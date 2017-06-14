@@ -1,0 +1,18 @@
+[
+	{
+		"id" : 1,
+		"archiveBoxNo" : 1,
+		"documentNum" : 50,
+		"archiveDate" : "2017-07-20",
+		"filingDate" : "2017-07-21",
+		"createUser" : "张厚武"
+	},
+	{
+		"id" : 2,
+		"archiveBoxNo" : 1,
+		"documentNum" : 48,
+		"archiveDate" : "2017-07-20",
+		"filingDate" : "2017-07-20",
+		"createUser" : "张厚武"
+	}
+]

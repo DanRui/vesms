@@ -1,0 +1,15 @@
+[
+	{
+		"name" : "--请选择--",
+		"value" : "none",
+		"selected" : true		
+	},
+	{
+		"name" : "manager",
+		"value" : "manager"
+	},
+	{
+		"name" : "test",
+		"value" : "test"
+	}
+]

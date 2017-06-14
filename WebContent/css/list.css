@@ -1,0 +1,14 @@
+.search_left{
+	padding-right:5px;
+	border:none;
+	text-align:right;
+}
+.search_right{
+	padding-left:5px;
+	border:none;
+	text-align:left;
+}
+
+.search_input{
+	width:150px
+}

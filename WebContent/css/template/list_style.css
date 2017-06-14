@@ -1,0 +1,33 @@
+
+.list_table { width:99%; background:#AACCEE ;height:20px;text-align:center; padding:0px}
+.list_table td { padding:2px; }
+
+.list_title { border:0px; height:25px; line-height:25px; background:#c3e6ff; font-size:14px; color:#404548; text-align:center; font-weight: bold  }
+.list_head {  text-align:center; background:url("../../images/di1.gif"); line-height:22px; font-weight: bold  }
+.list1 {  text-align:center;background:#f2f3f4;}
+.green{background:#cdffd8}
+.list1_b{background:#c7eaff; }
+.list2 { font-size:12px; text-align:center; background:white}
+.red {background:#ffcddf}
+.list2 small { font-size:10px;}
+.list2 small a { color:#f60; }
+.list2 small a:hover { color:#222; }
+.list2 span { float:right; font-size:12px; color:#999; }
+.list3, .list5 { background:#F6FBFE; width:100px; font-size:10px; color:#858D92; }
+.list3 a, .list5 a { font-size:12px; }
+.list4 { text-align:left; width:100px; color:#858D92; text-align:center}
+.list4 span { color:#f60; width:45px; display:block; float:left; text-align:right; }
+.list5 { width:100px; text-align:center; }
+.list6 { background:#F5F7F9; height:20px; text-align:right;}
+
+
+
+.edit_table { width:99%; background:#AACCEE ;text-align:center; padding:0px}
+.edit_table td { padding:2px; }
+
+.edit_title {   border:0px; height:25px; line-height:30px; background:#c0e7ff; font-size:16px; color:#404548; text-align:center; font-weight: bold }
+.edit_title1 {  text-align:left;background:#e2f3f4;  font-weight: bold ;line-height:25px; font-size:12px;}
+.edit_label {  text-align:right;background:#f2f3f4;font-size:12px; height:25px;}
+.edit_content {  text-align:left;background:white; font-size:12px; }
+.input_buttom {  text-align:center;background:white;line-height:35px;height:35px; }
+

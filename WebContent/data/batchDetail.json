@@ -1,0 +1,36 @@
+[
+	{
+		"id" : 1,
+		"applyNo" : "SL201707101001",
+		"vehiclePlateNum" : "粤B76799",
+		"vehiclePlateType" : "蓝牌",
+		"vehicleIdentifyNo" : "LLTCK12J75E001605",
+		"vehicleOwner" : "深圳市世豪货运有限公司",
+		"vehicleType" : "重型载货车",
+		"subsidiesMoney" : 18000,
+		"applyTime" : "2017-07-10",
+		"applyPerson" : "杨利云",
+		"applyPersonDept" : "环保部门",
+		"batchToFinanceStatus" : "待报财委",
+		"payResStatus" : "未拨付",
+		"batchNo" : "",
+		"isExported" : "待导出"
+	},
+	{
+		"id" : 2,
+		"applyNo" : "SL201707101002",
+		"vehiclePlateNum" : "粤B770A7",
+		"vehiclePlateType" : "蓝牌",
+		"vehicleIdentifyNo" : "LTJAOBOA31X002523",
+		"vehicleOwner" : "叶向东",
+		"vehicleType" : "轿车",
+		"subsidiesMoney" : 6000,
+		"applyTime" : "2017-07-10",
+		"applyPerson" : "曾笑梅",
+		"applyPersonDept": "环保部门",
+		"batchToFinanceStatus" : "再次未报",
+		"payResStatus" : "未拨付",
+		"batchNo" : "",
+		"isExported" : "待导出"
+	}
+]

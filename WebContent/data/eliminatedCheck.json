@@ -1,0 +1,42 @@
+[
+	{
+		"id" : 1,
+		"applyNo" : "SL201707101001",
+		"vehiclePlateNum" : "粤B6U4D7",
+		"vehiclePlateType" : "蓝牌",
+		"vehicleType" : "小型载客车",
+		"subsidiesMoney" : "10000",
+		"recycleDate" : "2017-07-10",
+		"vehicleIdentifyNo" : "LTJAOBOA31X002523",
+		"deadline" : "2018-07-01",
+		"vehicleOwner" : "华新宝实业（深圳）有限公司",
+		"isPersonal" : "N",
+		"isProxy" : "N",
+		"prePost" : "窗口受理",
+		"lastUpdateTime" : "2017-07-15 15:12",
+		"applyDate" : "2017-07-15",
+		"lastUpdatePerson" : "梁丽珍 ",
+		"bussinessStatus" : "正常",
+		"checkDept" : "环保部门"
+	},
+	{
+		"id" : 2,
+		"applyNo" : "SL201707101002",
+		"vehiclePlateNum" : "粤B47139",
+		"vehiclePlateType" : "黄牌",
+		"vehicleType" : "重型载货车",
+		"subsidiesMoney" : "18000",
+		"recycleDate" : "2013-06-19 ",
+		"vehicleIdentifyNo" : "LLTCK12J75E001605",
+		"deadline" : "2021-03-20 ",
+		"vehicleOwner" : "叶向东",
+		"isPersonal" : "Y",
+		"isProxy" : "Y",
+		"prePost" : "窗口审核",
+		"lastUpdateTime" : "2013-08-08 10:42",
+		"applyDate" : "2013-08-08",
+		"lastUpdatePerson" : "杨利云",
+		"bussinessStatus" : "正常",
+		"checkDept" : "环保部门"
+	}
+]

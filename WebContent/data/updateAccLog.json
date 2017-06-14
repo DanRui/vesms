@@ -1,0 +1,40 @@
+[
+	{
+		"id" : 1,
+		"applyNo" : "SL201707101001",
+		"vehiclePlateNum" : "粤B6U4D7",
+		"vehiclePlateType" : "蓝牌",
+		"vehicleType" : "小型载客车",
+		"subsidiesMoney" : "10000",
+		"recycleDate" : "2017-07-10",
+		"vehicleOwner" : "华新宝实业（深圳）有限公司",
+		"isPersonal" : "N",
+		"isProxy" : "N",
+		"prePost" : "窗口审核",
+		"handlePost" : "补贴账户修正",
+		"handleRes" : "补贴账户修改提交",
+		"lastUpdateTime" : "2017-07-15 15:12",
+		"lastUpdatePerson" : "梁丽珍 ",
+		"finishStatus" : "未办结",
+		"checkDept" : "环保部门"
+	},
+	{
+		"id" : 2,
+		"applyNo" : "SL201707101002",
+		"vehiclePlateNum" : "粤B47139",
+		"vehiclePlateType" : "黄牌",
+		"vehicleType" : "重型载货车",
+		"subsidiesMoney" : "18000",
+		"recycleDate" : "2013-06-19 ",
+		"vehicleOwner" : "叶向龙",
+		"isPersonal" : "Y",
+		"isProxy" : "Y",
+		"prePost" : "科长审核",
+		"handlePost" : "补贴账户修正审核",
+		"handleRes" : "补贴账户修改审核通过",
+		"lastUpdateTime" : "2013-08-08 10:42",
+		"lastUpdatePerson" : "杨利云",
+		"finishStatus" : "未办结",
+		"checkDept" : "环保部门"
+	}
+]

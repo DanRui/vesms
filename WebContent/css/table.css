@@ -1,0 +1,119 @@
+.datagrid-table-s{
+	border:none;
+	width:100%;
+}
+
+.datagrid-table-s tr{
+	height:35px;
+}
+.datagrid-table-s .classify-tr{
+	height:28px;
+}
+.classify-tr td{
+	background-color:#ecf4fe;color:#2779AA;text-indent:25px;font-size:15px;letter-spacing:2px
+}
+
+.view_table_left{
+	padding-right:5px;
+	text-align:right;
+	min-width:50px;
+	max-width:200px;
+}
+
+
+/* .view-table-title td{
+	background-color:red;
+	padding-left:10x;
+	text-align:left;
+	font-weight:blod;
+	font-size:16px;
+} */
+
+
+.easyui-panel-style{
+	padding: 0.3% 0.3% 0.3% 0.3%;height:100%
+}
+
+
+.datagrid-height-default{
+	 width: 100%;height:98.5%
+}
+
+
+.accordion-title{
+	height:100%;
+	width:100%
+}
+
+.datagrid-header table{
+	wdith:100%
+}
+
+.datagrid-table{
+	height:97.5%
+}
+
+.accordion-center{
+	padding:10px;
+	text-align:center
+}
+
+.dl-float-left{
+	float:left;padding-left:5px
+}
+
+.img-default-250{
+	 width:250px;
+	 height:250px;
+}
+
+.img-default-300{
+	width:300px;
+	height:300px;
+}
+
+.img-default-200{
+	width:200px;
+	height:200px;
+}
+.view_table_right{
+	padding-left:5px;
+	text-align:left;
+	min-width:50px;
+	max-width:250px;
+}
+
+.dl_title{
+	text-align:center;
+	margin:5px 0px 0px 0px;
+	font-size:14px;
+	font-weight:bold
+}
+
+.view-title{
+	overflow:auto;
+	padding:10px;
+}
+
+.dl_image{
+	
+}
+
+.datagrid-header td,
+.datagrid-body td,
+.datagrid-footer td {
+  border-width: 0 1px 1px 0;
+  border-style: dotted;
+  margin: 0;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+
+.search_input{
+	width:150px
+}
+
+.panel-title-center {
+	text-align : center;
+}

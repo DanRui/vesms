@@ -1,0 +1,62 @@
+[
+	{
+		"id" : 1,
+		"batchNo" : 1,
+		"createDate" : "2017-07-10",
+		"toFinanceDate" : "2017-07-12",
+		"payResDate" : "",
+		"createUser" : "陈俞伸",
+		"batchExpStatus" : "待导出",
+		"expRecentDate" : "",
+		"exportTimes" : 0,
+		"batchToFinanceStatus" : "待报财委",
+		"payBussCount" : 100,
+		"payBatchTotalAmount" : 800000,
+		"payBatchResStatus" : "未标记"
+	},
+	{
+		"id" : 2,
+		"batchNo" : 2,
+		"createDate" : "2017-07-10",
+		"toFinanceDate" : "2017-07-12",
+		"payResDate" : "2017-07-31",
+		"createUser" : "陈俞伸",
+		"batchExpStatus" : "已导出",
+		"expRecentDate" : "2017-07-10",
+		"exportTimes" : 1,
+		"batchToFinanceStatus" : "待报财委",
+		"payBussCount" : 100,
+		"payBatchTotalAmount" : 800000,
+		"payBatchResStatus" : "财委全部退回"
+	},
+	{
+		"id" : 3,
+		"batchNo" : 3,
+		"createDate" : "2017-07-10",
+		"toFinanceDate" : "2017-07-12",
+		"payResDate" : "2017-07-31",
+		"createUser" : "陈俞伸",
+		"batchExpStatus" : "待重新导出",
+		"expRecentDate" : "2017-07-10",
+		"exportTimes" : 1,
+		"batchToFinanceStatus" : "再次未报",
+		"payBussCount" : 100,
+		"payBatchTotalAmount" : 800000,
+		"payBatchResStatus" : "拨付部分成功" 
+	},
+	{
+		"id" : 4,
+		"batchNo" : 4,
+		"createDate" : "2017-07-10",
+		"toFinanceDate" : "2017-07-12",
+		"payResDate" : "2017-07-31",
+		"createUser" : "陈俞伸",
+		"batchExpStatus" : "已导出",
+		"expRecentDate" : "2017-07-10",
+		"exportTimes" : 1,
+		"batchToFinanceStatus" : "再次已报",
+		"payBussCount" : 100,
+		"payBatchTotalAmount" : 800000,
+		"payBatchResStatus" : "拨付已完成"
+	}
+]

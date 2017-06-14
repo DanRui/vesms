@@ -1,0 +1,14 @@
+[
+    {
+        "name":"审批中",
+        "value":"ZCBJ"
+    },
+    {
+        "name":"正在办结",
+        "value":"THBJ"
+    },
+    {
+        "name":"退办办结",
+        "value":"THDS"
+    }
+]

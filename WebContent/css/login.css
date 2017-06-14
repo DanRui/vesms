@@ -1,0 +1,142 @@
+*{
+	padding:0;
+	margin:0;
+}
+body{
+	background:#289bdc;
+}
+
+/**头部内容**/
+.header{
+	width:1024px;
+	height:142px;
+	margin:0 auto;
+}
+.header img{
+	display:block;
+	margin:0 auto;
+}
+
+/**中间内容**/
+.container{
+	width:1024px;
+	height:378px;
+	margin:20px auto 0;
+	border:4px solid #fff;
+	box-shadow: 0 0 6px #666;
+	font-family:"微软雅黑";
+}
+.container .left{
+	height:378px;
+	width:526px;
+	float:left;
+	border-right:4px solid #fff;
+}
+.container .left img{
+	display:block;
+}
+.container .right{
+	width:494px;
+	float:left;
+	height:378px;
+	background:#d2ecf6;
+}
+.container .right h1{
+	line-height:50px;
+	text-align:center;
+	color:#0555c2;
+	padding-top:10px;
+	font-size:24px;
+}
+
+/**登录内容**/
+.container .right .loginCon{
+	width:494px;
+	height:270px;
+	margin-top:30px;
+}
+.container .right .loginCon ul{
+	width:304px;
+	margin:0 auto;
+}
+.container .right .loginCon ul li{
+	line-height:30px;
+	margin:20px 0;
+	list-style:none;
+}
+.container .right .loginCon ul li span{
+	display:inline-block;
+	width:80px;
+	text-align:right;
+	line-height:30px;
+	letter-spacing: 1px;
+}
+.container .right .loginCon ul li input{
+	height:27px;
+	border:1px solid #d0d1d3;
+	outline:none;
+	background:#fff;
+	width:184px;
+	vertical-align:middle;
+	line-height:27px;
+}
+.container .right .loginCon ul li input.user{
+	background-image:url(../images/icon_user.jpg);
+	background-repeat: no-repeat;
+	background-position: left center;
+	text-indent:20px;
+}
+.container .right .loginCon ul li input.pass{
+	background-image:url(../images/icon_password.jpg);
+	background-repeat: no-repeat;
+	background-position: left center;
+	text-indent:20px;
+}
+.container .right .loginCon ul li input.checkBox{
+	width:110px;
+}
+.container .right .loginCon ul li .code{
+	position:relative;
+	left:10px;
+	top:10px;
+	cursor:pointer;
+}
+.container .right .loginCon .button{
+	width:304px;
+	margin:0 auto;
+	padding-top:20px;
+	text-align:center;
+}
+.container .right .loginCon .button a{
+	display:inline-block;
+	background:#ff7608;
+	width:110px;
+	height:40px;
+	text-decoration:none;
+	line-height:40px;
+	text-align:center;
+	color:#fff;
+	border-radius:4px;
+	font-weight:bold;
+	margin-right:20px;
+}
+.container .right .login-error {
+	position: absolute;
+	top: 490px;
+	left: 550px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+}
+.container .right .login-error label {
+	color: #ff0000;
+}
+
+
+
+
+
+
+
+
+

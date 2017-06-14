@@ -1,0 +1,37 @@
+[
+	{
+		"id" : 1,
+		"batchNo" : "1",
+		"archiveBoxNo" : "1",
+		"vehicleIdentifyNo" : "LTJAOBOA31X002523",
+		"applyNo" : "SL201704201002",
+		"applyConfirmStatus" : "受理未确认",
+		"vehiclePlateNum" : "粤B770A7",
+		"vehiclePlateType" : "蓝牌",
+		"vehicleOwner" : "叶向东",
+		"isPersonal" : "Y",
+		"isProxy" : "Y",
+		"vehicleType" : "轿车",
+		"subsidiesMoney" : 6000,
+		"applyTime" : "2017-07-01 10:15；28",
+		"applyPerson" : "曾笑梅",
+		"applyPersonDept" : "环保部门"
+	},{
+		"id" : 2,
+		"batchNo" : "",
+		"archiveBoxNo" : "",
+		"vehicleIdentifyNo" : "LLTCK12J75E001605",
+		"applyNo" : "SL201704201001",
+		"applyConfirmStatus" : "受理未确认",
+		"vehiclePlateNum" : "粤B76799",
+		"vehiclePlateType" : "蓝牌",
+		"vehicleOwner" : "深圳市世豪货运有限公司",
+		"isPersonal" : "N",
+		"isProxy" : "N",
+		"vehicleType" : "重型载货车",
+		"subsidiesMoney" : 18000,
+		"applyTime" : "2017-07-01 10:16:20",
+		"applyPerson" : "杨利云",
+		"applyPersonDept" : "环保部门"
+	}
+]	

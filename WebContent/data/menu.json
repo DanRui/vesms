@@ -1,0 +1,183 @@
+[
+	{
+		"menuCode":"100",
+  		"menuName":"报废车辆管理",
+  		"menuPic":"icon-baofei",
+  		"children":[
+
+  			{"menuCode":"1001","menuName":"报废车辆信息录入","menuUrl":"vehicleRecycle/add.jsp","openMode":"dialog","width":1112,"height":700,"maximizable":true,"param":
+  				{
+  				    "reset":false
+  				   
+  				}
+  			},
+			{"menuCode":"1002","menuName":"报废车辆查询","menuUrl":"vehicleRecycle/list.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"101",
+  		"menuName":"补贴业务受理",
+  		"menuPic":"icon-butieshenbao",
+		"children" : [
+			{"menuCode":"1011","menuName":"申报受理录入","menuUrl":"eliminatedApply/add.do","openMode":"dialog","width":1132,"height":800,"maximizable":true,"param":{
+			    "reset":false,
+			    "save":false,
+			    "close":false,
+			    "stage":"add"
+			}},
+			{"menuCode":"1012","menuName":"申报未受理查询","menuUrl":"eliminatedApply/list.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"102",
+  		"menuName":"业务资料修正",
+  		"menuPic":"icon-butie-modify",
+		"children" : [
+			{"menuCode":"1021","menuName":"一般资料修正","menuUrl":"eliminatedModify/list.jsp","openMode":"tab"},
+			{"menuCode":"1022","menuName":"补贴对象变更","menuUrl":"eliminatedModify/updateAccList.jsp","openMode":"tab"}		
+		]
+	},
+	{
+		"menuCode":"103",
+  		"menuName":"会计初审管理",
+  		"menuPic":"icon-shenpi",
+		"children" : [
+			{"menuCode":"1031","menuName":"正常业务审核","menuUrl":"eliminatedCheck/list.jsp?currentPost=KJCSG","openMode":"tab"},
+			{"menuCode":"1032","menuName":"修正业务重审核","menuUrl":"eliminatedCheck/backList.jsp?currentPost=KJCSG","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"104",
+  		"menuName":"窗口审核管理",
+  		"menuPic":"icon-shenpi",
+		"children" : [
+			{"menuCode":"1041","menuName":"正常业务审核","menuUrl":"eliminatedCheck/list.jsp?currentPost=CKSHG","openMode":"tab"},
+			{"menuCode":"1042","menuName":"修正业务重审核","menuUrl":"eliminatedCheck/backList.jsp?currentPost=CKSHG","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"105",
+  		"menuName":"科长审核管理",
+  		"menuPic":"icon-shenpi",
+		"children" : [
+			{"menuCode":"1051","menuName":"正常业务审核","menuUrl":"eliminatedCheck/list.jsp?currentPost=KZSHG","openMode":"tab"},
+			{"menuCode":"1052","menuName":"修正业务重审核","menuUrl":"eliminatedCheck/backList.jsp?currentPost=KZSHG","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"106",
+  		"menuName":"处长审核管理",
+  		"menuPic":"icon-shenpi",
+		"children" : [
+			{"menuCode":"1061","menuName":"正常业务审核","menuUrl":"eliminatedCheck/list.jsp?currentPost=CZSHG","openMode":"tab"},
+			{"menuCode":"1062","menuName":"修正业务重审核","menuUrl":"eliminatedCheck/backList.jsp?currentPost=CZSHG","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"107",
+  		"menuName":"会计复审管理",
+  		"menuPic":"icon-shenpi",
+		"children" : [
+			{"menuCode":"1071","menuName":"正常业务审核","menuUrl":"eliminatedCheck/list.jsp?currentPost=KJFSG","openMode":"tab"},
+			{"menuCode":"1072","menuName":"修正业务重审核","menuUrl":"eliminatedCheck/backList.jsp?currentPost=KJFSG","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"108",
+  		"menuName":"正常内部批次管理",
+  		"menuPic":"icon-bofushenbao",
+		"children" : [
+			{"menuCode":"1081","menuName":"正常内部批次生成","menuUrl":"payApply/createBatch.jsp","openMode":"tab"},
+			{"menuCode":"1082","menuName":"正常内部批次调整","menuUrl":"payApply/batchAdjust.jsp","openMode":"tab"},
+			{"menuCode":"1083","menuName":"正常内部批次查询","menuUrl":"payApply/batchList.jsp","openMode":"tab"}
+
+		]
+	},
+	{
+		"menuCode":"109",
+  		"menuName":"正常报财务批次管理",
+  		"menuPic":"icon-bofushenbao",
+		"children" : [
+			{"menuCode":"1091","menuName":"正常批次报财务","menuUrl":"payApply/toFinanceList.jsp","openMode":"tab"},
+			{"menuCode":"1092","menuName":"正常报财务批次查询","menuUrl":"payApply/toFinBatchList.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"201",
+  		"menuName":"重报内部批次管理",
+  		"menuPic":"icon-bofushenbao",
+		"children" : [
+			{"menuCode":"2011","menuName":"重报内部批次生成","menuUrl":"payApply/repeatCreateBatch.jsp","openMode":"tab"},
+			{"menuCode":"2012","menuName":"重报内部批次调整","menuUrl":"payApply/repeatBatchAdjust.jsp","openMode":"tab"},
+			{"menuCode":"2012","menuName":"重报内部批次查询","menuUrl":"payApply/repeatBatchList.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"202",
+  		"menuName":"重报报财务批次管理",
+  		"menuPic":"icon-bofushenbao",
+		"children" : [
+			{"menuCode":"2021","menuName":"重报批次报财务","menuUrl":"payApply/repeatToFinanceList.jsp","openMode":"tab"},
+			{"menuCode":"2022","menuName":"重报报财务批次查询","menuUrl":"payApply/repeatToFinBatchList.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"203",
+  		"menuName":"申报批次总查询",
+  		"menuPic":"icon-bofushenbao",
+		"children" : [
+			{"menuCode":"2031","menuName":"申报批次总查询","menuUrl":"payApply/allBatchList.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"204",
+  		"menuName":"拨付结果管理",
+  		"menuPic":"icon-bofushenbao-result",
+		"children" : [
+			{"menuCode":"2041","menuName":"拨付结果标记","menuUrl":"payResult/list.jsp","openMode":"tab"},
+			{"menuCode":"2042","menuName":"重报拨付结果标记","menuUrl":"payResult/repeatList.jsp","openMode":"tab"}
+		]
+	},
+		{
+		"menuCode":"205",
+  		"menuName":"办结管理",
+  		"menuPic":"icon-guidang",
+		"children" : [
+			{"menuCode":"2051","menuName":"正常办结","menuUrl":"concludeApply/list.jsp","openMode":"tab"},
+			{"menuCode":"2052","menuName":"异常办结","menuUrl":"concludeApply/exceList.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"206",
+  		"menuName":"归档管理",
+  		"menuPic":"icon-guidang",
+		"children" : [
+			{"menuCode":"2061","menuName":"档案管理","menuUrl":"archive/list.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"207",
+  		"menuName":"日志管理",
+  		"menuPic":"icon-rizhi",
+		"children" : [
+			{"menuCode":"2071","menuName":"日志查询","menuUrl":"sysLog/list.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"208",
+  		"menuName":"公众服务",
+  		"menuPic":"icon-public",
+  		"children":[
+			{"menuCode":"2081","menuName":"车辆补贴资格验证","menuUrl":"publicService/verify.jsp","openMode":"tab"}
+		]
+	},
+	{
+		"menuCode":"209",
+  		"menuName":"业务综合查询",
+  		"menuPic":"icon-view",
+  		"children":[
+  			{"menuCode":"2091","menuName":"申报受理综合查询","menuUrl":"eliminatedApply/listAll.jsp","openMode":"tab"},
+			{"menuCode":"2092","menuName":"工作记录查询","menuUrl":"workLogging/list.jsp","openMode":"tab"}
+		]
+	}
+]

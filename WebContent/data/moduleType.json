@@ -1,0 +1,11 @@
+[
+	{
+		"name" : "--请选择--",
+		"value" : "none",
+		"selected" : true		
+	},
+	{
+		"name" : "系统权限",
+		"value" : "M_VESMS_USER_MANAGER"
+	}
+]

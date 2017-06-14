@@ -1,0 +1,27 @@
+[
+	{
+		"title":"测试1",
+		"sendDeptName":"警视通",
+		"sendUserName":"管理员",
+		"recvTime":"2016-1-26",
+		"signFlag":"未签收",
+		"feedbackFlag":"未反馈",
+		"readFlag":"已阅读"
+	},{
+		"title":"测试2",
+		"sendDeptName":"警视通",
+		"sendUserName":"管理员",
+		"recvTime":"2016-1-26",
+		"signFlag":"未签收",
+		"feedbackFlag":"未反馈",
+		"readFlag":"已阅读"
+	},{
+		"title":"测试3",
+		"sendDeptName":"警视通",
+		"sendUserName":"管理员",
+		"recvTime":"2016-1-26",
+		"signFlag":"未签收",
+		"feedbackFlag":"未反馈",
+		"readFlag":"未阅读"
+	}
+]

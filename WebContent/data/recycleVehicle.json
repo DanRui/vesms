@@ -1,0 +1,24 @@
+[
+	{
+		"id" : 1,
+		"vehiclePlateNum" : "粤B6U4D7",
+		"vehiclePlateType" : "蓝牌",
+		"vehicleIdentifyNo" : "LTA1278U35X132040",
+		"vehicleType" : "小型载客车",
+		"carOwnerType" : "Y",
+		"useOfProperty" : "非营运",
+		"inputTime" : "2017-07-01 10:20:11",
+		"status" : "未受理"
+	},
+	{
+		"id" : 2,
+		"vehiclePlateNum" : "粤B47139",
+		"vehiclePlateType" : "黄牌",
+		"vehicleIdentifyNo" : "LGGGAJAS32L009300",
+		"vehicleType" : "重型载货车",
+		"carOwnerType" : "N",
+		"useOfProperty" : "营运",
+		"inputTime" : "2017-04-13 10:20:11",
+		"status" : "已受理"
+	}
+]

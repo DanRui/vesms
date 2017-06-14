@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+#webcam 
+{ 
+	border: 1px solid #666666;
+	width: 320px;
+	height: 240px; 
+}
+
+#photos 
+{
+	border: 1px solid #666666;
+	width: 320px;
+	height: 240px; 
+}
+
+.btn 
+{
+	width: 320px;
+	height: auto;
+	margin: 5px 0px;
+}
+
+.btn input[type=button] 
+{
+	width: 150px;
+	height: 50px;
+	line-height: 50px;
+	margin: 3px;
+}

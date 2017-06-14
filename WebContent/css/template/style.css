@@ -1,0 +1,31 @@
+@import url(list_style.css);
+
+html, body { 
+    background: #fff; color: #394145;
+	line-height:20px; scrollbar-3dlight-color:595959;
+	scrollbar-arrow-color:ffffff;
+	scrollbar-base-color:CFCFCF;
+	scrollbar-darkshadow-color:FFFFFF;
+	scrollbar-face-color:CFCFCF;
+	scrollbar-highlight-color:FFFFF;
+	scrollbar-shadow-color:595959; }
+
+html, body, h2, h3, h4, div, ul,p, li, input { font-family:arial, helvetica, sans-serif; list-style:none; margin:0px;padding:0px; }
+html,body,h2, h3, h4,input{font-size:12px;}
+div, table { margin: 0 auto; }
+a { color:#0b7ac0; text-decoration: none; }
+a:hover { color:#f60; text-decoration: underline; }
+a.button2:hover{ text-decoration:none; }
+h1 { font-size:14px; }
+hr { height:0px; size:0px; border:0px; border-bottom:1px solid #ddd; }
+input{color:#394145;font-size:18px;vertical-align:middle;font-size:12px}
+img { border-style: none; }
+textarea{vertical-align:middle;font-size:12px;}
+input,textarea{border:1px solid gray;}
+
+.button,button {
+	cursor: pointer;vertical-align:middle;  border:1px solid #9cc3d9; background:url("images/button_bg.gif"); font-size:12px;padding:0px 1px; height:20px;line-height:20px;	
+}
+
+.button_on { background:url("images/button_bg2.gif");  border:1px solid #c3a336; cursor: pointer;padding:0px 1px;height:20px;line-height:20px;}
+.title_top{background:#fff; text-align:left;font-size:14px;margin:5px;}

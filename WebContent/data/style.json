@@ -1,0 +1,57 @@
+[{
+	"group":"Base",
+	"text":"Default",
+	"value":"js/plugins/easyui/themes/default/easyui.css"
+},{
+	"group":"Base",
+	"text":"Gray",
+	"value":"js/plugins/easyui/themes/gray/easyui.css"
+},{
+	"group":"Base",
+	"text":"Metro",
+	"value":"js/plugins/easyui/themes/metro/easyui.css"
+},{
+	"group":"Base",
+	"text":"Bootstrap",
+	"value":"js/plugins/easyui/themes/bootstrap/easyui.css"
+},{
+	"group":"Base",
+	"text":"Black",
+	"value":"js/plugins/easyui/themes/black/easyui.css"
+},{
+	"group":"Metro",
+	"text":"Metro Blue",
+	"value":"js/plugins/easyui/themes/metro-blue/easyui.css"
+},{
+	"group":"Metro",
+	"text":"Metro Gray",
+	"value":"js/plugins/easyui/themes/metro-gray/easyui.css"
+},{
+	"group":"Metro",
+	"text":"Metro Green",
+	"value":"js/plugins/easyui/themes/metro-green/easyui.css"
+},{
+	"group":"Metro",
+	"text":"Metro Orange",
+	"value":"js/plugins/easyui/themes/metro-orange/easyui.css"
+},{
+	"group":"Metro",
+	"text":"Metro Red",
+	"value":"js/plugins/easyui/themes/metro-red/easyui.css"
+},{
+	"group":"UI",
+	"text":"Cupertino",
+	"value":"js/plugins/easyui/themes/ui-cupertino/easyui.css"
+},{
+	"group":"UI",
+	"text":"Dark Hive",
+	"value":"js/plugins/easyui/themes/ui-dark-hive/easyui.css"
+},{
+	"group":"UI",
+	"text":"Pepper Grinder",
+	"value":"js/plugins/easyui/themes/ui-pepper-grinder/easyui.css"
+},{
+	"group":"UI",
+	"text":"Sunny",
+	"value":"js/plugins/easyui/themes/ui-sunny/easyui.css"
+}]

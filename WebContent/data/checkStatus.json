@@ -1,0 +1,15 @@
+[
+	{
+		"name" : "请选择",
+		"value" : "-1",
+		"selected" : true
+	},
+	{
+		"name" : "未审核",
+		"value" : "0"
+	},
+	{
+		"name" : "已审核",
+		"value" : "1"
+	}
+]
