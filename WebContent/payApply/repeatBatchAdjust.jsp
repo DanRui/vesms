@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 </head>
 <body>
 	
-	<div id = "repeatBatchAdjust-list" class="easyui-panel  easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "repeatBatchAdjust-list" class="easyui-panel  easyui-panel-style" data-options="title: '重报内部批次调整',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="repeatBatchAdjust-grid-toolbar">
 				<table id="repeatBatchAdjust-recycle-tool-table" style = "width:100%;">
@@ -106,8 +106,8 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:800,height:450,
-					url:basePath+"/payApply/repBatchView.do?id="+rowData.id+"&type=view",content:"重报批次受理单明细"});
+				$(this).datagrid("view",{width:900,height:800,
+					url:basePath+"/payApply/repBatchView.do?id="+rowData.id+"&type=view",content:"重报批次受理单明细",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"batchNo",title:"重报内部批次号：",type:"text"},

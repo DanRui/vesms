@@ -12,7 +12,7 @@ String currentPost = request.getParameter("currentPost");
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "eliminated-check-list" class="easyui-panel easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "eliminated-check-list" class="easyui-panel easyui-panel-style" data-options="title:'正常业务审核',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="elimiCheckList-grid-toolbar">
 				<table id="eliminated-check-tool-table" style = "width:100%;">
@@ -223,7 +223,7 @@ String currentPost = request.getParameter("currentPost");
 			onDblClickRow : function(rowIndex, rowData) {
 				$(this).datagrid("view",{width:1132,height:800,url:basePath+"/eliminatedCheck/view.do?id="+rowData.id
 						+"&type=normal",
-						content:"受理单详细信息查看"});
+						content:"受理单详细信息查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},

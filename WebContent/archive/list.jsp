@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "archiveMain-list" class="easyui-panel  easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "archiveMain-list" class="easyui-panel  easyui-panel-style" data-options="title: '档案管理',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="archiveMain-grid-toolbar">
 				<table id="archiveMain-recycle-tool-table" style = "width:100%;">
@@ -91,7 +91,7 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:800,height:450,url:basePath+"/archives/view.do?id="+rowData.id+"&type=view",content:"档案盒内业务查询"});
+				$(this).datagrid("view",{width:900,height:800,url:basePath+"/archives/view.do?id="+rowData.id+"&type=view",content:"档案盒内业务查询",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[

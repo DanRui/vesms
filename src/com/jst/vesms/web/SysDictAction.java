@@ -110,7 +110,6 @@ public class SysDictAction extends BaseAction {
 					json.put("code", dict.getDictCode());
 					jsonArray.add(json);
 				}
-				
 			}
 		} catch (Exception e) {
 			log.error("SysDictAction getDictListFromMap is Error:" + e, e);

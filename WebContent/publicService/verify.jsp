@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "vehicle-verify-query" class="easyui-panel easyui-panel-style" data-options="title: '资格查询'" style="height:100%">
+	<div id = "vehicle-verify-query" class="easyui-panel easyui-panel-style" data-options="title: '资格查询',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header">
 				<table id="vehicle-verify-query-table" style="width:100%;">

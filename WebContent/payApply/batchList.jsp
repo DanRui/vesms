@@ -14,7 +14,7 @@ String basePath = request.getContextPath();
 </head>
 <body>
 	
-	<div id = "batchMain-list" class="easyui-panel  easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "batchMain-list" class="easyui-panel  easyui-panel-style" data-options="title: '正常内部批次查询',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="batchMain-grid-toolbar">
 				<table id="batchMain-recycle-tool-table" style = "width:100%;">
@@ -132,9 +132,9 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:800,height:450,
+				$(this).datagrid("view",{width:900,height:800,
 					url:basePath+"/payApply/batchView.do?id="+rowData.id+"&type=view",
-							content:"申报受理单明细"});
+							content:"申报受理单明细",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"batchNo",title:"内部批次号：",type:"text"},

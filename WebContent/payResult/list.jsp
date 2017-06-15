@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "pay-result-list" class="easyui-panel easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "pay-result-list" class="easyui-panel easyui-panel-style" data-options="title: '拨付结果标记',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="payResultList-grid-toolbar">
 				<table id="pay-result-tool-table" style = "width:100%;">
@@ -149,7 +149,7 @@ String basePath = request.getContextPath();
 			} */
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:800,height:450,url:basePath+"/payApply/view.do?id="+rowData.id+"&type=view",content:"受理单查看"});
+				$(this).datagrid("view",{width:900,height:800,url:basePath+"/payApply/view.do?id="+rowData.id+"&type=view",content:"受理单查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[

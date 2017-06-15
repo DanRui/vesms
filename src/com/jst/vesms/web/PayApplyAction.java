@@ -61,7 +61,7 @@ public class PayApplyAction extends BaseAction{
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-	public String list(@RequestParam(value="pageNo", defaultValue="1")int pageNo, 
+	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String vehicleType,String vehicleOwner, String applyNo,String vehicleIdentifyNo,String batchNo) throws Exception{
@@ -92,6 +92,9 @@ public class PayApplyAction extends BaseAction{
 		}
 		try {
 			page = payApplyService.getPageBySql(page, "select * from t_eliminated_apply where batch_no is null and current_post = 'BFSBG' and bussiness_status='1'");
+			if (page.getTotalCount() != 0) {
+				page = payApplyService.getPage(page, list);
+			}
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("PayApplyAction list is Error:" + e, e);
@@ -1492,7 +1495,7 @@ public class PayApplyAction extends BaseAction{
 		//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 		@ResponseBody
 		//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-		public String getBatchAllList(@RequestParam(value="pageNo", defaultValue="1")int pageNo, 
+		public String getBatchAllList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 						   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 						   @RequestParam(value="order", defaultValue="DESC")String order, 
 						   @RequestParam(value="sort", defaultValue="id")String orderBy,Integer toFinanceNo, String batchNo,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String toFinanceStartTime,String toFinanceEndTime, String createStartDate , String createEndDate,String batchType,String batchStatus) throws Exception{

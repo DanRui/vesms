@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "subsidTarget-apply-list" class="easyui-panel  easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "subsidTarget-apply-list" class="easyui-panel  easyui-panel-style" data-options="title: '补贴对象变更',headerCls:'panel-title-center" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 		<div class="datagrid-header" id="subsidTarget-apply-grid-toolbar">
 				<table id="subsidTarget-apply-tool-table" style = "width:100%;">
@@ -164,7 +164,7 @@ String basePath = request.getContextPath();
 			onDblClickRow : function(rowIndex, rowData) {
 				$(this).datagrid("view",{width:900,height:800,url:basePath+"/eliminatedModify/view.do?id="+rowData.id
 						+"&type=account",
-						content:"受理单修正信息查看"});
+						content:"受理单修正信息查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[

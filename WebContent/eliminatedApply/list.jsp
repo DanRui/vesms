@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "eliminated-apply-list" class="easyui-panel  easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "eliminated-apply-list" class="easyui-panel  easyui-panel-style" data-options="title: '申报未受理查询',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="eliminated-apply-grid-toolbar">
 				<table id="eliminated-apply-tool-table" style = "width:100%;">
@@ -148,7 +148,7 @@ String basePath = request.getContextPath();
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
 				$(this).datagrid("view",{width:1050,height:800,url:basePath+"/eliminatedApply/view.do?id="+rowData.id+"&type=view",
-						content:"受理单详细查看"});
+						content:"受理单详细查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{ columns: [
 			         {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},

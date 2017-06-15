@@ -196,10 +196,10 @@ String basePath = request.getContextPath();
 					content:"受理单详细信息查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
-			columns:[{field:"vehiclePlateType",title:"操作岗位:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
-					{field:"vehiclePlateType",title:"操作人:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
-					{field:"vehicleType",title:"操作动作:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
-					{field:"vehicleType",title:"操作结果:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
+			columns:[{field:"post",title:"操作岗位:",type:"combobox",panelHeight:false, url:basePath+"/workLogging/getPostList.do", text:"value", value:"code"},
+					{field:"actionUser",title:"操作人:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					{field:"action",title:"操作动作:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
+					{field:"actionResult",title:"操作结果:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
 					/* {field:"applyNo",title:"受理单号:",type:"text"},
 					{field:"vehicleOwner",title:"车主:",type:"text"},
 					{field:"vehicleIdentifyNo",title:"车架号:",type:"text"},

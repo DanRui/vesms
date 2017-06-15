@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "sys-log-list" class="easyui-panel easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "sys-log-list" class="easyui-panel easyui-panel-style" data-options="title: '日志查询',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="sysLogList-grid-toolbar">
 				<table id="vehicle-recycle-tool-table" style = "width:100%;">
@@ -85,7 +85,7 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				/* $(this).datagrid("view",{width:900,height:450,url:basePath+"/vehicleRecycle/view.jsp?id="+rowData.id,content:"报废车辆信息查看"}); */
+				 $(this).datagrid("view",{width:900,height:800,url:basePath+"/vehicleRecycle/view.jsp?id="+rowData.id,content:"报废车辆信息查看",param:{close:false}}); 
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"operateIP",title:"操作IP:",type:"text"},

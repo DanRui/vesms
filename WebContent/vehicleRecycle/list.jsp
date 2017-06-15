@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "vehicle-recycle-list" class="easyui-panel easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
+	<div id = "vehicle-recycle-list" class="easyui-panel easyui-panel-style" data-options="title: '报废车辆查询',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="vehicleRecyList-grid-toolbar">
 				<table id="vehicle-recycle-tool-table" style = "width:100%;">
@@ -102,7 +102,7 @@ String basePath = request.getContextPath();
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
 				$(this).datagrid("view",{width:950,height:680,url:basePath+"/vehicleRecycle/view.do?id="+rowData.id+"&type=view",
-						content:"报废车辆信息查看"});
+						content:"报废车辆信息查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
