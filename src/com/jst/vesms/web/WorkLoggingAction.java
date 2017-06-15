@@ -68,27 +68,31 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 		StringBuffer sb = new StringBuffer();
 		sb.append("select a.id id, a.current_post post, a.action_user actionUser, a.action_name actionName, a.action_result actionResult,");
 		sb.append("a.action_time actionTime, b.apply_no applyNo, b.vehicle_plate_num vehiclePlateNum, b.vehicle_plate_type vehiclePlateType,");
-		sb.append("b.emission_standard emissionStandard, b.iol_type iolTpye, b.subsidiesMoney subsidiesMoney, b.current_post curremtPost, b.bussinessStatus bussinessStatus ");
+		sb.append("b.emission_standard emissionStandard, b.iol_type iolTpye, b.subsidies_money subsidiesMoney, b.current_post currentPost, b.bussiness_status bussinessStatus ");
+		sb.append("from t_action_log a, t_eliminated_apply b ");
 		sb.append("where 1 = 1 and a.apply_no = b.apply_no ");
 		
-		if(StringUtil.isNotEmpty(post))
+		if (StringUtil.isNotEmpty(post))
 		{
 			sb.append("and a.current_post = '").append(post).append("' ");
 		}
-		if(StringUtil.isNotEmpty(actionUser)) {
+		if (StringUtil.isNotEmpty(actionUser)) {
 			sb.append("and a.actionUser = '").append(actionUser).append("' ");
 		}
-		if(StringUtil.isNotEmpty(action)) {
+		if (StringUtil.isNotEmpty(action)) {
 			sb.append("and a.action_name = '").append(action).append("' ");
 		}
-		if(StringUtil.isNotEmpty(actionResult)) {
+		if (StringUtil.isNotEmpty(actionResult)) {
 			sb.append("and a.actionResult = '").append(actionResult).append("' ");
 		}
-		if(StringUtil.isNotEmpty(startTime)) {
+		if (StringUtil.isNotEmpty(startTime)) {
 			sb.append("and a.action_time >= to_date('").append(startTime).append("', 'yyyy-MM-dd') ");
 		}
-		if(StringUtil.isNotEmpty(endTime)) {
+		if (StringUtil.isNotEmpty(endTime)) {
 			sb.append("and a.action_time <= to_date('").append(endTime).append("', 'yyyy-MM-dd') ");
+		}
+		if (StringUtil.isNotEmpty(orderBy)) {
+			sb.append("order by ").append(orderBy).append(" ").append(order).append(" ");
 		}
 		try {
 			// 查询

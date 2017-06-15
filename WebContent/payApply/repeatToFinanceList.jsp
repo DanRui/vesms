@@ -130,10 +130,6 @@ String basePath = request.getContextPath();
 								}else {
 									$.messager.confirm('报财务确认','你确定将选中的批次进行报财务吗?',function(r){
 									if(r){
-							/*		for (var i=0;i<selectedRows.length;i++){					
-										ids.push(selectedRows[i].id);
-									}
-									var ids = ids.join(",")+"";*/
 									if (null != infoMsg) {
 										Messager.alert({
 											type : "info",

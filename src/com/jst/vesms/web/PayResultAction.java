@@ -43,7 +43,7 @@ public class PayResultAction extends BaseAction{
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-	public String list(@RequestParam(value="pageNo", defaultValue="1")int pageNo, 
+	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String batchNo) throws Exception{
@@ -79,6 +79,9 @@ public class PayResultAction extends BaseAction{
 			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
 		}
 		page = payResultService.getPageBySql(page, "select * from t_eliminated_apply where repeated_batch_no is null and current_post = 'BFJGBJG' and bussiness_status = '1'");
+		if (page.getTotalCount() != 0) {
+			page = payResultService.getPage(page, list);
+		}
 		try {
 			returnStr = writerPage(page);
 		} catch (Exception e) {
@@ -326,7 +329,7 @@ public class PayResultAction extends BaseAction{
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-	public String getRepBatchList(@RequestParam(value="pageNo", defaultValue="1")int pageNo, 
+	public String getRepBatchList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String repeatedBatchNo) throws Exception{
@@ -363,6 +366,9 @@ public class PayResultAction extends BaseAction{
 		}
 		try {
 			page = payResultService.getPageBySql(page, "select * from t_eliminated_apply where repeated_batch_no is not null and current_post = 'BFJGBJG' and bussiness_status = '1'");
+			if (page.getTotalCount() != 0) {
+				page = payResultService.getPage(page, list);
+			}
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("PayResultAction list is Error:" + e, e);

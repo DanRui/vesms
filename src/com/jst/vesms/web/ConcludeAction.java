@@ -43,7 +43,7 @@ public class ConcludeAction extends BaseAction{
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-	public String list(@RequestParam(value="pageNo", defaultValue="1")int pageNo, 
+	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate) throws Exception{
@@ -77,6 +77,9 @@ public class ConcludeAction extends BaseAction{
 		}
 		try {
 			page = concludeService.getPageBySql(page, "select * from t_eliminated_apply where  current_post = 'YWBJG' and bussiness_status = '1'");
+			if (page.getTotalCount() != 0) {
+				page = concludeService.getPage(page, list);
+			}
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("TransactFinAction list is Error:" + e, e);
@@ -132,7 +135,7 @@ public class ConcludeAction extends BaseAction{
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-	public String getExcepList(@RequestParam(value="pageNo", defaultValue="1")int pageNo, 
+	public String getExcepList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate) throws Exception{
@@ -166,6 +169,9 @@ public class ConcludeAction extends BaseAction{
 		}
 		try {
 			page = concludeService.getPageBySql(page, "select * from t_eliminated_apply where  current_post = 'YWBJG' and bussiness_status = '-1'");
+			if (page.getTotalCount() != 0) {
+				page = concludeService.getPage(page, list);
+			}
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("TransactFinAction list is Error:" + e, e);

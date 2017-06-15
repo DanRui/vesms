@@ -144,29 +144,34 @@ public class CallDao implements ICallDao {
 								}
 								callStat.registerOutParameter(entry.getKey(), entry.getValue());
 							}
-							rs = callStat.executeQuery();//执行
+						}
 							
-							if (hasCursorResult) { //返回游标类型，遍历结果集
+						if (hasCursorResult) { //返回简单游标类型，遍历结果集
+							// 这里只返回一个结果集，返回多个结果集使用上一个方法
+							callStat.execute();
+							// 只有一个结果集才会执行，否则跳过返回空值
+							if (outParams.keySet().size() == 1) {
+								rs = (ResultSet) callStat.getObject(outParams.keySet().iterator().next());
 								ResultSetMetaData rsMetaData = rs.getMetaData();
-								int colCount = rsMetaData.getColumnCount();
+	                            int colCount = rsMetaData.getColumnCount();//获取当前结果集的列数
 								while(rs.next()) {
 									Map<String, Object> map = new HashMap<String, Object>();
-									for (int i = 0 ; i < colCount ; i ++) {
-										String colName = rsMetaData.getColumnName(i + 1);//列名称
+									for(int i = 1 ; i <= colCount ; i ++) {
+										String colName = rsMetaData.getColumnName(i);//列名称
 										map.put(colName, rs.getObject(colName));//将列名称和值放入Map
-									}
+		                            }
 									result.add(map);
 								}
-							} else { //返回普通参数的，构造Map对象，返回List
-								//循环输出参数得到输出参数类型和值，放入Map
-								Map<String, Object> tmp = new HashMap<String, Object>();
-								for (Map.Entry<Integer, Integer> entry : outParams.entrySet()) {
-									tmp.put(entry.getKey().toString(), callStat.getObject(entry.getKey()));
-								}
-								result.add(tmp);
 							}
+						} else { //返回普通参数的，构造Map对象，返回List
+							rs = callStat.executeQuery();//执行
+							//循环输出参数得到输出参数类型和值，放入Map
+							Map<String, Object> tmp = new HashMap<String, Object>();
+							for (Map.Entry<Integer, Integer> entry : outParams.entrySet()) {
+								tmp.put(entry.getKey().toString(), callStat.getObject(entry.getKey()));
+							}
+							result.add(tmp);
 						}
-						
 						close(callStat, rs);//关闭CallableStatement和ResultSet
 					}
 				});

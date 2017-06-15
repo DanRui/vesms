@@ -54,7 +54,7 @@ String basePath = request.getContextPath();
 						return "异常";
 					} else if (value == "1") {
 						return "正常";
-					} 
+					}
 				}
 			},{
 				field : "applyNo",

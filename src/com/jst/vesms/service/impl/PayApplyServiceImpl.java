@@ -207,7 +207,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	}
 
 	
-
+	//重报批次导出
 	public String batchRepExport(Integer id) throws Exception {
 		// TODO Auto-generated method stub
 			String sid=id+"";

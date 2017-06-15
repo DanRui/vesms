@@ -27,7 +27,7 @@ String basePath = request.getContextPath();
 			toolbar : "#workLoggingList-grid-toolbar",
 			url : basePath+"/workLogging/list.do",
 			method : "post",
-			sortName : "id",
+			sortName : "actionTime",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {
@@ -35,15 +35,56 @@ String basePath = request.getContextPath();
 				width : "2%",
 				checkbox : true
 			}, {
-				field : "operatePost",
+				field : "post",
 				title : "操作岗位",
 				width : "10%",
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true
+				sortable : true,
+				formatter : function(value, row, index) {
+					var postName = "";
+					switch (row.post) {
+						case "CKSLG" :
+							postName = "窗口受理岗";
+							break;
+						case "YBSLXXXZG" :
+							postName = "一般受理信息修正岗";
+							break;
+						case "BTDXXZG" :
+							postName = "补贴对象修正岗";
+							break;
+						case "KJCSG" :
+							postName = "会计初审岗";
+							break;
+						case "CKSHG" :
+							postName = "窗口审核岗";
+							break;
+						case "KZSHG" :
+							postName = "科长审核岗";
+							break;
+						case "CZSHG" :
+							postName = "处长审核岗";
+							break;
+						case "KJFSG" : 
+							postName = "会计复审岗"; 
+							break;
+						case "BFSBG" :
+							postName = "拨付申报岗";
+							break;
+						case "BFJGBJG" :
+							postName = "拨付结果标记岗";
+							break;
+						case "YWBJG" :
+							postName = "业务办结岗";
+							break;
+						default:
+							postName = "";
+					}
+					return postName;
+				}
 			}, {
-				field : "operator",
+				field : "actionUserName",
 				title : "操作人",
 				width : "10%",
 				align : "center",
@@ -51,7 +92,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true
 			}, {
-				field : "actionName",
+				field : "action",
 				title : "操作动作",
 				width : "10%",
 				align : "center",
@@ -66,6 +107,21 @@ String basePath = request.getContextPath();
 				halign : "center",
 				resizable : true,
 				sortable : true
+			}, {
+				field : "actionTime",
+				title : "操作时间",
+				width : "10%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true,
+				formatter : function (value, row, index) {
+					if (row.actionTime) {
+						return getNowFormatDate(new Date(row.actionTime.time))
+					} else {
+						return "";
+					}
+				}
 			}, {
 				field : "applyNo",
 				title : "业务受理单号",

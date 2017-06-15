@@ -4,13 +4,19 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import oracle.jdbc.internal.OracleTypes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,6 +37,7 @@ import com.jst.platformClient.entity.Dept;
 import com.jst.platformClient.entity.User;
 import com.jst.system.SystemConstants;
 import com.jst.system.security.LoginSecurity;
+import com.jst.vesms.service.CallService;
 
 @RequestMapping("/login")
 @Controller
@@ -38,6 +45,9 @@ public class LoginAction extends BaseAction{
 	
 	
 	private static final Log log = LogFactory.getLog(LoginAction.class);
+	
+	@Resource(name = "callServiceImpl")
+	private CallService callService;
 	
 	/**
 	 * 生成 验证码
@@ -112,7 +122,7 @@ public class LoginAction extends BaseAction{
 		if (null == session.getAttribute(SystemConstants.VERIFY_CODE) && SecurityUtils.getSubject().isAuthenticated()) {
 			log.debug("用户已登录，无需重新验证");
 			try {
-				//getIndexData();
+				getIndexData(session);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -170,7 +180,7 @@ public class LoginAction extends BaseAction{
 	
 						//addActionMessage(errorMessage);
 						logremark = errorMessage;
-					}else{
+					} else {
 	
 						log.debug("登录成功");
 						Map<String, Object> loginInfo = new Hashtable<String, Object>();
@@ -190,9 +200,9 @@ public class LoginAction extends BaseAction{
 						log.debug("清除登陆错误信息");
 						loginSecurity.clearErrorInfo();
 						try {
-							//getIndexData();
+							getIndexData(session);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
+							log.error("获取工作提醒数据异常！");
 							e.printStackTrace();
 						}
 						loginstate = true;
@@ -238,4 +248,70 @@ public class LoginAction extends BaseAction{
 		int b = fc + random.nextInt(bc - fc);
 		return new Color(r, g, b);
 	}
+	
+	/**
+	 * 
+	 * <p>Description: 获取首页提醒数据列表</p>
+	 * @param session 会话对象  HttpSession
+	 * @return void
+	 *
+	 */
+	public void getIndexData(HttpSession session) throws Exception {
+		// 受理信息
+		Map<String, Object> applyInfo = new HashMap<String, Object>();
+		// 会计初审岗业务
+		Map<String, Object> kjcsgApply = new HashMap<String, Object>();
+		// 窗口审核岗业务
+		Map<String, Object> ckshgApply = new HashMap<String, Object>();
+		// 科长审核岗业务
+		Map<String, Object> kzshgApply = new HashMap<String, Object>();
+		// 处长审核岗业务
+		Map<String, Object> czshgApply = new HashMap<String, Object>();
+		// 会计复审岗业务
+		Map<String, Object> kjfsgApply = new HashMap<String, Object>();
+		// 拨付申报岗业务
+		Map<String, Object> bfsbgApply = new HashMap<String, Object>();
+		// 拨付结果标记岗业务
+		Map<String, Object> bfjgbjgApply = new HashMap<String, Object>();
+		// 业务办结岗业务
+		Map<String, Object> ywbjgApply = new HashMap<String, Object>();
+		// 超期预警业务
+		Map<String, Object> cqywApply = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> workdata = new ArrayList<Map<String, Object>>();
+		
+		String callName = "{call PKG_QUERY.p_get_workdata(?)}";
+		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
+		outParams.put(1, OracleTypes.CURSOR);
+		
+		List<Map<String, Object>> result = callService.call(callName, null, outParams, "procedure");
+		if (result != null && result.size() > 0) {
+			applyInfo = result.get(0);
+			kjcsgApply = result.get(1);
+			ckshgApply = result.get(2);
+			kzshgApply = result.get(3);
+			czshgApply = result.get(4);
+			kjfsgApply = result.get(5);
+			bfsbgApply = result.get(6);
+			bfjgbjgApply = result.get(7);
+			ywbjgApply = result.get(8);
+			cqywApply = result.get(9);
+			
+			workdata.add(applyInfo);
+			workdata.add(kjcsgApply);
+			workdata.add(ckshgApply);
+			workdata.add(kzshgApply);
+			workdata.add(czshgApply);
+			workdata.add(kjfsgApply);
+			workdata.add(bfsbgApply);
+			workdata.add(bfjgbjgApply);
+			workdata.add(ywbjgApply);
+			workdata.add(cqywApply);
+			
+			session.setAttribute("WORKDATA", workdata);
+		} 
+		
+		System.out.println(result);
+	}
+	
 }

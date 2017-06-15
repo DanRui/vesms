@@ -7,7 +7,9 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -260,6 +262,38 @@ public class DBConnUtil {
 		log.debug("DBConnUtil loadMsgFromDB is end");
 		return result;
 	}
+	
+	public static void getNotifyList() throws Exception {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		ResultSet rs = null;
+		CallableStatement st = null;
+		Connection conn = null;
+		log.debug("DBConnUitl getNotifyList is start");
+		String result = null;
+		try {
+			String callName = "{call PKG_QUERY.p_get_workdata(?)}";
+			// 判断数据源是否已经加载
+			if (cp == null) {
+				inintDefault();
+			}
+			conn = cp.getConnection();
+			st = conn.prepareCall(callName);
+			st.registerOutParameter(1, oracle.jdbc.OracleTypes.CURSOR);
+			st.execute();
+		    rs = (ResultSet) st.getObject(1);
+		    while (rs.next()) {
+		    	System.out.println(rs.getString(1));
+		    	System.out.println(rs.getString(2));
+		    	System.out.println(rs.getString(3));
+		    	System.out.println("---下一条-----");
+		    }
+		} catch (Exception e) {
+			log.error("DBConnUtil getNotifyList is error" + e, e);
+		} finally {
+			closeAll(rs, st, conn);
+		}
+		log.debug("DBConnUtil getNotifyList is end");
+	}
 
 	public static void main(String[] args) {
 		DBConnUtil db = new DBConnUtil(); 
@@ -276,8 +310,9 @@ public class DBConnUtil {
 		 InputStream in = clazz.getResourceAsStream("/c3p0-config.xml");
 		 try {
 			p.load(in);
-			System.out.println(DBConnUtil.loadMsgFromDB("Hello,Oracle"));
-		} catch (IOException e) {
+//			System.out.println(DBConnUtil.loadMsgFromDB("Hello,Oracle"));
+			DBConnUtil.getNotifyList();
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (null != in) {

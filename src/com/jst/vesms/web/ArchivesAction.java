@@ -94,7 +94,7 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 	@RequestMapping("archiveApplyList")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-	public String archiveApplyList(@RequestParam(value="pageNo", defaultValue="1")int pageNo, 
+	public String archiveApplyList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String applyNo,String batchNo,String archiveBoxNo) throws Exception{
@@ -105,7 +105,7 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 			page.setPageSize(pageSize);
 			page.setOrder(order);
 			page.setOrderBy(orderBy);
-			/*if(StringUtil.isNotEmpty(vehiclePlateNum)) {
+			if(StringUtil.isNotEmpty(vehiclePlateNum)) {
 				list.add(new PropertyFilter("LIKES_vehiclePlateNum",vehiclePlateNum));
 			}
 			if(StringUtil.isNotEmpty(vehiclePlateType)) {
@@ -116,7 +116,7 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 			}
 			if(StringUtil.isNotEmpty(batchNo)) {
 				list.add(new PropertyFilter("EQS_batchNo",batchNo));
-			}*/
+			}
 			if(StringUtil.isNotEmpty(archiveBoxNo)) {  
 				list.add(new PropertyFilter("EQS_archiveBoxNo",archiveBoxNo));
 			}
