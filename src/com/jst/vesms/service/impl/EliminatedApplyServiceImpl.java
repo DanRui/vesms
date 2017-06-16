@@ -1167,6 +1167,72 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		map.put("hasAppointed", hasAppointed);
 		return map;
 	}
+
+	@Override
+	public Map<String, Object> verifyVehicle(String vehiclePlateNum,
+			String vehiclePlateType, String vehicleIdentifyNo, String type)
+			throws Exception {
+		try {
+			String callName = "{call PKG_VEHICLES.p_vehicle_verify_for_neibu(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+			Map<Integer, Object> inParams = new HashMap<Integer, Object>();
+			Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
+			
+			inParams.put(1,  vehiclePlateNum);
+			inParams.put(2,  vehiclePlateType);
+			inParams.put(3,  vehicleIdentifyNo);
+			inParams.put(4,  type);
+			
+			outParams.put(5,  OracleTypes.NUMBER); // 补贴类别
+			outParams.put(6,  OracleTypes.NUMBER); // 淘汰补贴金额
+			outParams.put(7,  OracleTypes.INTEGER); // 校验标志
+			outParams.put(8,  OracleTypes.VARCHAR); // 校验备注
+			outParams.put(9,  OracleTypes.VARCHAR); // 车架号
+			outParams.put(10,  OracleTypes.VARCHAR); // 燃料种类
+			outParams.put(11,  OracleTypes.VARCHAR); // 使用性质
+			outParams.put(12,  OracleTypes.VARCHAR); // 车辆类型
+			outParams.put(13,  OracleTypes.VARCHAR); // 发动机型号
+			outParams.put(14,  OracleTypes.DATE); // 强制报废期止
+			outParams.put(15,  OracleTypes.DATE); // 注销日期
+			outParams.put(16,  OracleTypes.VARCHAR); // 注销类别
+			outParams.put(17,  OracleTypes.VARCHAR); // 车主
+			outParams.put(18,  OracleTypes.VARCHAR); // 车主身份证明号
+			outParams.put(19,  OracleTypes.VARCHAR); // 排放阶段
+			outParams.put(20,  OracleTypes.DATE); // 初次登记日期
+			outParams.put(21,  OracleTypes.VARCHAR); // 车辆状态
+			outParams.put(22,  OracleTypes.DATE); // 报废交售日期
+			outParams.put(23,  OracleTypes.VARCHAR); // 回收证明编号
+			
+			List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
+			for (Map<String, Object> map : result) {
+				System.out.println(map.get("5"));   // 补贴类别
+				System.out.println(map.get("6"));   // 淘汰补贴金额
+				System.out.println(map.get("7"));   // 校验标志
+				System.out.println(map.get("8"));   // 校验备注
+				System.out.println(map.get("9"));    // 车架号
+				System.out.println(map.get("10"));    // 燃料种类
+				System.out.println(map.get("11"));    // 使用性质
+				System.out.println(map.get("12"));    // 车辆类型
+				System.out.println(map.get("13"));    // 发动机号
+				System.out.println(map.get("14"));    // 强制报废期止
+				System.out.println(map.get("15"));    // 注销日期
+				System.out.println(map.get("16"));   // 注销类别
+				System.out.println(map.get("17"));   // 车主
+				System.out.println(map.get("18"));   // 车主身份证明号
+				System.out.println(map.get("19"));   // 排放标准
+				System.out.println(map.get("20"));   // 初次登记日期
+				System.out.println(map.get("21"));   // 车辆状态
+				System.out.println(map.get("22"));   // 报废交售日期
+				System.out.println(map.get("23"));   // 回收证明编号
+			}
+			
+			if (result.size() > 0) {
+				return result.get(0);
+			}
+		} catch (Exception e) {
+			return null;
+		}
+		return null;
+	}
 	
 }
 
