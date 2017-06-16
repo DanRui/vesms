@@ -70,8 +70,8 @@
 		<div class="title">
 			<div class="title-common-layer">
 				<div class="title-info-box">
-					<span>所属部门：警视通</span>
-					<span>用户名称：admin</span>
+					<span>部门：<%=loginInfo.containsKey("DEPT_NAME") ? loginInfo.get("DEPT_NAME") : "" %></span>
+					<span>用户：<%=loginInfo.containsKey("USER_NAME") ? loginInfo.get("USER_NAME") : "" %></span>
 				</div>
 			</div>
 
@@ -99,6 +99,7 @@
 	List<Map<String, Object>> list = ((List<Map<String, Object>>)SecurityUtils.getSubject().getSession().getAttribute("WORKDATA"));
 	if(list != null) {
 	%>
+	<shiro:authenticated>
 	<div data-options="region:'center'" style="width:100%;">
 		<div id="index-tab" class="easyui-tabs" data-options="border:false,fit:true">
 			<div title="首页" style="background-color: #FFFFFF">
@@ -106,41 +107,41 @@
 				<div id="console" style="margin: 30px 20px;height: 400px;">
 					<div style="float: left; width: 8%; height: 200px;background:#f1f5f8;margin-right:5px;border-radius:5px 5px 0 0;">
 						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">受理业务</p>
-						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">受理未确认：<a href="javascript:void(0)" src="person/personInfoListPreCheck.jsp" parent="用户管理"><%=list.get(0).get("COL2") %></a>条</p>
-						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">待资料修正：<a href="javascript:void(0)" src="person/personInfoList.jsp" parent="用户管理"><%=list.get(0).get("COL3") %></a>条</p>
+						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">受理未确认：<a href="javascript:void(0)" src="eliminatedApply/list.jsp" parent="补贴业务受理"><%=list.get(0).get("COL2") %></a>条</p>
+						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">待资料修正：<a href="javascript:void(0)" src="eliminatedApply/listAll.jsp" parent="业务综合查询"><%=list.get(0).get("COL3") %></a>条</p>
 					</div>
 					<div style="float: left; width: 8%; height: 200px;background:#f1f5f8;margin-right:5px;border-radius:5px 5px 0 0;">
-						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">会计初审业务</p>
-						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">正常待审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(1).get("COL2") %></a>条</p>
-						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">修正待重审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(1).get("COL3") %></a>条</p>
+						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">会计初审</p>
+						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=KJCSG" parent="会计初审管理"><%=list.get(1).get("COL2") %></a>条</p>
+						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=KJCSG" parent="会计初审管理"><%=list.get(1).get("COL3") %></a>条</p>
 					</div>
 					<div style="float: left; width: 8%; height: 200px;background:#f1f5f8;margin-right:5px;border-radius:5px 5px 0 0;">
-						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">窗口审核业务</p>
+						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">窗口审核</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">正常待审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(2).get("COL2") %></a>条</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">修正待重审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(2).get("COL3") %></a>条</p>
 					</div>
 					<div style="float: left; width: 8%; height: 200px;background:#f1f5f8;margin-right:5px;border-radius:5px 5px 0 0;">
-						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">科长审核业务</p>
+						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">科长审核</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">正常待审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(3).get("COL2") %></a>条</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">修正待重审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(3).get("COL3") %></a>条</p>
 					</div>
 					<div style="float: left; width: 8%; height: 200px;background:#f1f5f8;margin-right:5px;border-radius:5px 5px 0 0;">
-						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">处长审核业务</p>
+						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">处长审核</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">正常待审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(4).get("COL2") %></a>条</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">修正待重审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(4).get("COL3") %></a>条</p>
 					</div>
 					<div style="float: left; width: 8%; height: 200px;background:#f1f5f8;margin-right:5px;border-radius:5px 5px 0 0;">
-						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">会计复审业务</p>
+						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">会计复审</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">正常待审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(5).get("COL2") %></a>条</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">修正待重审核：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(5).get("COL3") %></a>条</p>
 					</div>
 					<div style="float: left; width: 8%; height: 200px;background:#f1f5f8;margin-right:5px;border-radius:5px 5px 0 0;">
-						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">拨付申报业务</p>
+						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">拨付申报</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">待首次报财务：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(6).get("COL2") %></a>条</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">待重新报财务：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(6).get("COL3") %></a>条</p>
 					</div>
 					<div style="float: left; width: 10%; height: 200px;background:#f1f5f8;margin-right:5px;border-radius:5px 5px 0 0;">
-						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">拨付结果标记业务</p>
+						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">拨付结果标记</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">待首次拨付结果标记：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(7).get("COL2") %></a>条</p>
 						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">待重报拨付结果标记：<a href="javascript:void(0)" src="order_initList.action" parent="预约管理"><%=list.get(7).get("COL3") %></a>条</p>
 					</div>
@@ -151,13 +152,14 @@
 					</div>
 					<div style="float: left; width: 7%; height: 200px;background:#ff0000;border-radius:5px 5px 0 0;">
 						<p style="float: left; width: 100%; font-size: 16px;font-weight:bold;text-align:center;border-bottom:1px solid #66b5ff;">超期业务</p>
-						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">即将超期总量：<a href="javascript:void(0)" src="business/businessCheckList.jsp" parent="在线办理"><%=list.get(9).get("COL2") %></a>条</p>
-						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">已经超期数量：<a href="javascript:void(0)" src="business/businessDoList.html" parent="在线办理"><%=list.get(9).get("COL3") %></a>条</p>
+						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">即将超期总量：<a href="javascript:void(0)" src="eliminatedApply/listAll.jsp" parent="业务综合查询"><%=list.get(9).get("COL2") %></a>条</p>
+						<p style="float: left; width: 100%; font-size: 14px;text-indent: 20px;">已经超期数量：<a href="javascript:void(0)" src="eliminatedApply/listAll.jsp" parent="业务综合查询"><%=list.get(9).get("COL3") %></a>条</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	</shiro:authenticated>
 	<%
 	}
 	%>
@@ -193,4 +195,22 @@
 		<img width = "20" title = "全频" alt="全频" src="<%=basePath %>/skin/images/scale.png"/> --%></div>
 	</div>
 </body>
+<script type="text/javascript">
+$(function(){
+	$("#console a").click(function(e) {
+		e.preventDefault();
+		
+		var which = $(this).attr("parent"); 
+		var src = $(this).attr("src");
+		var parent = $("#index-accordion").accordion("getPanel", which);
+		parent.find("a").each(function() {
+			if($(this).data("menuUrl") == src) {
+				$(this).click();
+			}
+		});
+	});
+	
+	
+});
+</script>
 </html>

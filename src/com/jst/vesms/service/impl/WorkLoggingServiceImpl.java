@@ -108,6 +108,10 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 				workLogging.setCurrentPost(objs[12].toString());
 				// 业务当前状态
 				workLogging.setBussinessStatus(objs[13].toString());
+				// 受理表Id
+				BigDecimal applyId = (BigDecimal)objs[14];
+				workLogging.setApplyId(applyId.intValue());
+				
 				workLogs.add(workLogging);
 			}
 			page.setResult(workLogs);

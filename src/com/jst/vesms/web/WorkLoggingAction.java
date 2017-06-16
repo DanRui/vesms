@@ -68,7 +68,7 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 		StringBuffer sb = new StringBuffer();
 		sb.append("select a.id id, a.current_post post, a.action_user actionUser, a.action_name actionName, a.action_result actionResult,");
 		sb.append("a.action_time actionTime, b.apply_no applyNo, b.vehicle_plate_num vehiclePlateNum, b.vehicle_plate_type vehiclePlateType,");
-		sb.append("b.emission_standard emissionStandard, b.iol_type iolTpye, b.subsidies_money subsidiesMoney, b.current_post currentPost, b.bussiness_status bussinessStatus ");
+		sb.append("b.emission_standard emissionStandard, b.iol_type iolTpye, b.subsidies_money subsidiesMoney, b.current_post currentPost, b.bussiness_status bussinessStatus, b.id applyId ");
 		sb.append("from t_action_log a, t_eliminated_apply b ");
 		sb.append("where 1 = 1 and a.apply_no = b.apply_no ");
 		
@@ -91,9 +91,9 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 		if (StringUtil.isNotEmpty(endTime)) {
 			sb.append("and a.action_time <= to_date('").append(endTime).append("', 'yyyy-MM-dd') ");
 		}
-		if (StringUtil.isNotEmpty(orderBy)) {
+		/*if (StringUtil.isNotEmpty(orderBy)) {
 			sb.append("order by ").append(orderBy).append(" ").append(order).append(" ");
-		}
+		}*/
 		try {
 			// 查询
 			page = workLoggingService.getWorkLoggingPage(sb.toString(), list, page);

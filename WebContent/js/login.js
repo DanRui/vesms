@@ -1,4 +1,15 @@
 $(function(){
+	// 页面初始化完成，用户名获得焦点
+	$("input[name='username']").focus();
+	
+	// 绑定回车键入事件
+	document.onkeydown = function(event) {
+		var ev = document.all ? window.event : event;
+		if(ev.keyCode == 13) {
+			$("form").submit();
+		}
+	};
+	
 	$("form").submit(function(){
 		var valid = true;
 		

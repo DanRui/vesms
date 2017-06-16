@@ -119,7 +119,7 @@ public class EliminatedApplyAction extends BaseAction {
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleType, 
 					   String vehicleOwner, String applyNo, String vehicleIdentifyNo, String startTime, String endTime, String batchNo, String archiveBoxNo,
-					   String subsidiesMoney, String concludeStatus, String businessStatus) throws Exception{
+					   String subsidiesMoney, String concludeStatus, String businessStatus, String currentPost) throws Exception{
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -162,6 +162,9 @@ public class EliminatedApplyAction extends BaseAction {
 		}
 		if(StringUtil.isNotEmpty(businessStatus)) {
 			list.add(new PropertyFilter("EQS_bussinessStatus",businessStatus));
+		}
+		if(StringUtil.isNotEmpty(currentPost)) {
+			list.add(new PropertyFilter("EQS_currentPost",currentPost));
 		}
 		
 		try {

@@ -62,6 +62,9 @@ public class WorkLogging implements Serializable {
 	
 	// 业务当前状态
 	private String bussinessStatus;
+	
+	// 受理表Id
+	private Integer applyId;
 
 	public Integer getId() {
 		return id;
@@ -198,13 +201,21 @@ public class WorkLogging implements Serializable {
 	public void setBussinessStatus(String bussinessStatus) {
 		this.bussinessStatus = bussinessStatus;
 	}
+	
+	public Integer getApplyId() {
+		return applyId;
+	}
+
+	public void setApplyId(Integer applyId) {
+		this.applyId = applyId;
+	}
 
 	public WorkLogging(Integer id, String post, String actionUserCode,
 			String actionUserName, String action, String actionResult,
 			Date actionTime, String applyNo, String vehiclePlateNum,
 			String vehiclePlateType, String vehiclePlateTypeName,
 			String emissionStandard, String iolType, String iolTypeName,
-			Double subsidiesMoney, String currentPost, String bussinessStatus) {
+			Double subsidiesMoney, String currentPost, String bussinessStatus, Integer applyId) {
 		super();
 		this.id = id;
 		this.post = post;
@@ -223,6 +234,7 @@ public class WorkLogging implements Serializable {
 		this.subsidiesMoney = subsidiesMoney;
 		this.currentPost = currentPost;
 		this.bussinessStatus = bussinessStatus;
+		this.applyId = applyId;
 	}
 	
 	public WorkLogging() {}

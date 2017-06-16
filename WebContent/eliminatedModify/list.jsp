@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <title>Insert title here</title>
 </head>
 <body>
-	<div id = "editData-apply-list" class="easyui-panel  easyui-panel-style" data-options="title: '一般资料修正',headerCls:'panel-title-center" style="height:100%">
+	<div id = "editData-apply-list" class="easyui-panel  easyui-panel-style" data-options="title: '一般资料修正',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header" id="editData-apply-grid-toolbar">
 				<table id="editData-apply-tool-table" style = "width:100%;">

@@ -169,7 +169,23 @@
 			$("#btnContinueApply").click(function() {
 				// 继续受理下一单，后台查询是否有预约单号
 				var url = basePath+"/eliminatedApply/continueApply.do?&id="+id;
-				$("#common-dialog").dialog("refresh", url);
+				
+				openDialog({
+					type : "add",
+					title : "申报受理录入",
+					width : 1132,
+					height : 800,
+					param: {reset:false,
+					    	save:false,
+					    	close:false,
+					    	stage:"add"
+					    	},
+					maximizable : true,
+					href : url
+				});
+				
+				//$("#common-dialog").dialog("refresh", url);
+				//$("#common-dialog").dialog({title:""}).dialog("restore").dialog("center");
 			});
 		});
 		

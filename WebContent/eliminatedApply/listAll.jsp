@@ -332,7 +332,7 @@ String basePath = request.getContextPath();
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",panelHeight:true, url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					{field:"vehicleType",title:"车辆类型:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
 					{field:"applyNo",title:"受理单号:",type:"text"},
 					{field:"vehicleOwner",title:"车主:",type:"text"},
@@ -342,6 +342,7 @@ String basePath = request.getContextPath();
 					{field:"subsidiesMoney",title:"补贴金额（元）:",type:"text"},
 					{field:"concludeStatus",title:"办结类型:",type:"combobox",panelHeight:true,url:basePath+"/data/finishApplyStatus.json", text:"name", value:"value"},
 					{field:"businessStatus",title:"业务状态:",type:"combobox",panelHeight:true,url:basePath+"/data/bussStatus.json", text:"name", value:"value"},
+					{field:"currentPost",title:"业务当前岗位:",type:"combobox",panelHeight:false, url:basePath+"/workLogging/getPostList.do", text:"value", value:"code"},
 					{startField:"startTime",endField:"endTime",title:"受理时间:",type:"date",section:true}
 					],
 			tools:[
@@ -386,7 +387,8 @@ String basePath = request.getContextPath();
 								}
 							}
 					   }
-				   }
+				   },
+				   {type:"CLEAR"}
 			      ],
 			module:"M_TEST_MANAGER",
 			shownum:3,

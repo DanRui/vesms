@@ -379,10 +379,12 @@
 				var basePath = "<%=basePath%>";
 				
 				// 重新调整页面窗口大小和位置居中
-				$("#common-dialog").dialog("resize", {
+				/* $("#common-dialog").dialog({
+					title : "申报受理录入"
+				}).dialog("resize", {
 					width : 1132,
 					height : 800 
-				}).dialog("center");
+				}).dialog("center"); */
 				
 				// 初始化号牌号码输出框，显示粤B开头
 				$("input[name='vehiclePlateNum']").val("粤B");
