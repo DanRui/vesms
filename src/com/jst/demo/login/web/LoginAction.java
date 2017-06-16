@@ -256,6 +256,7 @@ public class LoginAction extends BaseAction{
 	 * @return void
 	 *
 	 */
+	@RequestMapping("refreshWorkData")
 	public void getIndexData(HttpSession session) throws Exception {
 		// 受理信息
 		Map<String, Object> applyInfo = new HashMap<String, Object>();

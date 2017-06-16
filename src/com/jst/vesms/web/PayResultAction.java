@@ -358,17 +358,20 @@ public class PayResultAction extends BaseAction{
 		if(StringUtil.isNotEmpty(applyNo)) {
 			list.add(new PropertyFilter("EQS_applyNo",applyNo));
 		}
-		if(StringUtil.isNotEmpty(payResStartDate)) {
+		/*if(StringUtil.isNotEmpty(payResStartDate)) {
 			list.add(new PropertyFilter("GTD_inputTime",payResStartDate));
 		}
 		if(StringUtil.isNotEmpty(payResEndDate)) {
 			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
-		}
+		}*/
+		
+		list.add(new PropertyFilter("EQS_currentPost", "BFJGBJG"));
+		list.add(new PropertyFilter("EQS_bussinessStatus", "1"));
+		
 		try {
-			page = payResultService.getPageBySql(page, "select * from t_eliminated_apply where repeated_batch_no is not null and current_post = 'BFJGBJG' and bussiness_status = '1'");
-			if (page.getTotalCount() != 0) {
-				page = payResultService.getPage(page, list);
-			}
+			page = payResultService.getApplyPage(page, list);
+			page = payResultService.filterRepeatedBatchPage(page);
+			//page = payResultService.getPageBySql(page, "select * from t_eliminated_apply where repeated_batch_no is not null and current_post = 'BFJGBJG' and bussiness_status = '1'");
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("PayResultAction list is Error:" + e, e);

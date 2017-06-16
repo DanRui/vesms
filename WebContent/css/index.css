@@ -333,6 +333,10 @@
 	position:absolute
 }
 
-
+.notify-list td {
+	font-size: 14px;
+	font-weight: bold;
+	font-family: Tahoma, Verdana, 微软雅黑, 新宋体;
+}
 
 

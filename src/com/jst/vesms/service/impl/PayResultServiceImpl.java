@@ -1,5 +1,6 @@
 package com.jst.vesms.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +128,27 @@ implements PayResultService{
 			String sql) throws Exception {
 		page=eliminatedApplyService.getPageBySql(page, sql);
 		page = eliminatedApplyService.getPageExtra(page);
+		return page;
+	}
+
+
+
+	@Override
+	public Page filterRepeatedBatchPage(Page page) throws Exception {
+		List list = page.getResult();
+		
+		List retList = new ArrayList();
+		if (null != list && list.size() > 0) {
+			for (int i = 0 ; i < list.size() ; i ++) {
+				EliminatedApply apply = (EliminatedApply) list.get(i);
+				if (apply.getRepeatedBatchNo() != null) {
+					retList.add(apply);
+				}
+			}
+			page.setResult(retList);
+			page.setTotalCount(retList.size());
+		}
+		
 		return page;
 	}
 }
