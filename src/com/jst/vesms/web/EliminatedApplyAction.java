@@ -220,8 +220,9 @@ public class EliminatedApplyAction extends BaseAction {
 		log.debug("eliminatedApplyAction save is End");
 		if(saveOk) {
 			return JsonUtil.toSuccessMsg(JsonUtil.parse(json).toString());
-		} else
-		return JsonUtil.toErrorMsg(JsonUtil.parse(json).toString());
+		} else {
+			return JsonUtil.toErrorMsg(JsonUtil.parse(json).toString());
+		}
 	}
 	
 	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "ADD")
@@ -231,24 +232,31 @@ public class EliminatedApplyAction extends BaseAction {
 		log.debug("eliminatedApplyAction getVehicleInfo is start");
 		boolean saveOk = false;
 		EliminatedApply eliminatedApply = null;
+		String msg = "";
 		try {
-			eliminatedApply = eliminatedApplyService.getVehicleInfo(vehiclePlateNum, vehiclePlateType);
-			if(null != eliminatedApply) {
-				// 判断补贴资格和金额，返回信息给前台页面
+			//Map<String, Object> map = eliminatedApplyService.getVehicleInfo(vehiclePlateNum, vehiclePlateType);
+			Map<String, Object> map = eliminatedApplyService.getJiaoJingVehicle(vehiclePlateNum, vehiclePlateType);
+			if(null != map && map.get("retCode").equals(1)) {
+				// 有补贴资格
 				saveOk = true;
+				eliminatedApply = (EliminatedApply) map.get("apply");
+			} else {
+				// 无补贴资格或数据库存储过程执行异常
+				saveOk = false;
+				msg = map.get("msg").toString();
 			}
 		} catch (Exception e) {
 			log.error("eliminatedApplyAction getVehicleInfo is Error:"+e, e);
+			msg = "补贴资格存储过程调用失败：" + e.getMessage();
 		}
 		
 		log.debug("eliminatedApplyAction getVehicleInfo is End");
 		if(saveOk) {
 			return JsonUtil.toSuccessMsg(JsonUtil.parse(eliminatedApply).toString());
-		} else
-		return JsonUtil.toErrorMsg("车辆数据获取失败");
+		} else {
+			return JsonUtil.toErrorMsg(msg);
+		}
 	}
-	
-	
 	
 	/**
 	 * 测试进行修改数据
@@ -602,13 +610,13 @@ public class EliminatedApplyAction extends BaseAction {
 		// 确认受理表，更新受理确认时间，写ActionLog
 		try {
 			hasConfirmed = eliminatedApplyService.saveConfirm(id, signedApplyFiles);
+			if(hasConfirmed) {
+				isOk = true;
+			}
 		} catch (Exception e) {
 			log.error("eliminatedApplyAction confirmApply is Error:"+e, e);
 		}
 		
-		if(hasConfirmed) {
-			isOk = true;
-		}
 		log.debug("eliminatedApplyAction confirmApply is End");
 		if(isOk) {
 			return JsonUtil.toSuccessMsg("受理表确认成功！");
@@ -702,6 +710,58 @@ public class EliminatedApplyAction extends BaseAction {
 			return JsonUtil.toSuccessMsg(result);
 		} else
 		return JsonUtil.toErrorMsg("预约数据获取失败");
+	}
+	
+	@ResponseBody
+	@RequestMapping("verifyVehicle")
+	public String verifyVehicle(@RequestParam("vehiclePlateNum")String vehiclePlateNum, @RequestParam("vehiclePlateType")String vehiclePlateType,
+								@RequestParam("vehicleIdentifyNo")String vehicleIdentifyNo) throws Exception {
+		log.debug("eliminatedApplyAction verifyVehicle is start");
+		boolean saveOk = false;
+		EliminatedApply eliminatedApply = null;
+		String msg = "";
+		try {
+			Map<String, Object> map = eliminatedApplyService.verifyVehicle(vehiclePlateNum, vehiclePlateType, vehicleIdentifyNo, "2");
+			if(null != map && map.get("7").equals(1)) {
+				// 有补贴资格
+				saveOk = true;
+				EliminatedApply apply = new EliminatedApply();
+				
+				System.out.println(map.get("6"));   // 淘汰补贴金额
+				System.out.println(map.get("8"));   // 校验备注
+				System.out.println(map.get("9"));    // 车架号
+				System.out.println(map.get("10"));    // 燃料种类
+				System.out.println(map.get("11"));    // 使用性质
+				System.out.println(map.get("12"));    // 车辆类型
+				System.out.println(map.get("13"));    // 发动机号
+				System.out.println(map.get("14"));    // 强制报废期止
+				System.out.println(map.get("15"));    // 注销日期
+				System.out.println(map.get("16"));   // 注销类别
+				System.out.println(map.get("17"));   // 车主
+				System.out.println(map.get("18"));   // 车主身份证明号
+				System.out.println(map.get("19"));   // 排放标准
+				System.out.println(map.get("20"));   // 初次登记日期
+				System.out.println(map.get("21"));   // 车辆状态
+				System.out.println(map.get("22"));   // 报废交售日期
+				System.out.println(map.get("23"));   // 回收证明编号
+				
+				
+			} else {
+				// 无补贴资格或数据库存储过程执行异常
+				saveOk = false;
+				msg = map.get("8").toString();
+			}
+		} catch (Exception e) {
+			log.error("eliminatedApplyAction verifyVehicle is Error:"+e, e);
+			msg = "补贴资格存储过程调用失败：" + e.getMessage();
+		}
+		
+		log.debug("eliminatedApplyAction verifyVehicle is End");
+		if(saveOk) {
+			return JsonUtil.toSuccessMsg(JsonUtil.parse(eliminatedApply).toString());
+		} else {
+			return JsonUtil.toErrorMsg(msg);
+		}
 	}
 	
 	/**

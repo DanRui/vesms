@@ -39,6 +39,7 @@ import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.model.PostBaseInfo;
 import com.jst.vesms.model.VehicleRecycle;
 import com.jst.vesms.service.EliminatedApplyService;
+import com.jst.vesms.service.SysDictService;
 import com.jst.vesms.service.VehicleRecycleService;
 import com.jst.vesms.util.PhotoUtil;
 
@@ -68,6 +69,9 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	
 	@Resource
 	private BFGSWebServiceClient bfgsWebServiceClient;
+	
+	@Resource(name="sysDictServiceImpl")
+	private SysDictService sysDictService;
 
 	/*public void seteliminatedApplyDao(IeliminatedApplyDao eliminatedApplyDao) {
 		this.eliminatedApplyDao = eliminatedApplyDao;
@@ -130,229 +134,163 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			  String bankCardFiles, String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles,
 			  String noFinanceProvideFiles, String openAccPromitFiles) throws Exception {
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		// 号牌号码
 		String vehiclePlateNum = eliminatedApply.getVehiclePlateNum();
 		// 号牌种类
 		String vehiclePlateType = eliminatedApply.getVehiclePlateType();
 		
-		// 传入号牌号码、号牌种类判断车辆补贴资格和补贴金额
-		String callNameForVerify = "{call PKG_VEHICLE_VERIFY.p_vehicle_verify(?,?,?,?,?,?,?,?)}";
-		Map<Integer, Object> inParamsVerify = new HashMap<Integer, Object>();
-		Map<Integer, Integer> outParamsVerify = new HashMap<Integer, Integer>();
+		// 调用资格校验存储过程，判断补贴资格
+		/*Map<String, Object> verifyResult = this.verifyVehicle(vehiclePlateNum, vehiclePlateType, eliminatedApply.getVehicleIdentifyNo(), "1");
 		
-		inParamsVerify.put(1, vehiclePlateNum);
-		inParamsVerify.put(2, vehiclePlateType);
-		inParamsVerify.put(3, eliminatedApply.getVehicleIdentifyNo() == null ? "" : eliminatedApply.getVehicleIdentifyNo());
-		inParamsVerify.put(4, 3);
-		Date recycleDate = new java.sql.Date(DateUtil.parse("2017-07-10", DateUtil.DATE_PATTERN_2).getTime());
-		inParamsVerify.put(5, recycleDate);
-		
-		outParamsVerify.put(6, OracleTypes.NUMBER);
-		outParamsVerify.put(7, OracleTypes.INTEGER);
-		outParamsVerify.put(8, OracleTypes.VARCHAR);
-		
-		List<Map<String, Object>> verifyResult = callDao.call(callNameForVerify, inParamsVerify, outParamsVerify, "procedure");
-		BigDecimal bigDecimal = (BigDecimal)verifyResult.get(0).get("6");
-		eliminatedApply.setSubsidiesMoney(bigDecimal.doubleValue());
-		eliminatedApply.setSubsidiesStandard((String)verifyResult.get(0).get("8"));
-		
-		// 传入号牌号码、号牌种类从交警接口获取车辆数据
-		//String callName = "{?=call PKG_TEST.test_msg(?)}";
-		String callName = "{call PKG_VEHICLES.p_get_jiaojin_vehicle(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
-		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
-		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
-		
-		inParams.put(1, vehiclePlateNum);
-		inParams.put(2, vehiclePlateType);
-		
-		outParams.put(3, OracleTypes.VARCHAR);
-		outParams.put(4, OracleTypes.VARCHAR);
-		outParams.put(5, OracleTypes.VARCHAR);
-		outParams.put(6, OracleTypes.VARCHAR);
-		outParams.put(7, OracleTypes.VARCHAR);
-		outParams.put(8, OracleTypes.DATE);
-		outParams.put(9, OracleTypes.DATE);
-		outParams.put(10, OracleTypes.VARCHAR);
-		outParams.put(11, OracleTypes.VARCHAR);
-		outParams.put(12, OracleTypes.VARCHAR);
-		outParams.put(13, OracleTypes.VARCHAR);
-		outParams.put(14, OracleTypes.DATE);
-		outParams.put(15, OracleTypes.VARCHAR);
-		outParams.put(16, OracleTypes.INTEGER);
-		outParams.put(17, OracleTypes.VARCHAR);
-		
-		
-		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
-		for (Map<String, Object> map : result) {
-			System.out.println(map.get("3"));    // 车架号
-			System.out.println(map.get("4"));    // 燃料种类
-			System.out.println(map.get("5"));    // 使用性质
-			System.out.println(map.get("6"));    // 车辆类型
-			System.out.println(map.get("7"));    // 发动机号
-			System.out.println(map.get("8"));    // 强制报废期止
-			System.out.println(map.get("9"));    // 注销日期
-			System.out.println(map.get("10"));   // 注销类别
-			System.out.println(map.get("11"));   // 车主
-			System.out.println(map.get("12"));   // 车主身份证明号
-			System.out.println(map.get("13"));   // 排放标准
-			System.out.println(map.get("14"));   // 初次登记日期
-			System.out.println(map.get("15"));   // 车辆状态
-			System.out.println(map.get("16"));   // 返回标识
-			System.out.println(map.get("17"));   // 返回信息
-		}
-		
-		// 车架号
-		//Date date = new Date();
-		//DateUtil.format(date, DateUtil.TIMESTAMPS_PATTERN_1);
-		String vehicleIdentifyNo = (String) result.get(0).get("3");
-		
-		// 燃料种类
-		String iolType = (String) result.get(0).get("4");
-		
-		// 使用性质
-		String useOfProperty = (String) result.get(0).get("5");
-		
-		// 车辆类型
-		String vehicleType = (String) result.get(0).get("6");
-		
-		// 发动机号
-		String engineNo = (String) result.get(0).get("7");
-		
-		// 强制报废期止
-		Date deadline = (Date) result.get(0).get("8");
-		
-		
-		// 注销日期
-		Date destroyDate = (Date) result.get(0).get("9");
-		
-		// 注销类别
-		String cancelReason = (String) result.get(0).get("10");
-		
-		// 车主
-		String vehicleOwner = (String) result.get(0).get("11");
-		
-		// 车主身份证明号
-		String vehicleOwnerIdentity = (String) result.get(0).get("12");
-		
-		// 排放标准
-		String emissionStandard = (String) result.get(0).get("13");
-		
-		// 初次登记日期
-		Date registerDate = (Date) result.get(0).get("14");
-		
-		// 车辆状态
-		String vehicleStatus = (String) result.get(0).get("15");
-		
-		// 返回标识
-		Integer returnFlag = (Integer) result.get(0).get("16");
-		
-		// 返回信息
-		String returnMsg = (String) result.get(0).get("17");
-		
-		// 设置字段值，交警车辆数据
-		eliminatedApply.setVehicleIdentifyNo(vehicleIdentifyNo);
-		eliminatedApply.setVehicleType(vehicleType);
-		eliminatedApply.setVehicleOwner(vehicleOwner);
-		eliminatedApply.setVehicleOwnerIdentity(vehicleOwnerIdentity);
-		eliminatedApply.setDestroyDate(destroyDate);
-		eliminatedApply.setRegisterDate(registerDate);
-		eliminatedApply.setVehicleStatus(vehicleStatus);
-		eliminatedApply.setEmissionStandard(emissionStandard);
-		eliminatedApply.setIolType(iolType);
-		eliminatedApply.setUseOfProperty(useOfProperty);
-		eliminatedApply.setEngineNo(engineNo);
-		eliminatedApply.setCancelReason(cancelReason);
-		eliminatedApply.setDeadline(deadline);
-		
-		// 报废信息(报废回收证明编号、交售日期)
-		VehicleRecycle vehicleRecycle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
-		if (vehicleRecycle != null) {
-			eliminatedApply.setRecycleDate(vehicleRecycle.getRecycleDate());
-			eliminatedApply.setCallbackProofNo(vehicleRecycle.getCallbackProofNo());
-		} else {
-			// 获取不到数据，或者车辆已经受理录入过，无法再次受理。
-			return null;
-		}
-		
-		// 设置其它字段属性
-		
-		// 提前报废时长
-		Integer advancedScrapDays = DateUtil.getDateDifference(deadline, vehicleRecycle.getRecycleDate(), "day");
-		eliminatedApply.setAdvancedScrapDays(advancedScrapDays);
-		
-		// 补贴对象名称
-		eliminatedApply.setBankAccountName(vehicleOwner);
-		
-		// 正常，无退回
-		eliminatedApply.setIsFault("0");
-		
-		// 业务状态
-		eliminatedApply.setBussinessStatus("1");//正常：1,异常：-1
-		
-		// 当前岗位,窗口受理岗
-		PostBaseInfo currentPost = postBaseInfoDao.getByCode("CKSLG");
-		eliminatedApply.setCurrentPost("CKSLG");
-		eliminatedApply.setCurrentPost(currentPost.getPrePost());
-		
-		eliminatedApply.setBussinessDataSrc("1");
-		eliminatedApply.setIsModified("N");
-		
-		eliminatedApply.setToFinanceStatus("-1");
-		
-		eliminatedApply.setArchivedStatus("0");
-		
-		// 生成受理单号
-		Map<Integer, Integer> outParamsApplyNo = new HashMap<Integer, Integer>();
-		outParamsApplyNo.put(1, OracleTypes.VARCHAR);
-		List<Map<String, Object>> callGenApplyNoRes = callDao.call("{?= call PKG_APPLY.f_create_apply_no}", null, outParamsApplyNo, "function");
-		String applyNo = (String) callGenApplyNoRes.get(0).get("1");
-		eliminatedApply.setApplyNo(applyNo);
-		
-		// 录入时间
-		eliminatedApply.setApplyTime(new Date());
-		
-		// 办结状态
-		eliminatedApply.setConcludeStatus("0");
-		
-		// 校验码
-		eliminatedApply.setVerifyCode("1");
-		
-		// 数据更新时间
-		eliminatedApply.setUpdateTime(new Date());
-		
-		//List list1 = eliminatedApplyDao.getByPropertys(new String[] {"applyNo", "vehiclePlateNum"}, new Object[] {"12", "1"}, null);
-		
-		Serializable id = eliminatedApplyDao.save(eliminatedApply);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		if (null != id) {
-			// 更新附件表数据
-			Map<String, Object> saveFilesRes = this.saveAttachments(applyNo, callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
-			if (saveFilesRes.get("isSave").equals(true)) {
-				map.put("isSuccess", true);
-				map.put("id", id);
-				map.put("msg", "受理单保存成功！");
-			} else {
-				map.put("isSuccess", false);
-				map.put("msg", "受理单证明材料保存失败！");
-			}
+		if (null != verifyResult) {
+			// 存储过程调用成功
+			Integer flag = (Integer) verifyResult.get("7");
 			
+			String msg = (String) verifyResult.get("8");
 			
-			/*if (eliminatedApply.getIsPersonal().equals("N")) {
-				// 保存非财政供养单位证明、开户许可证
+			if (flag == 1) {
+				*/
+				// 设置各业务状态字段值
 				
+				// 暂时跳过资格校验，直接从交警接口获取
+				Map<String, Object> vehicleMap = this.getJiaoJingVehicle(vehiclePlateNum, vehiclePlateType);
+				
+				if (null != vehicleMap) {
+					if (vehicleMap.get("retCode").equals(1)) {
+						// 调用成功
+						EliminatedApply jiaoJingVehicle = (EliminatedApply) vehicleMap.get("apply");
+						
+						if (null != jiaoJingVehicle) {
+							// 从交警接口获取数据
+							eliminatedApply.setVehiclePlateTypeName(jiaoJingVehicle.getVehiclePlateTypeName());
+							// 车架号
+							eliminatedApply.setVehicleIdentifyNo(jiaoJingVehicle.getVehicleIdentifyNo());
+							// 燃料种类
+							eliminatedApply.setIolType(jiaoJingVehicle.getIolType());
+							eliminatedApply.setIolTypeName(jiaoJingVehicle.getIolTypeName());
+							// 使用性质
+							eliminatedApply.setUseOfProperty(jiaoJingVehicle.getUseOfProperty());
+							eliminatedApply.setUseOfPropertyName(jiaoJingVehicle.getUseOfPropertyName());
+							// 车辆类型
+							eliminatedApply.setVehicleType(jiaoJingVehicle.getVehicleType());
+							eliminatedApply.setVehicleTypeName(jiaoJingVehicle.getVehicleTypeName());
+							// 发动机型号
+							eliminatedApply.setEngineNo(jiaoJingVehicle.getEngineNo());
+							// 强制报废期止
+							eliminatedApply.setDeadline(jiaoJingVehicle.getDeadline());
+							// 注销日期
+							eliminatedApply.setDestroyDate(jiaoJingVehicle.getDestroyDate());
+							// 注销类别
+							eliminatedApply.setCancelReason(jiaoJingVehicle.getCancelReason());
+							// 车主
+							eliminatedApply.setVehicleOwner(jiaoJingVehicle.getVehicleOwner());
+							// 排放阶段
+							eliminatedApply.setEmissionStandard(jiaoJingVehicle.getEmissionStandard());
+							// 初次登记日期
+							eliminatedApply.setRegisterDate(jiaoJingVehicle.getRegisterDate());
+							// 车辆状态
+							eliminatedApply.setVehicleStatus(jiaoJingVehicle.getVehicleStatus());
+							eliminatedApply.setVehicleStatusName(jiaoJingVehicle.getVehicleStatusName());
+							// 报废交售日期
+							eliminatedApply.setRecycleDate(jiaoJingVehicle.getRecycleDate());
+							// 报废回收证明编号
+							eliminatedApply.setCallbackProofNo(jiaoJingVehicle.getCallbackProofNo());
+							// 提前报废时长
+							eliminatedApply.setAdvancedScrapDays(jiaoJingVehicle.getAdvancedScrapDays());
+							// 补贴对象名称
+							eliminatedApply.setBankAccountName(jiaoJingVehicle.getBankAccountName());
+							// 补贴金额
+							eliminatedApply.setSubsidiesMoney(jiaoJingVehicle.getSubsidiesMoney());
+							// 补贴标准
+							eliminatedApply.setSubsidiesStandard(jiaoJingVehicle.getEmissionStandard());
+						}
+						
+						// 获得银行名称
+						String bankCode = eliminatedApply.getBankCode();
+						if (StringUtil.isNotEmpty(bankCode)) {
+							List<SysDict> bankListSysDict = sysDictService.getListByPorperty("dictCode", bankCode, "state = '1'");
+							if (null != bankListSysDict && bankListSysDict.size() > 0) {
+								eliminatedApply.setBankName(bankListSysDict.get(0).getDictValue());
+							}
+						}
+						
+						// 正常，无退回
+						eliminatedApply.setIsFault("0");
+						
+						// 业务状态
+						eliminatedApply.setBussinessStatus("1");//正常：1,异常：-1
+						
+						// 当前岗位,窗口受理岗
+						PostBaseInfo currentPost = postBaseInfoDao.getByCode("CKSLG");
+						eliminatedApply.setCurrentPost("CKSLG");
+						eliminatedApply.setCurrentPost(currentPost.getPrePost());
+						
+						eliminatedApply.setBussinessDataSrc("1"); // 业务来源，受理录入
+						eliminatedApply.setIsModified("N"); // 正常，无修改
+						
+						eliminatedApply.setToFinanceStatus("-1"); // 置报财务状态-1
+						
+						eliminatedApply.setArchivedStatus("0");
+						
+						// 生成受理单号
+						Map<Integer, Integer> outParamsApplyNo = new HashMap<Integer, Integer>();
+						outParamsApplyNo.put(1, OracleTypes.VARCHAR);
+						List<Map<String, Object>> callGenApplyNoRes = callDao.call("{?= call PKG_APPLY.f_create_apply_no}", null, outParamsApplyNo, "function");
+						String applyNo = (String) callGenApplyNoRes.get(0).get("1");
+						eliminatedApply.setApplyNo(applyNo);
+						
+						// 录入时间
+						eliminatedApply.setApplyTime(new Date());
+						
+						// 办结状态
+						eliminatedApply.setConcludeStatus("0");
+						
+						// 校验码
+						eliminatedApply.setVerifyCode("1");
+						
+						// 数据更新时间
+						eliminatedApply.setUpdateTime(new Date());
+						
+						//List list1 = eliminatedApplyDao.getByPropertys(new String[] {"applyNo", "vehiclePlateNum"}, new Object[] {"12", "1"}, null);
+						
+						Serializable id = eliminatedApplyDao.save(eliminatedApply);
+						
+						if (null != id) {
+							// 更新附件表数据
+							Map<String, Object> saveFilesRes = this.saveAttachments(applyNo, callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
+							if (saveFilesRes.get("isSave").equals(true)) {
+								map.put("isSuccess", true);
+								map.put("id", id);
+								map.put("msg", "受理单保存成功！");
+							} else {
+								map.put("isSuccess", false);
+								map.put("msg", "受理单证明材料保存失败！");
+							}
+							
+						} else {
+							map.put("isSuccess", false);
+							map.put("msg", "受理单保存失败！");
+						}
+						
+					} else {
+						map.put("retCode", vehicleMap.get("retCode"));
+						map.put("msg", vehicleMap.get("msg"));
+					}
+				} else {
+					// 存储过程执行返回结果，资格校验不通过
+					map.put("isSuccess", false);
+					map.put("msg", "系统异常");
+				}
+		
+				
+			/*} else {
+				// 存储过程执行返回结果，资格校验不通过
+				map.put("isSuccess", false);
+				map.put("msg", msg);
 			}
-			
-			if (eliminatedApply.getIsProxy().equals("N")) {
-				// 保存代理委托书、代理人身份证
-			}*/
-			
-			
-		} else {
-			map.put("isSuccess", false);
-			map.put("msg", "受理单保存失败！");
-		}
+		}*/
 		
 		return map;
 	}
@@ -423,11 +361,181 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	}
 
 	@Override
-	public EliminatedApply getVehicleInfo(String vehiclePlateNum,
+	public Map<String, Object> getVehicleInfo(String vehiclePlateNum,
 			String vehiclePlateType) throws Exception {
 		EliminatedApply eliminatedApply = new EliminatedApply();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Map<String, Object> result = this.verifyVehicle(vehiclePlateNum, vehiclePlateType, null, "1");
+		if (result != null) {
+			// 分情况返回信息
+			// 返回标识
+			Integer returnFlag = (Integer) result.get("7");
+			
+			// 返回信息
+			String returnMsg = (String) result.get("8");
+			
+			if (returnFlag == 1) {
+				// 资格校验通过
+				
+				// 车架号
+				String vehicleIdentifyNo = (String) result.get("9");
+				
+				// 燃料种类
+				String iolType = (String) result.get("10");
+				
+				// 使用性质
+				String useOfProperty = (String) result.get("11");
+				
+				// 车辆类型
+				String vehicleType = (String) result.get("12");
+				
+				// 发动机号
+				String engineNo = (String) result.get("13");
+				
+				// 强制报废期止
+				java.sql.Date sqlDeadline = (java.sql.Date) result.get("14");
+				Date deadline = new Date(sqlDeadline.getTime());
+				
+				// 注销日期
+				java.sql.Date sqlDestroyDate = (java.sql.Date) result.get("15");
+				Date destroyDate = new Date(sqlDestroyDate.getTime());
+				
+				// 注销类别
+				String cancelReason = (String) result.get("16");
+				
+				// 车主
+				String vehicleOwner = (String) result.get("17");
+				
+				// 车主身份证明号
+				String vehicleOwnerIdentity = (String) result.get("18");
+				
+				// 排放标准
+				String emissionStandard = (String) result.get("19");
+				
+				// 初次登记日期
+				java.sql.Date sqlRegisterDate = (java.sql.Date) result.get("20");
+				Date registerDate = new Date(sqlRegisterDate.getTime());
+				
+				// 车辆状态
+				String vehicleStatus = (String) result.get("21");
+				
+				// 报废交售日期
+				java.sql.Date sqlVehicleDate = (java.sql.Date) result.get("22");
+				Date vehicleRecycleDate = new Date(sqlVehicleDate.getTime());
+				
+				// 报废回收证明编号
+				String callbackProofNo = (String) result.get("23");
+				
+				// 补贴金额类别
+				BigDecimal bigDecimalStandType = (BigDecimal)result.get("5");
+				Double subsidiesStandardType = bigDecimalStandType.doubleValue();
+				
+				// 补贴金额
+				BigDecimal bigDecimal = (BigDecimal)result.get("6");
+				Double subsidiesMoney = bigDecimal.doubleValue();
+				
+				
+				// 设置字段值，交警车辆数据
+				eliminatedApply.setVehicleIdentifyNo(vehicleIdentifyNo);
+				eliminatedApply.setVehicleType(vehicleType);
+				eliminatedApply.setVehicleOwner(vehicleOwner);
+				eliminatedApply.setVehicleOwnerIdentity(vehicleOwnerIdentity);
+				eliminatedApply.setDestroyDate(destroyDate);
+				eliminatedApply.setRegisterDate(registerDate);
+				eliminatedApply.setVehicleStatus(vehicleStatus);
+				eliminatedApply.setEmissionStandard(emissionStandard);
+				eliminatedApply.setIolType(iolType);
+				eliminatedApply.setUseOfProperty(useOfProperty);
+				eliminatedApply.setEngineNo(engineNo);
+				eliminatedApply.setCancelReason(cancelReason);
+				eliminatedApply.setDeadline(deadline);
+				
+				// 补贴金额信息
+				eliminatedApply.setSubsidiesStandard(returnMsg);
+				eliminatedApply.setSubsidiesMoney(bigDecimal.doubleValue());
+				
+				// 交售信息
+				eliminatedApply.setRecycleDate(vehicleRecycleDate);
+				eliminatedApply.setCallbackProofNo(callbackProofNo);
+				
+				// 提前报废时长
+				Integer advancedScrapDays = DateUtil.getDateDifference(deadline, vehicleRecycleDate, "day");
+				eliminatedApply.setAdvancedScrapDays(advancedScrapDays);
+				
+				// 补贴对象名称
+				eliminatedApply.setBankAccountName(vehicleOwner);
+				
+				// 通过缓存，获取号牌种类、车辆类型、燃油种类、使用性质、车辆状态等字典类型字段的名称
+				// 号牌种类
+				if (StringUtil.isNotEmpty(vehiclePlateType)) {
+					SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
+					if (null != sysDictVehiclePlateType) {
+						String vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
+						eliminatedApply.setVehiclePlateType(vehiclePlateType);
+						eliminatedApply.setVehiclePlateTypeName(vehiclePlateTypeName);
+					}
+				}
+				
+				// 车辆类型
+				if (StringUtil.isNotEmpty(vehicleType)) {
+					SysDict sysDictVehicleType = CacheRead.getSysDictByCode("VEHICLE_TYPE", vehicleType);
+					if (null != sysDictVehicleType) {
+						String vehicleTypeName = sysDictVehicleType.getDictValue();
+						eliminatedApply.setVehicleType(vehicleType);
+						eliminatedApply.setVehicleTypeName(vehicleTypeName);
+					}
+				}
+				
+				// 燃油种类
+				if (StringUtil.isNotEmpty(iolType)) {
+					SysDict sysDictIOLType = CacheRead.getSysDictByCode("IOL_TYPE", iolType);
+					if (null != sysDictIOLType) {
+						String iolTypeName = sysDictIOLType.getDictValue();
+						eliminatedApply.setIolType(iolType);
+						eliminatedApply.setIolTypeName(iolTypeName);;
+					}
+				}
+				
+				// 使用类型
+				if (StringUtil.isNotEmpty(useOfProperty)) {
+					SysDict sysDictUseType = CacheRead.getSysDictByCode("USE_OF_PROPERTY", useOfProperty);
+					if (null != sysDictUseType) {
+						String useOfPropertyName = sysDictUseType.getDictValue();
+						eliminatedApply.setUseOfProperty(useOfProperty);
+						eliminatedApply.setUseOfPropertyName(useOfPropertyName);
+					}
+				}
+				
+				// 车辆状态
+				if (StringUtil.isNotEmpty(vehicleStatus)) {
+					SysDict sysDictVehicleStatus = CacheRead.getSysDictByCode("VEHICLE_STATUS", vehicleStatus);
+					if (null != sysDictVehicleStatus) {
+						String vehicleStatusName = sysDictVehicleStatus.getDictValue();
+						eliminatedApply.setVehicleStatus(vehicleStatus);
+						eliminatedApply.setVehicleStatusName(vehicleStatusName);
+					}
+				}
+				
+				map.put("retCode", 1);
+				map.put("apply", eliminatedApply);
+				
+			} else {
+				// 资格校验不通过或者数据库存储过程执行异常，返回错误代码和消息
+				map.put("retCode", returnFlag);
+				map.put("msg", returnMsg);
+			}
+		} else {
+			map.put("retCode", -1);
+			map.put("msg", "数据获取异常");
+		}
+		
+		return map;
+		
+		
 		// 报废信息(报废回收证明编号、交售日期)
-		VehicleRecycle vehicleRecycle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
+/*		VehicleRecycle vehicleRecycle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
 		if (vehicleRecycle != null) {
 			eliminatedApply.setRecycleDate(vehicleRecycle.getRecycleDate());
 			eliminatedApply.setCallbackProofNo(vehicleRecycle.getCallbackProofNo());
@@ -616,9 +724,9 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		// 判断车辆补贴资格和补贴金额，暂时定位固定值
 		eliminatedApply.setSubsidiesMoney(1000d);
-		eliminatedApply.setSubsidiesStandard(eliminatedApply.getVehicleTypeName()+":补贴金额--"+eliminatedApply.getSubsidiesMoney());
+		eliminatedApply.setSubsidiesStandard(eliminatedApply.getVehicleTypeName()+":补贴金额--"+eliminatedApply.getSubsidiesMoney());*/
 
-		return eliminatedApply;
+		//return eliminatedApply;
 	}
 
 	@Override
@@ -1172,64 +1280,275 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	public Map<String, Object> verifyVehicle(String vehiclePlateNum,
 			String vehiclePlateType, String vehicleIdentifyNo, String type)
 			throws Exception {
-		try {
-			String callName = "{call PKG_VEHICLES.p_vehicle_verify_for_neibu(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
-			Map<Integer, Object> inParams = new HashMap<Integer, Object>();
-			Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
+		String callName = "{call PKG_VEHICLES.p_vehicle_verify_for_neibu(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
+		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
+		
+		inParams.put(1,  vehiclePlateNum);
+		inParams.put(2,  vehiclePlateType);
+		inParams.put(3,  vehicleIdentifyNo);
+		inParams.put(4,  type);
+		
+		outParams.put(5,  OracleTypes.NUMBER); // 补贴类别
+		outParams.put(6,  OracleTypes.NUMBER); // 淘汰补贴金额
+		outParams.put(7,  OracleTypes.INTEGER); // 校验标志
+		outParams.put(8,  OracleTypes.VARCHAR); // 校验备注
+		outParams.put(9,  OracleTypes.VARCHAR); // 车架号
+		outParams.put(10,  OracleTypes.VARCHAR); // 燃料种类
+		outParams.put(11,  OracleTypes.VARCHAR); // 使用性质
+		outParams.put(12,  OracleTypes.VARCHAR); // 车辆类型
+		outParams.put(13,  OracleTypes.VARCHAR); // 发动机型号
+		outParams.put(14,  OracleTypes.DATE); // 强制报废期止
+		outParams.put(15,  OracleTypes.DATE); // 注销日期
+		outParams.put(16,  OracleTypes.VARCHAR); // 注销类别
+		outParams.put(17,  OracleTypes.VARCHAR); // 车主
+		outParams.put(18,  OracleTypes.VARCHAR); // 车主身份证明号
+		outParams.put(19,  OracleTypes.VARCHAR); // 排放阶段
+		outParams.put(20,  OracleTypes.DATE); // 初次登记日期
+		outParams.put(21,  OracleTypes.VARCHAR); // 车辆状态
+		outParams.put(22,  OracleTypes.DATE); // 报废交售日期
+		outParams.put(23,  OracleTypes.VARCHAR); // 回收证明编号
+		
+		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
+		for (Map<String, Object> map : result) {
+			System.out.println(map.get("5"));   // 补贴类别
+			System.out.println(map.get("6"));   // 淘汰补贴金额
+			System.out.println(map.get("7"));   // 校验标志
+			System.out.println(map.get("8"));   // 校验备注
+			System.out.println(map.get("9"));    // 车架号
+			System.out.println(map.get("10"));    // 燃料种类
+			System.out.println(map.get("11"));    // 使用性质
+			System.out.println(map.get("12"));    // 车辆类型
+			System.out.println(map.get("13"));    // 发动机号
+			System.out.println(map.get("14"));    // 强制报废期止
+			System.out.println(map.get("15"));    // 注销日期
+			System.out.println(map.get("16"));   // 注销类别
+			System.out.println(map.get("17"));   // 车主
+			System.out.println(map.get("18"));   // 车主身份证明号
+			System.out.println(map.get("19"));   // 排放标准
+			System.out.println(map.get("20"));   // 初次登记日期
+			System.out.println(map.get("21"));   // 车辆状态
+			System.out.println(map.get("22"));   // 报废交售日期
+			System.out.println(map.get("23"));   // 回收证明编号
+		}
+		
+		if (null != result && result.size() > 0) {
+			return result.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> getJiaoJingVehicle(String vehiclePlateNum,
+			String vehiclePlateType) throws Exception {
+		Map<String, Object> vehicleMap = new HashMap<String, Object>();
+		String callName = "{call PKG_VEHICLES.p_get_jiaojin_vehicle_lyq(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
+		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
+		
+		inParams.put(1,  vehiclePlateNum);
+		inParams.put(2,  vehiclePlateType);
+		
+		outParams.put(3,  OracleTypes.VARCHAR); // 车架号
+		outParams.put(4,  OracleTypes.VARCHAR); // 燃料种类
+		outParams.put(5,  OracleTypes.VARCHAR); // 使用性质
+		outParams.put(6,  OracleTypes.VARCHAR); // 车辆类型
+		outParams.put(7,  OracleTypes.VARCHAR); // 发动机型号
+		outParams.put(8,  OracleTypes.DATE); // 强制报废期止
+		outParams.put(9,  OracleTypes.DATE); // 注销日期
+		outParams.put(10,  OracleTypes.VARCHAR); // 注销类别
+		outParams.put(11,  OracleTypes.VARCHAR); // 车主
+		outParams.put(12,  OracleTypes.VARCHAR); // 车主身份证明号
+		outParams.put(13,  OracleTypes.VARCHAR); // 排放阶段
+		outParams.put(14,  OracleTypes.DATE); // 初次登记日期
+		outParams.put(15,  OracleTypes.VARCHAR); // 车辆状态
+		
+		outParams.put(16,  OracleTypes.INTEGER); // 返回标识
+		outParams.put(17,  OracleTypes.VARCHAR); // 返回信息
+		
+		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
+		for (Map<String, Object> map : result) {
+			System.out.println(map.get("3"));    // 车架号
+			System.out.println(map.get("4"));    // 燃料种类
+			System.out.println(map.get("5"));    // 使用性质
+			System.out.println(map.get("6"));    // 车辆类型
+			System.out.println(map.get("7"));    // 发动机号
+			System.out.println(map.get("8"));    // 强制报废期止
+			System.out.println(map.get("9"));    // 注销日期
+			System.out.println(map.get("10"));   // 注销类别
+			System.out.println(map.get("11"));   // 车主
+			System.out.println(map.get("12"));   // 车主身份证明号
+			System.out.println(map.get("13"));   // 排放标准
+			System.out.println(map.get("14"));   // 初次登记日期
+			System.out.println(map.get("15"));   // 车辆状态
+			System.out.println(map.get("16"));   // 返回标识
+			System.out.println(map.get("17"));   // 返回信息
+		}
+		
+		if (null != result && result.size() > 0) {
+			// 存储过程调用成功
+			// 返回标识
+			Integer retFlag = (Integer) result.get(0).get("16");
 			
-			inParams.put(1,  vehiclePlateNum);
-			inParams.put(2,  vehiclePlateType);
-			inParams.put(3,  vehicleIdentifyNo);
-			inParams.put(4,  type);
+			// 返回信息
+			String msg = (String) result.get(0).get("17");
 			
-			outParams.put(5,  OracleTypes.NUMBER); // 补贴类别
-			outParams.put(6,  OracleTypes.NUMBER); // 淘汰补贴金额
-			outParams.put(7,  OracleTypes.INTEGER); // 校验标志
-			outParams.put(8,  OracleTypes.VARCHAR); // 校验备注
-			outParams.put(9,  OracleTypes.VARCHAR); // 车架号
-			outParams.put(10,  OracleTypes.VARCHAR); // 燃料种类
-			outParams.put(11,  OracleTypes.VARCHAR); // 使用性质
-			outParams.put(12,  OracleTypes.VARCHAR); // 车辆类型
-			outParams.put(13,  OracleTypes.VARCHAR); // 发动机型号
-			outParams.put(14,  OracleTypes.DATE); // 强制报废期止
-			outParams.put(15,  OracleTypes.DATE); // 注销日期
-			outParams.put(16,  OracleTypes.VARCHAR); // 注销类别
-			outParams.put(17,  OracleTypes.VARCHAR); // 车主
-			outParams.put(18,  OracleTypes.VARCHAR); // 车主身份证明号
-			outParams.put(19,  OracleTypes.VARCHAR); // 排放阶段
-			outParams.put(20,  OracleTypes.DATE); // 初次登记日期
-			outParams.put(21,  OracleTypes.VARCHAR); // 车辆状态
-			outParams.put(22,  OracleTypes.DATE); // 报废交售日期
-			outParams.put(23,  OracleTypes.VARCHAR); // 回收证明编号
-			
-			List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
-			for (Map<String, Object> map : result) {
-				System.out.println(map.get("5"));   // 补贴类别
-				System.out.println(map.get("6"));   // 淘汰补贴金额
-				System.out.println(map.get("7"));   // 校验标志
-				System.out.println(map.get("8"));   // 校验备注
-				System.out.println(map.get("9"));    // 车架号
-				System.out.println(map.get("10"));    // 燃料种类
-				System.out.println(map.get("11"));    // 使用性质
-				System.out.println(map.get("12"));    // 车辆类型
-				System.out.println(map.get("13"));    // 发动机号
-				System.out.println(map.get("14"));    // 强制报废期止
-				System.out.println(map.get("15"));    // 注销日期
-				System.out.println(map.get("16"));   // 注销类别
-				System.out.println(map.get("17"));   // 车主
-				System.out.println(map.get("18"));   // 车主身份证明号
-				System.out.println(map.get("19"));   // 排放标准
-				System.out.println(map.get("20"));   // 初次登记日期
-				System.out.println(map.get("21"));   // 车辆状态
-				System.out.println(map.get("22"));   // 报废交售日期
-				System.out.println(map.get("23"));   // 回收证明编号
+			if (retFlag == 1) {
+				EliminatedApply eliminatedApply = new EliminatedApply();
+				// 车架号
+				String vehicleIdentifyNo = (String) result.get(0).get("3");
+				
+				// 燃料种类
+				String iolType = (String) result.get(0).get("4");
+				
+				// 使用性质
+				String useOfProperty = (String) result.get(0).get("5");
+				
+				// 车辆类型
+				String vehicleType = (String) result.get(0).get("6");
+				
+				// 发动机号
+				String engineNo = (String) result.get(0).get("7");
+				
+				// 强制报废期止
+				java.sql.Date sqlDeadline = (java.sql.Date) result.get(0).get("8");
+				Date deadline = new Date(sqlDeadline.getTime());
+				
+				// 注销日期
+				java.sql.Date sqlDestroyDate = (java.sql.Date) result.get(0).get("9");
+				Date destroyDate = (sqlDestroyDate != null) ? new Date(sqlDestroyDate.getTime()) : new Date(); 
+				
+				// 注销类别
+				String cancelReason = (result.get(0).get("10") != null) ? (String) result.get(0).get("10") : "";
+				
+				// 车主
+				String vehicleOwner = (String) result.get(0).get("11");
+				
+				// 车主身份证明号
+				String vehicleOwnerIdentity = (String) result.get(0).get("12");
+				//String vehicleOwnerIdentity = (result.get(0).get("12") != null) ? (String) result.get(0).get("12") : "";
+				
+				// 排放标准
+				String emissionStandard = (String) result.get(0).get("13");
+				
+				// 初次登记日期
+				java.sql.Date sqlRegisterDate = (java.sql.Date) result.get(0).get("14");
+				Date registerDate = new Date(sqlRegisterDate.getTime());
+				
+				// 车辆状态
+				String vehicleStatus = (String) result.get(0).get("15");
+				
+				// 报废交售日期
+				Date vehicleRecycleDate = null;
+				
+				// 报废回收证明编号
+				String callbackProofNo = null;
+				
+				VehicleRecycle vehicleRecycle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
+				if (vehicleRecycle != null) {
+					vehicleRecycleDate = vehicleRecycle.getRecycleDate();
+					callbackProofNo = vehicleRecycle.getCallbackProofNo();
+				} else {
+					// 获取不到数据，或者车辆已经受理录入过，无法再次受理。
+					// 报废交售日期
+					vehicleRecycleDate = DateUtil.parse("2017-07-10", DateUtil.DATE_PATTERN_2);
+					
+					// 报废回收证明编号
+					callbackProofNo = "HS-730000-1323-20140710-20";
+				}
+				
+				
+				// 设置字段值，交警车辆数据
+				eliminatedApply.setVehicleIdentifyNo(vehicleIdentifyNo);
+				eliminatedApply.setVehicleType(vehicleType);
+				eliminatedApply.setVehicleOwner(vehicleOwner);
+				eliminatedApply.setVehicleOwnerIdentity(vehicleOwnerIdentity);
+				eliminatedApply.setDestroyDate(destroyDate);
+				eliminatedApply.setRegisterDate(registerDate);
+				eliminatedApply.setVehicleStatus(vehicleStatus);
+				eliminatedApply.setEmissionStandard(emissionStandard);
+				eliminatedApply.setIolType(iolType);
+				eliminatedApply.setUseOfProperty(useOfProperty);
+				eliminatedApply.setEngineNo(engineNo);
+				eliminatedApply.setCancelReason(cancelReason);
+				eliminatedApply.setDeadline(deadline);
+				
+				// 交售信息
+				eliminatedApply.setRecycleDate(vehicleRecycleDate);
+				eliminatedApply.setCallbackProofNo(callbackProofNo);
+				
+				// 提前报废时长
+				Integer advancedScrapDays = DateUtil.getDateDifference(deadline, vehicleRecycleDate, "day");
+				eliminatedApply.setAdvancedScrapDays(advancedScrapDays);
+				
+				// 补贴对象名称
+				eliminatedApply.setBankAccountName(vehicleOwner);
+				
+				// 通过缓存，获取号牌种类、车辆类型、燃油种类、使用性质、车辆状态等字典类型字段的名称
+				// 号牌种类
+				if (StringUtil.isNotEmpty(vehiclePlateType)) {
+					SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
+					if (null != sysDictVehiclePlateType) {
+						String vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
+						eliminatedApply.setVehiclePlateType(vehiclePlateType);
+						eliminatedApply.setVehiclePlateTypeName(vehiclePlateTypeName);
+					}
+				}
+				
+				// 车辆类型
+				if (StringUtil.isNotEmpty(vehicleType)) {
+					SysDict sysDictVehicleType = CacheRead.getSysDictByCode("VEHICLE_TYPE", vehicleType);
+					if (null != sysDictVehicleType) {
+						String vehicleTypeName = sysDictVehicleType.getDictValue();
+						eliminatedApply.setVehicleType(vehicleType);
+						eliminatedApply.setVehicleTypeName(vehicleTypeName);
+					}
+				}
+				
+				// 燃油种类
+				if (StringUtil.isNotEmpty(iolType)) {
+					SysDict sysDictIOLType = CacheRead.getSysDictByCode("IOL_TYPE", iolType);
+					if (null != sysDictIOLType) {
+						String iolTypeName = sysDictIOLType.getDictValue();
+						eliminatedApply.setIolType(iolType);
+						eliminatedApply.setIolTypeName(iolTypeName);;
+					}
+				}
+				
+				// 使用类型
+				if (StringUtil.isNotEmpty(useOfProperty)) {
+					SysDict sysDictUseType = CacheRead.getSysDictByCode("USE_OF_PROPERTY", useOfProperty);
+					if (null != sysDictUseType) {
+						String useOfPropertyName = sysDictUseType.getDictValue();
+						eliminatedApply.setUseOfProperty(useOfProperty);
+						eliminatedApply.setUseOfPropertyName(useOfPropertyName);
+					}
+				}
+				
+				// 车辆状态
+				if (StringUtil.isNotEmpty(vehicleStatus)) {
+					SysDict sysDictVehicleStatus = CacheRead.getSysDictByCode("VEHICLE_STATUS", vehicleStatus);
+					if (null != sysDictVehicleStatus) {
+						String vehicleStatusName = sysDictVehicleStatus.getDictValue();
+						eliminatedApply.setVehicleStatus(vehicleStatus);
+						eliminatedApply.setVehicleStatusName(vehicleStatusName);
+					}
+				}
+				
+				// 补贴金额信息
+				// 判断车辆补贴资格和补贴金额，暂时定位固定值
+				eliminatedApply.setSubsidiesMoney(1000d);
+				eliminatedApply.setSubsidiesStandard(eliminatedApply.getVehicleTypeName() + ":补贴金额--" + eliminatedApply.getSubsidiesMoney());
+				
+				vehicleMap.put("retCode", 1);
+				vehicleMap.put("apply", eliminatedApply);
+			} else {
+				// 获取失败
+				vehicleMap.put("retCode", retFlag);
+				vehicleMap.put("msg", msg);
 			}
 			
-			if (result.size() > 0) {
-				return result.get(0);
-			}
-		} catch (Exception e) {
-			return null;
+			return vehicleMap;
 		}
 		return null;
 	}

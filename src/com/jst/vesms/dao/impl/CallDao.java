@@ -178,8 +178,9 @@ public class CallDao implements ICallDao {
 				return result;
 			} catch (Exception e) {
 				log.error("CallDao call error:"+e, e);
+				throw new Exception(e);
 			} 
-			return null;
+			//return null;
 	}
 
 

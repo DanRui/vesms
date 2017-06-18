@@ -80,7 +80,7 @@ String basePath = request.getContextPath();
 		</table>
 	</div>
 	<script type="text/javascript">
-	
+		
 	</script>
 </body>
 </html>
