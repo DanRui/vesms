@@ -63,8 +63,7 @@
 					</td>
 					<td class="view_table_left">号牌种类：</td>
 					<td class="view_table_right">
-						<input id="vehiclePlateType" class="easyui-combobox" name="vehiclePlateType" 
-						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:'auto'"/>
+						<input id="vehiclePlateTypeNew" name="vehiclePlateType"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 						<a id="btnApplyVerify" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-baofei-message'">取机动车数据</a>
 					</td>
@@ -378,6 +377,18 @@
 				
 				var basePath = "<%=basePath%>";
 				
+				// 页面渲染完成，构造号牌种类下拉框
+				//"editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:'auto'"
+				$("#vehiclePlateTypeNew").combobox({
+					editable : false,
+					reqiured : true,
+					valueField : 'code',
+					textField : 'value',
+					panelHeight : 'auto'
+				});
+				
+				$("#vehiclePlateTypeNew").combobox("reload", basePath + '/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE');
+				
 				// 重新调整页面窗口大小和位置居中
 				/* $("#common-dialog").dialog({
 					title : "申报受理录入"
@@ -408,7 +419,7 @@
 	        				var tr = "<tr id='appoint-"+i+"' onDblClick='dblClickAppointInfo("+i+");'>"
 	        					   + "<td>号牌号码</td><td>"+appointList.list[i].vehiclePlateNum+"</td>"
 	        				       + "<td>号牌种类</td><td>"+appointList.list[i].vehiclePlateTypeName+"<input type='hidden' name='appointVehPlateCode' value='"+ appointList.list[i].vehiclePlateType +"'/></td>"
-	        				       + "<td>补贴银行</td><td>"+appointList.list[i].bankName+"<input type='hidden' name='bankCode' value='"+ appointList.list[i].bankCode +"'/></td>"
+	        				       + "<td>补贴银行</td><td>"+appointList.list[i].bankName+"<input type='hidden' name='appointBankCode' value='"+ appointList.list[i].bankCode +"'/></td>"
 	        				       + "<td>银行账号</td><td>"+appointList.list[i].bankAccount+"</td>"
 	        				       + "<td>"+appointList.list[i].applyStatus+"</td>"
 	        				       + "</tr>";
@@ -525,7 +536,7 @@
 				        				var tr = "<tr id='appoint-"+i+"' onDblClick='dblClickAppointInfo("+i+");'>"
 				        					   + "<td>号牌号码</td><td>"+list[i].vehiclePlateNum+"</td>"
 				        				       + "<td>号牌种类</td><td>"+list[i].vehiclePlateTypeName+"<input type='hidden' name='appointVehPlateCode' value='"+ list[i].vehiclePlateType +"'/></td>"
-				        				       + "<td>补贴银行</td><td>"+list[i].bankName+"<input type='hidden' name='bankCode' value='"+ list[i].bankCode +"'/></td>"
+				        				       + "<td>补贴银行</td><td>"+list[i].bankName+"<input type='hidden' name='appointBankCode' value='"+ list[i].bankCode +"'/></td>"
 				        				       + "<td>银行账号</td><td>"+list[i].bankAccount+"</td>"
 				        				       + "<td>"+list[i].applyStatus+"</td>"
 				        				       + "</tr>";
@@ -848,11 +859,14 @@
 				$("#btnApplyVerify").bind("click", function() {
 					//校验输入的号牌号码和号牌种类，判断是否在系统中录入的车辆，过滤不符合资格或者补贴金额为0的车辆。
 					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
-					if (vehiclePlateNum == "") {
+					if(vehiclePlateNum!=null && vehiclePlateNum.indexOf("粤") != -1) {
+						vehiclePlateNum = vehiclePlateNum.substring(1);
+					}
+					if (vehiclePlateNum == "" || vehiclePlateNum < 6) {
 						alert("号牌号码为空！");
 						return false;
 					}
-					var vehiclePlateType = $("#vehiclePlateType").combobox("getValue");
+					var vehiclePlateType = $("#vehiclePlateTypeNew").combobox("getValue");
 					if (vehiclePlateType == "") {
 						alert("号牌种类为空！");
 						return false;
@@ -1066,14 +1080,14 @@
 				var vehiclePlateType = $(trId).find("td:eq(3)").find("input[name='appointVehPlateCode']").val();
 				
 				// 补贴账户银行
-				var bankCode = $(trId).find("td:eq(5)").find("input[name='bankCode']").val();
+				var bankCode = $(trId).find("td:eq(5)").find("input[name='appointBankCode']").val();
 				
 				// 补贴账户卡号
 				var bankAccountNo = $(trId).find("td:eq(7)").html();
 				
 				// 设置受理页面的号牌号码和号牌种类值
 				$("input[name='vehiclePlateNum']").val(vehiclePlateNum);
-				$("#vehiclePlateType").combobox("setValue", vehiclePlateType);
+				$("#vehiclePlateTypeNew").combobox("setValue", vehiclePlateType);
 				
 				// 设置开户银行和银行账号
 				$("#bankName").combobox("setValue", bankCode);
