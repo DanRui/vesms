@@ -48,7 +48,7 @@ String basePath = request.getContextPath();
 				sortable : true
 			},{
 				field : "toFinanceStatus",
-				title : "批次报财委状态",
+				title : "批次报财务状态",
 				width : "10%",
 				align : "center",
 				halign : "center",
@@ -157,7 +157,7 @@ String basePath = request.getContextPath();
 									 Messager.alert({
 											type : "info",
 											title : "警告",
-											content : "选中的批次中含有已报财委  或者 是被作废数据，无法进行作废操作!"
+											content : "选中的批次中含有已报财务  或者 是被作废数据，无法进行作废操作!"
 										});
 								 } else {
 									  $.get(basePath+"/payApply/batchCancel.do",{ids:ids},function(data){
@@ -187,11 +187,11 @@ String basePath = request.getContextPath();
 									content : infoMsg
 								});
 							} else {
-								if (selectedRows[0].batchToFinanceStatus == "已报财委" || selectedRows[0].batchToFinanceStatus == "再次已报") {
+								if (selectedRows[0].batchToFinanceStatus == "已报财务" || selectedRows[0].batchToFinanceStatus == "再次已报") {
 									Messager.alert({
 										type : "info",
 										title : "警告",
-										content : "已报财委的批次数据无法调整!"
+										content : "已报财务的批次数据无法调整!"
 									});
 								} else {
 									openDialog({

@@ -10,9 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.axis2.databinding.types.Id;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
@@ -30,10 +45,13 @@ import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.JsonUtil;
 import com.jst.util.StringUtil;
+import com.jst.vesms.dao.impl.EliminatedApplyDao;
+import com.jst.vesms.model.BatchExport;
 import com.jst.vesms.model.BatchMain;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.model.VehicleRecycle;
 import com.jst.vesms.service.EliminatedApplyService;
+import com.jst.vesms.service.ExportBatchService;
 import com.jst.vesms.service.PayApplyService;
 import com.jst.vesms.service.VehicleRecycleService;
 import com.jst.vesms.service.impl.PayApplyServiceImpl;
@@ -49,10 +67,13 @@ public class PayApplyAction extends BaseAction{
 	private static final Log log = LogFactory.getLog(PayApplyAction.class);
 	
 	@Resource(name="payApplyServiceImpl")
-	private PayApplyService payApplyService;
+	private  PayApplyService payApplyService;
 		
 	@Resource(name = "cacheService")
 	private CacheService cacheService;
+	
+	@Resource(name = "exportBatchServiceImpl")
+	private ExportBatchService exportBatchService;
 	
 	/**
 	 * 进行查询数据
@@ -295,7 +316,7 @@ public class PayApplyAction extends BaseAction{
 			ExcelProperties excelProperties=new ExcelProperties();
 			excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
 			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表（预览）");
-			ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 40, 90 }, dataList, outputStream);
+			ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 5,10,15,15,25,15,15,45 }, dataList, outputStream);
 		} catch (Exception e) {
 			log.error("PayApplyAction excelList is Error:"+e, e);
 		}		
@@ -705,16 +726,19 @@ public class PayApplyAction extends BaseAction{
 		//正常报财务批次导出(加密)
 		@RequestMapping("confirmBatchExcel")
 		@ResponseBody
-		public String confirmBatchExcel(@RequestParam("id")Integer id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,String password,HttpServletResponse response) {
+		public String confirmBatchExcel(@RequestParam("id")Integer id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,String password,HttpServletResponse response,HttpServletRequest request) {
 			log.debug("PayApplyAction confirmBatchPreview is start");
 			int count =0;
 			try {
+				String result="";
+				String exportPath = "";
+				String contextPath = request.getSession().getServletContext().getRealPath("/");
+				String file = "excel/";
 				response.setHeader("Content-disposition", "attachment;  filename="
 						+ new String(("batch_"+batchNo+".xls").getBytes(), "iso-8859-1"));
 				// 定义输出类型
 				response.setContentType("application/vnd.ms-excel");
 				OutputStream outputStream = response.getOutputStream();
-				//result= payApplyService.batchExport(id);
 				List<EliminatedApply> list = new ArrayList<EliminatedApply>();
 				list = payApplyService.getBatchApplyList(batchNo);
 				List<String[]> dataList = new ArrayList<String[]>();
@@ -725,14 +749,15 @@ public class PayApplyAction extends BaseAction{
 							apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+toFinanceNo+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
 					dataList.add(strings);
 				}
-				//outputStream = new FileOutputStream(new File("d:\\sss.xls"));
+				exportPath=contextPath+file+"batch_"+batchNo+".xls";
+				result = exportPath.replaceAll("\\\\", "\\/");
+			//	outputStream = new FileOutputStream(new File("d://"+"batch_"+batchNo+".xls"));
 				ExcelProperties excelProperties=new ExcelProperties();
 				excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+toFinanceNo+"批)");
 				excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
-			//	OutputStream outputStream = null;
-				ExportExcel.exportExcelInWebs(excelProperties, "ss", new int[] { 40, 90 }, dataList, outputStream,password);
+				ExportExcel.exportExcelInWebs(excelProperties, "ss", new int[] { 5,10,15,15,25,15,15,45 }, dataList, outputStream,password);
 				// 后台调用导出存储过程,
-				payApplyService.batchExport(id);
+				payApplyService.batchExport(id,result);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPreview is Error:"+e, e);
 			}		
@@ -744,32 +769,44 @@ public class PayApplyAction extends BaseAction{
 	//正常报财务批次查看
 		@RequestMapping("confirmBatchLook")
 		@ResponseBody
-		public String confirmBatchLook(@RequestParam("id")String id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
+		public String confirmBatchLook(@RequestParam("id")Integer id,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPreview is start");
 			int count =0;
 			try {
-				response.setHeader("Content-disposition", "attachment;  filename="
+				BatchExport batchExport = new BatchExport();
+				batchExport = exportBatchService.getExportPath(id);
+				String filePath =  batchExport.getExportRoute();
+			/*	response.setHeader("Content-disposition", "attachment;  filename="
 						+ new String(("batch_"+batchNo+".xls").getBytes(), "iso-8859-1"));
 				// 定义输出类型
-				response.setContentType("application/vnd.ms-excel");
+				response.setContentType("application/vnd.ms-excel");*/
+				
+				response.setContentType("application/octet-stream");
+				response.setHeader("Content-disposition", "attachment;filename="+filePath);
+				response.flushBuffer();
+			//	HSSFWorkbook wb ;
+				//wb:HSSFWorkbook
+			//	wb.write(response.getOutputStream());
+				
+				
 				OutputStream outputStream = response.getOutputStream();
 				//result= payApplyService.batchExport(id);
-				List<EliminatedApply> list = new ArrayList<EliminatedApply>();
+			/*	List<EliminatedApply> list = new ArrayList<EliminatedApply>();
 				list = payApplyService.getBatchApplyList(batchNo);
-				List<String[]> dataList = new ArrayList<String[]>();
-				for (int i = 0; i < list.size(); i++) {
+				List<String[]> dataList = new ArrayList<String[]>();*/
+			/*	for (int i = 0; i < list.size(); i++) {
 					EliminatedApply apply = list.get(i);
 					count++;
 					String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999","003",apply.getVehicleOwner().toString(),
 							apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+toFinanceNo+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
 					dataList.add(strings);
-				}
+				}*/
 				//outputStream = new FileOutputStream(new File("d:\\sss.xls"));
-				ExcelProperties excelProperties=new ExcelProperties();
+			/*	ExcelProperties excelProperties=new ExcelProperties();
 				excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+toFinanceNo+"批)");
 				excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
 			//	OutputStream outputStream = null;
-				ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 40, 90 }, dataList, outputStream);
+				ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 5,10,15,15,25,15,15,45 }, dataList, outputStream);*/
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPreview is Error:"+e, e);
 			}		
@@ -963,6 +1000,7 @@ public class PayApplyAction extends BaseAction{
 	
 	//导出重报批次预览
 	@RequestMapping("repBatchPreview")
+	@ResponseBody
 	public String repBatchPreview (Integer id,String batchNo,HttpServletResponse response) {
 		log.debug("PayApplyAction excelList is start");
 		int count=0;
@@ -972,20 +1010,53 @@ public class PayApplyAction extends BaseAction{
 			// 定义输出类型
 			response.setContentType("application/vnd.ms-excel");
 			OutputStream outputStream = response.getOutputStream();
-			List<EliminatedApply> list = new ArrayList<EliminatedApply>();
-			list = payApplyService.getRepBatchApplyList(batchNo);
+		//	List<EliminatedApply> list = new ArrayList<EliminatedApply>();
+		//	list = payApplyService.getRepBatchApplyList(batchNo);
 			List<String[]> dataList = new ArrayList<String[]>();
-			for (int i = 0; i < list.size(); i++) {
-				EliminatedApply apply = list.get(i);
+			//调用sql 
+			List sqlList = payApplyService.getBySql(batchNo);
+			for (int i = 0; i < sqlList.size(); i++) {
 				count++;
-				String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999","003",apply.getVehicleOwner().toString(),
-						apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
+				Object[] object = (Object[]) sqlList.get(i);
+				//序号
+				String number = (String) object[0];
+				//车牌号码
+				String vehiclePlateNum = (String)object[3];
+				//补贴金额
+				String subsidiesMoney = (String)object[5];
+				//原车主姓名
+				String lastAccountName = (String)object[7];
+				//原开户行
+				String lastBankName = (String)object[6];
+				//原开户账户
+				String lastAccountNo = (String)object[8];	
+				//变更后补贴对象
+				String thisBankName = (String)object[10];
+				//变更后银行
+				String thisAccountName = (String)object[9];
+				//变更后银行账号
+				String thisAccountNo = (String)object[11];
+				//变更内容
+				String thisType = (String)object[12];
+				//当前报送序号
+				String thisToFinanceNo = (String)object[2];
+				String[] strings = new String[] {count+"",vehiclePlateNum,subsidiesMoney,
+						lastAccountName,lastBankName,lastAccountNo,thisBankName,thisAccountName,thisAccountNo,
+						thisType,thisToFinanceNo};
 				dataList.add(strings);
 			}
+			
+			/*for (int i = 0; i < list.size(); i++) {
+				EliminatedApply apply = list.get(i);
+				count++;
+				String[] strings = new String[]{count+"", apply.getVehiclePlateNum().toString(),apply.getSubsidiesStandard().toString(),apply.getVehicleOwner().toString(),
+						};
+				dataList.add(strings);
+			}*/
 			ExcelProperties excelProperties=new ExcelProperties();
-			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表（预览）");
-			excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
-			ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 40, 90 }, dataList, outputStream);
+			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表(预览)");
+			excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","批次号" });
+			ExportExcel.repExportExcelPreview(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
 		} catch (Exception e) {
 			log.error("PayApplyAction excelList is Error:"+e, e);
 		}		
@@ -1425,12 +1496,11 @@ public class PayApplyAction extends BaseAction{
 							apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+toFinanceNo+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
 					dataList.add(strings);
 				}
-				//outputStream = new FileOutputStream(new File("d:\\sss.xls"));
+				outputStream = new FileOutputStream(new File("d:\\sss.xls"));
 				ExcelProperties excelProperties=new ExcelProperties();
 				excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+toFinanceNo+"批)");
 				excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
-			//	OutputStream outputStream = null;
-				ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 40, 90 }, dataList, outputStream);
+				ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPreview is Error:"+e, e);
 			}		
@@ -1470,7 +1540,7 @@ public class PayApplyAction extends BaseAction{
 				ExcelProperties excelProperties=new ExcelProperties();
 				excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+toFinanceNo+"批)");
 				excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
-				ExportExcel.exportExcelInWebs(excelProperties, "ss", new int[] { 40, 90 }, dataList, outputStream,password);
+				ExportExcel.exportExcelInWebs(excelProperties, "ss", new int[] { 5,13,10,18,15,18,20,15,18,23,8}, dataList, outputStream,password);
 				// 调用后台重报批次导出的存储过程
 				payApplyService.batchRepExport(id);
 			} catch (Exception e) {
@@ -1485,7 +1555,7 @@ public class PayApplyAction extends BaseAction{
 		
 		
 		
-		//报财务查询导出预览
+		//报财务查询导出查看
 		@RequestMapping("repFinanceExcel")
 		public ModelAndView repFinanceExcel(@RequestParam("id")Integer id) {
 			String view = "PAY_APPLY.TO_REP_FINANCE_EXCEL";
@@ -1501,7 +1571,6 @@ public class PayApplyAction extends BaseAction{
 		//申报批次总查询
 		@RequestMapping("batchAllList")
 		//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
-		@ResponseBody
 		//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
 		public String getBatchAllList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 						   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
@@ -1556,4 +1625,5 @@ public class PayApplyAction extends BaseAction{
 			log.debug("PayApplyAction list is end");
 		    return returnStr;
 		}
+		
 }

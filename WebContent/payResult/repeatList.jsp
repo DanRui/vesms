@@ -189,7 +189,6 @@ String basePath = request.getContextPath();
 										{id:"pay_res_mark_save",text:"保存",iconCls:"icon-save",handler:function(){
 											var payResult = $("#checkType").combobox('getValue');
 											var remark = $("#checkOpinion").val();
-											alert(payResult);
 											var faultType =$('#faultType').combobox('getValue');
 											var ifValid = $("form #pay-res-check-form").form("enableValidation").form("validate");
 											if (ifValid) {
@@ -201,6 +200,7 @@ String basePath = request.getContextPath();
 													});
 										 		});
 												$("#pay_res_mark").dialog("close");
+												$("#repeatPay-result-list #repeatPay-result-grid").datagrid('load');
 											}
 										}},
 										{id:"pay_res_mark_cancel",text:"取消",iconCls:"icon-cancel",handler:function(){

@@ -14,6 +14,7 @@ import oracle.jdbc.OracleTypes;
 
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.BaseServiceImpl;
@@ -22,6 +23,8 @@ import com.jst.util.StringUtil;
 import com.jst.vesms.dao.ICallDao;
 import com.jst.vesms.dao.IPayApplyDao;
 import com.jst.vesms.dao.impl.CallDao;
+import com.jst.vesms.dao.impl.EliminatedApplyDao;
+import com.jst.vesms.dao.impl.PayApplyDao;
 import com.jst.vesms.model.BatchMain;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.EliminatedApplyService;
@@ -89,10 +92,9 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	 */
 
 	@Override
-	public String batchExport(Integer id) throws Exception {
+	public String batchExport(Integer id,String exportPath) throws Exception {
 		// TODO Auto-generated method stub
 		//	File file = new File("D:\\123.txt");
-			String file = "D:\\123.txt" ;
 			String sid=id+"";
 			String callName = "{call PKG_BATCH.p_normal_batch_export(?,?,?,?,?)}";
 			Map<Integer, Object> inParams = new HashMap<Integer, Object>();
@@ -100,7 +102,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 			inParams.put(1, "用户code");
 			inParams.put(2, "用户名称");
 			inParams.put(3, sid);
-			inParams.put(4, file);
+			inParams.put(4, exportPath);
 			outParams.put(5, OracleTypes.VARCHAR);
 			List<Map<String, Object>> result1 = callDao.call(callName, inParams, outParams, "procedure");		
 			Map<String, Object> map = result1.get(0);
@@ -332,8 +334,37 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 		return list;
 	}
 
-
-
+	@Override
+	public List getBySql(String batchNo) throws Exception{
+		String sql = "select rownum xuhao,"
+				+ "thisbatchno,thistofinanceno,vehicle_plate_num,vehicle_plate_type,subsidies_money,"
+				+ "lastbankname,lastaccountname,lastaccountno,"
+				+ "thisbankname,thisaccountname,thisaccountno,thisfaultType,"
+				+ "'第'||tofinancecishu||'次报送，上一次报送批号：'||lasttofinanceno note"
+				+ "from"
+				+ "(select tbm.batch_no thisbatchno,"
+				+ " tbm.to_finance_no thistofinanceno,"
+				+ "tea.vehicle_plate_num,"
+				+ "tea.vehicle_plate_type,"
+				+ "tea.subsidies_money,"
+				+ "tbd.remark,"
+				+ "abs(tea.to_finance_status) tofinancecishu,"
+				+ "f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'PCH:','|') lastbatchno,"
+				+ "f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'BSXH:','|') lasttofinanceno,"
+				+ "f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'KHYH:','|') lastbankname,"
+				+ "f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'KHHM:','|') lastaccountname,"
+				+ "f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'YHZH:','|') lastaccountno,"
+				+ "tea.bank_name thisbankname,"
+				+ "tea.bank_account_name thisaccountname,"
+				+ "tea.bank_account_no thisaccountno,tea.fault_type thisfaultType"
+				+ "from t_eliminated_apply tea,t_batch_detail tbd,t_batch_main tbm"
+				+ "where tbm.batch_no="+batchNo
+				+ "and tbm.batch_no=tbd.batch_no"
+				+ "and tea.apply_no=tbd.apply_no"
+				+ "order by tea.apply_confirm_time)";
+			List list = payApplyDao.getTableList(sql, null);
+			return list;
+	}
 
 
 }

@@ -37,7 +37,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "batchNo",
 				title : "重报内部批次号",
-				width : "8%",
+				width : "10%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -60,7 +60,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "createUser",
 				title : "重报批次生成人",
-				width : "8%",
+				width : "10%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -68,7 +68,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "toFinanceStatus",
 				title : "重报批次报财委状态",
-				width : "10%",
+				width : "12%",
 				align : "center",
 				halign : "center",
 				resizable : true,

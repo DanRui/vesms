@@ -31,7 +31,7 @@ public interface PayApplyService extends BaseService {
 
 	public EliminatedApply  getById(Integer id) throws Exception;
 
-	public String batchExport(Integer id) throws Exception;
+	public String batchExport(Integer id, String exportPath) throws Exception;
 
 	public String deleteApply(String batchId, String ids)  throws Exception;
 
@@ -60,7 +60,8 @@ public interface PayApplyService extends BaseService {
 	public BatchMain getObj(Integer id);
 
 	public List<EliminatedApply> getRepBatchApplyList(String batchNo)throws Exception;
-
+	
+	public List getBySql(String batchNo) throws Exception ;
 
 
 

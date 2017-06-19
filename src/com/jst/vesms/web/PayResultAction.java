@@ -1,4 +1,4 @@
-package com.jst.vesms.web;
+﻿package com.jst.vesms.web;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +79,9 @@ public class PayResultAction extends BaseAction{
 			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
 		}
 		page = payResultService.getPageBySql(page, "select * from t_eliminated_apply where repeated_batch_no is null and current_post = 'BFJGBJG' and bussiness_status = '1'");
-		if (page.getTotalCount() != 0) {
+	/*	if (page.getTotalCount() != 0) {
 			page = payResultService.getPage(page, list);
-		}
+		}*/
 		try {
 			returnStr = writerPage(page);
 		} catch (Exception e) {

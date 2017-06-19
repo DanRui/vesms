@@ -1,5 +1,6 @@
 package com.jst.vesms.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.jst.common.model.BaseModel;
 /**
  * <p>Title:标题</p>
  * <p>Description: 描述</p>
@@ -19,9 +22,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="T_BATCH_EXPORT")
-public class BatchExport{
+public class BatchExport extends BaseModel implements Serializable{
 	// 主键id
-	private int id;
+	private Integer id;
 	
 	// 批次号
 	private String batchNo;
@@ -48,11 +51,11 @@ public class BatchExport{
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
 	@Column(name = "ID", unique = true, nullable = false, precision = 8, scale = 0)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	

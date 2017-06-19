@@ -36,7 +36,7 @@ String createDate = request.getParameter("createDate"); */
 		<tr class="datagrid-row">
 			<td class="view_table_left">批次导出状态：</td>
 			<td class="view_table_right">
-			<c:if test="${v.isExported == '0'}">
+				<c:if test="${v.isExported == '0'}">
 						未导出
 				</c:if>
 				<c:if test="${v.isExported == '1'}">
@@ -85,7 +85,7 @@ String createDate = request.getParameter("createDate"); */
 			sortOrder : "desc",
 			columns : [ [{
 				field : "batchNo",
-				title : "批次号",
+				title : "内部批次号",
 				width : "10%",
 				align : "center",
 				halign : "center",
@@ -172,7 +172,7 @@ String createDate = request.getParameter("createDate"); */
 						return "color:red";
 					} 
 				}
-			},{
+			}/*,{
 				field : "applyTime",
 				title : "受理时间",
 				width : "10%",
@@ -187,7 +187,7 @@ String createDate = request.getParameter("createDate"); */
 						return "";
 					}
 				}
-			}/* ,{
+			} ,{
 				field : "applyPerson",
 				title : "受理人",
 				width : "7%",

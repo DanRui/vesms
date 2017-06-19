@@ -75,11 +75,10 @@ public class ConcludeAction extends BaseAction{
 		if(StringUtil.isNotEmpty(payResEndDate)) {
 			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
 		}
+		list.add(new PropertyFilter("EQS_CURRENT_POST", "YWBJG"));
+		list.add(new PropertyFilter("EQS_BUSSINESS_STATUS", "1"));
 		try {
-			page = concludeService.getPageBySql(page, "select * from t_eliminated_apply where  current_post = 'YWBJG' and bussiness_status = '1'");
-			if (page.getTotalCount() != 0) {
-				page = concludeService.getPage(page, list);
-			}
+			page = concludeService.getPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("TransactFinAction list is Error:" + e, e);
@@ -128,9 +127,7 @@ public class ConcludeAction extends BaseAction{
 	
 	
 	
-	/**
-	 * 重报批次拨付查询数据
-	 */
+
 	@RequestMapping("exceList")
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
@@ -167,11 +164,10 @@ public class ConcludeAction extends BaseAction{
 		if(StringUtil.isNotEmpty(payResEndDate)) {
 			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
 		}
+		list.add(new PropertyFilter("EQS_CURRENT_POST", "YWBJG"));
+		list.add(new PropertyFilter("EQS_BUSSINESS_STATUS", "-1"));
 		try {
-			page = concludeService.getPageBySql(page, "select * from t_eliminated_apply where  current_post = 'YWBJG' and bussiness_status = '-1'");
-			if (page.getTotalCount() != 0) {
-				page = concludeService.getPage(page, list);
-			}
+			page = concludeService.getPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("TransactFinAction list is Error:" + e, e);

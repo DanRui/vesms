@@ -37,7 +37,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "repeatedBatchNo",
 				title : "重报内部批次号",
-				width : "8%",
+				width : "10%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -45,7 +45,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "toFinanceStatus",
 				title : "业务报财务状态",
-				width : "8%",
+				width : "10%",
 				align : "center",
 				halign : "center",
 				resizable : true,

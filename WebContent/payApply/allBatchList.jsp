@@ -40,7 +40,7 @@ String basePath = request.getContextPath();
 				width : "2%"
 			},{
 				field : "toFinanceNo",
-				title : "报财务序号",
+				title : "报送序号",
 				width : "8%",
 				align : "center",
 				halign : "center",
@@ -198,7 +198,7 @@ String basePath = request.getContextPath();
 			}
 		}).datagrid("initSearch",{
 			columns:[
-					 {field:"toFinanceNo",title:"报财务序号：",type:"text"},
+					 {field:"toFinanceNo",title:"报送序号：",type:"text"},
 			         {field:"batchNo",title:"内部批次号：",type:"text"},
 			         {field:"toFinanceStatus",title:"批次报财委状态:",type:"combobox", url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"},
 					 {field:"batchType",title:"批次类型：",type:"combobox", url:basePath+"/data/batchType.json", text:"name", value:"value"},
