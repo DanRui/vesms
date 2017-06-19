@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +18,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,8 +41,9 @@ import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.EliminatedApply;
-import com.jst.vesms.model.VehicleRecycle;
 import com.jst.vesms.service.EliminatedApplyService;
+
+import net.sf.json.JSONObject;
 
 @RequestMapping("/eliminatedApply")
 @Controller
@@ -725,26 +725,6 @@ public class EliminatedApplyAction extends BaseAction {
 			if(null != map && map.get("7").equals(1)) {
 				// 有补贴资格
 				saveOk = true;
-				EliminatedApply apply = new EliminatedApply();
-				
-				System.out.println(map.get("6"));   // 淘汰补贴金额
-				System.out.println(map.get("8"));   // 校验备注
-				System.out.println(map.get("9"));    // 车架号
-				System.out.println(map.get("10"));    // 燃料种类
-				System.out.println(map.get("11"));    // 使用性质
-				System.out.println(map.get("12"));    // 车辆类型
-				System.out.println(map.get("13"));    // 发动机号
-				System.out.println(map.get("14"));    // 强制报废期止
-				System.out.println(map.get("15"));    // 注销日期
-				System.out.println(map.get("16"));   // 注销类别
-				System.out.println(map.get("17"));   // 车主
-				System.out.println(map.get("18"));   // 车主身份证明号
-				System.out.println(map.get("19"));   // 排放标准
-				System.out.println(map.get("20"));   // 初次登记日期
-				System.out.println(map.get("21"));   // 车辆状态
-				System.out.println(map.get("22"));   // 报废交售日期
-				System.out.println(map.get("23"));   // 回收证明编号
-				
 				
 			} else {
 				// 无补贴资格或数据库存储过程执行异常
@@ -762,6 +742,62 @@ public class EliminatedApplyAction extends BaseAction {
 		} else {
 			return JsonUtil.toErrorMsg(msg);
 		}
+	}
+	
+	
+	@RequestMapping("verifyResult")
+	public ModelAndView verifyResult(@RequestParam("vehiclePlateNum")String vehiclePlateNum, @RequestParam("vehiclePlateType")String vehiclePlateType,
+			@RequestParam("vehicleIdentifyNo")String vehicleIdentifyNo) throws Exception {
+		String view = "PUBLIC_QUERY_VERIFY.RESULT";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		EliminatedApply apply = new EliminatedApply();
+		
+		Map<String, Object> map = eliminatedApplyService.verifyVehicle(vehiclePlateNum, vehiclePlateType, vehicleIdentifyNo, "2");
+		
+		// 获得足够多的车辆信息展示到页面
+		if(null != map && map.get("7").equals(1)) {
+			// 有补贴资格
+			// 补贴金额
+			BigDecimal bigDecimal = (BigDecimal) map.get("6");
+			Double subsidiesMoney = bigDecimal.doubleValue();
+			// 补贴标准说明
+			String subsidiesStandard = (String) map.get("8");
+			// 车架号
+			
+			// 获取交警接口数据
+			Map<String, Object> jiaoJingVehicleMap = eliminatedApplyService.getJiaoJingVehicle(vehiclePlateNum, vehiclePlateType);
+			if (null != jiaoJingVehicleMap && jiaoJingVehicleMap.get("retCode").equals(1)) {
+				// 调用存储过程成功
+				apply = (EliminatedApply) jiaoJingVehicleMap.get("apply");
+				apply.setVehiclePlateNum(vehiclePlateNum);
+				apply.setVehiclePlateType(vehiclePlateType);
+				apply.setSubsidiesMoney(subsidiesMoney);
+				apply.setSubsidiesStandard(subsidiesStandard);
+			}
+			
+		}
+		
+		System.out.println(map.get("6"));   // 淘汰补贴金额
+		System.out.println(map.get("8"));   // 校验备注
+		System.out.println(map.get("9"));    // 车架号
+		System.out.println(map.get("10"));    // 燃料种类
+		System.out.println(map.get("11"));    // 使用性质
+		System.out.println(map.get("12"));    // 车辆类型
+		System.out.println(map.get("13"));    // 发动机号
+		System.out.println(map.get("14"));    // 强制报废期止
+		System.out.println(map.get("15"));    // 注销日期
+		System.out.println(map.get("16"));   // 注销类别
+		System.out.println(map.get("17"));   // 车主
+		System.out.println(map.get("18"));   // 车主身份证明号
+		System.out.println(map.get("19"));   // 排放标准
+		System.out.println(map.get("20"));   // 初次登记日期
+		System.out.println(map.get("21"));   // 车辆状态
+		System.out.println(map.get("22"));   // 报废交售日期
+		System.out.println(map.get("23"));   // 回收证明编号
+		
+		mv.addObject("v", apply);
+		
+		return mv;
 	}
 	
 	/**
