@@ -11,7 +11,7 @@ String basePath = request.getContextPath();
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>导出查看</title>
+<title>文件查看</title>
 </head>
 <body>
 	<form action="payApply/confirmBatchLook.do" enctype="multipart/form-data" method="post" id="confirmId">
@@ -19,7 +19,7 @@ String basePath = request.getContextPath();
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>
 		<td>
-			<input type="button" value="导出查看" class="button" id="ConfirmButton">
+			<input type="button" value="文件查看" class="button" id="ConfirmButton">
 		</td>
 		</tr>
 	</table>

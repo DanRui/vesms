@@ -111,7 +111,6 @@
 			<tx:method name="evaluate*" propagation="REQUIRED" />
 			<tx:method name="send*" propagation="REQUIRED"/>
 			<tx:method name="doServiceAround" propagation="REQUIRED"/>
-			<tx:method name="verify*" propagation="REQUIRED"/>
 			<tx:method name="*" read-only="true" />
 		</tx:attributes>
 	</tx:advice>

@@ -19,7 +19,7 @@ String basePath = request.getContextPath();
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>
 		<td>
-			<input type="button" value="导出查看" class="button" id="ConfirmButton">
+			<input type="button" value="文件查看" class="button" id="ConfirmButton">
 		</td>
 		</tr>
 	</table>

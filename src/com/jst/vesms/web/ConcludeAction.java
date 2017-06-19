@@ -77,9 +77,9 @@ public class ConcludeAction extends BaseAction{
 		}
 		try {
 			page = concludeService.getPageBySql(page, "select * from t_eliminated_apply where  current_post = 'YWBJG' and bussiness_status = '1'");
-			//if (page.getTotalCount() != 0) {
-				//page = concludeService.getPage(page, list);
-			//}
+			if (page.getTotalCount() != 0) {
+				page = concludeService.getPage(page, list);
+			}
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("TransactFinAction list is Error:" + e, e);

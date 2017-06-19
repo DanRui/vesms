@@ -18,7 +18,7 @@ String basePath = request.getContextPath();
 		<br>
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>
-			<td>设置excel密码:</td>
+			<td>设置导出文件的加密密码:</td>
 			<td>
 				<input id="password" name="password" type="text" class="easyui-validatebox" data-options="required:true"/>
 			</td>
