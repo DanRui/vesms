@@ -1,4 +1,3 @@
-
 package com.jst.vesms.web;
 
 import java.io.BufferedInputStream;
@@ -7,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +17,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,8 +40,9 @@ import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.EliminatedApply;
-import com.jst.vesms.model.VehicleRecycle;
 import com.jst.vesms.service.EliminatedApplyService;
+
+import net.sf.json.JSONObject;
 
 @RequestMapping("/eliminatedApply")
 @Controller
@@ -220,8 +219,9 @@ public class EliminatedApplyAction extends BaseAction {
 		log.debug("eliminatedApplyAction save is End");
 		if(saveOk) {
 			return JsonUtil.toSuccessMsg(JsonUtil.parse(json).toString());
-		} else
-		return JsonUtil.toErrorMsg(JsonUtil.parse(json).toString());
+		} else {
+			return JsonUtil.toErrorMsg(JsonUtil.parse(json).toString());
+		}
 	}
 	
 	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "ADD")
@@ -231,24 +231,31 @@ public class EliminatedApplyAction extends BaseAction {
 		log.debug("eliminatedApplyAction getVehicleInfo is start");
 		boolean saveOk = false;
 		EliminatedApply eliminatedApply = null;
+		String msg = "";
 		try {
-			eliminatedApply = eliminatedApplyService.getVehicleInfo(vehiclePlateNum, vehiclePlateType);
-			if(null != eliminatedApply) {
-				// 判断补贴资格和金额，返回信息给前台页面
+			//Map<String, Object> map = eliminatedApplyService.getVehicleInfo(vehiclePlateNum, vehiclePlateType);
+			Map<String, Object> map = eliminatedApplyService.getJiaoJingVehicle(vehiclePlateNum, vehiclePlateType);
+			if(null != map && map.get("retCode").equals(1)) {
+				// 有补贴资格
 				saveOk = true;
+				eliminatedApply = (EliminatedApply) map.get("apply");
+			} else {
+				// 无补贴资格或数据库存储过程执行异常
+				saveOk = false;
+				msg = map.get("msg").toString();
 			}
 		} catch (Exception e) {
 			log.error("eliminatedApplyAction getVehicleInfo is Error:"+e, e);
+			msg = "补贴资格存储过程调用失败：" + e.getMessage();
 		}
 		
 		log.debug("eliminatedApplyAction getVehicleInfo is End");
 		if(saveOk) {
 			return JsonUtil.toSuccessMsg(JsonUtil.parse(eliminatedApply).toString());
-		} else
-		return JsonUtil.toErrorMsg("车辆数据获取失败");
+		} else {
+			return JsonUtil.toErrorMsg(msg);
+		}
 	}
-	
-	
 	
 	/**
 	 * 测试进行修改数据
@@ -602,13 +609,13 @@ public class EliminatedApplyAction extends BaseAction {
 		// 确认受理表，更新受理确认时间，写ActionLog
 		try {
 			hasConfirmed = eliminatedApplyService.saveConfirm(id, signedApplyFiles);
+			if(hasConfirmed) {
+				isOk = true;
+			}
 		} catch (Exception e) {
 			log.error("eliminatedApplyAction confirmApply is Error:"+e, e);
 		}
 		
-		if(hasConfirmed) {
-			isOk = true;
-		}
 		log.debug("eliminatedApplyAction confirmApply is End");
 		if(isOk) {
 			return JsonUtil.toSuccessMsg("受理表确认成功！");
@@ -702,6 +709,94 @@ public class EliminatedApplyAction extends BaseAction {
 			return JsonUtil.toSuccessMsg(result);
 		} else
 		return JsonUtil.toErrorMsg("预约数据获取失败");
+	}
+	
+	@ResponseBody
+	@RequestMapping("verifyVehicle")
+	public String verifyVehicle(@RequestParam("vehiclePlateNum")String vehiclePlateNum, @RequestParam("vehiclePlateType")String vehiclePlateType,
+								@RequestParam("vehicleIdentifyNo")String vehicleIdentifyNo) throws Exception {
+		log.debug("eliminatedApplyAction verifyVehicle is start");
+		boolean saveOk = false;
+		EliminatedApply eliminatedApply = null;
+		String msg = "";
+		try {
+			Map<String, Object> map = eliminatedApplyService.verifyVehicle(vehiclePlateNum, vehiclePlateType, vehicleIdentifyNo, "2");
+			if(null != map && map.get("7").equals(1)) {
+				// 有补贴资格
+				saveOk = true;
+				
+			} else {
+				// 无补贴资格或数据库存储过程执行异常
+				saveOk = false;
+				msg = map.get("8").toString();
+			}
+		} catch (Exception e) {
+			log.error("eliminatedApplyAction verifyVehicle is Error:"+e, e);
+			msg = "补贴资格存储过程调用失败：" + e.getMessage();
+		}
+		
+		log.debug("eliminatedApplyAction verifyVehicle is End");
+		if(saveOk) {
+			return JsonUtil.toSuccessMsg(JsonUtil.parse(eliminatedApply).toString());
+		} else {
+			return JsonUtil.toErrorMsg(msg);
+		}
+	}
+	
+	
+	@RequestMapping("verifyResult")
+	public ModelAndView verifyResult(@RequestParam("vehiclePlateNum")String vehiclePlateNum, @RequestParam("vehiclePlateType")String vehiclePlateType,
+			@RequestParam("vehicleIdentifyNo")String vehicleIdentifyNo) throws Exception {
+		String view = "PUBLIC_QUERY_VERIFY.RESULT";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		EliminatedApply apply = new EliminatedApply();
+		
+		Map<String, Object> map = eliminatedApplyService.verifyVehicle(vehiclePlateNum, vehiclePlateType, vehicleIdentifyNo, "2");
+		
+		// 获得足够多的车辆信息展示到页面
+		if(null != map && map.get("7").equals(1)) {
+			// 有补贴资格
+			// 补贴金额
+			BigDecimal bigDecimal = (BigDecimal) map.get("6");
+			Double subsidiesMoney = bigDecimal.doubleValue();
+			// 补贴标准说明
+			String subsidiesStandard = (String) map.get("8");
+			// 车架号
+			
+			// 获取交警接口数据
+			Map<String, Object> jiaoJingVehicleMap = eliminatedApplyService.getJiaoJingVehicle(vehiclePlateNum, vehiclePlateType);
+			if (null != jiaoJingVehicleMap && jiaoJingVehicleMap.get("retCode").equals(1)) {
+				// 调用存储过程成功
+				apply = (EliminatedApply) jiaoJingVehicleMap.get("apply");
+				apply.setVehiclePlateNum(vehiclePlateNum);
+				apply.setVehiclePlateType(vehiclePlateType);
+				apply.setSubsidiesMoney(subsidiesMoney);
+				apply.setSubsidiesStandard(subsidiesStandard);
+			}
+			
+		}
+		
+		System.out.println(map.get("6"));   // 淘汰补贴金额
+		System.out.println(map.get("8"));   // 校验备注
+		System.out.println(map.get("9"));    // 车架号
+		System.out.println(map.get("10"));    // 燃料种类
+		System.out.println(map.get("11"));    // 使用性质
+		System.out.println(map.get("12"));    // 车辆类型
+		System.out.println(map.get("13"));    // 发动机号
+		System.out.println(map.get("14"));    // 强制报废期止
+		System.out.println(map.get("15"));    // 注销日期
+		System.out.println(map.get("16"));   // 注销类别
+		System.out.println(map.get("17"));   // 车主
+		System.out.println(map.get("18"));   // 车主身份证明号
+		System.out.println(map.get("19"));   // 排放标准
+		System.out.println(map.get("20"));   // 初次登记日期
+		System.out.println(map.get("21"));   // 车辆状态
+		System.out.println(map.get("22"));   // 报废交售日期
+		System.out.println(map.get("23"));   // 回收证明编号
+		
+		mv.addObject("v", apply);
+		
+		return mv;
 	}
 	
 	/**
@@ -816,4 +911,3 @@ public class EliminatedApplyAction extends BaseAction {
 	
 	
 }
-

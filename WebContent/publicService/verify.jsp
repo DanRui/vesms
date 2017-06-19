@@ -30,11 +30,11 @@ String basePath = request.getContextPath();
 							<font color="red">&nbsp;*&nbsp;</font>
 						</td>
 					</tr>
-					<tr class="datagrid-row">
+					<!-- <tr class="datagrid-row">
 						<td class="view_table_left">车辆运营类型：</td>
 						<td class="view_table_right">
-							<!-- <input id="vehicleType" class="easyui-combobox" name="vehicleType" 
-							data-options="required:true,valueField:'value',textField:'name',url:'data/carType.json',panelHeight:'auto'"/> -->
+							<input id="vehicleType" class="easyui-combobox" name="vehicleType" 
+							data-options="required:true,valueField:'value',textField:'name',url:'data/carType.json',panelHeight:'auto'"/>
 							<select name="useOfProperty" data-options="width:100,editable:false,required:true,panelHeight:'auto'" class="easyui-combobox">
 								<option>请选择</option>
 								<option value="0">非营运</option>
@@ -42,21 +42,21 @@ String basePath = request.getContextPath();
 							</select>
 							<font color="red">&nbsp;*&nbsp;</font>
 						</td>
-					</tr>
+					</tr> -->
 					<tr>
-						<td class="view_table_left">车架号（后四位）：</td>
+						<td class="view_table_left">车架号：</td>
 						<td class="view_table_right">
-							<input type="text" name="vehicleIdentifyNo" class="easyui-numberbox" data-options="required:true"/>
+							<input type="text" name="vehicleIdentifyNo" class="easyui-validatebox" data-options="required:true"/>
 							<font color="red">&nbsp;*&nbsp;</font>
 						</td>
 					</tr>
-					<tr>
+					<!-- <tr>
 						<td class="view_table_left">交车日期：</td>
 						<td class="view_table_right">
 							<input type="text" name="recycleDate" class="easyui-datebox" data-options="editable:false,required:true"/>
 							<font color="red">&nbsp;*&nbsp;</font>
 						</td>
-					</tr>
+					</tr> -->
 				</table>
 				<a id="btnQuery" href="#" style="display:block;text-align:center" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
 			</div>
@@ -64,9 +64,50 @@ String basePath = request.getContextPath();
 
 	<script type="text/javascript">
 		$(function() {
-			$("#btnQuery").click(function(){
+			var basePath = "<%=basePath%>";
+			$("#btnQuery").click(function() {
+				// ajax调用后台接口返回信息
+				var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
 				
-				$.messager.alert("信息","号牌号码:粤B6U4D7,号牌种类:蓝牌,车主:叶向东,车辆类型:小型载客车,补贴金额(元):7000");  
+				var vehiclePlateType = $("#vehiclePlateType").combobox("getValue");
+				
+				var vehicleIdentifyNo = $("input[name='vehicleIdentifyNo']").val();
+				
+				$.ajax({
+					url : basePath + "/eliminatedApply/getVehicleInfo.do?vehiclePlateNum=" + vehiclePlateNum + "&vehiclePlateType=" + vehiclePlateType + "&vehicleIdentifyNo=" + vehicleIdentifyNo,
+		        	async : true,
+		        	type : "POST",
+		        	dataType : "json",
+		        	beforeSend : function() {
+		        		if (null == vehiclePlateNum || null == vehiclePlateType) {
+		        			return false;
+		        		}
+		        		// 提交表单前格式化号牌号码，截取粤字
+		        		//$(input[name='vehiclePlateNum']).val();
+		        	},
+		        	success : function(data) {
+		        		if (data.success) {
+		        			// 有补贴资格，尽量显示多车辆信息和补贴金额
+		        			var verify_result_page = basePath + "/eliminatedApply/verifyResult.do?vehiclePlateNum=" + vehiclePlateNum + "&vehiclePlateType=" + vehiclePlateType + "&vehicleIdentifyNo=" + vehicleIdentifyNo;
+		        			openDialog({
+		        				type : "verify_result",
+								title : "车辆补贴资格说明",
+								width : 1040,
+								height : 400,
+								param: {reset:false,save:false,close:false},
+								maximizable : true,
+								href : verify_result_page
+		        			});
+		        			
+		        		} else {
+		        			Messager.alert({
+		        				type : 'error',
+		        				title : '&nbsp',
+		        				content : data.message.msg
+		        			});
+		        		}
+		        	}
+				});
 				
 			})
 			  

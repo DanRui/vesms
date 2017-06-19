@@ -88,25 +88,20 @@
 				<!-- 
 				<tr class="datagrid-row">
 					<td class="view_table_left">使用性质：</td>
-
 					<td class="view_table_right">
 						<input type="text" name="useOfPropertyName" readonly="readonly" /></td>
-
 					<td class="view_table_left">燃油类型：</td>
 					<td class="view_table_right">
 						<input type="text" name="iolTypeName" readonly="readonly" />
 					</td>
 					<td class="view_table_left">总质量（千克）</td>
-
 					<td class="view_table_right">
 						<input type="text" name="totalWeight" value="0" readonly="readonly" />
 					</td>
-
 				</tr>
 				 -->
 				<tr class="datagrid-row">
 					<!-- <td class="view_table_left">核定载客数（人）：</td>
-
 					<td class="view_table_right">
 						<input type="text" name="vehicleNumPeople" readonly="readonly" /></td> -->
 					<td class="view_table_left">燃油类型：</td>
@@ -221,7 +216,7 @@
 					</td>
 					<td class="view_table_left">开户银行：</td>
 					<td class="view_table_right">
-						<input id="bankName" class="easyui-combobox" name="bankName" 
+						<input id="bankCode" class="easyui-combobox" name="bankCode" 
 						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=BANK_CODE',panelHeight:150"/>
 						<!-- <input type="text" name="bankName" class="easyui-validatebox" data-options="required:true" /> -->
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
@@ -461,7 +456,7 @@
 					
 					if (!DateFormatter.DateISO(appointmentNo.substring(5, 13), "yyyyMMdd")) {
 						// 日期格式不匹配
-						alert("输入的预约单号有误，请检查！");
+						alert("输入的预约单号格式有误，请检查！");
 						return false;
 					}
 					// 从服务器获取预约的车辆列表
@@ -494,7 +489,7 @@
 			        				var tr = "<tr id='appoint-"+i+"' onDblClick='dblClickAppointInfo("+i+");'>"
 			        					   + "<td>号牌号码</td><td>"+list[i].vehiclePlateNum+"</td>"
 			        				       + "<td>号牌种类</td><td>"+list[i].vehiclePlateTypeName+"<input type='hidden' name='appointVehPlateCode' value='"+ list[i].vehiclePlateType +"'/></td>"
-			        				       + "<td>补贴银行</td><td>"+list[i].bankName+"<input type='hidden' name='bankCode' value='"+ list[i].bankCode +"'/></td>"
+			        				       + "<td>补贴银行</td><td>"+list[i].bankName+"<input type='hidden' name='appointBankCode' value='"+ list[i].bankCode +"'/></td>"
 			        				       + "<td>银行账号</td><td>"+list[i].bankAccount+"</td>"
 			        				       + "<td>"+list[i].applyStatus+"</td>"
 			        				       + "</tr>";
@@ -817,13 +812,16 @@
 				$("#btnApplyVerify").bind("click", function() {
 					//校验输入的号牌号码和号牌种类，判断是否在系统中录入的车辆，过滤不符合资格或者补贴金额为0的车辆。
 					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
-					if (vehiclePlateNum == "") {
-						alert("号牌号码为空！");
+					if(vehiclePlateNum!=null && vehiclePlateNum.indexOf("粤") != -1) {
+						vehiclePlateNum = vehiclePlateNum.substring(1);
+					}
+					if (vehiclePlateNum == "" || vehiclePlateNum.length < 6) {
+						alert("请输入号牌号码！");
 						return false;
 					}
 					var vehiclePlateType = $("#vehiclePlateType").combobox("getValue");
 					if (vehiclePlateType == "") {
-						alert("号牌种类为空！");
+						alert("请选择号牌种类！");
 						return false;
 					}
 					
@@ -836,6 +834,8 @@
 			        		if (null == vehiclePlateNum || null == vehiclePlateType) {
 			        			return false;
 			        		}
+			        		// 提交表单前格式化号牌号码，截取粤字
+			        		//$(input[name='vehiclePlateNum']).val();
 			        	},
 			        	success : function(data) {
 			        		if (data.success) {
@@ -892,7 +892,7 @@
 				        		$("textarea[name='callbackProofNo']").val(data.message.callbackProofNo);
 				        		
 			        		} else {
-			        			alert("报废数据获取失败!");
+			        			alert(data.message);
 			        		}
 			        	}
 			        });
@@ -957,11 +957,12 @@
 									$("#common-dialog").dialog("refresh", url);
 									
 			                	} else {
-			                		Messager.show({
+			                		Messager.alert({
+			                			type:"error",
 										title:"&nbsp;",
-										content:data.message
+										content:data.message.msg
 									});
-			                		$("#common-dialog").dialog("close");
+			                		//$("#common-dialog").dialog("close");
 			                	}
 			            	}
 						});
@@ -1035,7 +1036,7 @@
 				var vehiclePlateType = $(trId).find("td:eq(3)").find("input[name='appointVehPlateCode']").val();
 				
 				// 补贴账户银行
-				var bankCode = $(trId).find("td:eq(5)").find("input[name='bankCode']").val();
+				var bankCode = $(trId).find("td:eq(5)").find("input[name='appointBankCode']").val();
 				
 				// 补贴账户卡号
 				var bankAccountNo = $(trId).find("td:eq(7)").html();
@@ -1045,7 +1046,7 @@
 				$("#vehiclePlateType").combobox("setValue", vehiclePlateType);
 				
 				// 设置开户银行和银行账号
-				$("#bankName").combobox("setValue", bankCode);
+				$("#bankCode").combobox("setValue", bankCode);
 				$("#bankAccountNo").numberbox("setValue", bankAccountNo);
 			}
 			
