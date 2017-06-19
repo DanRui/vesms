@@ -105,7 +105,7 @@
 			<div title="首页" style="background-color: #FFFFFF">
 				<!-- <img src="images/welcome.jpg"> -->
 				<div style="margin: 30px 20px; width: 800px; height: 400px;">
-					<p style="float: left; width: 100%; font-size: 14px;font-weight:bold;text-align:center;border-bottom:1px #66b5ff;"><font color="red">目前各个岗位等待处理的业务如下，请及时处理：</font>
+					<p class="notify-list" style="float: left; width: 100%; font-weight:bold;text-align:center;border-bottom:1px #66b5ff;"><font color="red">目前各个岗位等待处理的业务如下，请及时处理：</font>
 						<a id="btnFresh" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">刷新</a>
 					</p>
 					<table id="console" class="notify-list">

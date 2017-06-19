@@ -26,7 +26,7 @@ String basePath = request.getContextPath();
 						<td class="view_table_left">号牌种类：</td>
 						<td class="view_table_right">
 							<input id="vehiclePlateType" class="easyui-combobox" name="vehiclePlateType" 
-							data-options="editable:false,required:true,valueField:'value',textField:'name',url:'data/vehiclePlateType.json',panelHeight:'auto'"/>
+							data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:'auto'"/>
 							<font color="red">&nbsp;*&nbsp;</font>
 						</td>
 					</tr>
