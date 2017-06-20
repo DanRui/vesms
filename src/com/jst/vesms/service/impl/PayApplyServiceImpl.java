@@ -356,11 +356,11 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 				+ "f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'YHZH:','|') lastaccountno,"
 				+ "tea.bank_name thisbankname,"
 				+ "tea.bank_account_name thisaccountname,"
-				+ "tea.bank_account_no thisaccountno,tea.fault_type thisfaultType"
-				+ "from t_eliminated_apply tea,t_batch_detail tbd,t_batch_main tbm"
-				+ "where tbm.batch_no="+batchNo
-				+ "and tbm.batch_no=tbd.batch_no"
-				+ "and tea.apply_no=tbd.apply_no"
+				+ "tea.bank_account_no thisaccountno,tea.fault_type thisfaultType "
+				+ "from t_eliminated_apply tea,t_batch_detail tbd,t_batch_main tbm "
+				+ "where tbm.batch_no= '"+batchNo+"' "
+				+ "and tbm.batch_no=tbd.batch_no "
+				+ "and tea.apply_no=tbd.apply_no "
 				+ "order by tea.apply_confirm_time)";
 			List list = payApplyDao.getTableList(sql, null);
 			return list;
