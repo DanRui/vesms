@@ -53,7 +53,7 @@ public interface PayApplyService extends BaseService {
 
 	public Page getPageBySql(Page page, String sql) throws Exception;
 
-	public String batchRepExport(Integer id)throws Exception;
+	public String batchRepExport(Integer id,String exportPath)throws Exception;
 
 	public List<EliminatedApply> getBatchApplyList(String batchNo) throws Exception;
 

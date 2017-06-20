@@ -29,7 +29,7 @@ String basePath = request.getContextPath();
 	$().ready(function(){
 		$("#ConfirmButton").click(function(){
 			$("#confirmId").form("submit", {
-				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}',
+				url : $("#confirmId").attr("action")+"?batchNo="+'${v.batchNo}',
 				success : function(data) {
 					Messager.alert("导出成功");
 				}

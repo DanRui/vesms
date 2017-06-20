@@ -230,6 +230,7 @@ public class ExportExcel {
 						}
 				
 					}
+					//设置密码
 					 SheetSettings ss = ws.getSettings(); 
 					    ss.setPassword(password); 
 					    ss.setProtected(true);
@@ -262,7 +263,7 @@ public class ExportExcel {
 	
 	
 	
-	//重报导出预览(不加密)
+	//重报导出预览
 	public static int repExportExcelPreview(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os) {
 		int result = 1;
 		int colsNum = 0;
@@ -342,20 +343,6 @@ public class ExportExcel {
 
 					//
 					if (result != Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION) {
-						//设置每列的宽度
-					
-						//ws.setColumnView(i, cellView);//根据内容自动设置列宽  
-					/*	ws.setColumnView(0, 5); 
-						ws.setColumnView(1, 13); 
-						ws.setColumnView(2, 10); 
-						ws.setColumnView(3, 18); 
-						ws.setColumnView(4, 15); 
-						ws.setColumnView(5, 18); 
-						ws.setColumnView(6, 20); 
-						ws.setColumnView(7, 15); 
-						ws.setColumnView(8, 18); 
-						ws.setColumnView(9, 23); 
-						ws.setColumnView(10, 8); */
 						if (colsSize.length == colsNum) {
 							for (int i = 0; i < colsSize.length; i++) {
 								
@@ -389,6 +376,122 @@ public class ExportExcel {
 		return result;
 	}	
 	
+	
+	
+	
+	
+	
+	
+	
+	//重报批次报财务（加密文件）
+	public static int repExportExcelToFinance(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os,String password) {
+		int result = 1;
+		int colsNum = 0;
+		// 先判断是否传入原始数据
+		if (data == null || data.size() == 0) {
+			result = Constant.EXPORT_EXCEL_NO_DATA;
+		} else {
+			// 判断传入的流
+			if (os != null) {
+				// 生成EXCEL文件
+				WritableWorkbook wwb = null;
+				try {
+					wwb = Workbook.createWorkbook(os);
+					Label lable = new Label(0, 0, excelProperties.getHeader());
+					// lable.setCellFormat(new CellFormat)
+					// 设置字体
+					WritableFont font = new WritableFont(WritableFont.ARIAL,20,WritableFont.NO_BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.BLACK);
+					WritableCellFormat cellFormat = new WritableCellFormat(font);
+					// 水平居中
+					cellFormat.setAlignment(Alignment.CENTRE);
+					// 垂直居中
+					cellFormat.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					// 背景颜色
+					//cellFormat.setBackground(Colour.YELLOW);
+					lable.setCellFormat(cellFormat);
+					// 创建EXCEL工作表
+					WritableSheet ws = wwb.createSheet("默认", 0);
+					ws.addCell(lable);
+					// 取得LIST中的数组大小
+					colsNum = data.get(0).length;
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, 0, colsNum - 1, 0);
+					// 设置标题行高
+					ws.setRowView(0, 1200, false);
+					// 处理内标题
+					int flag = 1;
+					WritableFont sideFont = new WritableFont(WritableFont.ARIAL,10,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.BLACK);
+					WritableCellFormat sideTitle = new WritableCellFormat(sideFont);
+					// 水平居中
+					sideTitle.setAlignment(Alignment.CENTRE);
+					// 垂直居中
+					sideTitle.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					String tempClosHeader[] = excelProperties.getColsHeader();
+					for (int i = 0; i < tempClosHeader.length; i++) {
+						lable = new Label(i, flag, tempClosHeader[i],sideTitle);
+						ws.addCell(lable);
+					}
+					//设置内容
+					WritableCellFormat content = new WritableCellFormat();
+					// 水平居中
+					content.setAlignment(Alignment.CENTRE);
+					// 垂直居中
+					content.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					
+					CellView cellView = new CellView(); 
+				    cellView.setAutosize(true); //设置自动大小
+					if (tempClosHeader != null && tempClosHeader.length > 0) {
+						flag++;
+					}
+					for (String temp[] : data) {
+						if (colsNum == temp.length) {
+							for (int i = 0; i < temp.length; i++) {
+								lable = new Label(i, flag, temp[i],content);
+								ws.setRowView(i+1, 500);
+								ws.addCell(lable);
+							}
+							flag++;
+						} else {
+							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
+						}
+					}
+
+					//
+					if (result != Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION) {
+						if (colsSize.length == colsNum) {
+							for (int i = 0; i < colsSize.length; i++) {
+								ws.setColumnView(i, colsSize[i]);
+							}
+						} else {
+							// 设置默认的宽度
+							for (int i = 0; i < colsNum; i++) {
+								ws.setColumnView(i, 20);
+							}
+							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
+						}
+					}
+					 SheetSettings ss = ws.getSettings(); 
+					    ss.setPassword(password); 
+					    ss.setProtected(true);
+					wwb.write();
+					wwb.close();
+					os.close();
+				} catch (IOException e) {
+					result = Constant.EXPORT_EXCEL_NOFILE_EXCEPTION;
+					e.printStackTrace();
+				} catch (RowsExceededException e) {
+					result = Constant.EXPORT_EXCEL_SYSTEM_EXCEPTION;
+					e.printStackTrace();
+				} catch (WriteException e) {
+					result = Constant.EXPORT_EXCEL_SYSTEM_EXCEPTION;
+					e.printStackTrace();
+				}
+			} else {
+				result = Constant.EXPORT_EXCEL_NULL_OUTPUTSTREAM_EXCEPTION;
+			}
+		}
+		return result;
+	}	
 	
 	
 	

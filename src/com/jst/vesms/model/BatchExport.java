@@ -30,7 +30,7 @@ public class BatchExport extends BaseModel implements Serializable{
 	private String batchNo;
 	
 	// 批次导出时间
-	private Date exportTime;
+	private Date exportDate;
 	
 	//批次导出路径
 	private String exportRoute;
@@ -47,7 +47,7 @@ public class BatchExport extends BaseModel implements Serializable{
 	//更新时间
 	private Date updateTime;
 
-	@SequenceGenerator(name = "generator",sequenceName = "SEQ_BATCH_Export_ID", allocationSize = 1)
+	@SequenceGenerator(name = "generator",sequenceName = "SEQ_BATCH_EXPORT_ID", allocationSize = 1)
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
 	@Column(name = "ID", unique = true, nullable = false, precision = 8, scale = 0)
@@ -68,13 +68,13 @@ public class BatchExport extends BaseModel implements Serializable{
 		this.batchNo = batchNo;
 	}
 
-	@Column(name = "EXPORT_TIME", unique = false, nullable = true)
-	public Date getExportTime() {
-		return exportTime;
+	@Column(name = "EXPORT_DATE", unique = false, nullable = true)
+	public Date getExportDate() {
+		return exportDate;
 	}
 
-	public void setExportTime(Date exportTime) {
-		this.exportTime = exportTime;
+	public void setExportDate(Date exportDate) {
+		this.exportDate = exportDate;
 	}
 
 	@Column(name = "EXPORT_ROUTE", unique = true, nullable = false, length = 200)

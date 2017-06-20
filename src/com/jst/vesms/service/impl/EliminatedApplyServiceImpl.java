@@ -23,6 +23,7 @@ import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.common.utils.string.StringUtil;
 import com.jst.util.DateUtil;
+import com.jst.util.EncryptUtil;
 import com.jst.vesms.common.BFGSWebServiceClient;
 import com.jst.vesms.common.CacheRead;
 import com.jst.vesms.dao.IActionLogDao;
@@ -165,6 +166,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 							// 从交警接口获取数据
 							eliminatedApply.setVehiclePlateTypeName(jiaoJingVehicle.getVehiclePlateTypeName());
 							// 车架号
+							//EncryptUtil.encryptDES("1111111122222222", jiaoJingVehicle.getVehicleIdentifyNo())
 							eliminatedApply.setVehicleIdentifyNo(jiaoJingVehicle.getVehicleIdentifyNo());
 							// 燃料种类
 							eliminatedApply.setIolType(jiaoJingVehicle.getIolType());
@@ -214,6 +216,23 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 								eliminatedApply.setBankName(bankListSysDict.get(0).getDictValue());
 							}
 						}
+						
+						/*
+						// 加密银行账号
+						eliminatedApply.setBankAccountNo(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getBankAccountNo()));
+						
+						// 加密车主手机号
+						eliminatedApply.setMobile(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getMobile()));
+						
+						// 加密经办人手机号
+						eliminatedApply.setAgentMobileNo(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getAgentMobileNo()));
+						
+						// 加密车主身份证明号
+						eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getVehicleOwnerIdentity()));
+						
+						// 加密经办人身份证明号
+						eliminatedApply.setAgentIdentity(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getAgentIdentity()));
+						*/
 						
 						// 正常，无退回
 						eliminatedApply.setIsFault("0");
@@ -355,6 +374,25 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				eliminatedApply.setVehicleStatusName(vehicleStatusName);
 			}
 		}
+		/*
+		// 解密车架号
+		eliminatedApply.setVehicleIdentifyNo(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getVehicleIdentifyNo()));
+		
+		// 解密银行账号
+		eliminatedApply.setBankAccountNo(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getBankAccountNo()));
+		
+		// 解密车主手机号
+		eliminatedApply.setMobile(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getMobile()));
+		
+		// 解密经办人手机号
+		eliminatedApply.setMobile(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getAgentMobileNo()));
+		
+		// 解密车主身份证明号
+		eliminatedApply.setMobile(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getVehicleOwnerIdentity()));
+		
+		// 解密经办人身份证号
+		eliminatedApply.setMobile(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getAgentIdentity()));
+		*/
 		
 		return eliminatedApply;
 	}
@@ -1424,8 +1462,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				String vehicleOwner = (String) result.get(0).get("11");
 				
 				// 车主身份证明号
-				String vehicleOwnerIdentity = (String) result.get(0).get("12");
-				//String vehicleOwnerIdentity = (result.get(0).get("12") != null) ? (String) result.get(0).get("12") : "";
+				//String vehicleOwnerIdentity = (String) result.get(0).get("12");
+				String vehicleOwnerIdentity = (result.get(0).get("12") != null) ? (String) result.get(0).get("12") : "";
 				
 				// 排放标准
 				String emissionStandard = (String) result.get(0).get("13");

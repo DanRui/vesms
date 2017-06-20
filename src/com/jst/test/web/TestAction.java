@@ -42,6 +42,7 @@ import com.jst.system.wrapper.XssRequestWrapper;
 import com.jst.test.model.ClassRecord;
 import com.jst.test.model.TestModel;
 import com.jst.type.DataType;
+import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.MessageHandlerUtil;
 import com.jst.util.PropertyUtil;
@@ -285,7 +286,10 @@ public class TestAction extends BaseAction{
 		
 		//WebServiceClient.invokeInterface(SERVICE_NAME, "test2", new Object[]{testModel}, dataType);
 		
-		System.out.println(TestModel.class.getSimpleName());
+		//System.out.println(TestModel.class.getSimpleName());
+		
+		System.out.println(EncryptUtil.encryptDES("1111111122222222", "asdasdasdasdasd"));
+		System.out.println(EncryptUtil.decryptDES("1111111122222222", "042ced78e4855ccca31fb50b883c1b3d"));
 	}
 	
 	

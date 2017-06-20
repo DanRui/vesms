@@ -1,7 +1,9 @@
 
 package com.jst.vesms.common;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -18,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import com.jst.util.WebServiceUtil;
-import com.jst.vesms.model.RecycleInfoEntity;
+import com.jst.vesms.model.MobileInfo;
 
 @Component
 public class BFGSWebServiceClient {
@@ -38,10 +40,10 @@ public class BFGSWebServiceClient {
 	 * @param methodName
 	 * @param params
 	 * @param paramValues
-	 * @return Object
+	 * @return List
 	 * @throws Exception
 	 */
-	public static Object invoke(String serviceName, String targetNamespace, String methodName, Object[] params, Object[] paramValues) throws Exception {
+	public static List invoke(String serviceName, String targetNamespace, String methodName, Object[] params, Object[] paramValues) throws Exception {
 		log.debug("调用报废公司接口开始");
 		RPCServiceClient client = new RPCServiceClient();
 
@@ -54,37 +56,49 @@ public class BFGSWebServiceClient {
 		OMFactory factory = OMAbstractFactory.getOMFactory();
 		OMNamespace namespace = factory.createOMNamespace(targetNamespace, "");
 		OMElement method = factory.createOMElement(methodName, namespace);
-		OMElement xmlData = factory.createOMElement((String)params[0], null);
-//		xmlData.setText("HS-730000-1323-20150605-8");
-		xmlData.setText((String)paramValues[0]);
-		method.addChild(xmlData);
+		for (int i = 0 ; i < params.length ; i ++) {
+			OMElement xmlData = factory.createOMElement((String)params[i], null);
+			//xmlData.setText("HS-730000-1323-20150605-8");
+			xmlData.setText((String)paramValues[i]);
+			method.addChild(xmlData);
+		}
 		method.build();
 		OMElement response = client.sendReceive(method);
 		log.debug("获得报废公司接口返回报文：\n" + response.toString());
 		Object object = null;
+		response.getChildrenWithLocalName("mbs");
 		OMElement omResult = response.getFirstElement();
-		if (omResult.getLocalName().equals("GetMobileInfoResult") && omResult.getText().equals("0")) {
-			for (Iterator iterator = response.getChildElements() ; iterator.hasNext() ;)
+		
+		List<Object> list = new ArrayList<Object>();
+		
+		if (omResult.getLocalName().equals("GetMobileInfoByDateResult") && omResult.getText().equals("0")) {
+			
+			Iterator iterator = response.getChildrenWithLocalName("mbs");
+			
+			while (iterator.hasNext())
 			{
 				OMElement om = (OMElement) iterator.next();
-				if (om.getLocalName().equals("mb")) {
-					object = BeanUtil.processObject(om, RecycleInfoEntity.class, null, true, new DefaultObjectSupplier(), null);
-				} 
+				for (Iterator it = om.getChildElements() ; it.hasNext();) {
+					OMElement mobile = (OMElement) it.next();
+					Object obj = BeanUtil.processObject(mobile, MobileInfo.class, null, true, new DefaultObjectSupplier(), null);
+					list.add(obj);
+					System.out.println(obj);
+				}
 			}
 		} else {
 			log.error("获取报废公司接口数据异常！错误码:"+ omResult.getText());
-			object = null;
+			list = null;
 		}
 		/*for (Iterator iterator2 = om.getChildElements(); iterator2.hasNext();) {
 			OMElement type = (OMElement) iterator2.next();
 			System.out.println(type.getLocalName()+":"+type.getText());
 		}*/
 		log.debug("调用报废公司接口结束");
-		return object == null ? null : object;
+		return list == null ? null : list;
 	}
 	
 	public static void main(String[] args) throws Exception {
-		RecycleInfoEntity recycleInfoEntity =  (RecycleInfoEntity)BFGSWebServiceClient.invoke(SERVICE_URL_PREFIX, TARGET_NAMESPACE, "GetMobileInfo", new String[] {"gjhszm"}, new String[] {"HS-730000-1323-20150605-8"});
+		List<MobileInfo> recycleInfoEntity =  BFGSWebServiceClient.invoke(SERVICE_URL_PREFIX, TARGET_NAMESPACE, "GetMobileInfoByDate", new String[] {"start", "end"}, new String[] {"2017-05-01 00:00:00", "2017-05-10 23:59:59"});
 
 		System.out.println(recycleInfoEntity);
 	}

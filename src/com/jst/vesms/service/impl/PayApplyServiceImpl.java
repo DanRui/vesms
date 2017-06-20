@@ -210,10 +210,9 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 
 	
 	//重报批次导出
-	public String batchRepExport(Integer id) throws Exception {
+	public String batchRepExport(Integer id,String exportPath) throws Exception {
 		// TODO Auto-generated method stub
 			String sid=id+"";
-			String file = "D:\\123.txt" ;
 			//File file = new File("D:\\123.txt");
 			String callName = "{call PKG_BATCH.p_repeat_batch_export(?,?,?,?,?)}";
 			Map<Integer, Object> inParams = new HashMap<Integer, Object>();
@@ -221,7 +220,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 			inParams.put(1, "用户code");
 			inParams.put(2, "用户名称");
 			inParams.put(3, sid);
-			inParams.put(4, file);
+			inParams.put(4, exportPath);
 			outParams.put(5, OracleTypes.VARCHAR);
 			List<Map<String, Object>> result1 = callDao.call(callName, inParams, outParams, "procedure");		
 			Map<String, Object> map = result1.get(0);
@@ -340,7 +339,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 				+ "thisbatchno,thistofinanceno,vehicle_plate_num,vehicle_plate_type,subsidies_money,"
 				+ "lastbankname,lastaccountname,lastaccountno,"
 				+ "thisbankname,thisaccountname,thisaccountno,thisfaultType,"
-				+ "'第'||tofinancecishu||'次报送，上一次报送批号：'||lasttofinanceno note"
+				+ "'第'||tofinancecishu||'次报送，上一次报送批号：'||lasttofinanceno note "
 				+ "from"
 				+ "(select tbm.batch_no thisbatchno,"
 				+ " tbm.to_finance_no thistofinanceno,"

@@ -1,8 +1,7 @@
 [
 	{
 		"name" : "--请选择--",
-		"value" : "none",
-		"selected" : true		
+		"value" : "none"		
 	},
 	{
 		"name" : "系统权限",

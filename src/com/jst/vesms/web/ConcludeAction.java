@@ -81,9 +81,9 @@ public class ConcludeAction extends BaseAction{
 			page = concludeService.getPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("TransactFinAction list is Error:" + e, e);
+			log.error("ConcludeAction list is Error:" + e, e);
 		}
-		log.debug("TransactFinAction list is end");
+		log.debug("ConcludeAction list is end");
 	    return returnStr;
 	}
 	
@@ -108,7 +108,7 @@ public class ConcludeAction extends BaseAction{
 	@ResponseBody
 	@RequestMapping(value = "conclude" ) 
 	public String concludeApply(@RequestParam("ids")String ids,@RequestParam("concludeStatus")String concludeStatus) {
-		log.debug("TransactFinAction concludeApply is start");
+		log.debug("ConcludeAction concludeApply is start");
 		String result = null;
 		String strids = "";
 		try {
@@ -119,7 +119,7 @@ public class ConcludeAction extends BaseAction{
 			strids=strids.substring(0, strids.length()-1);
 			result = concludeService.concludeApply(strids,concludeStatus);			
 		} catch (Exception e) {
-			log.error("TransactFinAction concludeApply  is Error:"+e, e);
+			log.error(" concludeApply  is Error:"+e, e);
 		}		
 		log.debug("TransactFinAction concludeApply  is End");
 			return 	JsonUtil.toSuccessMsg(result);
@@ -170,9 +170,9 @@ public class ConcludeAction extends BaseAction{
 			page = concludeService.getPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("TransactFinAction list is Error:" + e, e);
+			log.error("ConcludeAction list is Error:" + e, e);
 		}
-		log.debug("TransactFinAction list is end");
+		log.debug("ConcludeAction list is end");
 	    return returnStr;
 	}
 }

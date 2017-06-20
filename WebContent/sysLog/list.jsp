@@ -25,7 +25,7 @@ String basePath = request.getContextPath();
 		var basePath = $("#basePath").val();
 		$("#sys-log-list #sys-log-grid").datagrid({
 			toolbar : "#sysLogList-grid-toolbar",
-			url : basePath+"/data/sysLog.json",
+			url : basePath+"/sysLog/list.do",
 			method : "post",
 			sortName : "id",
 			sortOrder : "desc",
@@ -35,7 +35,7 @@ String basePath = request.getContextPath();
 				width : "2%",
 				checkbox : true
 			},{
-				field : "moduleName",
+				field : "objType",
 				title : "模块名称",
 				width : "10%",
 				align : "center",
@@ -43,7 +43,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true
 			},{
-				field : "operateName",
+				field : "opeType",
 				title : "操作名称",
 				width : "10%",
 				align : "center",
@@ -51,7 +51,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true
 			},{
-				field : "operatePerson",
+				field : "opeUserName",
 				title : "操作人",
 				width : "10%",
 				align : "center",
@@ -59,7 +59,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true
 			},{
-				field : "operatePersonCode",
+				field : "opeUserCode",
 				title : "操作人账号",
 				width : "10%",
 				align : "center",
@@ -67,7 +67,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true
 			},{
-				field : "operateIP",
+				field : "opeIp",
 				title : "操作IP",
 				width : "10%",
 				align : "center",
@@ -75,7 +75,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true
 			},{
-				field : "operateTime",
+				field : "opeTime",
 				title : "操作时间",
 				width : "12%",
 				align : "center",
@@ -88,11 +88,11 @@ String basePath = request.getContextPath();
 				 $(this).datagrid("view",{width:900,height:800,url:basePath+"/vehicleRecycle/view.jsp?id="+rowData.id,content:"报废车辆信息查看",param:{close:false}}); 
 			}
 		}).datagrid("initSearch",{
-			columns:[{field:"operateIP",title:"操作IP:",type:"text"},
-					{field:"moduleType",title:"操作模块:",type:"combobox", url:basePath+"/data/moduleType.json", text:"name", value:"value"},
-					{field:"operateType",title:"操作名称:",type:"combobox", url:basePath+"/data/operateType.json", text:"name", value:"value"},
-					{field:"operatePersonCode",title:"操作人账号:",type:"combobox", url:basePath+"/data/operatePersonCode.json", text:"name", value:"value"},
-					{startField:"operateStartTime",endField:"operateEndTime",title:"操作时间:",type:"datetime",section:true},
+			columns:[{field:"opeIp",title:"操作IP:",type:"text"},
+					{field:"objType",title:"操作模块:",type:"combobox", url:basePath+"/data/moduleType.json", text:"name", value:"value"},
+					{field:"opeType",title:"操作名称:",type:"combobox", url:basePath+"/data/operateType.json", text:"name", value:"value"},
+					{field:"opeUserCode",title:"操作人账号:",type:"combobox", url:basePath+"/data/operatePersonCode.json", text:"name", value:"value"},
+					{startField:"startTime",endField:"EndTime",title:"操作时间:",type:"datetime",section:true},
 					],
 			tools:[
 				   {type:"QUERY"},

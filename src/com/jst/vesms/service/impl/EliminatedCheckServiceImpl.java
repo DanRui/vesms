@@ -461,6 +461,13 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 		String msg = "";
 		Map map = new HashMap<String, Object>();
 		
+		String strIds = "";
+		String idString[] = ids.split(",");
+		for (int i = 0; i < idString.length; i ++) {
+			strIds += idString[i].concat("|");
+		}
+		strIds = strIds.substring(0, strIds.length() - 1);
+		
 		String callName = "{call PKG_APPLY.p_apply_check(?,?,?,?,?,?,?,?)}";
 		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
 		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
@@ -468,7 +475,7 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 		inParams.put(1, "admin");
 		inParams.put(2, "管理员");
 		inParams.put(3, currentPost);
-		inParams.put(4, ids);
+		inParams.put(4, strIds);
 		inParams.put(5, checkType);
 		inParams.put(6, faultType);
 		inParams.put(7, checkOpinion);

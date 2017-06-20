@@ -25,10 +25,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.jst.common.json.WriterUtil;
+import com.jst.common.system.LogConstants;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.demo.login.web.LoginAction;
 import com.jst.system.util.SystemUtil;
 import com.jst.util.JsonUtil;
+import com.jst.util.PropertyUtil;
 import com.jst.util.RequestUtil;
 
 import net.sf.json.JSONArray;
@@ -57,6 +59,12 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		log.debug("pre action begin");
+		boolean isRecordLog = Boolean.parseBoolean(PropertyUtil.getPropertyValue("isrecord.log"));
+		Thread thread = Thread.currentThread();
+		System.out.println("接口拦截器内的：" + thread.getId());
+		LogConstants.put(LogConstants.CURRENT_START_TIME, System.currentTimeMillis());
+		
 		Subject subject = SecurityUtils.getSubject();
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		Class action = handlerMethod.getBeanType();
@@ -185,6 +193,26 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 			String prvgCode = pri.prvgCode();
 			log.debug("当前访问action实例的方法对应模块：" + modelCode);
 			log.debug("当前访问action实例的方法对应权限：" + prvgCode);
+			
+			/**
+			 * 是否进行日志记录，设置在config.properties 中的 isrecord.log为true时进行记录
+			 */
+			if (isRecordLog) {
+				// 开始设置日志记录所需信息
+				//LogConstants.put(LogConstants., PropertyUtil.getPropertyValue("current.system.appcode"));
+				LogConstants.put(LogConstants.USER_CODE, userCode);
+				LogConstants.put(LogConstants.WEB_SESSION_INFO, sessionInfo);
+				LogConstants.put(LogConstants.WEB_TERMINAL_INFO, terminalInfo);
+				LogConstants.put(LogConstants.IP_STR, ip);
+				
+				LogConstants.put(LogConstants.CURRENT_TERMINAL, terminalStr);
+				
+				LogConstants.put(LogConstants.CURRENT_SESSION, sessionStr);
+				//LogConstants.put(LogConstants.SERVICE_NAME, serviceName);
+				
+				LogConstants.put(LogConstants.MDL_CODE, modelCode);
+				LogConstants.put(LogConstants.MDL_PRVG, prvgCode);
+			}
 			
 			boolean hasPrvg = subject.isPermitted(modelCode+":"+prvgCode);
 			if(!hasPrvg){
