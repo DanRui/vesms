@@ -111,12 +111,13 @@
 			<tx:method name="evaluate*" propagation="REQUIRED" />
 			<tx:method name="send*" propagation="REQUIRED"/>
 			<tx:method name="doServiceAround" propagation="REQUIRED"/>
+			<tx:method name="call*" propagation="REQUIRED"/>
 			<tx:method name="*" read-only="true" />
 		</tx:attributes>
 	</tx:advice>
 	<bean id="serviceAspect" class="com.jst.common.system.aspect.impl.ServiceAspect" />  
 	<aop:config>				
-		<aop:pointcut id="allManagerMethod" expression="execution(* com.jst.vesms.service.impl.*.*(..)) or execution(* com.jst.vesms.service.*.*(..)) or execution(* com.jst.common.service.*.*(..))" />
+		<aop:pointcut id="allManagerMethod" expression="execution(* com.jst.vesms.service.impl.*.*(..)) or execution(* com.jst.vesms.service.*.*(..)) or execution(* com.jst.common.service.*.*(..)) or execution(* com.jst.common.service.impl.*.*(..))"/>
 		<aop:advisor pointcut-ref="allManagerMethod" advice-ref="txAdvice" />
 
 	 	<aop:aspect id="serverA" ref="serviceAspect" order="5">

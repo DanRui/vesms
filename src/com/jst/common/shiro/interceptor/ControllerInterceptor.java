@@ -28,6 +28,7 @@ import com.jst.common.json.WriterUtil;
 import com.jst.common.system.LogConstants;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.demo.login.web.LoginAction;
+import com.jst.platformClient.entity.User;
 import com.jst.system.util.SystemUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
@@ -146,11 +147,39 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 					/*String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 					response.sendRedirect(request.getContextPath()+"/login.jsp");*/
 					return false;
+			}else{
+				Object obj = SecurityUtils.getSubject().getPrincipal();
+				User user = (User)obj;
+				String userCode = user.getUserCode();
+				String userName = user.getUserName();
+				LogConstants.put(LogConstants.USER_CODE, userCode);
 			}
+		}
+	
+
+		if (isRecordLog) {
+			// 开始设置日志记录所需信息
+			//LogConstants.put(LogConstants., PropertyUtil.getPropertyValue("current.system.appcode"));
+		
+			LogConstants.put(LogConstants.WEB_SESSION_INFO, sessionInfo);
+			LogConstants.put(LogConstants.WEB_TERMINAL_INFO, terminalInfo);
+			LogConstants.put(LogConstants.IP_STR, ip);
+			LogConstants.put(LogConstants.CURRENT_TERMINAL, terminalStr);
+			
+			LogConstants.put(LogConstants.CURRENT_SESSION, sessionStr);
+			//LogConstants.put(LogConstants.SERVICE_NAME, serviceName);
+			
+		
 		}
 		
 		Privilege pri = currentMethod.getAnnotation(Privilege.class);
+	
+		
 		if(pri!=null){
+			Object obj = SecurityUtils.getSubject().getPrincipal();
+			User user = (User)obj;
+			String userCode = user.getUserCode();
+			String userName = user.getUserName();
 			
 			Hashtable<String, Object> loginInfo = (Hashtable<String, Object>) subject.getSession().getAttribute("LOGIN_INFO");
 			if(null==loginInfo || loginInfo.isEmpty()){
@@ -186,33 +215,18 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 				
 				return false;
 			}
-			String userCode = loginInfo.get("USER_CODE").toString();
-			String userName = loginInfo.get("USER_NAME").toString();
+			
 			log.debug("当前用户代码：" + userCode + ", 用户名称："+ userName);
 			String modelCode = pri.modelCode();
 			String prvgCode = pri.prvgCode();
 			log.debug("当前访问action实例的方法对应模块：" + modelCode);
 			log.debug("当前访问action实例的方法对应权限：" + prvgCode);
 			
+			LogConstants.put(LogConstants.MDL_CODE, modelCode);
+			LogConstants.put(LogConstants.MDL_PRVG, prvgCode);
 			/**
 			 * 是否进行日志记录，设置在config.properties 中的 isrecord.log为true时进行记录
 			 */
-			if (isRecordLog) {
-				// 开始设置日志记录所需信息
-				//LogConstants.put(LogConstants., PropertyUtil.getPropertyValue("current.system.appcode"));
-				LogConstants.put(LogConstants.USER_CODE, userCode);
-				LogConstants.put(LogConstants.WEB_SESSION_INFO, sessionInfo);
-				LogConstants.put(LogConstants.WEB_TERMINAL_INFO, terminalInfo);
-				LogConstants.put(LogConstants.IP_STR, ip);
-				
-				LogConstants.put(LogConstants.CURRENT_TERMINAL, terminalStr);
-				
-				LogConstants.put(LogConstants.CURRENT_SESSION, sessionStr);
-				//LogConstants.put(LogConstants.SERVICE_NAME, serviceName);
-				
-				LogConstants.put(LogConstants.MDL_CODE, modelCode);
-				LogConstants.put(LogConstants.MDL_PRVG, prvgCode);
-			}
 			
 			boolean hasPrvg = subject.isPermitted(modelCode+":"+prvgCode);
 			if(!hasPrvg){

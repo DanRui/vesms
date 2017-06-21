@@ -233,8 +233,8 @@ public class EliminatedApplyAction extends BaseAction {
 		EliminatedApply eliminatedApply = null;
 		String msg = "";
 		try {
-			//Map<String, Object> map = eliminatedApplyService.getVehicleInfo(vehiclePlateNum, vehiclePlateType);
-			Map<String, Object> map = eliminatedApplyService.getJiaoJingVehicle(vehiclePlateNum, vehiclePlateType);
+			Map<String, Object> map = eliminatedApplyService.getVehicleInfo(vehiclePlateNum, vehiclePlateType);
+			//Map<String, Object> map = eliminatedApplyService.getJiaoJingVehicle(vehiclePlateNum, vehiclePlateType);
 			if(null != map && map.get("retCode").equals(1)) {
 				// 有补贴资格
 				saveOk = true;

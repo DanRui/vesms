@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class CallServiceImpl implements CallService {
 	private ICallDao callDao;
 	
 	@Override
+	@Transactional
 	public List<Map<String, Object>> call(String name,
 			Map<Integer, Object> inParams, Map<Integer, Integer> outParams,
 			String type) throws Exception {

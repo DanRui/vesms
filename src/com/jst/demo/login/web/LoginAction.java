@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.LogConstants;
 import com.jst.platformClient.client.WebServiceClient;
 import com.jst.platformClient.entity.Dept;
 import com.jst.platformClient.entity.User;
@@ -122,7 +123,9 @@ public class LoginAction extends BaseAction{
 		if (null == session.getAttribute(SystemConstants.VERIFY_CODE) && SecurityUtils.getSubject().isAuthenticated()) {
 			log.debug("用户已登录，无需重新验证");
 			try {
-				getIndexData(session);
+				if (null == session.getAttribute("WORKDATA")) {
+					getIndexData(session);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -200,7 +203,10 @@ public class LoginAction extends BaseAction{
 						log.debug("清除登陆错误信息");
 						loginSecurity.clearErrorInfo();
 						try {
-							getIndexData(session);
+							LogConstants.put(LogConstants.USER_CODE, loginInfo.get("USER_CODE"));
+							if (null == session.getAttribute("WORKDATA")) {
+								getIndexData(session); 
+							}
 						} catch (Exception e) {
 							log.error("获取工作提醒数据异常！");
 							e.printStackTrace();
@@ -313,6 +319,16 @@ public class LoginAction extends BaseAction{
 		} 
 		
 		System.out.println(result);
+	}
+	
+	/**
+	 * 
+	 * TODO 跳转页面.
+	 * @see com.jst.common.springmvc.BaseAction#redirectPage(java.lang.String)
+	 */
+	@RequestMapping("redirect")
+	public String redirect(String page) {
+		return redirectPage(page)+SystemConstants.JSP_SUFFIX;
 	}
 	
 }

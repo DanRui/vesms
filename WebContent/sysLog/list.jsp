@@ -81,7 +81,15 @@ String basePath = request.getContextPath();
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true
+				sortable : true,
+				formatter : function (value, row, index) {
+					if (row.opeTime) {
+						return new Date(row.opeTime.time).Format("yyyy-MM-dd hh:mm:ss");
+						//return getNowFormatDate(new Date(row.opeTime.time))
+					} else {
+						return "";
+					}
+				}
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {

@@ -103,7 +103,7 @@ String basePath = request.getContextPath();
 		        			Messager.alert({
 		        				type : 'error',
 		        				title : '&nbsp',
-		        				content : data.message.msg
+		        				content : data.message
 		        			});
 		        		}
 		        	}

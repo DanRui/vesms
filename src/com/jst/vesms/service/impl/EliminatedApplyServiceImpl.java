@@ -24,6 +24,7 @@ import com.jst.common.utils.page.Page;
 import com.jst.common.utils.string.StringUtil;
 import com.jst.util.DateUtil;
 import com.jst.util.EncryptUtil;
+import com.jst.util.PropertyUtil;
 import com.jst.vesms.common.BFGSWebServiceClient;
 import com.jst.vesms.common.CacheRead;
 import com.jst.vesms.dao.IActionLogDao;
@@ -151,7 +152,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			String msg = (String) verifyResult.get("8");
 			
 			if (flag == 1) {
-				*/
+				
 				// 设置各业务状态字段值
 				
 				// 暂时跳过资格校验，直接从交警接口获取
@@ -166,8 +167,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 							// 从交警接口获取数据
 							eliminatedApply.setVehiclePlateTypeName(jiaoJingVehicle.getVehiclePlateTypeName());
 							// 车架号
-							//EncryptUtil.encryptDES("1111111122222222", jiaoJingVehicle.getVehicleIdentifyNo())
-							eliminatedApply.setVehicleIdentifyNo(jiaoJingVehicle.getVehicleIdentifyNo());
+							//EncryptUtil.encryptDES(des_key, jiaoJingVehicle.getVehicleIdentifyNo())
+							eliminatedApply.setVehicleIdentifyNo(EncryptUtil.encryptDES(des_key, jiaoJingVehicle.getVehicleIdentifyNo()));
 							// 燃料种类
 							eliminatedApply.setIolType(jiaoJingVehicle.getIolType());
 							eliminatedApply.setIolTypeName(jiaoJingVehicle.getIolTypeName());
@@ -206,7 +207,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 							eliminatedApply.setSubsidiesMoney(jiaoJingVehicle.getSubsidiesMoney());
 							// 补贴标准
 							eliminatedApply.setSubsidiesStandard(jiaoJingVehicle.getEmissionStandard());
-						}
+						}*/
 						
 						// 获得银行名称
 						String bankCode = eliminatedApply.getBankCode();
@@ -217,22 +218,26 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 							}
 						}
 						
-						/*
+						// 加密车架号
+						String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+						//EncryptUtil.encryptDES(des_key, jiaoJingVehicle.getVehicleIdentifyNo())
+						eliminatedApply.setVehicleIdentifyNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getVehicleIdentifyNo()));
+						
 						// 加密银行账号
-						eliminatedApply.setBankAccountNo(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getBankAccountNo()));
+						eliminatedApply.setBankAccountNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getBankAccountNo()));
 						
 						// 加密车主手机号
-						eliminatedApply.setMobile(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getMobile()));
+						eliminatedApply.setMobile(EncryptUtil.encryptDES(des_key, eliminatedApply.getMobile()));
 						
 						// 加密经办人手机号
-						eliminatedApply.setAgentMobileNo(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getAgentMobileNo()));
+						eliminatedApply.setAgentMobileNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getAgentMobileNo()));
 						
 						// 加密车主身份证明号
-						eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getVehicleOwnerIdentity()));
+						eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.encryptDES(des_key, eliminatedApply.getVehicleOwnerIdentity()));
 						
 						// 加密经办人身份证明号
-						eliminatedApply.setAgentIdentity(EncryptUtil.encryptDES("1111111122222222", eliminatedApply.getAgentIdentity()));
-						*/
+						eliminatedApply.setAgentIdentity(EncryptUtil.encryptDES(des_key, eliminatedApply.getAgentIdentity()));
+						
 						
 						// 正常，无退回
 						eliminatedApply.setIsFault("0");
@@ -292,7 +297,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 							map.put("msg", "受理单保存失败！");
 						}
 						
-					} else {
+					/*} else {
 						map.put("retCode", vehicleMap.get("retCode"));
 						map.put("msg", vehicleMap.get("msg"));
 					}
@@ -300,7 +305,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 					// 存储过程执行返回结果，资格校验不通过
 					map.put("isSuccess", false);
 					map.put("msg", "系统异常");
-				}
+				}*/
 		
 				
 			/*} else {
@@ -374,25 +379,26 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				eliminatedApply.setVehicleStatusName(vehicleStatusName);
 			}
 		}
-		/*
+		
+		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
 		// 解密车架号
-		eliminatedApply.setVehicleIdentifyNo(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getVehicleIdentifyNo()));
+		eliminatedApply.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, eliminatedApply.getVehicleIdentifyNo()));
 		
 		// 解密银行账号
-		eliminatedApply.setBankAccountNo(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getBankAccountNo()));
+		eliminatedApply.setBankAccountNo(EncryptUtil.decryptDES(des_key, eliminatedApply.getBankAccountNo()));
 		
 		// 解密车主手机号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getMobile()));
+		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, eliminatedApply.getMobile()));
 		
 		// 解密经办人手机号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getAgentMobileNo()));
+		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, eliminatedApply.getAgentMobileNo()));
 		
 		// 解密车主身份证明号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getVehicleOwnerIdentity()));
+		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, eliminatedApply.getVehicleOwnerIdentity()));
 		
 		// 解密经办人身份证号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES("1111111122222222", eliminatedApply.getAgentIdentity()));
-		*/
+		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, eliminatedApply.getAgentIdentity()));
+		
 		
 		return eliminatedApply;
 	}

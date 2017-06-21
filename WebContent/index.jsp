@@ -112,7 +112,7 @@
 						<tr>
 							<td>窗口受理岗：</td>
 							<td>受理未确认：<a href="javascript:void(0)" src="eliminatedApply/list.jsp" parent="补贴业务受理"><%=list.get(0).get("COL2") %></a>条</td>
-							<td>待资料修正：<a href="javascript:void(0)" src="eliminatedApply/listAll.jsp" parent="业务综合查询"><%=list.get(0).get("COL3") %></a>条</td>
+							<td>待资料修正：<a href="javascript:void(0)" src="eliminatedModify/list.jsp" parent="业务资料修正"><%=list.get(0).get("COL3") %></a>条</td>
 						</tr>
 						<tr>
 							<td>会计初审岗：</td>
@@ -273,7 +273,8 @@ $(function(){
 		var url = basePath + "/login/refreshWorkData.do";
 		$.get(url);
 		// session更新成功，刷新页面
-		window.location.reload();
+		window.location.href = "<%=basePath%>/login/redirect.do?page=INDEX";
+		//window.location.reload();
 	});
 	
 });
