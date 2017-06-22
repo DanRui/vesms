@@ -433,6 +433,7 @@ $.extend($.fn.datagrid.methods,{
 				  url: "main/prvg.do?type="+p.module,
 				  async: false
 			}).responseText;
+			//alert(prvg);
 		}
 		var _t = _this.datagrid("options").toolbar;
 		var columns = p.columns;
@@ -576,7 +577,7 @@ $.extend($.fn.datagrid.methods,{
 					p_width= 70;
 				}
 				
-				if(_t_t == "ADD"  && ((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>0)){
+				if(_t_t == "ADD"  && ((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>=0)){
 					if(title==null||title==undefined){
 						title = "新增";
 					}
@@ -585,7 +586,7 @@ $.extend($.fn.datagrid.methods,{
 						
 					}
 					t +='<a href="javascript:void(0);" class="easyui-linkbutton" p-index = "'+_i+'" o_type = "'+_t_t+'" data-options="iconCls: \''+_icon+'\'" style="margin: 2px 2px; height: 26px;width:'+p_width+'px">'+title+'</a>';
-				}else if(_t_t == "UPDATE" && ((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>0)){
+				}else if(_t_t == "UPDATE" && ((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>=0)){
 					if(title==null||title==undefined){
 						title = "修改";
 					}
@@ -593,7 +594,7 @@ $.extend($.fn.datagrid.methods,{
 						_icon = "icon-edit";
 					}
 					t += '<a href="javascript:void(0);" class="easyui-linkbutton" p-index = "'+_i+'" o_type = "'+_t_t+'" data-options="iconCls: \''+_icon+'\'" style="margin: 2px 2px; height: 26px;width:'+p_width+'px">'+title+'</a>';
-				}else if(_t_t == "DELETE"  && ((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>0)){
+				}else if(_t_t == "DELETE"  && ((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>=0)){
 					if(title==null||title==undefined){
 						title = "删除";
 					}
@@ -616,7 +617,7 @@ $.extend($.fn.datagrid.methods,{
 						
 					}
 					t += '<a href="javascript:void(0);" class="easyui-linkbutton" p-index = "'+_i+'" o_type = "'+_t_t+'" data-options="iconCls: \''+_icon+'\'" style="margin: 2px 2px; height: 26px;width:'+p_width+'px">'+title+'</a>';
-				}else if(_t_t == "QUERY"  && ((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>0)){
+				}else if(_t_t == "QUERY"  && ((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>=0)){
 					if(title==null||title==undefined){
 						title = "查询";
 					}
@@ -626,7 +627,7 @@ $.extend($.fn.datagrid.methods,{
 					}
 					t+='<a href="javascript:void(0);" class="easyui-linkbutton" p-index = "'+_i+'" id ="'+_this.attr("id")+'_search" o_type = "'+_t_t+'" data-options="iconCls: \''+_icon+'\'" style="margin: 2px; height: 26px;width:'+p_width+'px">'+title+'</a>';
 				}else {
-					if(((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>0)){						
+					if(((p.debug!=undefined&&p.debug)||prvg.indexOf(_t_t)>=0)){						
 						t+='<a href="javascript:void(0);" class="easyui-linkbutton" p-index = "'+_i+'" id ="'+_this.attr("id")+'_'+_t_t+'" o_type = "'+_t_t+'" data-options="iconCls: \''+p.tools[_i].icon+'\'" style="margin: 2px; height: 26px;width:'+p_width+'px">'+title+'</a>';
 					}
 				}

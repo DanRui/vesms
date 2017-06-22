@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.JsonUtil;
 import com.jst.util.StringUtil;
@@ -194,11 +195,13 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 	
 	@RequestMapping("check")
 	@ResponseBody
+	@Privilege(modelCode = "M_ELIMINATED_CHECK_PRVG", prvgCode = "CHECK")
 	public String check(@RequestParam("ids")String ids, @RequestParam("checkType")String checkType,
 						@RequestParam("faultType")String faultType, @RequestParam("checkOpinion")String checkOpinion, @RequestParam("currentPost")String currentPost) throws Exception {
 		log.debug("EliminatedCheckAction check is start");
 		boolean checkOk = false;
 		JSONObject json = new JSONObject();
+		String errorStr = "";
 		try {
 			Map<String, Object> map = eliminatedCheckService.check(ids, checkType, faultType, checkOpinion, currentPost);
 			if (map.get("isSuccess").equals(true)) {
@@ -209,13 +212,15 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 			}
 		} catch (Exception e) {
 			log.error("EliminatedCheckAction check is Error:"+e, e);
+			errorStr = e.getMessage();
 		}
 		
 		log.debug("EliminatedCheckAction check is End");
 		if(checkOk) {
 			return JsonUtil.toSuccessMsg(json.toString());
-		} else
-		return JsonUtil.toErrorMsg("受理单审批提交失败");
+		} else {
+			return JsonUtil.toErrorMsg(errorStr);
+		}
 	}
 	
 }

@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.DateUtil;
 import com.jst.util.JsonUtil;
@@ -61,7 +62,7 @@ public class VehicleRecycleAction extends BaseAction {
 	@RequestMapping("list")
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_VEHICLE_RECYCLE_LIST", prvgCode = "LIST")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 

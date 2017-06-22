@@ -261,11 +261,19 @@ $(function(){
 		var which = $(this).attr("parent"); 
 		var src = $(this).attr("src");
 		var parent = $("#index-accordion").accordion("getPanel", which);
-		parent.find("a").each(function() {
-			if($(this).data("menuUrl") == src) {
-				$(this).click();
-			}
-		});
+		if (parent != null) {
+			parent.find("a").each(function() {
+				if($(this).data("menuUrl") == src) {
+					$(this).click();
+				}
+			});
+		} else {
+			Messager.alert({
+				type : "error",
+				title : "&nbsp;",
+				content : "权限不足，操作失败"
+			});
+		}
 	});
 	
 	// 点击刷新按钮，更新session中存放的工作项提醒数据
@@ -273,8 +281,8 @@ $(function(){
 		var url = basePath + "/login/refreshWorkData.do";
 		$.get(url);
 		// session更新成功，刷新页面
-		window.location.href = "<%=basePath%>/login/redirect.do?page=INDEX";
-		//window.location.reload();
+		//window.location.href = "<%=basePath%>/login/redirect.do?page=INDEX";
+		window.location.reload(true);
 	});
 	
 });

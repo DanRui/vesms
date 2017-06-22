@@ -4,6 +4,7 @@ pageEncoding="utf-8"%>
 <%
 String basePath = request.getContextPath();
 String currentPost = request.getParameter("currentPost");
+String mdlCode = request.getParameter("mdlCode");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -25,6 +26,7 @@ String currentPost = request.getParameter("currentPost");
 	$(function(){
 		var basePath = $("#basePath").val();
 		var currentPost = "<%=currentPost%>";
+		var mdlCode = "<%=mdlCode%>";
 		
 		$("#eliminated-check-list #eliminated-check-grid").datagrid({
 			toolbar : "#elimiCheckList-grid-toolbar",
@@ -269,9 +271,9 @@ String currentPost = request.getParameter("currentPost");
 						}
 				   }}, 
 				   {type:"QUERY"}],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true
+			module : '${param.mdlCode}',
+			shownum:3 ,
+			debug:false
 		})
 
 	})

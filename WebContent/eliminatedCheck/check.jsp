@@ -334,7 +334,8 @@ pageEncoding="utf-8"%>
 						
 						if(data.success) {
 							
-							Messager.show({
+							Messager.alert({
+								type : "info",
 								title:"&nbsp;",
 								content:data.message.msg
 							});
@@ -345,6 +346,12 @@ pageEncoding="utf-8"%>
 							//var listUrl = basePath+"/eliminatedCheck/list.do";
 							$("#eliminated-check-list #eliminated-check-grid").datagrid("load");
 							$("#back-check-list #back-check-grid").datagrid("load");
+	                	} else {
+	                		Messager.alert({
+								type : "error",
+								title:"&nbsp;",
+								content:data.message
+							});
 	                	}
 	                }
 				});

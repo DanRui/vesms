@@ -138,9 +138,9 @@ public class SystemUtil {
 		  try { 
 			Long currentTime = System.currentTimeMillis();
 		    Runtime rt = Runtime.getRuntime();
-		    Process proc = rt.exec(cmd);
+		    Process proc = rt.exec(another);
 		    proc.waitFor(); //已经执行完第一个命令，准备执行第二个命令
-		    proc = rt.exec(another); //rt.exec(cmd); 
+		    //proc = rt.exec(another); //rt.exec(cmd); 
 		    System.out.println("user time is :"+(System.currentTimeMillis()-currentTime));
 		   
 		    InputStreamReader is = new InputStreamReader(proc.getInputStream()); 
@@ -227,11 +227,11 @@ public class SystemUtil {
 		public static String getMacAddress(String ip){
 		  String macAddress = "";
 		  macAddress = getMacInWindows(ip).trim();
-		  /*
-		  if(macAddress==null||"".equals(macAddress)) {
+		  
+		  /*if(macAddress==null||"".equals(macAddress)) {
 		    macAddress = getMacInLinux(ip).trim();
-		  }
-		  */
+		  }*/
+		  
 		  return macAddress;
 		}
 		//做个测试
