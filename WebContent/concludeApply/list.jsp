@@ -66,6 +66,28 @@ String basePath = request.getContextPath();
 				halign : "center",
 				resizable : true,
 				sortable : true
+			},{
+				field : "payResStatus",
+				title : "拨付结果状态",
+				width : "8%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true,
+				formatter : function(value, row, index) {
+					if (value == "1") {
+						return "拨付成功";
+					} else if (value == "2") {
+						return "拨付不成功";
+					}
+				},
+				styler : function(value, row, index) {
+					if (value == "1") {
+						return "color:green";
+					} else if (value == "2") {
+						return "color:red";
+					}
+				}
 			},
 			{
 				field : "vehicleIdentifyNo",

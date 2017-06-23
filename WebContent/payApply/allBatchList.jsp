@@ -19,7 +19,7 @@ String basePath = request.getContextPath();
 			<div class="datagrid-header" id="allBatchMain-grid-toolbar">
 				<table id="allBatchMain-recycle-tool-table" style = "width:100%;">
 				</table>
-		</div>
+			</div>
 		<table id="allBatchMain-grid" style = "height:97.5%"></table>
 	</div>
 

@@ -18,6 +18,7 @@ $(function(){
 	
 	//加载菜单
 	$.post("menu/list.do", {}, function(data) {
+	//$.post("data/menu.json", {}, function(data) {
 		var _accordion = $("#index-accordion");
 		
 		$.each(data,function(i, o){
@@ -30,16 +31,22 @@ $(function(){
 				
 				_a.data("menuUrl",child.menuUrl);
 				_a.data("openMode",child.openMode);
-				_a.data("mdlCode", child.mdlCode);
+				
+				if (child.mdlCode != undefined && child.mdlCode != null) {
+					_a.data("mdlCode", child.mdlCode);
+				}
 				
 				if("dialog" == child.openMode){
 					_a.data("showType",child.showType);
 					_a.data("width",child.width);
 					_a.data("height",child.height);
-					_a.data("param",child.params);
 					
-					var params = eval('(' + child.params + ')');
-					_a.data("maximizable",child.params.maximizable);
+					if (child.params != undefined && child.params != null) {
+						_a.data("param",child.params);
+						
+						var params = eval('(' + child.params + ')');
+						_a.data("maximizable",child.params.maximizable);
+					}
 				}
 				
 				var _span = $('<span>' + child.menuName + '</span>');
@@ -144,7 +151,9 @@ $(function(){
 			
 			// 当前菜单所对应的权限代码
 			var mdlCode = $(this).data("mdlCode");
-			href = href + '&mdlCode=' + mdlCode;
+			if (mdlCode != undefined && mdlCode != null) {
+				href = href + '&mdlCode=' + mdlCode;
+			}
 			
 			var menuIndex = $(this).closest("div.panel").index();
 			var subMenuIndex = $(this).closest("li").index();

@@ -24,7 +24,7 @@ public class PhotoUtil {
                     b[i] += 256;  
                 }  
             }  
-            //生成jpeg图片  
+            //生成jpg图片  
             String imgFilePath = "d://image//"+jpgName;//新生成的图片  
             OutputStream out = new FileOutputStream(imgFilePath);      
             out.write(b);  

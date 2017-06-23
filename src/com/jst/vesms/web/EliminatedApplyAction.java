@@ -18,6 +18,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -35,14 +37,13 @@ import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.DateUtil;
+import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.EliminatedApplyService;
-
-import net.sf.json.JSONObject;
 
 @RequestMapping("/eliminatedApply")
 @Controller
@@ -61,45 +62,47 @@ public class EliminatedApplyAction extends BaseAction {
 	 * 进行查询数据
 	 */
 	@RequestMapping("list")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_ELIMINATED_APPLY_NO_LIST", prvgCode = "QUERY")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String startTime, String endTime) throws Exception{
-		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
 		page.setPageSize(pageSize);
 		page.setOrder(order);
 		page.setOrderBy(orderBy);
+		StringBuffer sb = new StringBuffer("select * from t_eliminated_apply t where 1 = 1 ");
 		String returnStr = "";
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
-			list.add(new PropertyFilter("EQS_vehiclePlateNum",vehiclePlateNum));
+			sb.append("and t.vehicle_plate_num = '").append(vehiclePlateNum).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehiclePlateType)) {
-			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
+			sb.append("and t.vehicle_plate_type = '").append(vehiclePlateType).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-			list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
+			String key = PropertyUtil.getPropertyValue("DES_KEY");
+			vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
+			sb.append("and t.vehicle_identify_no = '").append(vehicleIdentifyNo).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
-			list.add(new PropertyFilter("LIKES_vehicleOwner",vehicleOwner));
+			sb.append("and t.vehicle_owner like '%").append(vehicleOwner).append("%' ");
 		}
 		if(StringUtil.isNotEmpty(applyNo)) {
-			list.add(new PropertyFilter("EQS_applyNo",applyNo));
+			sb.append("and t.apply_no = '").append(applyNo).append("' ");
 		}
 		if(StringUtil.isNotEmpty(startTime)) {
-			list.add(new PropertyFilter("GTD_applyTime",startTime));
+			sb.append("and t.apply_time >= to_date('").append(startTime).append("', 'yyyy-MM-dd') ");
 		}
 		if(StringUtil.isNotEmpty(endTime)) {
-			list.add(new PropertyFilter("LTD_applyTime",endTime));
+			sb.append("and t.apply_time <= to_date('").append(endTime).append("', 'yyyy-MM-dd') ");
 		}
+		sb.append("and t.apply_confirm_time is null ");
 		try {
-			//page = eliminatedApplyService.getPageBySql(page, "select * from t_eliminated_apply where apply_confirm_time is null");
-			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
-			page = eliminatedApplyService.filterNoConfirm(page);
+			page = eliminatedApplyService.getPageBySql(page, sb.toString());
+			//page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+			//page = eliminatedApplyService.filterNoConfirm(page, list);
 			page = eliminatedApplyService.getPageExtra(page);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
@@ -110,7 +113,6 @@ public class EliminatedApplyAction extends BaseAction {
 	}
 	
 	@RequestMapping("listAll")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
 	public String listAll(@RequestParam(value="page", defaultValue="1")int pageNo, 
@@ -169,7 +171,6 @@ public class EliminatedApplyAction extends BaseAction {
 		try {
 			//page = eliminatedApplyService.getPageBySql(page, "select * from t_eliminated_apply where apply_confirm_time is null");
 			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
-			//page = eliminatedApplyService.filterNoConfirm(page);
 			page = eliminatedApplyService.getPageExtra(page);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
@@ -179,7 +180,7 @@ public class EliminatedApplyAction extends BaseAction {
 	    return returnStr;
 	}
 	
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "ADD")
+	@Privilege(modelCode = "M_ELIMINATED_APPLY_ADD",prvgCode = "ADD")
 	@ResponseBody
 	@RequestMapping(value = "save" )
 	public String save(EliminatedApply eliminatedApply, String callbackProofFile, String vehicleCancelProofFiles,
@@ -602,6 +603,7 @@ public class EliminatedApplyAction extends BaseAction {
 	
 	@ResponseBody
 	@RequestMapping("confirmApply")
+	@Privilege(modelCode  = "M_ELIMINATED_APPLY_NO_LIST", prvgCode = "CONFIRM")
 	public String confirmApply(@RequestParam("id")Integer id, @RequestParam("signedApplyFiles")String signedApplyFiles) throws Exception {
 		log.debug("eliminatedApplyAction confirmApply is start");
 		boolean isOk = false;

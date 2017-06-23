@@ -266,7 +266,7 @@ String mdlCode = request.getParameter("mdlCode");
 										          ]
 									   },
 								maximizable : true,
-								href : basePath+"/eliminatedCheck/checkView.do?ids="+ids+"&currentPost="+currentPost
+								href : basePath+"/eliminatedCheck/checkView.do?ids="+ids+"&currentPost="+currentPost+"&mdlCode="+'${param.mdlCode}'
 							});
 						}
 				   }}, 

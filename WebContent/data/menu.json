@@ -144,7 +144,7 @@
   		"menuPic":"icon-guidang",
 		"children" : [
 			{"menuCode":"2051","menuName":"正常办结","menuUrl":"concludeApply/list.jsp","openMode":"tab"},
-			{"menuCode":"2052","menuName":"异常办结","menuUrl":"concludeApply/exceList.jsp","openMode":"tab"}
+			{"menuCode":"2052","menuName":"异常办结","menuUrl":"concludeApply/faultList.jsp","openMode":"tab"}
 		]
 	},
 	{

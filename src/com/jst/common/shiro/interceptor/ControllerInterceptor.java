@@ -11,6 +11,9 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,11 +31,15 @@ import com.jst.common.json.WriterUtil;
 import com.jst.common.system.LogConstants;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.demo.login.web.LoginAction;
+import com.jst.platformClient.client.WebServiceClient;
 import com.jst.platformClient.entity.User;
+import com.jst.platformClient.entity.UserPrvg;
+import com.jst.platformClient.utils.Constants;
 import com.jst.system.util.SystemUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.util.RequestUtil;
+import com.jst.util.StringUtil;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -60,7 +67,7 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		log.debug("pre action begin");
+		log.debug("preHandle begin");
 		boolean isRecordLog = Boolean.parseBoolean(PropertyUtil.getPropertyValue("isrecord.log"));
 		Thread thread = Thread.currentThread();
 		System.out.println("接口拦截器内的：" + thread.getId());
@@ -83,11 +90,11 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 		Method currentMethod = handlerMethod.getMethod();
 		String methodName = currentMethod.getName();
 		log.debug("user time is :"+ (System.currentTimeMillis() - currentTime));
-		if(handlerMethod.getBean() instanceof LoginAction){
+		if(handlerMethod.getBean() instanceof LoginAction) {
 			
-		}else{
+		} else {
 			String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath();
-			if(!subject.isAuthenticated()){
+			if(!subject.isAuthenticated()) {
 				
 				if (RequestUtil.isSynchronized(request)) {// 不需要
 					// WriterUtil.writeJSONString(response, "<script type='text/javascript'>alert('" + UN_LOGIN + "');</script>");
@@ -147,7 +154,7 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 					/*String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 					response.sendRedirect(request.getContextPath()+"/login.jsp");*/
 					return false;
-			}else{
+			} else {
 				Object obj = SecurityUtils.getSubject().getPrincipal();
 				User user = (User)obj;
 				String userCode = user.getUserCode();
@@ -168,14 +175,63 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 			
 			LogConstants.put(LogConstants.CURRENT_SESSION, sessionStr);
 			//LogConstants.put(LogConstants.SERVICE_NAME, serviceName);
-			
 		
 		}
 		
-		Privilege pri = currentMethod.getAnnotation(Privilege.class);
-	
+		// 读取岗位配置信息，判断当前岗位操作的模块是否有权限
+		String requestUrlPath = request.getRequestURL().toString();
+		String pageMdlCode = request.getParameter("mdlCode");
+		String currentPost = request.getParameter("currentPost");
+		if (StringUtil.isNotEmpty(pageMdlCode)) {
+			// 检查是否是审核模块的请求
+			log.debug("检查是否有当前审核岗位的权限");
+			if (requestUrlPath.contains("eliminatedCheck")) {
+				boolean check = false;
+				if (StringUtil.isNotEmpty(currentPost)) {
+					if (pageMdlCode.substring(19, 24).equals(currentPost)) {
+						Map prvg = (Map) SecurityUtils.getSubject().getSession().getAttribute("userPrvg");
+						Iterator<Map.Entry<String, String>> it = prvg.entrySet().iterator();
+						while (it.hasNext()) {
+							Map.Entry<String, String> entry = it.next();
+							
+							if ("M_ELIMINATED_CHECK_PRVG".equals(entry.getKey()) && currentPost.equals(entry.getValue())) {
+								// 当前岗位的权限与配置的岗位权限一致
+								check = true;
+							}
+						}
+					}
+				}
+				if (!check) {
+					log.debug("用户操作权限不足。当前操作模块："+ pageMdlCode + ", 岗位代码：" + currentPost);
+					
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("text/html;charset=UTF-8");
+					
+					PrintWriter writer = response.getWriter();
+					
+					String script = "";
+					
+					script += "<script type='text/javascript'>";
+					script += "window.alert('权限不足，无法进行此操作');";
+					script += "";
+					// script += "window.location.href='userLogin_logout.action';";
+					script += "</script>";
+					
+					writer.print(script);
+					writer.flush();
+					
+					log.debug("此次操作拦截成功");
+					
+					return false;
+					
+				}
+			}
+		}
 		
-		if(pri!=null){
+		
+		Privilege pri = currentMethod.getAnnotation(Privilege.class);
+		
+		if(pri != null ) {
 			Object obj = SecurityUtils.getSubject().getPrincipal();
 			User user = (User)obj;
 			String userCode = user.getUserCode();
@@ -228,8 +284,11 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 			 * 是否进行日志记录，设置在config.properties 中的 isrecord.log为true时进行记录
 			 */
 			
-			boolean hasPrvg = subject.isPermitted(modelCode+":"+prvgCode);
-			if(!hasPrvg){
+			@SuppressWarnings("unused")
+			List<UserPrvg> userPrvgList = new WebServiceClient().getUserPrvgList(Constants.CURRENT_APPCODE, userCode, null);
+			
+			boolean hasPrvg = subject.isPermitted(modelCode + ":"+ prvgCode);
+			if(!hasPrvg) {
 				log.debug("用户权限不足，无法访问当前action实例方法");
 				
 				response.setCharacterEncoding("UTF-8");
@@ -251,7 +310,7 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 				
 				return false;
 			}
-		}else{
+		} else {
 			return super.preHandle(request, response, handlerMethod);
 		}
 		/*Annotation [] annotations =method.getAnnotations();

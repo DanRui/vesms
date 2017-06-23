@@ -112,7 +112,7 @@ String basePath = request.getContextPath();
 					{startField:"inputStartTime",endField:"inputEndTime",title:"录入时间:",type:"date",section:true}
 					],
 			tools:[
-				   {type:"UPDATE",title:"编辑",content:"报废车辆信息更新",width:1012,height:600,param:{
+				  /*  {type:"UPDATE",title:"编辑",content:"报废车辆信息更新",width:1012,height:600,param:{
  					   reset:false},url:basePath+"/vehicleRecycle/view.do",
 					   confim:function(c) {
 				    		var selectedRows = $(this).datagrid("getSelections");
@@ -143,11 +143,11 @@ String basePath = request.getContextPath();
 								return true;
 							}
 						}
-				   },
+				   }, */
 				   {type:"QUERY"}],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true
+			module : '${param.mdlCode}',
+			shownum : 3/* ,
+			debug:true */
 		})
 
 	})

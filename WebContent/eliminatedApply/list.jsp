@@ -160,16 +160,16 @@ String basePath = request.getContextPath();
 			        ],
 			tools:[			       
 			       //{type:"ADD",title:"新增录入",content:"补贴受理信息录入",text_width:100,width:1012,height:400,url:basePath+"/eliminatedApply/add.jsp",param:{reset:false}},				 
-			       {type:"DELETE",color:"red",confim:function(d) {
+			       /* {type:"DELETE",color:"red",confim:function(d) {
 			    	   return true;
-			       }},
+			       }}, */
 				   {type:"UPDATE",content:"补贴受理信息修改",width:1132,height:800,url:basePath+"/eliminatedApply/view.do",
 			    	param:{
 			    		reset : false
 			    	}   
 				   },			
 				   //{type:"CLEAR",title:"重置",text_width:70},  
-				   {type:"PRINT_APPLY_TABLE",icon:"icon-print",title:"打印受理表",text_width:100,
+				   {type:"PRINT_APPLY",icon:"icon-print",title:"打印受理表",text_width:100,
 					   fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							var infoMsg = null;
@@ -210,7 +210,7 @@ String basePath = request.getContextPath();
 							}
 					   }
 				   },
-				   {type:"CONFIRM_APPLY",icon:"icon-ok",title:"受理单确认",text_width:100,
+				   {type:"CONFIRM",icon:"icon-ok",title:"受理单确认",text_width:100,
 					   fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							var infoMsg = null;
@@ -266,9 +266,9 @@ String basePath = request.getContextPath();
 				   },
 				   {type:"QUERY"},  
 				   ],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true   
+			module : '${param.mdlCode}',
+			shownum:3/* ,
+			debug:true */   
 		})
 
 		

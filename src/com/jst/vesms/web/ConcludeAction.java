@@ -75,10 +75,10 @@ public class ConcludeAction extends BaseAction{
 		if(StringUtil.isNotEmpty(payResEndDate)) {
 			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
 		}
-		list.add(new PropertyFilter("EQS_CURRENT_POST", "YWBJG"));
-		list.add(new PropertyFilter("EQS_BUSSINESS_STATUS", "1"));
+		list.add(new PropertyFilter("EQS_currentPost", "YWBJG"));
+		list.add(new PropertyFilter("EQS_bussinessStatus", "1"));
 		try {
-			page = concludeService.getPage(page, list);
+			page = concludeService.getApplyPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("ConcludeAction list is Error:" + e, e);
@@ -128,11 +128,11 @@ public class ConcludeAction extends BaseAction{
 	
 	
 
-	@RequestMapping("exceList")
+	@RequestMapping("faultList")
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-	public String getExcepList(@RequestParam(value="page", defaultValue="1")int pageNo, 
+	public String getFaultpList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate) throws Exception{
@@ -164,10 +164,10 @@ public class ConcludeAction extends BaseAction{
 		if(StringUtil.isNotEmpty(payResEndDate)) {
 			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
 		}
-		list.add(new PropertyFilter("EQS_CURRENT_POST", "YWBJG"));
-		list.add(new PropertyFilter("EQS_BUSSINESS_STATUS", "-1"));
+		list.add(new PropertyFilter("EQS_currentPost", "YWBJG"));
+		list.add(new PropertyFilter("EQS_bussinessStatus", "-1"));
 		try {
-			page = concludeService.getPage(page, list);
+			page = concludeService.getApplyPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("ConcludeAction list is Error:" + e, e);

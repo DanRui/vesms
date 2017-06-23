@@ -144,7 +144,7 @@ String basePath = request.getContextPath();
 											} else {
 											$.messager.confirm('报财务确认','是否确定报送财务',function(r){
 											if(r){												
-												$.ajaxSetup({  
+											/*	$.ajaxSetup({  
 												    async : false  
 												});  
 											 	$.post(basePath+"/payApply/confirmBatch.do",{id:selectedRows[0].id},function(data) {
@@ -154,7 +154,7 @@ String basePath = request.getContextPath();
 														content : data.message
 													});
 										 			$("#repFinance-list #repFinance-grid").datagrid("load");
-										 		});
+										 		}); */
 											 	openDialog({
 												   	type : "batch_adjust",
 													title : "批次报财务",

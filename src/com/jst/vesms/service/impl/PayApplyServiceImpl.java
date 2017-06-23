@@ -163,16 +163,21 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	@Override
 	public String confirmBatch(String ids) throws Exception {
 		// TODO Auto-generated method stub
-		String callName = "{call PKG_BATCH.p_normal_batch_to_finance(?,?,?,?)}";
+		String callName = "{call PKG_BATCH.p_normal_batch_to_finance(?,?,?,?,?)}";
 		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
 		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
 		inParams.put(1, "admin");
 		inParams.put(2, "admin");
 		inParams.put(3, ids);
 		outParams.put(4, OracleTypes.VARCHAR);
+		outParams.put(5, OracleTypes.VARCHAR);
 		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
 		Map<String, Object> map = result.get(0);
-		return map.get("4").toString();
+		if (map.get("4").toString().equals("-1")){
+			return "-1";
+		}else {
+			return map.get("5").toString();
+		}
 	}
 
 
@@ -186,7 +191,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 		inParams.put(2, "用户名称");
 		inParams.put(3, ids);
 		outParams.put(4, OracleTypes.VARCHAR);
-		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");		
+		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
 		Map<String, Object> map = result.get(0);
 		return map.get("4").toString();
 	}
@@ -281,16 +286,20 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	@Override
 	public String confirmRepBatch(String ids) throws Exception {
 		// TODO Auto-generated method stub
-		String callName = "{call PKG_BATCH.p_repeat_batch_to_finance(?,?,?,?)}";
+		String callName = "{call PKG_BATCH.p_repeat_batch_to_finance(?,?,?,?,?)}";
 		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
 		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
 		inParams.put(1, "admin");
 		inParams.put(2, "admin");
 		inParams.put(3, ids);
 		outParams.put(4, OracleTypes.VARCHAR);
+		outParams.put(5, OracleTypes.VARCHAR);
 		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
 		Map<String, Object> map = result.get(0);
-		return map.get("4").toString();
+		if (map.get("4").toString()=="-1"){
+			return "-1";
+		}
+		return map.get("5").toString();
 	}
 
 
@@ -303,9 +312,8 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	@Override
 	public Page getPageBySql(Page page,
 			String sql) throws Exception {
-		page=eliminatedApplyService.getPageBySql(page, sql);
-		page = eliminatedApplyService.getPageExtra(page);
-		return page;
+		Page retPage = eliminatedApplyService.getPageBySql(page, sql);
+		return eliminatedApplyService.getPageExtra(retPage);
 	}
 
 
@@ -365,5 +373,45 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 			return list;
 	}
 
+
+	// 重报批次待生成
+	@Override
+	public Page filterRepeatedBatchPage(Page page) {
+		// TODO Auto-generated method stub
+		Page<EliminatedApply> filterPage = new Page<EliminatedApply>();
+		List list = page.getResult();
+		if (null != list && list.size() > 0) {
+			for (int i = 0 ; i < list.size() ; i ++) {
+				EliminatedApply apply = (EliminatedApply) list.get(i);
+				String toFinanceString = apply.getToFinanceStatus().toString();
+				int toFinanceNum = Integer.parseInt(toFinanceString);
+				if (apply.getRepeatedBatchNo() == null&& toFinanceNum <=-2&& apply.getBatchNo()!=null) {
+					filterPage.getResult().add(apply);
+					filterPage.setTotalCount(filterPage.getResult().size());
+				}
+			}
+		}
+		return filterPage;
+	}
+
+
+	// 批次为空的数据
+	@Override
+	public Page filterBatchPage(Page page) {
+		// TODO Auto-generated method stub
+		Page<EliminatedApply> filterPage = new Page<EliminatedApply>();
+		List list = page.getResult();
+		if (null != list && list.size() > 0) {
+			for (int i = 0 ; i < list.size() ; i ++) {
+				EliminatedApply apply = (EliminatedApply)list.get(i);
+				if (apply.getBatchNo() == null) {
+					filterPage.getResult().add(apply);
+					filterPage.setTotalCount(filterPage.getResult().size());
+				}
+			}
+		}
+		return filterPage;
+	}
+	
 
 }

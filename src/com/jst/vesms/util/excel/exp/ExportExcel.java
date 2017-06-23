@@ -79,12 +79,12 @@ public class ExportExcel {
 					WritableSheet ws = wwb.createSheet("默认", 0);
 					ws.addCell(lable);
 					
-					// 取得LIST中的数组大小
+					// 取得LIST中的数组大小(对象的个数，excel中的列数)
 					colsNum = data.get(0).length;
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, 0, colsNum - 1, 0);
 					// 行
-					int flag = 1;
+					int flag = 2;
 					// 处理内标题
 					String tempClosHeader[] = excelProperties.getColsHeader();
 					for (int i = 0; i < tempClosHeader.length; i++) {
@@ -94,33 +94,51 @@ public class ExportExcel {
 					if (tempClosHeader != null && tempClosHeader.length > 0) {
 						flag++;
 					}
+					Integer intnumbersum=0;
+					int j=0;
 					for (String temp[] : data) {
 						if (colsNum == temp.length) {
 							for (int i = 0; i < temp.length; i++) {
-								lable = new Label(i, flag, temp[i]);
-								ws.addCell(lable);
+								//金额，数字输出		
+								if(i==1){
+									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
+									ws.addCell(number);
+									Double doublst=Double.parseDouble(temp[i]);
+									intnumbersum=intnumbersum+doublst.intValue();
+								}else{
+									lable = new Label(i, flag, temp[i]);
+									ws.addCell(lable);
+								}
 							}
 							flag++;
 						} else {
 							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
 						}
+						j++;
 					}
+					//合计
+					jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
+					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
+				
+					WritableCellFormat endFormat = new WritableCellFormat();
+					endFormat.setBackground(Colour.YELLOW);
+					lable = new Label(7, j+4, numberstr);
+					lable.setCellFormat(endFormat);
+					ws.addCell(lable);
+					lable = new Label(7, 1, numberstr);
+					lable.setCellFormat(endFormat);
+					ws.addCell(lable);
+					
+					
+					
 
 					//
 					if (result != Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION) {
 						// 设置列宽
-					/*	if (colsSize.length == colsNum) {
-							for (int i = 0; i < colsSize.length; i++) {*/
+						if (colsSize.length == colsNum) {
+							for (int i = 0; i < colsSize.length; i++) {
 								//设置每列的宽度
-								ws.setColumnView(0, 5); 
-								ws.setColumnView(1, 10); 
-								ws.setColumnView(2, 15); 
-								ws.setColumnView(3, 15); 
-								ws.setColumnView(4, 25); 
-								ws.setColumnView(5, 15); 
-								ws.setColumnView(6, 15); 
-								ws.setColumnView(7, 45); 
-					/*			ws.setColumnView(i, colsSize[i]);
+								ws.setColumnView(i, colsSize[i]);
 							}
 						} else {
 							// 设置默认的宽度
@@ -128,7 +146,7 @@ public class ExportExcel {
 								ws.setColumnView(i, 20);
 							}
 							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
-						}*/
+						}
 					}
 					wwb.write();
 					wwb.close();
@@ -182,8 +200,8 @@ public class ExportExcel {
 					colsNum = data.get(0).length;
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, 0, colsNum - 1, 0);
-					// 行
-					int flag = 1;
+					// 第3行上设置内标题
+					int flag = 2;
 					// 处理内标题
 					String tempClosHeader[] = excelProperties.getColsHeader();
 					for (int i = 0; i < tempClosHeader.length; i++) {
@@ -193,30 +211,46 @@ public class ExportExcel {
 					if (tempClosHeader != null && tempClosHeader.length > 0) {
 						flag++;
 					}
+					
+					Integer intnumbersum=0;
+					int j=0;
 					for (String temp[] : data) {
 						if (colsNum == temp.length) {
 							for (int i = 0; i < temp.length; i++) {
-								lable = new Label(i, flag, temp[i]);
-								ws.addCell(lable);
+								//金额，数字输出		
+								if(i==1){
+									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
+									ws.addCell(number);
+									Double doublst=Double.parseDouble(temp[i]);
+									intnumbersum=intnumbersum+doublst.intValue();
+								}else{
+									lable = new Label(i, flag, temp[i]);
+									ws.addCell(lable);
+								}
 							}
 							flag++;
 						} else {
 							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
 						}
+						j++;
 					}
+					
+					//合计
+					jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
+					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
+				
+					WritableCellFormat endFormat = new WritableCellFormat();
+					endFormat.setBackground(Colour.YELLOW);
+					lable = new Label(7, j+4, numberstr);
+					lable.setCellFormat(endFormat);
+					ws.addCell(lable);
+					lable = new Label(7, 1, numberstr);
+					lable.setCellFormat(endFormat);
+					ws.addCell(lable);
 
 					//
 					if (result != Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION) {
 						// 设置列宽
-						
-					/*	ws.setColumnView(0, 5); 
-						ws.setColumnView(1, 10); 
-						ws.setColumnView(2, 15); 
-						ws.setColumnView(3, 15); 
-						ws.setColumnView(4, 25); 
-						ws.setColumnView(5, 15); 
-						ws.setColumnView(6, 15); 
-						ws.setColumnView(7, 45); */
 						if (colsSize.length == colsNum) {
 							for (int i = 0; i < colsSize.length; i++) {
 								ws.setColumnView(i, colsSize[i]);
@@ -237,6 +271,7 @@ public class ExportExcel {
 					wwb.write();
 					wwb.close();
 					os.close();
+					result = Constant.EXPORT_EXCEL_SUCCESS;
 				} catch (IOException e) {
 					result = Constant.EXPORT_EXCEL_NOFILE_EXCEPTION;
 					e.printStackTrace();
@@ -302,7 +337,7 @@ public class ExportExcel {
 					
 					
 					// 处理内标题
-					int flag = 1;
+					int flag = 2;
 					WritableFont sideFont = new WritableFont(WritableFont.ARIAL,10,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.BLACK);
 					WritableCellFormat sideTitle = new WritableCellFormat(sideFont);
 					// 水平居中
@@ -314,6 +349,43 @@ public class ExportExcel {
 						lable = new Label(i, flag, tempClosHeader[i],sideTitle);
 						ws.addCell(lable);
 					}
+					
+					// 给第二行后末尾行加上标志(显示总行和总金额)
+					Integer intnumbersum=0;
+					int j=0;
+					for (String temp[] : data) {
+						if (colsNum == temp.length) {
+							for (int i = 0; i < temp.length; i++) {
+								//金额，数字输出		
+								if(i==1){
+									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
+									ws.addCell(number);
+									Double doublst=Double.parseDouble(temp[i]);
+									intnumbersum=intnumbersum+doublst.intValue();
+								}else{
+									lable = new Label(i, flag, temp[i]);
+									ws.addCell(lable);
+								}
+							}
+							flag++;
+						} else {
+							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
+						}
+						j++;
+					}
+					
+					//合计
+					jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
+					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
+				
+					WritableCellFormat endFormat = new WritableCellFormat();
+					endFormat.setBackground(Colour.YELLOW);
+					lable = new Label(10, j+4, numberstr);
+					lable.setCellFormat(endFormat);
+					ws.addCell(lable);
+					lable = new Label(10, 1, numberstr);
+					lable.setCellFormat(endFormat);
+					ws.addCell(lable);
 					
 					
 					//设置内容
@@ -419,7 +491,7 @@ public class ExportExcel {
 					// 设置标题行高
 					ws.setRowView(0, 1200, false);
 					// 处理内标题
-					int flag = 1;
+					int flag = 2;
 					WritableFont sideFont = new WritableFont(WritableFont.ARIAL,10,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.BLACK);
 					WritableCellFormat sideTitle = new WritableCellFormat(sideFont);
 					// 水平居中
@@ -431,6 +503,45 @@ public class ExportExcel {
 						lable = new Label(i, flag, tempClosHeader[i],sideTitle);
 						ws.addCell(lable);
 					}
+					
+					// 给第二行后末尾行加上标志(显示总行和总金额)
+					Integer intnumbersum=0;
+					int j=0;
+					for (String temp[] : data) {
+						if (colsNum == temp.length) {
+							for (int i = 0; i < temp.length; i++) {
+								//金额，数字输出		
+								if(i==1){
+									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
+									ws.addCell(number);
+									Double doublst=Double.parseDouble(temp[i]);
+									intnumbersum=intnumbersum+doublst.intValue();
+								}else{
+									lable = new Label(i, flag, temp[i]);
+									ws.addCell(lable);
+								}
+							}
+							flag++;
+						} else {
+							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
+						}
+						j++;
+					}
+					
+					//合计
+					jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
+					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
+				
+					WritableCellFormat endFormat = new WritableCellFormat();
+					endFormat.setBackground(Colour.YELLOW);
+					lable = new Label(10, j+4, numberstr);
+					lable.setCellFormat(endFormat);
+					ws.addCell(lable);
+					lable = new Label(10, 1, numberstr);
+					lable.setCellFormat(endFormat);
+					ws.addCell(lable);
+					
+					
 					//设置内容
 					WritableCellFormat content = new WritableCellFormat();
 					// 水平居中
@@ -683,7 +794,6 @@ public class ExportExcel {
 										ws.addCell(lable);
 									}
 								}
-							
 							}
 							flag++;
 						} else {

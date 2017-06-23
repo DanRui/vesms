@@ -81,7 +81,7 @@ String createDate = request.getParameter("createDate"); */
 		var basePath = $("#basePath").val();
 		$("#batch-adjust-list #batch-adjust-grid").datagrid({
 			toolbar : "#batchAdjustList-grid-toolbar",
-			url : basePath+"/payApply/adjustList.do?batchNo="+'${v.batchNo}'+'&batchId='+'${v.id}',
+			url : basePath+"/payApply/batchApplyList.do?batchNo="+'${v.batchNo}'+'&batchId='+'${v.id}',
 			method : "post",
 			sortName : "id",
 			sortOrder : "desc",

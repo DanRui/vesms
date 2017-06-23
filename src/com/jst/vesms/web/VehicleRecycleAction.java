@@ -60,9 +60,8 @@ public class VehicleRecycleAction extends BaseAction {
 	 * 进行查询数据
 	 */
 	@RequestMapping("list")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
-	@Privilege(modelCode = "M_VEHICLE_RECYCLE_LIST", prvgCode = "LIST")
+	@Privilege(modelCode = "M_VEHICLE_RECYCLE_LIST", prvgCode = "QUERY")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -271,7 +270,7 @@ public class VehicleRecycleAction extends BaseAction {
 	}
 	
 	@RequestMapping("view")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_VEHICLE_RECYCLE_LIST",prvgCode = "VIEW")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
 		String view = "VEHICLE_RECYCLE.VIEW";
 		if(StringUtil.isNotEmpty(type)&&"update".equals(type)) {

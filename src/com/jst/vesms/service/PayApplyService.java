@@ -63,6 +63,10 @@ public interface PayApplyService extends BaseService {
 	
 	public List getBySql(String batchNo) throws Exception ;
 
+	public Page filterRepeatedBatchPage(Page page);
+
+	public Page filterBatchPage(Page page);
+
 
 
 

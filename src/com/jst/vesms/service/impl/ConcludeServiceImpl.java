@@ -11,6 +11,7 @@ import oracle.jdbc.OracleTypes;
 import org.springframework.stereotype.Service;
 
 import com.jst.common.hibernate.BaseDAO;
+import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.vesms.dao.ICallDao;
@@ -40,13 +41,13 @@ implements ConcludeService{
 		return eliminatedApplyDao;
 	}
 
-	@Override
+/*	@Override
 	public Page getPageBySql(Page page, String sql) throws Exception {
 		// TODO Auto-generated method stub
 		page=eliminatedApplyService.getPageBySql(page, sql);
 		page = eliminatedApplyService.getPageExtra(page);
 		return page;
-	}
+	}*/
 
 	@Override
 	public EliminatedApply getById(Integer id) throws Exception {
@@ -70,4 +71,16 @@ implements ConcludeService{
 		Map<String, Object> map = result.get(0);
 		return map.get("5").toString();
 	}
+
+	@Override
+	public Page getApplyPage(Page page, List<PropertyFilter> list) {
+		try {
+			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+			page = eliminatedApplyService.getPageExtra(page);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return page;
+	}
+	
 }

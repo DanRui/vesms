@@ -15,18 +15,31 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import oracle.jdbc.OracleTypes;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.jst.common.hibernate.BaseDAO;
+import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.model.SysDict;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.common.utils.string.StringUtil;
+import com.jst.constant.Message;
+import com.jst.handler.MessageHandler;
+import com.jst.platformClient.utils.Constants;
+import com.jst.system.util.SystemUtil;
+import com.jst.type.DataType;
 import com.jst.util.DateUtil;
 import com.jst.util.EncryptUtil;
+import com.jst.util.JsonUtil;
+import com.jst.util.MessageHandlerUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.vesms.common.BFGSWebServiceClient;
 import com.jst.vesms.common.CacheRead;
+import com.jst.vesms.common.SuperviseWebServiceClient;
+import com.jst.vesms.constant.SysConstant;
 import com.jst.vesms.dao.IActionLogDao;
 import com.jst.vesms.dao.IAppointmentVehicleDao;
 import com.jst.vesms.dao.IAttachmentDao;
@@ -47,6 +60,8 @@ import com.jst.vesms.util.PhotoUtil;
 @Service("eliminatedApplyServiceImpl")
 public class EliminatedApplyServiceImpl extends BaseServiceImpl implements EliminatedApplyService {
 
+	private static final Log log = LogFactory.getLog(EliminatedApplyServiceImpl.class);
+	
 	@Resource(name="eliminatedApplyDao")
 	private IEliminatedApplyDao eliminatedApplyDao;
 	
@@ -92,16 +107,22 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			for (Object obj : result) {
 				EliminatedApply eliminatedApply = (EliminatedApply)obj;
 				// 获得号牌种类名称
-				SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", eliminatedApply.getVehiclePlateType());
-				eliminatedApply.setVehiclePlateTypeName(sysDictVehiclePlateType.getDictValue());
+				String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(eliminatedApply.getVehiclePlateType());
+				eliminatedApply.setVehiclePlateTypeName(vehiclePlateTypeName);
+				/*SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", eliminatedApply.getVehiclePlateType());
+				eliminatedApply.setVehiclePlateTypeName(sysDictVehiclePlateType.getDictValue());*/
 				
 				// 获得车辆类型名称
 				SysDict sysDictVehicleType = CacheRead.getSysDictByCode("VEHICLE_TYPE", eliminatedApply.getVehicleType());
-				eliminatedApply.setVehicleTypeName(sysDictVehicleType.getDictValue());
+				if (null != sysDictVehicleType) {
+					eliminatedApply.setVehicleTypeName(sysDictVehicleType.getDictValue());
+				}
 				
 				// 获得使用性质
 				SysDict sysDictUseOfProperty = CacheRead.getSysDictByCode("USE_OF_PROPERTY", eliminatedApply.getUseOfProperty());
-				eliminatedApply.setUseOfPropertyName(sysDictUseOfProperty.getDictValue());
+				if (null != sysDictUseOfProperty) {
+					eliminatedApply.setUseOfPropertyName(sysDictUseOfProperty.getDictValue());
+				}
 				
 				// 获得燃油种类
 				SysDict sysDictIolType = CacheRead.getSysDictByCode("IOL_TYPE", eliminatedApply.getIolType());
@@ -155,7 +176,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	public Map<String, Object> save(EliminatedApply eliminatedApply, String callbackProofFile, String vehicleCancelProofFiles,
 			  String bankCardFiles, String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles,
 			  String noFinanceProvideFiles, String openAccPromitFiles) throws Exception {
-		
+		log.debug("EliminatedApplyServiceImpl save is start");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		// 号牌号码
@@ -236,6 +257,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 							List<SysDict> bankListSysDict = sysDictService.getListByPorperty("dictCode", bankCode, "state = '1'");
 							if (null != bankListSysDict && bankListSysDict.size() > 0) {
 								eliminatedApply.setBankName(bankListSysDict.get(0).getDictValue());
+								log.debug("获得银行名称：" + bankListSysDict.get(0).getDictValue());
 							}
 						}
 						
@@ -258,7 +280,6 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 						
 						// 加密经办人身份证明号
 						eliminatedApply.setAgentIdentity(EncryptUtil.encryptDES(des_key, eliminatedApply.getAgentIdentity()));
-						
 						
 						// 正常，无退回
 						eliminatedApply.setIsFault("0");
@@ -283,6 +304,9 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 						outParamsApplyNo.put(1, OracleTypes.VARCHAR);
 						List<Map<String, Object>> callGenApplyNoRes = callDao.call("{?= call PKG_APPLY.f_create_apply_no}", null, outParamsApplyNo, "function");
 						String applyNo = (String) callGenApplyNoRes.get(0).get("1");
+						
+						log.debug("生成受理单号：" + applyNo);
+						
 						eliminatedApply.setApplyNo(applyNo);
 						
 						// 录入时间
@@ -292,7 +316,70 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 						eliminatedApply.setConcludeStatus("0");
 						
 						// 校验码
-						eliminatedApply.setVerifyCode("1");
+						// 调用资金监管生成校验码服务接口，返回校验码
+						// 车辆类型
+						String vehicleType = eliminatedApply.getVehicleType();
+						// 车架号
+						String vehicleIdentifyNo = eliminatedApply.getVehicleIdentifyNo();
+						// 燃料种类
+						String iolType = eliminatedApply.getIolType();
+						// 排放阶段
+						String emissionStandard = eliminatedApply.getEmissionStandard();
+						// 补贴金额
+						Double subsidiesMoney = eliminatedApply.getSubsidiesMoney();
+						// 银行名称
+						String bankName = eliminatedApply.getBankName();
+						// 银行户名
+						String bankAccountName = eliminatedApply.getBankAccountName();
+						// 银行卡号
+						String bankAccountNo = eliminatedApply.getBankAccountNo();
+						// 用户Code
+						@SuppressWarnings("unchecked")
+						Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+						String userCode = (String) loginInfo.get("USER_CODE");
+						// 当前操作时间
+						String now = DateUtil.format(new Date(), DateUtil.TIMESTAMPS_PATTERN_2);
+						// 关键字段值
+						JSONArray jsonArray = new JSONArray();
+						jsonArray.add(SystemUtil.createJson("VEHICLE_PLATE_NUM", "String", vehiclePlateNum));
+						jsonArray.add(SystemUtil.createJson("VEHICLE_TYPE", "String", vehiclePlateType));
+						jsonArray.add(SystemUtil.createJson("VEHICLE_TYPE", "String", vehicleType));
+						jsonArray.add(SystemUtil.createJson("IOL_TYPE", "String", iolType));
+						jsonArray.add(SystemUtil.createJson("EMISSION_STANDARD", "String", emissionStandard));
+						jsonArray.add(SystemUtil.createJson("SUBSIDIES_MONEY", "Double", subsidiesMoney.toString()));
+						jsonArray.add(SystemUtil.createJson("VEHICLE_IDENTIFY_NO", "String", vehicleIdentifyNo));
+						jsonArray.add(SystemUtil.createJson("BANK_NAME", "String", bankName));
+						jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NAME", "String", bankAccountName));
+						jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NO", "String", bankAccountNo));
+						
+						log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
+						/*String businessData = "[{\"column\":\"VEHICLE_PLATE_NUM\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateNum + "},"
+										+ "{\"column\":\"VEHICLE_PLATE_TYPE\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
+										+ "{\"column\":\"VEHICLE_TYPE\",\"type\":\"varchar2\",\"value\":"+ vehicleType + "},"
+										+ "{\"column\":\"IOL_TYPE\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
+										+ "{\"column\":\"EMISSION_STANDARD\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
+										+ "{\"column\":\"BANK_NAME\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
+										+ "{\"column\":\"BANK_ACCOUNT_NAME\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
+										+ "{\"column\":\"BANK_ACCOUNT_NO\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
+										+ "{\"column\":\"VEHICLE_IDENTIFY_NO\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
+										+ "{\"column\":\"SUBSIDIES_MONEY\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
+										+ "]";*/
+						
+						String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), null, "ADD"}, DataType.JSON);
+						
+						MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
+						String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
+						String retMsg = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.BODY, DataType.JSON));
+						JSONObject json = JSONObject.fromObject(retMsg);
+						if(Message.RET_CODE_SUCCESS.equals(retCode)) {
+							log.debug("生成校验码为：" + json.getString("chekcCode"));
+							eliminatedApply.setVerifyCode(json.getString("checkCode"));
+						} else {
+							// 校验码生成失败，记录日志。
+							log.debug("生成校验码失败：" + json.getString("retMsg"));
+							eliminatedApply.setVerifyCode("1");
+						}
+						
 						
 						// 数据更新时间
 						eliminatedApply.setUpdateTime(new Date());
@@ -301,6 +388,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 						
 						Serializable id = eliminatedApplyDao.save(eliminatedApply);
 						
+						log.debug("受理表插入成功：id=" + id);
+						
 						if (null != id) {
 							// 更新附件表数据
 							Map<String, Object> saveFilesRes = this.saveAttachments(applyNo, callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
@@ -308,14 +397,17 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 								map.put("isSuccess", true);
 								map.put("id", id);
 								map.put("msg", "受理单保存成功！");
+								log.debug("证明材料表新增成功");
 							} else {
 								map.put("isSuccess", false);
 								map.put("msg", "受理单证明材料保存失败！");
+								log.debug("受理单证明材料保存失败");
 							}
 							
 						} else {
 							map.put("isSuccess", false);
 							map.put("msg", "受理单保存失败！");
+							log.debug("受理单保存失败");
 						}
 						
 					/*} else {
@@ -335,7 +427,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				map.put("msg", msg);
 			}
 		}*/
-		
+		log.debug("EliminatedApplyServiceImpl save is end");
 		return map;
 	}
 
@@ -346,15 +438,19 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		EliminatedApply eliminatedApply = (EliminatedApply) eliminatedApplyDao.get(id);
 		
 		// 通过缓存，获取号牌种类、车辆类型、燃油种类、使用性质、车辆状态等字典类型字段的名称
+		// 将缓存数据放入内存，防止每次读取缓存数据，造成访问速度过慢。
 		// 号牌种类
 		String vehiclePlateType = eliminatedApply.getVehiclePlateType();
 		if (StringUtil.isNotEmpty(vehiclePlateType)) {
-			SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
-			if (null != sysDictVehiclePlateType) {
-				String vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
-				eliminatedApply.setVehiclePlateType(vehiclePlateType);
-				eliminatedApply.setVehiclePlateTypeName(vehiclePlateTypeName);
+			String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(eliminatedApply.getVehiclePlateType());
+			if (null == vehiclePlateTypeName) {
+				SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
+				if (null != sysDictVehiclePlateType) {
+					vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
+				}
 			}
+			eliminatedApply.setVehiclePlateType(vehiclePlateType);
+			eliminatedApply.setVehiclePlateTypeName(vehiclePlateTypeName);
 		}
 		
 		// 车辆类型
@@ -795,7 +891,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	@Override
 	public boolean saveConfirm(Integer id, String signedApplyFiles) throws Exception {
 		// 更新受理确认时间、业务流水记录
-		EliminatedApply apply = this.getById(id);
+		// 从数据库获取数据，无需解密，方便更新校验码（不调用this.getById(id)）
+		EliminatedApply apply = (EliminatedApply) this.get(id);
 		if (null != apply) {
 			// 增加受理确认表附件记录
 			if (StringUtil.isNotEmpty(signedApplyFiles)) {
@@ -847,11 +944,71 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				apply.setPrePost("CKSLG"); // 更新上一岗位是窗口受理岗
 				apply.setCurrentPost("KJCSG"); // 更新下一岗位为会计初审岗，流程跳转。
 				
+				// 更新校验码
+				// 校验码
+				// 调用资金监管生成校验码服务接口，返回校验码
+				// 号牌号码
+				String vehiclePlateNum = apply.getVehiclePlateNum();
+				// 号牌种类
+				String vehiclePlateType = apply.getVehiclePlateType();
+				// 车辆类型
+				String vehicleType = apply.getVehicleType();
+				// 车架号
+				String vehicleIdentifyNo = apply.getVehicleIdentifyNo();
+				// 燃料种类
+				String iolType = apply.getIolType();
+				// 排放阶段
+				String emissionStandard = apply.getEmissionStandard();
+				// 补贴金额
+				Double subsidiesMoney = apply.getSubsidiesMoney();
+				// 银行名称
+				String bankName = apply.getBankName();
+				// 银行户名
+				String bankAccountName = apply.getBankAccountName();
+				// 银行卡号
+				String bankAccountNo = apply.getBankAccountNo();
+				// 用户Code
+				@SuppressWarnings("unchecked")
+				Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+				String userCode = (String) loginInfo.get("USER_CODE");
+				// 当前操作时间
+				String now = DateUtil.format(new Date(), DateUtil.TIMESTAMPS_PATTERN_2);
+				// 原校验码
+				String oldCode = apply.getVerifyCode();
+				
+				// 关键字段值
+				JSONArray jsonArray = new JSONArray();
+				jsonArray.add(SystemUtil.createJson("VEHICLE_PLATE_NUM", "String", vehiclePlateNum));
+				jsonArray.add(SystemUtil.createJson("VEHICLE_TYPE", "String", vehiclePlateType));
+				jsonArray.add(SystemUtil.createJson("VEHICLE_TYPE", "String", vehicleType));
+				jsonArray.add(SystemUtil.createJson("IOL_TYPE", "String", iolType));
+				jsonArray.add(SystemUtil.createJson("EMISSION_STANDARD", "String", emissionStandard));
+				jsonArray.add(SystemUtil.createJson("SUBSIDIES_MONEY", "Double", subsidiesMoney.toString()));
+				jsonArray.add(SystemUtil.createJson("VEHICLE_IDENTIFY_NO", "String", vehicleIdentifyNo));
+				jsonArray.add(SystemUtil.createJson("BANK_NAME", "String", bankName));
+				jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NAME", "String", bankAccountName));
+				jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NO", "String", bankAccountNo));
+				
+				log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
+				
+				String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
+				
+				MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
+				String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
+				String retMsg = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.BODY, DataType.JSON));
+				JSONObject json = JSONObject.fromObject(retMsg);
+				if(Message.RET_CODE_SUCCESS.equals(retCode)) {
+					log.debug("更新后校验码为：" + json.getString("chekcCode"));
+					apply.setVerifyCode(json.getString("checkCode"));
+				} else {
+					// 校验码生成失败，记录日志。
+					log.debug("更新校验码失败：" + json.getString("retMsg"));
+					apply.setVerifyCode("1");
+				}
+				
 				Map<String, Object> map = this.updateById(id, apply);
 				if (map.get("isSuccess").equals(true)) {
 					// 更新成功，报废车辆信息表受理状态更改为已受理
-					String vehiclePlateNum = apply.getVehiclePlateNum();
-					String vehiclePlateType = apply.getVehiclePlateType();
 					VehicleRecycle vehicle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
 					if (null != vehicle) {
 						vehicle.setStatus("1"); // 更新受理状态为已受理
@@ -886,9 +1043,72 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	@Override
 	public Map<String, Object> updateById(Integer id,
 			EliminatedApply eliminatedApply) throws Exception {
-		
+		log.debug("EliminatedApplyServiceImpl update is start");
 		// 更新业务最近更新时间
 		eliminatedApply.setLastUpdateTimeDate(new Date());
+		
+		// 更新校验码
+		// 调用资金监管生成校验码服务接口，返回校验码
+		// 号牌号码
+		String vehiclePlateNum = eliminatedApply.getVehiclePlateNum();
+		// 号牌种类
+		String vehiclePlateType = eliminatedApply.getVehiclePlateType();
+		// 车辆类型
+		String vehicleType = eliminatedApply.getVehicleType();
+		// 车架号
+		String vehicleIdentifyNo = eliminatedApply.getVehicleIdentifyNo();
+		// 燃料种类
+		String iolType = eliminatedApply.getIolType();
+		// 排放阶段
+		String emissionStandard = eliminatedApply.getEmissionStandard();
+		// 补贴金额
+		Double subsidiesMoney = eliminatedApply.getSubsidiesMoney();
+		// 银行名称
+		String bankName = eliminatedApply.getBankName();
+		// 银行户名
+		String bankAccountName = eliminatedApply.getBankAccountName();
+		// 银行卡号
+		String bankAccountNo = eliminatedApply.getBankAccountNo();
+		// 用户Code
+		@SuppressWarnings("unchecked")
+		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+		String userCode = (String) loginInfo.get("USER_CODE");
+		// 当前操作时间
+		String now = DateUtil.format(new Date(), DateUtil.TIMESTAMPS_PATTERN_2);
+		// 原校验码
+		String oldCode = eliminatedApply.getVerifyCode();
+		log.debug("原校验码为：" + oldCode);
+		
+		// 关键字段值
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.add(SystemUtil.createJson("VEHICLE_PLATE_NUM", "String", vehiclePlateNum));
+		jsonArray.add(SystemUtil.createJson("VEHICLE_TYPE", "String", vehiclePlateType));
+		jsonArray.add(SystemUtil.createJson("VEHICLE_TYPE", "String", vehicleType));
+		jsonArray.add(SystemUtil.createJson("IOL_TYPE", "String", iolType));
+		jsonArray.add(SystemUtil.createJson("EMISSION_STANDARD", "String", emissionStandard));
+		jsonArray.add(SystemUtil.createJson("SUBSIDIES_MONEY", "Double", subsidiesMoney.toString()));
+		jsonArray.add(SystemUtil.createJson("VEHICLE_IDENTIFY_NO", "String", vehicleIdentifyNo));
+		jsonArray.add(SystemUtil.createJson("BANK_NAME", "String", bankName));
+		jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NAME", "String", bankAccountName));
+		jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NO", "String", bankAccountNo));
+		
+		log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
+		
+		String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
+		
+		MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
+		String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
+		String retMsg = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.BODY, DataType.JSON));
+		JSONObject json = JSONObject.fromObject(retMsg);
+		if(Message.RET_CODE_SUCCESS.equals(retCode)) {
+			log.debug("更新后校验码为：" + json.getString("chekcCode"));
+			eliminatedApply.setVerifyCode(json.getString("checkCode"));
+		} else {
+			// 校验码生成失败，记录日志。
+			log.debug("更新校验码失败：" + json.getString("retMsg"));
+			eliminatedApply.setVerifyCode("1");
+		}
+		
 		EliminatedApply updatedApply = (EliminatedApply) this.update(id, eliminatedApply);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -899,11 +1119,13 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			map.put("archiveBoxNo", updatedApply.getArchiveBoxNo());
 			map.put("archivedInnerNo", updatedApply.getArchivedInnerNo());
 			map.put("msg", "受理单更新成功！");
+			log.debug("EliminatedApplyServiceImpl update is success");
 		} else {
 			map.put("isSuccess", false);
 			map.put("msg", "受理单保存失败！");
+			log.debug("EliminatedApplyServiceImpl update is error");
 		}
-		
+		log.debug("EliminatedApplyServiceImpl update is end");
 		return map;
 	}
 
@@ -915,17 +1137,16 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	@Override
 	public Page<EliminatedApply> getPageBySql(Page<EliminatedApply> page,
 			String sql) throws Exception {
-		
 		if (StringUtil.isEmpty(sql)) {
 			return this.getPageExtra(page);
 		} else {
-			List list = eliminatedApplyDao.getListBySql(sql);
+			List list = eliminatedApplyDao.getListBySql(sql, null, page);
+			long count = eliminatedApplyDao.getListCounter("select count(*) from (" + sql + ") ");
 			if (null != list && list.size() > 0) {
-				page.setTotalCount(list.size());
+				page.setTotalCount(count);
 				page.setResult(list);
 			}
 		}
-		
 		return page;
 	}
 
@@ -934,20 +1155,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	 * TODO 查询受理未确认的受理单.
 	 * @see com.jst.vesms.service.EliminatedApplyService#filterNoConfirm(com.jst.common.utils.page.Page)
 	 */
-	@Override
-	public Page filterNoConfirm(Page page) throws Exception {
-		
-		Page<EliminatedApply> filterPage = new Page<EliminatedApply>();
-		List<EliminatedApply> list = page.getResult();
-		for (int i = 0 ; i < list.size() ; i ++) {
-			EliminatedApply apply = list.get(i);
-			if (apply.getApplyConfirmTime() == null) {
-				filterPage.getResult().add(apply);
-				filterPage.setTotalCount(filterPage.getResult().size());
-			}
-		}
-		
-		return filterPage;
+	public Page filterNoConfirm(Page page, List<PropertyFilter> filter) throws Exception {
+		return page;
 	}
 	
 	/**

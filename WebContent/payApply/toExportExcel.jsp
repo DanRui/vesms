@@ -14,7 +14,7 @@ String basePath = request.getContextPath();
 <title>报财务导出</title>
 </head>
 <body>
-	<form action="payApply/confirmBatchExcel.do" enctype="multipart/form-data" method="post" id="confirmId">
+	<form action="payApply/confirmBatchExcel.do" method="post" id="confirmId">
 		<br>
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>
@@ -22,6 +22,7 @@ String basePath = request.getContextPath();
 			<td>
 				<input id="password" name="password" type="text" class="easyui-validatebox" data-options="required:true"/>
 			</td>
+			<a id="excel_file"></a>
 		</tr>
 		<tr>
 		<td>
@@ -33,13 +34,35 @@ String basePath = request.getContextPath();
 	
 	<script type="text/javascript">
 	$().ready(function(){
+		
+		$("#excel_file").hide();
+		
 		$("#ConfirmButton").click(function(){
 			var password=$("#password").val();
 			if (password!=""){
 			$("#confirmId").form("submit", {
 				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}'+"&password="+password,
 				success : function(data) {
-					Messager.alert("导出成功");
+					var data = eval('(' + data + ')');
+					if (data.success) {
+						Messager.alert({
+							type : 'info',
+							title : '&nbsp',
+							content : "批次报财务成功"
+						});
+						
+						$("#excel_file").show();
+						var excelPath = '<%=basePath%>/' + data.message;
+						$("#excel_file").attr("href", excelPath);
+						$("#excel_file").text("批次文件，请下载");
+						
+					} else {
+						Messager.alert({
+							type : 'error',
+							title : '&nbsp',
+							content : data.message
+						});
+					}
 				}
 			});
 			}else {

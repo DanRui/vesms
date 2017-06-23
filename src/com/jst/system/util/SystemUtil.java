@@ -234,6 +234,25 @@ public class SystemUtil {
 		  
 		  return macAddress;
 		}
+		
+		/**
+		 * 
+		 * <p>Description: 生成调用校验码服务的JSON报文 </p>
+		 * @param column 字段名称 String
+		 * @param type 字段类型  String
+		 * @param value 字段的值  String
+		 * @return JSONObject
+		 *
+		 */
+		public static JSONObject createJson(String column, String type, String value) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.accumulate("column", column);
+			jsonObj.accumulate("type", type);
+			jsonObj.accumulate("value", value);
+			
+			return jsonObj;
+		}
+		
 		//做个测试
 		public static void main(String[] args) { 
 		  System.out.println(getMacAddress("111.13.101.208"));

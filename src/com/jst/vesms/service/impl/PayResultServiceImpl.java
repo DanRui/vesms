@@ -93,6 +93,7 @@ implements PayResultService{
 	 */
 	@Override
 	public Page getApplyPage(Page page, List<PropertyFilter> list) {
+		// TODO Auto-generated method stub
 		try {
 			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
 			page = eliminatedApplyService.getPageExtra(page);
@@ -126,6 +127,7 @@ implements PayResultService{
 
 	public Page getPageBySql(Page page,
 			String sql) throws Exception {
+		// TODO Auto-generated method stub
 		page=eliminatedApplyService.getPageBySql(page, sql);
 		page = eliminatedApplyService.getPageExtra(page);
 		return page;
@@ -135,20 +137,37 @@ implements PayResultService{
 
 	@Override
 	public Page filterRepeatedBatchPage(Page page) throws Exception {
+		// TODO Auto-generated method stub
 		List list = page.getResult();
-		
-		List retList = new ArrayList();
+		Page<EliminatedApply> filterPage = new Page<EliminatedApply>();
 		if (null != list && list.size() > 0) {
 			for (int i = 0 ; i < list.size() ; i ++) {
 				EliminatedApply apply = (EliminatedApply) list.get(i);
 				if (apply.getRepeatedBatchNo() != null) {
-					retList.add(apply);
+					filterPage.getResult().add(apply);
+					filterPage.setTotalCount(filterPage.getResult().size());
 				}
 			}
-			page.setResult(retList);
-			page.setTotalCount(retList.size());
 		}
-		
-		return page;
+		return filterPage;
+	}
+
+
+
+	@Override
+	public Page filterBatchPage(Page page) throws Exception {
+		// TODO Auto-generated method stub
+		List list = page.getResult();
+		Page<EliminatedApply> filterPage = new Page<EliminatedApply>();
+		if (null != list && list.size() > 0) {
+			for (int i = 0 ; i < list.size() ; i ++) {
+				EliminatedApply apply = (EliminatedApply) list.get(i);
+				if (apply.getBatchNo() != null) {
+					filterPage.getResult().add(apply);
+					filterPage.setTotalCount(filterPage.getResult().size());
+				}
+			}
+		}
+		return filterPage;
 	}
 }

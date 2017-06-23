@@ -3,6 +3,7 @@ package com.jst.vesms.service;
 import java.util.List;
 import java.util.Map;
 
+import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.BaseService;
 import com.jst.common.utils.page.Page;
 import com.jst.vesms.model.ActionLog;
@@ -92,7 +93,7 @@ public interface EliminatedApplyService extends BaseService {
 	
 	public boolean saveAttachment(String type, Integer id, String absFilePath, String businessType) throws Exception;
 
-	public Page filterNoConfirm(Page page) throws Exception;
+	public Page filterNoConfirm(Page page, List<PropertyFilter> filter) throws Exception;
 	
 	public List<ActionLog> getActionLogList(Integer id) throws Exception;
 	

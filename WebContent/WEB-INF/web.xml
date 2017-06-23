@@ -205,6 +205,16 @@
 		<extension>inc</extension>
 		<mime-type>text/plain</mime-type>
 	</mime-mapping>
+	<!-- 支持超连接跳转到指定xml路径  -->
+	<mime-mapping>
+		<extension>doc</extension>
+		<mime-type>application/vnd.ms-word</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>xls</extension>
+		<mime-type>application/vnd.ms-excel</mime-type>
+	</mime-mapping>
+	
 
 	<security-constraint>
 		<web-resource-collection>
