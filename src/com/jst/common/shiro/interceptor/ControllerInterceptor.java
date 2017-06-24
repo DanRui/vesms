@@ -284,9 +284,6 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 			 * 是否进行日志记录，设置在config.properties 中的 isrecord.log为true时进行记录
 			 */
 			
-			@SuppressWarnings("unused")
-			List<UserPrvg> userPrvgList = new WebServiceClient().getUserPrvgList(Constants.CURRENT_APPCODE, userCode, null);
-			
 			boolean hasPrvg = subject.isPermitted(modelCode + ":"+ prvgCode);
 			if(!hasPrvg) {
 				log.debug("用户权限不足，无法访问当前action实例方法");

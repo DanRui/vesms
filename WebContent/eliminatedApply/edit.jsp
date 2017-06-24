@@ -12,15 +12,21 @@
 <title>Test-add</title>
 </head>
 <body>
-	<form id="form-apply-edit" action="eliminatedApply/edit.do" method="post" enctype="multipart/form-data">
+	<form id="common-apply-edit" action="eliminatedApply/edit.do" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="id" value="${v.id}"/>
 		<div id="eliminated-apply-edit" class="datagrid-header">
 			<table class="datagrid-table-s datagrid-htable">
 				<tr class="datagrid-header-row">
 					<td class="view_table_left">车主类型：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="isPersonal" class="easyui-combobox" value="${v.isPersonal}" name="isPersonal" 
-						data-options="editable:false,required:true,valueField:'id',textField:'text',url:'data/isPersonal.json',panelHeight:'auto'"/>
+						<c:if test="${v.isPersonal eq 'Y'}">
+							自然人
+						</c:if>
+						<c:if test="${v.isPersonal eq 'N'}">
+							企业
+						</c:if>
+						<%-- <input id="isPersonal" class="easyui-combobox" value="${v.isPersonal}" name="isPersonal" 
+						data-options="editable:false,required:true,valueField:'id',textField:'text',url:'data/isPersonal.json',panelHeight:'auto'"/> --%>
 						<!-- <select id="isPersonal" name="isPersonal" class="easyui-combobox" data-options="editable:false,required:true,width:160,panelHeight:'auto'">
 							<option>请选择是自然人或企业</option> 
 							<option value="Y">自然人</option>
@@ -30,8 +36,14 @@
 					</td>
 					<td class="view_table_left">办理类型：</td>
 					<td class="view_table_right" colspan="2" >
-						<input id="isProxy" class="easyui-combobox" value="${v.isProxy}" name="isProxy" 
-						data-options="editable:false,required:true,valueField:'id',textField:'text',url:'data/isProxy.json',panelHeight:'auto'"/>				
+						<c:if test="${v.isProxy == 'Y'}">
+							自办
+						</c:if>
+						<c:if test="${v.isProxy == 'N'}">
+							代办
+						</c:if>
+						<%-- <input id="isProxy" class="easyui-combobox" value="${v.isProxy}" name="isProxy" 
+						data-options="editable:false,required:true,valueField:'id',textField:'text',url:'data/isProxy.json',panelHeight:'auto'"/> --%>			
 						<!-- <select id="isProxy" name="isProxy" class="easyui-combobox" data-options="editable:false,required:true,width:75,panelHeight:'auto'">
 							<option>请选择</option>
 							<option value="Y">自办</option>
@@ -46,15 +58,16 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">号牌号码：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehiclePlateNum" value="${v.vehiclePlateNum}" class="easyui-validatebox" data-options="required:true"  />
-						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
+						<input type="text" name="vehiclePlateNum" value="${v.vehiclePlateNum}" class="easyui-validatebox" readonly="readonly"/>
+						<!-- <span style="color:red;text-align:center">&nbsp;*&nbsp;</span> -->
 					</td>
 					<td class="view_table_left">号牌种类：</td>
 					<td class="view_table_right">
-						<input id="vehiclePlateType" class="easyui-combobox" value="${v.vehiclePlateType}" name="vehiclePlateType" 
-						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:300"/>
+						<input type="text" name="vehiclePlateNum" value="${v.vehiclePlateNum}" class="easyui-validatebox" readonly="readonly"/>
+						<%-- <input id="vehiclePlateType" class="easyui-combobox" value="${v.vehiclePlateType}" name="vehiclePlateType" 
+						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:300"/> 
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
-						<a id="btnApplyVerify" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-baofei-message'">取报废数据</a>
+						<a id="btnApplyVerify" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-baofei-message'">取报废数据</a> --%>
 					</td>
 					<td class="view_table_left">厂牌型号：</td>
 					<td class="view_table_right">
@@ -203,12 +216,14 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">开户户名：</td>
 					<td class="view_table_right">
-						<input type="text" name="bankAccountName" value="${v.bankAccountName}" class="easyui-validatebox" data-options="required:true"/>
-						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
+						<input type="text" name="bankAccountName" value="${v.bankAccountName}" class="easyui-validatebox" readonly="readonly"/>
+						<!-- <span style="color:red;text-align:center">&nbsp;*&nbsp;</span> -->
 					</td>
 					<td class="view_table_left">开户银行：</td>
 					<td class="view_table_right">
-						<input type="text" name="bankName" value="${v.bankName}" class="easyui-validatebox" data-options="required:true" />
+						<input id="bankCode" class="easyui-combobox" name="bankCode" 
+						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=BANK_CODE',panelHeight:150"/>
+						<%-- <input type="text" name="bankName" value="${v.bankName}" class="easyui-validatebox" data-options="required:true" /> --%>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					<td class="view_table_left">开户银行账号：</td>
@@ -230,13 +245,21 @@
 						<input type="text" name="subsidiesStandard" value="${v.subsidiesStandard}" readonly="readonly"/>
 					</td>
 				</tr>
+				<!-- 报废汽车回收证明 -->
 				<input type="hidden" name="callbackProofFile"/>
+				<!-- 机动车注销证明 -->
 				<input type="hidden" name="vehicleCancelProofFiles"/>
+				<!-- 银行卡 -->
 				<input type="hidden" name="bankCardFiles"/>
+				<!-- 车主身份证明 -->
 				<input type="hidden" name="vehicleOwnerProofFiles"/>
+				<!-- 代理委托书 -->
 				<input type="hidden" name="agentProxyFiles"/>
+				<!-- 代理人身份证 -->
 				<input type="hidden" name="agentProofFiles"/>
+				<!-- 非财政供养单位证明 -->
 				<input type="hidden" name="noFinanceProvideFiles"/>
+				<!-- 开户许可证 -->
 				<input type="hidden" name="openAccPromitFiles"/>
 			</table>
 		</div>
@@ -247,83 +270,130 @@
 			<tr class="datagrid-header-row classify-tr">
 				<td colspan="6">证明材料</td>
 			</tr>
+			<c:if test="${!empty callbackFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">原报废汽车回收证明：</td>
+				<td class="view_table_right">
+					<c:forEach items="${callbackFiles}" var="callbackFile">
+						<a href="${callbackFile.filePath}" target="_blank">${callbackFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
 			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">报废汽车回收证明：</td>
 				<td class="view_table_right" colspan="2">
-					<input id="callbackProofFiles" name="callbackProofFiles" data-options="editable:false,required:true,buttonText:'请选择'"
+					<input id="callbackProofFiles" name="callbackProofFiles" data-options="editable:false,required:false,buttonText:'请选择'"
 					class="easyui-filebox" />
-					<font color="red">&nbsp;*&nbsp;</font>
+					<!-- <font color="red">&nbsp;*&nbsp;</font> -->
 					<a id="btnTakePhotoCallbackProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 				</td>
 				<td class="view_table_right" colspan="3">
 					<a id="callbackProofFileImg" href="#" target="_blank"></a>
 				</td>
-				<!-- <td class="view_table_right">
-					<table id="#callbackFileTable">
-						<tr>
-							<td>
-								<form id="uploadFile" enctype="multipart/form-data" method="post">
-            						<input id="callbackProofFile" class="easyui-filebox" name="callbackProofFile" data-options="prompt:'选择文件',required:true,buttonText:'请选择'">
-            						<font color="red">&nbsp;*&nbsp;</font>
-            						<a id="btn_upload_file1" href="#" class="easyui-linkbutton" iconCls="icon-shangchuan">上传</a>
-       				 			</form>
-       				 		</td>
-       				 	</tr>
-       				 	<tr style="display:none;">
-       				 		<td>
-    							<div id="progressFile" class="easyui-progressbar" style="width:100%;"></div>
-    						</td>
-    						</tr>
-    					
-					</table>
-				</td> -->
 			</tr>
+			<c:if test="${!empty vehicleCancelProofFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">原机动车注销证明：</td>
+				<td class="view_table_right">
+					<c:forEach items="${vehicleCancelProofFiles}" var="vehicleCancelProofFile">
+						<a href="${vehicleCancelProofFile.filePath}" target="_blank">${vehicleCancelProofFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
 			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">机动车注销证明：</td>
 				<td class="view_table_right" colspan="2">
-					<input id="vehicleCancelProof" class="easyui-filebox" name="vehicleCancelProof" data-options="editable:false,required:true,buttonText:'请选择'"/>
-					<font color="red">&nbsp;*&nbsp;</font>
+					<input id="vehicleCancelProof" class="easyui-filebox" name="vehicleCancelProof" data-options="editable:false,required:false,buttonText:'请选择'"/>
+					<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+					<a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 				</td>
 				<td class="view_table_right" colspan="3">
 					<a id="vehicleCancelProofFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			<c:if test="${!empty bankCardFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">银行卡：</td>
+				<td class="view_table_right">
+					<c:forEach items="${bankCardFiles}" var="bankCardFile">
+						<a href="${bankCardFile.filePath}" target="_blank">${bankCardFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
 			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:120px">银行卡：</td>
 				<td class="view_table_right" colspan="2">
-					<input id="bankCard" class="easyui-filebox" name="bankCard" data-options="editable:false,required:true,buttonText:'请选择'"/>
-					<font color="red">&nbsp;*&nbsp;</font>
+					<input id="bankCard" class="easyui-filebox" name="bankCard" data-options="editable:false,required:false,buttonText:'请选择'"/>
+					<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+					<a id="btnTakePhotoBankCard" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 				</td>
 				<td class="view_table_right" colspan="3">
 					<a id="bankCardFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			<c:if test="${!empty vehicleOwnerProofFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">原车主身份证明：</td>
+				<td class="view_table_right">
+					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile">
+						<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
 			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">车主身份证明：</td>
 				<td class="view_table_right" colspan="2">
-					<input id="vehicleOwnerProof" class="easyui-filebox" name="vehicleOwnerProof" data-options="editable:false,required:true,buttonText:'请选择'"/>
-					<font color="red">&nbsp;*&nbsp;</font>
+					<input type="file" name="vehicleOwnerProof" multiple="multiple" />
+					<!-- <input id="vehicleOwnerProof" class="easyui-filebox" name="vehicleOwnerProof" data-options="editable:false,required:true,buttonText:'请选择'"/> -->
+					<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+					<a id="btnTakePhotoVehicleOwnerProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 				</td>
 				<td class="view_table_right" colspan="3">
 					<a id="vehicleOwnerProofFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
 			<c:if test="${v.isProxy eq 'N'}">
-			<tr class="datagrid-row proxyType">
+			<c:if test="${!empty agentProxyFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">原代理委托书：</td>
+				<td class="view_table_right">
+					<c:forEach items="${agentProxyFiles}" var="agentProxyFile">
+						<a href="${agentProxyFile.filePath}" target="_blank">${agentProxyFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
+			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:120px">代理委托书：</td>
 				<td class="view_table_right" colspan="2">
-					<input id="agentProxy" class="easyui-filebox" name="agentProxy" data-options="editable:false,width:141,buttonText:'请选择'"/>
-					<font color="red">&nbsp;*&nbsp;</font>
+					<input id="agentProxy" class="easyui-filebox" name="agentProxy" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
+					<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+					<a id="btnTakePhotoAgentProxyProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 				</td>
 				<td class="view_table_right" colspan="3">
 					<a id="agentProxyFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
-			<tr class="datagrid-row proxyType">
+			<c:if test="${!empty agentProofFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">原代理人身份证：</td>
+				<td class="view_table_right">
+					<c:forEach items="${agentProofFiles}" var="agentProofFile">
+						<a href="${agentProofFile.filePath}" target="_blank">${agentProofFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
+			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">代理人身份证：</td>
 				<td class="view_table_right" colspan="2">
-					<input id="agentProof" class="easyui-filebox" name="agentProof" data-options="editable:false,width:141,buttonText:'请选择'"/>
-					<font color="red">&nbsp;*&nbsp;</font>
+					<input id="agentProof" class="easyui-filebox" name="agentProof" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
+					<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+					<a id="btnTakePhotoAgentProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 				</td>
 				<td class="view_table_right" colspan="3">
 					<a id="agentProofFileImg" href="#" target="_blank"></a>
@@ -331,21 +401,44 @@
 			</tr>
 			</c:if>
 			<c:if test="${v.isPersonal eq 'N'}">
-			<tr class="datagrid-row applyType">
+			<c:if test="${!empty noFinanceProvideFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">原非财政供养单位证明：</td>
+				<td class="view_table_right">
+					<c:forEach items="${noFinanceProvideFiles}" var="noFinanceProvideFile">
+						<a href="${noFinanceProvideFile.filePath}" target="_blank">${noFinanceProvideFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
+			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:120px">非财政供养单位证明：</td>
 				<td class="view_table_right" colspan="2">
-					<input id="noFinanceProvide" class="easyui-filebox" name="noFinanceProvide" data-options="editable:false,width:141,buttonText:'请选择'"/>
-					<font color="red">&nbsp;*&nbsp;</font>
+					<input id="noFinanceProvide" class="easyui-filebox" name="noFinanceProvide" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
+					<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+					<a id="btnTakePhotoNoFinanceProvide" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 				</td>
 				<td class="view_table_right" colspan="3">
 					<a id="noFinanceProvideFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
-			<tr class="datagrid-row applyType">
+			<c:if test="${!empty openAccPromitFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">原开户许可证：</td>
+				<td class="view_table_right">
+					<c:forEach items="${openAccPromitFiles}" var="openAccPromitFile">
+						<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
+			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">开户许可证：</td>
 				<td class="view_table_right" colspan="2">
-					<input id="openAccPromit" class="easyui-filebox" name="openAccPromit" data-options="editable:false,width:141,buttonText:'请选择'"/>
-					<font color="red">&nbsp;*&nbsp;</font>
+					<input type="file" name="openAccPromit" multiple="multiple" />
+					<!-- <input id="openAccPromit" class="easyui-filebox" name="openAccPromit" data-options="editable:false,required:true,width:141,buttonText:'请选择'"/> -->
+					<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+					<a id="btnTakePhotoOpenAccPromit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 				</td>
 				<td class="view_table_right" colspan="3">
 					<a id="openAccPromitFileImg" href="#" target="_blank"></a>
@@ -378,17 +471,14 @@
 			$("#common-dialog-save").hide();
 			$("#common-dialog-close").hide();
 			
-			//隐藏组织结构类型和文件上传区域
-			/* $("tr[class*='applyType']").each(function() {
-				$(this).hide();
-			});
+			// 设置已经上传的图片路径(后期优化预览图片效果)
+			// 选择银行名称
+			var bankCode = '${v.bankCode}';
+			$("#bankCode").combobox("setValue", bankCode);
 			
-			$("tr[class*='proxyType']").each(function() {
-				$(this).hide();
-			}); */
 			
 			// 选中车主类型和办理类型
-			
+			/*
 			$("#isPersonal").combobox({
 				onChange : function() {
 					var isPersonal = $(this).combobox("getValue");
@@ -426,12 +516,13 @@
 					});
 				}
 			});
+			*/
 			
 		   //报废回收证明、机动车注销证明、银行卡、车主身份证明、代理委托书、代理人身份证、开户许可证、非财政供养单位证明
 		   $("#btnUpload").click(function() {
 			   
-			   var isPersonal = $("#isPersonal").combobox("getValue");
-			   var isProxy = $("#isProxy").combobox("getValue");
+			   var isPersonal = '${v.isPersonal}';
+			   var isProxy = '${v.isProxy}';
 			   
 			   if (isPersonal != "Y" && isPersonal != "N") {
 				   alert("请选择车主类型！");
@@ -495,19 +586,28 @@
 	        					
 	        		 		} else {
 	        		 			alert("文件上传失败！");
+	        		 			//$('#form-apply-upload')[0].reset();
 	        		 			
 	        		 			$("#callbackProofFile").filebox("clear");
 	        		 			$("#vehicleCancelProof").filebox("clear");
 	        		 			$("#bankCard").filebox("clear");
-	        		 			$("#vehicleOwnerProof").filebox("clear");
+	        		 			
+	        		 			var jVehicleOwnerProof = $("#vehicleOwnerProof")   
+	        		 			jVehicleOwnerProof.after(jVehicleOwnerProof.clone().val(""));     
+	        		 			jVehicleOwnerProof.remove();
+	        		 			
+	        		 			//$("#vehicleOwnerProof").filebox("clear");
 	        		 			if (isPersonal == "N") {
 		        		 			$("#agentProxy").filebox("clear");
 		        		 			$("#agentProof").filebox("clear");
 	        		 			}
 	        		 			if (isProxy == "N") {
 	        		 				$("#noFinanceProvide").filebox("clear");
-	        		 				$("#openAccPromit").filebox("clear");
-	        		 			}
+	        		 				var jOpenAccPromit = $("#openAccPromit")   
+		        		 			jOpenAccPromit.after(jOpenAccPromit.clone().val(""));     
+	        		 				jOpenAccPromit.remove();
+	        		 				//$("#openAccPromit").filebox("clear");
+	        		 			} 
 	        		 		}
 	        			}
 	        	 	});
@@ -517,11 +617,219 @@
 				   alert("还有证明材料未选择，请选择后上传！");
 				   return false;
 			   }
-			   
         	 	
 	        });
 			
-			// 取报废录入数据和交警接口数据
+			// 报废回收证明抓拍上传
+			$("#btnTakePhotoCallbackProof").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#callbackProofFileImg").text("报废回收证明(1)");
+        			$("#callbackProofFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#callbackProofFileImg"+i+"' href='"+filepath+"' target='_blank'>报废回收证明("+i+")</a>";
+	        				$("#callbackProofFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='callbackProofFile']").val(parentValue.filepath);
+	        	}
+			});
+			
+			// 机动车注销证明
+			$("#btnTakePhotoVehicleCancelProof").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#vehicleCancelProofFileImg").text("机动车注销证明(1)");
+        			$("#vehicleCancelProofFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#vehicleCancelProofFileImg"+i+"' href='"+filepath+"' target='_blank'>机动车注销证明("+i+")</a>";
+	        				$("#vehicleCancelProofFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='vehicleCancelProofFiles']").val(parentValue.filepath);
+	        	}
+			});
+			
+			// 车主身份证明
+			$("#btnTakePhotoVehicleOwnerProof").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#vehicleOwnerProofFileImg").text("车主身份证明(1)");
+        			$("#vehicleOwnerProofFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#vehicleOwnerProofFileImg"+i+"' href='"+filepath+"' target='_blank'>车主身份证明("+i+")</a>";
+	        				$("#vehicleOwnerProofFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='vehicleOwnerProofFiles']").val(parentValue.filepath);
+	        	}
+			});
+			
+			// 银行卡
+			$("#btnTakePhotoBankCard").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#bankCardFileImg").text("银行卡(1)");
+        			$("#bankCardFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#bankCardFileImg"+i+"' href='"+filepath+"' target='_blank'>银行卡("+i+")</a>";
+	        				$("#bankCardFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='bankCardFiles']").val(parentValue.filepath);
+	        	}
+			});
+			
+			// 非财政供养单位证明
+			$("#btnTakePhotoNoFinanceProvide").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#noFinanceProvideFileImg").text("非财政供养单位证明(1)");
+        			$("#noFinanceProvideFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#noFinanceProvideFileImg"+i+"' href='"+filepath+"' target='_blank'>非财政供养单位证明("+i+")</a>";
+	        				$("#noFinanceProvideFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='noFinanceProvideFiles']").val(parentValue.filepath);
+	        	}
+			});
+			
+			// 开户许可证
+			$("#btnTakePhotoOpenAccPromit").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#openAccPromitFileImg").text("开户许可证(1)");
+        			$("#openAccPromitFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#openAccPromitFileImg"+i+"' href='"+filepath+"' target='_blank'>开户许可证("+i+")</a>";
+	        				$("#openAccPromitFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='openAccPromitFiles']").val(parentValue.filepath);
+	        	}
+			});
+			
+			// 代理委托书
+			$("#btnTakePhotoAgentProxyProof").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#agentProxyFileImg").text("代理委托书(1)");
+        			$("#agentProxyFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#agentProxyFileImg"+i+"' href='"+filepath+"' target='_blank'>代理委托书("+i+")</a>";
+	        				$("#agentProxyFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='agentProxyFiles']").val(parentValue.filepath);
+	        	}
+			});
+			
+			// 代理人身份证
+			$("#btnTakePhotoAgentProof").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#agentProofFileImg").text("代理人身份证(1)");
+        			$("#agentProofFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#agentProofFileImg"+i+"' href='"+filepath+"' target='_blank'>代理人身份证("+i+")</a>";
+	        				$("#agentProofFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='agentProofFiles']").val(parentValue.filepath);
+	        	}
+			});
+			
+			
+			/* // 取报废录入数据和交警接口数据
 			$("#btnApplyVerify").bind("click", function() {
 				//校验输入的号牌号码和号牌种类，判断是否在系统中录入的车辆，过滤不符合资格或者补贴金额为0的车辆。
 				var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
@@ -606,7 +914,7 @@
 		        });
 				//alert("机动车未注销，不得受理！");
 				//$("#common-dialog").dialog("close");
-			});
+			}); */
 			
 			Callback.onsubmit = function() {
 				// 点击下一步，页面提交前的特殊处理
@@ -623,7 +931,7 @@
 		                //cache: true,
 		                type: "POST",
 		                url:$("#form-apply-edit").attr("action"),
-		                data:$("#form-apply-edit").serialize(),//
+		                data:$("#form-apply-edit").serialize(),
 		                async: true,
 		                success: function(data) {
 		                	

@@ -43,9 +43,9 @@ $(function(){
 					
 					if (child.params != undefined && child.params != null) {
 						_a.data("param",child.params);
-						
-						var params = eval('(' + child.params + ')');
-						_a.data("maximizable",child.params.maximizable);
+						if (child.params.maximizable != undefined && child.params.maximizable != null) {
+							_a.data("maximizable",child.params.maximizable);
+						}
 					}
 				}
 				
@@ -152,7 +152,10 @@ $(function(){
 			// 当前菜单所对应的权限代码
 			var mdlCode = $(this).data("mdlCode");
 			if (mdlCode != undefined && mdlCode != null) {
-				href = href + '&mdlCode=' + mdlCode;
+				// 过滤审核链接
+				if (href.indexOf("eliminatedCheck") > 0) {
+					href = href + '&mdlCode=' + mdlCode;
+				}
 			}
 			
 			var menuIndex = $(this).closest("div.panel").index();

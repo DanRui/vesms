@@ -144,7 +144,7 @@ String basePath = request.getContextPath();
 					 //{field:"batchCreateStatus",title:"批次生成状态:",type:"combobox",url:basePath+"/data/batchCreateStatus.json",text:"name", value:"value"}
 			        ],
 			tools:[
-					{type:"conclude_mark",icon:"icon-add",title:"办结",text_width:100,
+					{type:"CONCLUDE_MARK",icon:"icon-add",title:"办结",text_width:100,
 						  fn:function() {
 							var ids=[];
 							var selectedRows = this.datagrid("getSelections");

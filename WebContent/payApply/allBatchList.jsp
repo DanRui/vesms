@@ -204,7 +204,7 @@ String basePath = request.getContextPath();
 					 {field:"batchType",title:"批次类型：",type:"combobox", url:basePath+"/data/batchType.json", text:"name", value:"value"},
 					 {startField:"createStartDate",endField:"createEndDate",title:"批次生成时间:",type:"date",section:true},
 					 {field:"batchStatus",title:"批次状态：",type:"combobox", url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
-					 {startField:"toFinanceStartTime",endField:"toFinanceStartTime",title:"批次报财务时间:",type:"date",section:true}
+					 {startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"批次报财务时间:",type:"date",section:true}
 			        ],
 			tools:[			       
 					   {type:"QUERY"}

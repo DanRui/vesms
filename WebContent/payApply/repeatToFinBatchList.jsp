@@ -165,7 +165,7 @@ String basePath = request.getContextPath();
 					 {startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"报财务时间:",type:"date",section:true}
 			        ],
 			tools:[
-					{type:"BATCH_Export",icon:"icon-add",title:"文件查看",text_width:100,
+					{type:"FILE_QUERY",icon:"icon-add",title:"文件查看",text_width:100,
 						  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							//var ids=[];

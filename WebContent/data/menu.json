@@ -109,11 +109,11 @@
 		"children" : [
 			{"menuCode":"2011","menuName":"重报内部批次生成","menuUrl":"payApply/repeatCreateBatch.jsp","openMode":"tab"},
 			{"menuCode":"2012","menuName":"重报内部批次调整","menuUrl":"payApply/repeatBatchAdjust.jsp","openMode":"tab"},
-			{"menuCode":"2012","menuName":"重报内部批次查询","menuUrl":"payApply/repeatBatchList.jsp","openMode":"tab"}
+			{"menuCode":"2013","menuName":"重报内部批次查询","menuUrl":"payApply/repeatBatchList.jsp","openMode":"tab"}
 		]
 	},
 	{
-		"menuCode":"202",
+		"menuCode":"202",	
   		"menuName":"重报报财务批次管理",
   		"menuPic":"icon-bofushenbao",
 		"children" : [

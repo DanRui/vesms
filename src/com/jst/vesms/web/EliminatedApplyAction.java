@@ -509,7 +509,7 @@ public class EliminatedApplyAction extends BaseAction {
 	}
 	
 	@RequestMapping("view")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_ELIMINATED_APPLY_NO_LIST", prvgCode = "VIEW")
 	public ModelAndView view(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
 		String view = "ELIMINATED_APPLY.VIEW";
 		if(StringUtil.isNotEmpty(type) && "update".equals(type)) {
@@ -603,7 +603,7 @@ public class EliminatedApplyAction extends BaseAction {
 	
 	@ResponseBody
 	@RequestMapping("confirmApply")
-	@Privilege(modelCode  = "M_ELIMINATED_APPLY_NO_LIST", prvgCode = "CONFIRM")
+	@Privilege(modelCode  = "M_ELIMINATED_APPLY_ADD", prvgCode = "CONFIRM")
 	public String confirmApply(@RequestParam("id")Integer id, @RequestParam("signedApplyFiles")String signedApplyFiles) throws Exception {
 		log.debug("eliminatedApplyAction confirmApply is start");
 		boolean isOk = false;
@@ -661,12 +661,17 @@ public class EliminatedApplyAction extends BaseAction {
 	
 	@ResponseBody
 	@RequestMapping("edit")
-	public String edit(@RequestParam("id")Integer id, EliminatedApply eliminatedApply) throws Exception {
+	@Privilege(modelCode = "M_ELIMINATED_APPLY_NO_LIST", prvgCode = "UPDATE")
+	public String edit(@RequestParam("id")Integer id, EliminatedApply eliminatedApply,
+					String callbackProofFile, String vehicleCancelProofFiles,
+					String bankCardFiles, String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles,
+					String noFinanceProvideFiles, String openAccPromitFiles) throws Exception {
 		log.debug("EliminatedApplyAction edit is start");
 		boolean saveOk = false;
 		JSONObject json = new JSONObject();
 		try {
-			Map<String, Object> result = eliminatedApplyService.updateById(id, eliminatedApply);
+			Map<String, Object> result = eliminatedApplyService.updateById(id, eliminatedApply, callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, 
+					agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
 			if(null != result && result.get("isSuccess").equals(true)) {
 				saveOk = true;
 				json.put("id", result.get("id"));

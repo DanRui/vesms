@@ -66,6 +66,7 @@ public class VehicleRecycleAction extends BaseAction {
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleIdentifyNo, String recycleStartDate, String recycleEndDate, String inputStartTime, String inputEndTime) throws Exception{
+		log.debug("VehicleRecycleAction list is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -99,7 +100,7 @@ public class VehicleRecycleAction extends BaseAction {
 			page = vehicleRecycleService.getPageExtra(page);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("VehicleRecycleAction list is Error:" + e, e);
+			log.error("VehicleRecycleAction list is error:" + e, e);
 		}
 		log.debug("VehicleRecycleAction list is end");
 	    return returnStr;

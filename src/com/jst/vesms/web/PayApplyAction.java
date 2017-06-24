@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
@@ -57,9 +57,8 @@ public class PayApplyAction extends BaseAction{
 	 * 进行查询数据
 	 */
 	@RequestMapping("list")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_ADD_BATCH", prvgCode = "QUERY")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 

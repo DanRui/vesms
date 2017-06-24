@@ -34,18 +34,6 @@ String createDate = request.getParameter("createDate"); */
 			<td class="view_table_right">${v.payBatchTotalAmount }</td>
 		</tr>
 		<tr class="datagrid-row">
-			<td class="view_table_left">批次导出状态：</td>
-			<td class="view_table_right">
-				<c:if test="${v.isExported == '0'}">
-						未导出
-				</c:if>
-				<c:if test="${v.isExported == '1'}">
-						已导出
-				</c:if>
-				<c:if test="${v.isExported == '2'}">
-						待重新导出
-				</c:if>
-			</td>
 			<td class="view_table_left">批次报财委状态：</td>
 			<td class="view_table_right">
 				<c:if test="${v.toFinanceStatus == '0'}">
@@ -169,7 +157,7 @@ String createDate = request.getParameter("createDate"); */
 					if (num < 0) {
 						return "color:gray";
 					} else if (num > 0) {
-						return "color:red";
+						return "color:green";
 					} 
 				}
 			}/*,{

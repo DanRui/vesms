@@ -35,6 +35,7 @@ String mdlCode = request.getParameter("mdlCode");
 			sortName : "id",
 			sortOrder : "desc",
 			rownumbers : true,
+			/* pageSize : 100, */
 			columns : [ [ {
 				field : "id",
 				width : "2%",

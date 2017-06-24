@@ -94,6 +94,8 @@ public class ExportExcel {
 					if (tempClosHeader != null && tempClosHeader.length > 0) {
 						flag++;
 					}
+					
+					
 					Integer intnumbersum=0;
 					int j=0;
 					for (String temp[] : data) {
@@ -117,22 +119,32 @@ public class ExportExcel {
 						j++;
 					}
 					//合计
-					jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
+				//	jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
 					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
-				
+					String endstr="批次文件到此结束      车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
 					WritableCellFormat endFormat = new WritableCellFormat();
+					// 黄色
 					endFormat.setBackground(Colour.YELLOW);
-					lable = new Label(7, j+4, numberstr);
+					// 居左
+					endFormat.setAlignment(Alignment.LEFT);
+					// 垂直居中
+					endFormat.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					//第二行展示数据
+					lable = new Label(0, 1, numberstr);
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, 1, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
+					ws.setRowView(1, 350);
 					ws.addCell(lable);
-					lable = new Label(7, 1, numberstr);
+					
+					//末尾展示数据
+					lable = new Label(0, j+3, endstr);
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, j+3, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
+					ws.setRowView(j+3, 350);
 					ws.addCell(lable);
 					
-					
-					
-
-					//
 					if (result != Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION) {
 						// 设置列宽
 						if (colsSize.length == colsNum) {
@@ -236,16 +248,29 @@ public class ExportExcel {
 					}
 					
 					//合计
-					jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
 					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
-				
+					String endstr="批次文件到此结束      车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
 					WritableCellFormat endFormat = new WritableCellFormat();
+					// 黄色
 					endFormat.setBackground(Colour.YELLOW);
-					lable = new Label(7, j+4, numberstr);
+					// 居左
+					endFormat.setAlignment(Alignment.LEFT);
+					// 垂直居中
+					endFormat.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					//第二行展示数据
+					lable = new Label(0, 1, numberstr);
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, 1, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
+					ws.setRowView(1, 350);
 					ws.addCell(lable);
-					lable = new Label(7, 1, numberstr);
+					
+					//末尾展示数据
+					lable = new Label(0, j+3, endstr);
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, j+3, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
+					ws.setRowView(j+3, 350);
 					ws.addCell(lable);
 
 					//
@@ -357,7 +382,7 @@ public class ExportExcel {
 						if (colsNum == temp.length) {
 							for (int i = 0; i < temp.length; i++) {
 								//金额，数字输出		
-								if(i==1){
+								if(i==2){
 									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
 									ws.addCell(number);
 									Double doublst=Double.parseDouble(temp[i]);
@@ -375,16 +400,29 @@ public class ExportExcel {
 					}
 					
 					//合计
-					jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
 					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
-				
+					String endstr="批次文件到此结束      车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
 					WritableCellFormat endFormat = new WritableCellFormat();
+					// 黄色
 					endFormat.setBackground(Colour.YELLOW);
-					lable = new Label(10, j+4, numberstr);
+					// 居左
+					endFormat.setAlignment(Alignment.LEFT);
+					// 垂直居中
+					endFormat.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					//第二行展示数据
+					lable = new Label(0, 1, numberstr);
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, 1, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
+					ws.setRowView(1, 350);
 					ws.addCell(lable);
-					lable = new Label(10, 1, numberstr);
+					
+					//末尾展示数据
+					lable = new Label(0, j+3, endstr);
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, j+3, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
+					ws.setRowView(j+3, 350);
 					ws.addCell(lable);
 					
 					
@@ -511,7 +549,7 @@ public class ExportExcel {
 						if (colsNum == temp.length) {
 							for (int i = 0; i < temp.length; i++) {
 								//金额，数字输出		
-								if(i==1){
+								if(i==2){
 									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
 									ws.addCell(number);
 									Double doublst=Double.parseDouble(temp[i]);
@@ -529,16 +567,29 @@ public class ExportExcel {
 					}
 					
 					//合计
-					jxl.write.Number number = new jxl.write.Number(6, j+2, Double.parseDouble(intnumbersum.toString()));
 					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
-				
+					String endstr="批次文件到此结束      车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
 					WritableCellFormat endFormat = new WritableCellFormat();
+					// 黄色
 					endFormat.setBackground(Colour.YELLOW);
-					lable = new Label(10, j+4, numberstr);
+					// 居左
+					endFormat.setAlignment(Alignment.LEFT);
+					// 垂直居中
+					endFormat.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					//第二行展示数据
+					lable = new Label(0, 1, numberstr);
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, 1, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
+					ws.setRowView(1, 350);
 					ws.addCell(lable);
-					lable = new Label(10, 1, numberstr);
+					
+					//末尾展示数据
+					lable = new Label(0, j+3, endstr);
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, j+3, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
+					ws.setRowView(j+3, 350);
 					ws.addCell(lable);
 					
 					

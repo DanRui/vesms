@@ -264,9 +264,9 @@ String basePath = request.getContextPath();
 							}
 					   }
 				   },
-				   {type:"QUERY"},  
+				   {type:"QUERY"},
 				   ],
-			module : '${param.mdlCode}',
+			module : "M_ELIMINATED_APPLY_NO_LIST",
 			shownum:3/* ,
 			debug:true */   
 		})

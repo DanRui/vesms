@@ -1006,8 +1006,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 					apply.setVerifyCode("1");
 				}
 				
-				Map<String, Object> map = this.updateById(id, apply);
-				if (map.get("isSuccess").equals(true)) {
+				EliminatedApply updateApply = (EliminatedApply) this.update((Serializable)id, apply);
+				if (null != updateApply) {
 					// 更新成功，报废车辆信息表受理状态更改为已受理
 					VehicleRecycle vehicle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
 					if (null != vehicle) {
@@ -1041,8 +1041,9 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	}
 
 	@Override
-	public Map<String, Object> updateById(Integer id,
-			EliminatedApply eliminatedApply) throws Exception {
+	public Map<String, Object> updateById(Integer id, EliminatedApply eliminatedApply,
+			String callbackProofFile, String vehicleCancelProofFiles, String bankCardFiles,
+			String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles, String noFinanceProvideFiles, String openAccPromitFiles) throws Exception {
 		log.debug("EliminatedApplyServiceImpl update is start");
 		// 更新业务最近更新时间
 		eliminatedApply.setLastUpdateTimeDate(new Date());
@@ -1113,6 +1114,9 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (null != updatedApply) {
+			
+			
+			
 			map.put("isSuccess", true);
 			map.put("id", updatedApply.getId());
 			map.put("applyNo", updatedApply.getApplyNo());
@@ -1488,11 +1492,17 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		JSONArray jsonArray = new JSONArray();
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append(" select a.*, decode(c.apply_time, null, '未受理', '已受理') apply_status from t_appointment_vehicle a ");
+		sb.append(" select va.appointment_date, va.start_time, vav.vehicle_plate_num, vav.vehicle_plate_type, ");
+		sb.append(" vav.bank_code, vav.bank_name, vav.bank_account, ");
+		sb.append(" decode((select count(*) from t_eliminated_apply tea where tea.vehicle_plate_num = vav.vehicle_plate_num and tea.vehicle_plate_type = vav.vehicle_plate_type), 0, '未受理', '已受理') if_shouli ");
+		sb.append(" from v_appointment va, v_appointment_vehicle vav ");
+		sb.append(" where va.appointment_no = vav.appointment_no ");
+		sb.append(" and va.appointment_no = '").append(appointmentNo).append("' ");
+		/*sb.append(" select a.*, decode(c.apply_time, null, '未受理', '已受理') apply_status from t_appointment_vehicle a ");
 		sb.append(" left join t_appointment b on a.appointment_no = b.appointment_no ");
 		sb.append(" left join t_eliminated_apply c on a.vehicle_plate_num = c.vehicle_plate_num ");
 		sb.append(" and a.vehicle_plate_type = c.vehicle_plate_type ");
-		sb.append(" where b.appointment_no = '").append(appointmentNo).append("' ");
+		sb.append(" where b.appointment_no = '").append(appointmentNo).append("' ");*/
 		
 		List<Object[]> list = eliminatedApplyDao.executeSql(sb.toString());
 		if (null != list && list.size() > 0) {
@@ -1500,16 +1510,16 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				JSONObject jsonObject = new JSONObject();
 				Object[] result = list.get(i);
 				// 循环获取数据，构造json字符串
-				jsonObject.put("vehiclePlateNum", result[2]);
-				jsonObject.put("vehiclePlateType", result[3]);
-				jsonObject.put("vehiclePlateTypeName", CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", result[3].toString()).getDictValue());
+				jsonObject.put("vehiclePlateNum", result[3]);
+				jsonObject.put("vehiclePlateType", result[4]);
+				jsonObject.put("vehiclePlateTypeName", CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", result[4].toString()).getDictValue());
 				
-				jsonObject.put("bankCode", result[8]);
-				jsonObject.put("bankName", result[9]);
-				jsonObject.put("bankAccount", result[10]);
+				jsonObject.put("bankCode", result[5]);
+				jsonObject.put("bankName", result[6]);
+				jsonObject.put("bankAccount", result[7]);
 				
 				// 判断受理状态
-				jsonObject.put("applyStatus", result[11]);
+				jsonObject.put("applyStatus", result[8]);
 				
 				jsonArray.add(jsonObject);
 			}
@@ -1823,6 +1833,263 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			return vehicleMap;
 		}
 		return null;
+	}
+
+	@Override
+	public Map<String, Object> updateAttachments(String applyNo,
+			String callbackProofFile, String vehicleCancelProofFiles,
+			String bankCardFiles, String vehicleOwnerProofFiles,
+			String agentProxyFiles, String agentProofFiles,
+			String noFinanceProvideFiles, String openAccPromitFiles)
+			throws Exception {
+		
+		// 根据受理单号获得附件表数据，更新原附件表数据为无效，新增附件表记录
+		Map<String, Object> map = new HashMap<String, Object>();
+		boolean isSuccess = true;
+		
+		// 报废回收证明
+		if (StringUtil.isNotEmpty(callbackProofFile)) {
+			// 更新原报废证明为无效数据
+			attachmentDao.updateAttachment(applyNo, "JDCHSZM", "0");
+			
+			String[] callbackProofs = callbackProofFile.split(",");
+			for (int i = 0 ; i < callbackProofs.length ; i ++) {
+				String fileType = callbackProofs[i].substring(callbackProofs[i].lastIndexOf(".")+1);
+				Attachment file = new Attachment();
+				file.setApplyNo(applyNo);
+				file.setName("报废回收证明"+(i+1));
+				file.setFileType(fileType);
+				file.setBussinessType("2");
+				file.setFilePath(callbackProofs[i]);
+				file.setType("JDCHSZM");
+				file.setStatus("1");
+				file.setUploadUser("admin");
+				file.setUploadUserCode("admin");
+				file.setUploadTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setVerifyCode("1");
+				
+				Serializable id = attachmentDao.save(file);
+				if (null == id) {
+					isSuccess = false;
+				}
+			}
+			
+		}
+		
+		// 机动车注销证明
+		if (StringUtil.isNotEmpty(vehicleCancelProofFiles)) {
+			attachmentDao.updateAttachment(applyNo, "JDCZXZM", "0");
+			
+			String[] vehicleRegisterProofs = vehicleCancelProofFiles.split(",");
+			for (int i = 0 ; i < vehicleRegisterProofs.length ; i ++) {
+				String fileType = vehicleRegisterProofs[i].substring(vehicleRegisterProofs[i].lastIndexOf(".")+1);
+				Attachment file = new Attachment();
+				file.setApplyNo(applyNo);
+				file.setName("机动车注销证明"+(i+1));
+				file.setFileType(fileType);
+				file.setBussinessType("2");
+				file.setFilePath(vehicleRegisterProofs[i]);
+				file.setType("JDCZXZM");
+				file.setStatus("1");
+				file.setUploadUser("admin");
+				file.setUploadUserCode("admin");
+				file.setUploadTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setVerifyCode("1");
+				
+				Serializable id = attachmentDao.save(file);
+				if (null == id) {
+					isSuccess = false;
+				}
+			}
+			
+		}
+		
+		// 银行卡
+		if (StringUtil.isNotEmpty(bankCardFiles)) {
+			attachmentDao.updateAttachment(applyNo, "YHK", "0");
+			
+			String[] vehicleLicenses = bankCardFiles.split(",");
+			for (int i = 0 ; i < vehicleLicenses.length ; i ++) {
+				String fileType = vehicleLicenses[i].substring(vehicleLicenses[i].lastIndexOf(".")+1);
+				Attachment file = new Attachment();
+				file.setApplyNo(applyNo);
+				file.setName("银行卡"+(i+1));
+				file.setFileType(fileType);
+				file.setBussinessType("2");
+				file.setFilePath(vehicleLicenses[i]);
+				file.setType("YHK");
+				file.setStatus("1");
+				file.setUploadUser("admin");
+				file.setUploadUserCode("admin");
+				file.setUploadTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setVerifyCode("1");
+				
+				Serializable id = attachmentDao.save(file);
+				if (null == id) {
+					isSuccess = false;
+				}
+			}
+			
+		}
+		
+		// 车主身份证明
+		if (StringUtil.isNotEmpty(vehicleOwnerProofFiles)) {
+			attachmentDao.updateAttachment(applyNo, "ZCSFZM", "0");
+			
+			String[] vehicleLicenses = vehicleOwnerProofFiles.split(",");
+			for (int i = 0 ; i < vehicleLicenses.length ; i ++) {
+				String fileType = vehicleLicenses[i].substring(vehicleLicenses[i].lastIndexOf(".")+1);
+				Attachment file = new Attachment();
+				file.setApplyNo(applyNo);
+				file.setName("车主身份证明"+(i+1));
+				file.setFileType(fileType);
+				file.setBussinessType("2");
+				file.setFilePath(vehicleLicenses[i]);
+				file.setType("ZCSFZM");
+				file.setStatus("1");
+				file.setUploadUser("admin");
+				file.setUploadUserCode("admin");
+				file.setUploadTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setVerifyCode("1");
+				
+				Serializable id = attachmentDao.save(file);
+				if (null == id) {
+					isSuccess = false;
+				}
+			}
+			
+		}
+				
+		// 非财政供养单位证明
+		if (StringUtil.isNotEmpty(noFinanceProvideFiles)) {
+			attachmentDao.updateAttachment(applyNo, "FCZGYZM", "0");
+			
+			String[] vehicleLicenses = noFinanceProvideFiles.split(",");
+			for (int i = 0 ; i < vehicleLicenses.length ; i ++) {
+				String fileType = vehicleLicenses[i].substring(vehicleLicenses[i].lastIndexOf(".")+1);
+				Attachment file = new Attachment();
+				file.setApplyNo(applyNo);
+				file.setName("非财政供养单位证明"+(i+1));
+				file.setFileType(fileType);
+				file.setBussinessType("2");
+				file.setFilePath(vehicleLicenses[i]);
+				file.setType("FCZGYZM");
+				file.setStatus("1");
+				file.setUploadUser("admin");
+				file.setUploadUserCode("admin");
+				file.setUploadTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setVerifyCode("1");
+				
+				Serializable id = attachmentDao.save(file);
+				if (null == id) {
+					isSuccess = false;
+				}
+			}
+			
+		}
+		
+		// 开户许可证
+		if (StringUtil.isNotEmpty(openAccPromitFiles)) {
+			attachmentDao.updateAttachment(applyNo, "KHXKZ", "0");
+			
+			String[] vehicleLicenses = openAccPromitFiles.split(",");
+			for (int i = 0 ; i < vehicleLicenses.length ; i ++) {
+				String fileType = vehicleLicenses[i].substring(vehicleLicenses[i].lastIndexOf(".")+1);
+				Attachment file = new Attachment();
+				file.setApplyNo(applyNo);
+				file.setName("开户许可证"+(i+1));
+				file.setFileType(fileType);
+				file.setBussinessType("2");
+				file.setFilePath(vehicleLicenses[i]);
+				file.setType("KHXKZ");
+				file.setStatus("1");
+				file.setUploadUser("admin");
+				file.setUploadUserCode("admin");
+				file.setUploadTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setVerifyCode("1");
+				
+				Serializable id = attachmentDao.save(file);
+				if (null == id) {
+					isSuccess = false;
+				}
+			}
+			
+		}
+		
+		// 代理委托书
+		if (StringUtil.isNotEmpty(agentProxyFiles)) {
+			attachmentDao.updateAttachment(applyNo, "DLWTS", "0");
+			
+			String[] vehicleLicenses = agentProxyFiles.split(",");
+			for (int i = 0 ; i < vehicleLicenses.length ; i ++) {
+				String fileType = vehicleLicenses[i].substring(vehicleLicenses[i].lastIndexOf(".")+1);
+				Attachment file = new Attachment();
+				file.setApplyNo(applyNo);
+				file.setName("代理委托书"+(i+1));
+				file.setFileType(fileType);
+				file.setBussinessType("2");
+				file.setFilePath(vehicleLicenses[i]);
+				file.setType("DLWTS");
+				file.setStatus("1");
+				file.setUploadUser("admin");
+				file.setUploadUserCode("admin");
+				file.setUploadTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setVerifyCode("1");
+				
+				Serializable id = attachmentDao.save(file);
+				if (null == id) {
+					isSuccess = false;
+				}
+			}
+			
+		}
+		
+		// 代理人身份证
+		if (StringUtil.isNotEmpty(agentProofFiles)) {
+			attachmentDao.updateAttachment(applyNo, "DLRSFZ", "0");
+			
+			String[] vehicleLicenses = agentProofFiles.split(",");
+			for (int i = 0 ; i < vehicleLicenses.length ; i ++) {
+				String fileType = vehicleLicenses[i].substring(vehicleLicenses[i].lastIndexOf(".")+1);
+				Attachment file = new Attachment();
+				file.setApplyNo(applyNo);
+				file.setName("代理人身份证"+(i+1));
+				file.setFileType(fileType);
+				file.setBussinessType("2");
+				file.setFilePath(vehicleLicenses[i]);
+				file.setType("DLRSFZ");
+				file.setStatus("1");
+				file.setUploadUser("admin");
+				file.setUploadUserCode("admin");
+				file.setUploadTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setUpdateTime(new Date());
+				file.setVerifyCode("1");
+				
+				Serializable id = attachmentDao.save(file);
+				if (null == id) {
+					isSuccess = false;
+				}
+			}
+			
+		}
+		
+		map.put("isSave", isSuccess);
+		return map;
 	}
 	
 }

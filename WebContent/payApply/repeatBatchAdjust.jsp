@@ -114,7 +114,7 @@ String basePath = request.getContextPath();
 					{startField:"batchCreateStartDate",endField:"batchCreateEndDate",title:"重报批次生成时间:",type:"date",section:true}
 			        ],
 			tools:[			    
-			       {type:"DELETE",icon:"icon-add",title:"作废",text_width:100,
+			       {type:"CANCEL",icon:"icon-add",title:"作废",text_width:100,
 				     	  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							var ids=[];
@@ -161,7 +161,7 @@ String basePath = request.getContextPath();
 							}
 					 	  }
 				       },
-				    {type:"BATCH_ADJUST",title:"调整批次",text_width:100,icon:"icon-edit",
+				    {type:"ADJUST",title:"调整批次",text_width:100,icon:"icon-edit",
 				    	fn:function() {
 				    		var selectedRows = this.datagrid("getSelections");
 							var infoMsg = null;

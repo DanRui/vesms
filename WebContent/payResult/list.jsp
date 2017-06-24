@@ -163,7 +163,7 @@ String basePath = request.getContextPath();
 					 //{field:"batchCreateStatus",title:"批次生成状态:",type:"combobox",url:basePath+"/data/batchCreateStatus.json",text:"name", value:"value"}
 			        ],
 			tools:[
-				   {type:"PAY_RESULT",title:"拨付结果标记",text_width:150,icon:"icon-biaoji",fn:function(){
+				   {type:"RESULT_MARK",title:"拨付结果标记",text_width:150,icon:"icon-biaoji",fn:function(){
 						var selectedRows = this.datagrid("getSelections");
 						var infoMsg = null;
 						var ids=[];

@@ -85,7 +85,9 @@ public interface EliminatedApplyService extends BaseService {
 			  String bankCardFiles, String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles,
 			  String noFinanceProvideFiles, String openAccPromitFiles) throws Exception;
 	
-	public Map<String, Object> updateById(Integer id, EliminatedApply eliminatedApply) throws Exception;
+	public Map<String, Object> updateById(Integer id, EliminatedApply eliminatedApply,
+			String callbackProofFile, String vehicleCancelProofFiles, String bankCardFiles,
+			String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles, String noFinanceProvideFiles, String openAccPromitFiles) throws Exception;
 	
 	public EliminatedApply getById(Integer id) throws Exception;
 	
@@ -103,6 +105,13 @@ public interface EliminatedApplyService extends BaseService {
 			String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles, String noFinanceProvideFiles, String openAccPromitFiles) throws Exception;
 	
 	public List<Attachment> getAttachments(String type, String applyNo) throws Exception;
+	
+	public Map<String, Object> updateAttachments(String applyNo,
+			String callbackProofFile, String vehicleCancelProofFiles,
+			String bankCardFiles, String vehicleOwnerProofFiles,
+			String agentProxyFiles, String agentProofFiles,
+			String noFinanceProvideFiles, String openAccPromitFiles)
+			throws Exception;
 	
 	/**
 	 * 

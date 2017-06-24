@@ -145,7 +145,7 @@ String basePath = request.getContextPath();
 						}
 				   }, */
 				   {type:"QUERY"}],
-			module : '${param.mdlCode}',
+			module : "M_VEHICLE_RECYCLE_LIST",
 			shownum : 3/* ,
 			debug:true */
 		})

@@ -174,8 +174,18 @@ public class VehicleRecycleServiceImpl extends BaseServiceImpl implements Vehicl
 			for (Object obj : result) {
 				VehicleRecycle vehicleRecycle = (VehicleRecycle)obj;
 				// 获得号牌种类名称
-				SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehicleRecycle.getVehiclePlateType());
-				vehicleRecycle.setVehiclePlateTypeName(sysDictVehiclePlateType.getDictValue());
+				String vehiclePlateType = vehicleRecycle.getVehiclePlateType();
+				if (StringUtil.isNotEmpty(vehiclePlateType)) {
+					String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(vehicleRecycle.getVehiclePlateType());
+					if (null == vehiclePlateTypeName) {
+						SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
+						if (null != sysDictVehiclePlateType) {
+							vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
+						}
+					}
+					vehicleRecycle.setVehiclePlateType(vehiclePlateType);
+					vehicleRecycle.setVehiclePlateTypeName(vehiclePlateTypeName);
+				}
 				
 				// 获得车辆类型名称
 				SysDict sysDictVehicleType = CacheRead.getSysDictByCode("VEHICLE_TYPE", vehicleRecycle.getVehicleType());
@@ -261,12 +271,15 @@ public class VehicleRecycleServiceImpl extends BaseServiceImpl implements Vehicl
 		// 号牌种类
 		String vehiclePlateType = vehicleRecycle.getVehiclePlateType();
 		if (StringUtil.isNotEmpty(vehiclePlateType)) {
-			SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
-			if (null != sysDictVehiclePlateType) {
-				String vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
-				vehicleRecycle.setVehiclePlateType(vehiclePlateType);
-				vehicleRecycle.setVehiclePlateTypeName(vehiclePlateTypeName);
+			String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(vehicleRecycle.getVehiclePlateType());
+			if (null == vehiclePlateTypeName) {
+				SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
+				if (null != sysDictVehiclePlateType) {
+					vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
+				}
 			}
+			vehicleRecycle.setVehiclePlateType(vehiclePlateType);
+			vehicleRecycle.setVehiclePlateTypeName(vehiclePlateTypeName);
 		}
 		
 		// 车辆类型

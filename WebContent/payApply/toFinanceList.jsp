@@ -142,7 +142,7 @@ String basePath = request.getContextPath();
 													content : infoMsg
 												});
 											} else {
-											$.messager.confirm('报财务确认','是否确定报送财务',function(r){
+										$.messager.confirm('报财务确认','是否确定报送财务',function(r){
 											if(r){												
 											/*	$.ajaxSetup({  
 												    async : false  

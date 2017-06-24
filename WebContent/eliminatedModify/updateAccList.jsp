@@ -211,7 +211,7 @@ String basePath = request.getContextPath();
 					},	
 				   {type:"QUERY"}
 				   ],
-			module : '${param.mdlCode}',
+			module : 'M_ELIMINATED_MODIFY_UPA',
 			shownum : 3/* ,
 			debug:true  */  
 		})

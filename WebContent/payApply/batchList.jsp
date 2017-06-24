@@ -142,7 +142,7 @@ String basePath = request.getContextPath();
 					 {startField:"createStartDate",endField:"createEndDate",title:"批次生成时间:",type:"date",section:true}
 			        ],
 			tools:[		
-			       {type:"BATCH_Export",icon:"icon-add",title:"文件预览",text_width:100,
+			       {type:"BATCH_PREVIEW",icon:"icon-add",title:"文件预览",text_width:100,
 				     	  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							//var ids=[];

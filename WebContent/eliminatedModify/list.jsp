@@ -239,9 +239,9 @@ String basePath = request.getContextPath();
 				   {type:"QUERY"}
 				 
 				   ],
-			module : '${param.mdlCode}',
-			shownum : 3/* ,
-			debug : true */   
+			module : 'M_ELIMINATED_MODIFY_NOR',
+			shownum : 3 ,
+			debug : false   
 		})
 	})
 
