@@ -1,3 +1,6 @@
 /build/*
 .svn/*
 .gitignore
+.classpath
+.project
+/WebContent/WEB-INF/classes/*
