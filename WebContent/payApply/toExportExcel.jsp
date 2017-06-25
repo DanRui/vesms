@@ -23,6 +23,8 @@ String basePath = request.getContextPath();
 				<input id="password" name="password" type="text" class="easyui-validatebox" data-options="required:true"/>
 			</td>
 			<a id="excel_file"></a>
+			<br>
+			<a id="pdf_file"></a>
 		</tr>
 		<tr>
 		<td>
@@ -36,7 +38,7 @@ String basePath = request.getContextPath();
 	$().ready(function(){
 		
 		$("#excel_file").hide();
-		
+		$("#pdf_file").hide();
 		$("#ConfirmButton").click(function(){
 			var password=$("#password").val();
 			if (password!=""){
@@ -52,9 +54,18 @@ String basePath = request.getContextPath();
 						});
 						
 						$("#excel_file").show();
-						var excelPath = '<%=basePath%>/' + data.message;
+						$("#pdf_file").show();
+						
+						var filepath = data.message.split(",");
+						
+						
+						var excelPath = '<%=basePath%>/payApply/fileDownload.do?batchNo='+'${v.batchNo}'+'&filepath=' + filepath[0];
 						$("#excel_file").attr("href", excelPath);
-						$("#excel_file").text("批次文件，请下载");
+						$("#excel_file").text("批次excel文件，请下载");
+						
+						var pdfPath = '<%=basePath%>/payApply/fileDownload.do?batchNo='+'${v.batchNo}'+'&filepath=' + filepath[1];
+						$("#pdf_file").attr("href", pdfPath);
+						$("#pdf_file").text("批次pdf文件，请下载");
 						
 					} else {
 						Messager.alert({

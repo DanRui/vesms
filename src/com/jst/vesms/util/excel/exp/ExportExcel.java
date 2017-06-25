@@ -358,9 +358,7 @@ public class ExportExcel {
 					ws.mergeCells(0, 0, colsNum - 1, 0);
 					// 设置标题行高
 					ws.setRowView(0, 1200, false);
-					
-					
-					
+
 					// 处理内标题
 					int flag = 2;
 					WritableFont sideFont = new WritableFont(WritableFont.ARIAL,10,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.BLACK);
@@ -372,23 +370,36 @@ public class ExportExcel {
 					String tempClosHeader[] = excelProperties.getColsHeader();
 					for (int i = 0; i < tempClosHeader.length; i++) {
 						lable = new Label(i, flag, tempClosHeader[i],sideTitle);
+						ws.setRowView(2, 500);
 						ws.addCell(lable);
+						
 					}
+					if (tempClosHeader != null && tempClosHeader.length > 0) {
+						flag++;
+					}
+					
 					
 					// 给第二行后末尾行加上标志(显示总行和总金额)
 					Integer intnumbersum=0;
 					int j=0;
 					for (String temp[] : data) {
 						if (colsNum == temp.length) {
+							//设置内容
+							WritableCellFormat content = new WritableCellFormat();
+							// 水平居中
+							content.setAlignment(Alignment.CENTRE);
+							// 垂直居中
+							content.setVerticalAlignment(VerticalAlignment.CENTRE); 
 							for (int i = 0; i < temp.length; i++) {
 								//金额，数字输出		
 								if(i==2){
-									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
+									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]),content);									
 									ws.addCell(number);
 									Double doublst=Double.parseDouble(temp[i]);
 									intnumbersum=intnumbersum+doublst.intValue();
 								}else{
-									lable = new Label(i, flag, temp[i]);
+									lable = new Label(i, flag, temp[i],content);// 列   行 
+									ws.setRowView(flag, 500);
 									ws.addCell(lable);
 								}
 							}
@@ -414,7 +425,7 @@ public class ExportExcel {
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, 1, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
-					ws.setRowView(1, 350);
+					ws.setRowView(1, 500);
 					ws.addCell(lable);
 					
 					//末尾展示数据
@@ -422,36 +433,10 @@ public class ExportExcel {
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, j+3, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
-					ws.setRowView(j+3, 350);
+					ws.setRowView(j+3, 500);
 					ws.addCell(lable);
 					
-					
-					//设置内容
-					WritableCellFormat content = new WritableCellFormat();
-					// 水平居中
-					content.setAlignment(Alignment.CENTRE);
-					// 垂直居中
-					content.setVerticalAlignment(VerticalAlignment.CENTRE); 
-					
-					CellView cellView = new CellView(); 
-				    cellView.setAutosize(true); //设置自动大小
-					if (tempClosHeader != null && tempClosHeader.length > 0) {
-						flag++;
-					}
-					for (String temp[] : data) {
-						if (colsNum == temp.length) {
-							for (int i = 0; i < temp.length; i++) {
-								lable = new Label(i, flag, temp[i],content);
-								ws.setRowView(i+1, 500);
-								ws.addCell(lable);
-							}
-							flag++;
-						} else {
-							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
-						}
-					}
-
-					//
+				
 					if (result != Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION) {
 						if (colsSize.length == colsNum) {
 							for (int i = 0; i < colsSize.length; i++) {
@@ -528,6 +513,7 @@ public class ExportExcel {
 					ws.mergeCells(0, 0, colsNum - 1, 0);
 					// 设置标题行高
 					ws.setRowView(0, 1200, false);
+
 					// 处理内标题
 					int flag = 2;
 					WritableFont sideFont = new WritableFont(WritableFont.ARIAL,10,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.BLACK);
@@ -539,23 +525,36 @@ public class ExportExcel {
 					String tempClosHeader[] = excelProperties.getColsHeader();
 					for (int i = 0; i < tempClosHeader.length; i++) {
 						lable = new Label(i, flag, tempClosHeader[i],sideTitle);
+						ws.setRowView(2, 500);
 						ws.addCell(lable);
+						
 					}
+					if (tempClosHeader != null && tempClosHeader.length > 0) {
+						flag++;
+					}
+					
 					
 					// 给第二行后末尾行加上标志(显示总行和总金额)
 					Integer intnumbersum=0;
 					int j=0;
 					for (String temp[] : data) {
 						if (colsNum == temp.length) {
+							//设置内容
+							WritableCellFormat content = new WritableCellFormat();
+							// 水平居中
+							content.setAlignment(Alignment.CENTRE);
+							// 垂直居中
+							content.setVerticalAlignment(VerticalAlignment.CENTRE); 
 							for (int i = 0; i < temp.length; i++) {
 								//金额，数字输出		
 								if(i==2){
-									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
+									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]),content);									
 									ws.addCell(number);
 									Double doublst=Double.parseDouble(temp[i]);
 									intnumbersum=intnumbersum+doublst.intValue();
 								}else{
-									lable = new Label(i, flag, temp[i]);
+									lable = new Label(i, flag, temp[i],content);// 列   行 
+									ws.setRowView(flag, 500);
 									ws.addCell(lable);
 								}
 							}
@@ -581,7 +580,7 @@ public class ExportExcel {
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, 1, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
-					ws.setRowView(1, 350);
+					ws.setRowView(1, 500);
 					ws.addCell(lable);
 					
 					//末尾展示数据
@@ -589,39 +588,14 @@ public class ExportExcel {
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, j+3, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
-					ws.setRowView(j+3, 350);
+					ws.setRowView(j+3, 500);
 					ws.addCell(lable);
 					
-					
-					//设置内容
-					WritableCellFormat content = new WritableCellFormat();
-					// 水平居中
-					content.setAlignment(Alignment.CENTRE);
-					// 垂直居中
-					content.setVerticalAlignment(VerticalAlignment.CENTRE); 
-					
-					CellView cellView = new CellView(); 
-				    cellView.setAutosize(true); //设置自动大小
-					if (tempClosHeader != null && tempClosHeader.length > 0) {
-						flag++;
-					}
-					for (String temp[] : data) {
-						if (colsNum == temp.length) {
-							for (int i = 0; i < temp.length; i++) {
-								lable = new Label(i, flag, temp[i],content);
-								ws.setRowView(i+1, 500);
-								ws.addCell(lable);
-							}
-							flag++;
-						} else {
-							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
-						}
-					}
-
-					//
+				
 					if (result != Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION) {
 						if (colsSize.length == colsNum) {
 							for (int i = 0; i < colsSize.length; i++) {
+								
 								ws.setColumnView(i, colsSize[i]);
 							}
 						} else {

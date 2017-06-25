@@ -15,11 +15,13 @@ import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.vesms.dao.IActionLogDao;
+import com.jst.vesms.dao.IAttachmentDao;
 import com.jst.vesms.dao.ICallDao;
 import com.jst.vesms.dao.IEliminatedApplyDao;
 import com.jst.vesms.dao.IPostBaseInfoDao;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.ApplyModifyInfo;
+import com.jst.vesms.model.Attachment;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.EliminatedApplyService;
 import com.jst.vesms.service.EliminatedCheckService;
@@ -47,6 +49,9 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 	
 	@Resource(name="actionLogDao")
 	private IActionLogDao actionLogDao;
+	
+	@Resource(name="attachmentDao")
+	private IAttachmentDao attachmentDao;
 
 	@Override
 	public BaseDAO getHibernateBaseDAO() {
@@ -167,6 +172,19 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 	public List<ActionLog> getActionLogList(Integer id) throws Exception {
 		
 		return eliminatedCheckService.getActionLogList(id);
+	}
+
+	@Override
+	public List<Attachment> getAttachments(String type, String applyNo)
+			throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_attachment t ");
+		sb.append("where 1 = 1 and t.type = '").append(type).append("' ");
+		sb.append("and t.apply_no = '").append(applyNo).append("' ");
+		sb.append("and t.status = '1' ");
+		List<Attachment> list = attachmentDao.getListBySql(sb.toString());
+		return list;
 	}
 
 }

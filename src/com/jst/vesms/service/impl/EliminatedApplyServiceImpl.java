@@ -142,13 +142,13 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
 				
 				// 解密经办人手机号 
-				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+				eliminatedApply.setAgentMobileNo(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
 				
 				// 解密车主身份证明号
-				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+				eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
 				
 				// 解密经办人身份证号
-				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+				eliminatedApply.setAgentIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 				
 				vehicleList.add(eliminatedApply);
 			}
@@ -364,8 +364,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 										+ "{\"column\":\"VEHICLE_IDENTIFY_NO\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
 										+ "{\"column\":\"SUBSIDIES_MONEY\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
 										+ "]";*/
-						
-						String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), null, "ADD"}, DataType.JSON);
+						// 测试正确后打开
+						/*String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), null, "ADD"}, DataType.JSON);
 						
 						MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
 						String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
@@ -378,8 +378,9 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 							// 校验码生成失败，记录日志。
 							log.debug("生成校验码失败：" + json.getString("retMsg"));
 							eliminatedApply.setVerifyCode("1");
-						}
+						}*/
 						
+						eliminatedApply.setVerifyCode("1");
 						
 						// 数据更新时间
 						eliminatedApply.setUpdateTime(new Date());
@@ -508,13 +509,13 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
 		
 		// 解密经办人手机号 
-		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+		eliminatedApply.setAgentMobileNo(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
 		
 		// 解密车主身份证明号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+		eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
 		
 		// 解密经办人身份证号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+		eliminatedApply.setAgentIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 		
 		return eliminatedApply;
 	}
@@ -559,7 +560,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				
 				// 注销日期
 				java.sql.Date sqlDestroyDate = (java.sql.Date) result.get("15");
-				Date destroyDate = new Date(sqlDestroyDate.getTime());
+				Date destroyDate = (sqlDestroyDate != null) ? new Date(sqlDestroyDate.getTime()) : new Date();
 				
 				// 注销类别
 				String cancelReason = (String) result.get("16");
@@ -991,7 +992,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				
 				log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
 				
-				String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
+				// 服务未启动，测试通过后再开启
+				/*String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
 				
 				MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
 				String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
@@ -1004,7 +1006,9 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 					// 校验码生成失败，记录日志。
 					log.debug("更新校验码失败：" + json.getString("retMsg"));
 					apply.setVerifyCode("1");
-				}
+				}*/
+				
+				apply.setVerifyCode("1");
 				
 				EliminatedApply updateApply = (EliminatedApply) this.update((Serializable)id, apply);
 				if (null != updateApply) {
@@ -1095,7 +1099,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
 		
-		String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
+		/*String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
 		
 		MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
 		String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
@@ -1108,15 +1112,34 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			// 校验码生成失败，记录日志。
 			log.debug("更新校验码失败：" + json.getString("retMsg"));
 			eliminatedApply.setVerifyCode("1");
-		}
+		}*/
+		
+		eliminatedApply.setVerifyCode("1");
+		
+		// 更新受理表数据，从页面取得是解密后数据，要再加密一遍才能与数据库保持一致。
+		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+		// 解密车架号
+		eliminatedApply.setVehicleIdentifyNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getVehicleIdentifyNo()));
+		
+		// 解密银行账号
+		eliminatedApply.setBankAccountNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getBankAccountNo()));
+		
+		// 解密车主手机号
+		eliminatedApply.setMobile(EncryptUtil.encryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
+		
+		// 解密经办人手机号 
+		eliminatedApply.setAgentMobileNo(EncryptUtil.encryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+		
+		// 解密车主身份证明号
+		eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.encryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+		
+		// 解密经办人身份证号
+		eliminatedApply.setAgentIdentity(EncryptUtil.encryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 		
 		EliminatedApply updatedApply = (EliminatedApply) this.update(id, eliminatedApply);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (null != updatedApply) {
-			
-			
-			
 			map.put("isSuccess", true);
 			map.put("id", updatedApply.getId());
 			map.put("applyNo", updatedApply.getApplyNo());
@@ -1171,7 +1194,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	@Override
 	public List<ActionLog> getActionLogList(Integer id) throws Exception {
 		List list = new ArrayList<ActionLog>();
-		EliminatedApply apply = this.getById(id);
+		EliminatedApply apply = (EliminatedApply) this.get(id);
 		if (null != apply) {
 			// 按照处理时间顺序排列
 			list = actionLogDao.getByPropertys(new String[]{"applyNo"}, new Object[]{apply.getApplyNo()}, "1=1 order by actionTime asc");
@@ -1341,7 +1364,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFileType(fileType);
 				file.setBussinessType("2");
 				file.setFilePath(vehicleLicenses[i]);
-				file.setType("ZCSFZM");
+				file.setType("CZSFZM");
 				file.setStatus("1");
 				file.setUploadUser("admin");
 				file.setUploadUserCode("admin");
@@ -1506,20 +1529,22 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		List<Object[]> list = eliminatedApplyDao.executeSql(sb.toString());
 		if (null != list && list.size() > 0) {
+			String des_key = PropertyUtil.getPropertyValue("DES_KEY");
 			for (int i = 0 ; i < list.size() ; i ++) {
 				JSONObject jsonObject = new JSONObject();
 				Object[] result = list.get(i);
 				// 循环获取数据，构造json字符串
-				jsonObject.put("vehiclePlateNum", result[3]);
-				jsonObject.put("vehiclePlateType", result[4]);
-				jsonObject.put("vehiclePlateTypeName", CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", result[4].toString()).getDictValue());
+				jsonObject.put("vehiclePlateNum", result[2]);
+				jsonObject.put("vehiclePlateType", result[3]);
+				jsonObject.put("vehiclePlateTypeName", CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", result[3].toString()).getDictValue());
 				
-				jsonObject.put("bankCode", result[5]);
-				jsonObject.put("bankName", result[6]);
-				jsonObject.put("bankAccount", result[7]);
+				jsonObject.put("bankCode", result[4]);
+				jsonObject.put("bankName", result[5]);
+				String bankAccount = EncryptUtil.decryptDES(des_key, result[6].toString());
+				jsonObject.put("bankAccount", bankAccount);
 				
 				// 判断受理状态
-				jsonObject.put("applyStatus", result[8]);
+				jsonObject.put("applyStatus", result[7]);
 				
 				jsonArray.add(jsonObject);
 			}

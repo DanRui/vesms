@@ -18,14 +18,14 @@ String basePath = request.getContextPath();
 					<tr class="datagrid-row">
 						<td class="view_table_left">号牌号码：</td>
 						<td class="view_table_right">
-							<input type="text" name="vehiclePlateNum" data-options="required:true" class="easyui-validatebox"/>
+							<input type="text" name="vehiclePlateNum" data-options="required:true" value="粤B" class="easyui-validatebox"/>
 							<font color="red">&nbsp;*&nbsp;</font>
 						</td>
 					</tr>
 					<tr>
 						<td class="view_table_left">号牌种类：</td>
 						<td class="view_table_right">
-							<input id="vehiclePlateType" class="easyui-combobox" name="vehiclePlateType" 
+							<input id="vehiclePlateTypeQuery" class="easyui-combobox" name="vehiclePlateType" 
 							data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:'auto'"/>
 							<font color="red">&nbsp;*&nbsp;</font>
 						</td>
@@ -46,8 +46,8 @@ String basePath = request.getContextPath();
 					<tr>
 						<td class="view_table_left">车架号：</td>
 						<td class="view_table_right">
-							<input type="text" name="vehicleIdentifyNo" class="easyui-validatebox" data-options="required:true"/>
-							<font color="red">&nbsp;*&nbsp;</font>
+							<input type="text" name="vehicleIdentifyNo" class="easyui-validatebox"/>
+							<!-- <font color="red">&nbsp;*&nbsp;</font> -->
 						</td>
 					</tr>
 					<!-- <tr>
@@ -65,11 +65,26 @@ String basePath = request.getContextPath();
 	<script type="text/javascript">
 		$(function() {
 			var basePath = "<%=basePath%>";
+			
 			$("#btnQuery").click(function() {
 				// ajax调用后台接口返回信息
 				var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
 				
-				var vehiclePlateType = $("#vehiclePlateType").combobox("getValue");
+				console.log(vehiclePlateNum);
+				if (null == vehiclePlateNum) {
+					alert("请输入号牌号码！");
+					return false;
+				}
+				
+				vehiclePlateNum = vehiclePlateNum.replace("粤", "");
+				
+				var vehiclePlateType = $("#vehiclePlateTypeQuery").combobox("getValue");
+				
+				console.log(vehiclePlateType);
+				if (null == vehiclePlateType || vehiclePlateType == "") {
+					alert("请输入号牌种类！");
+					return false;
+				}
 				
 				var vehicleIdentifyNo = $("input[name='vehicleIdentifyNo']").val();
 				

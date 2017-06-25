@@ -76,7 +76,9 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">车辆类型：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehicleTypeName" readonly="readonly" /></td>
+						<input type="hidden" name="vehicleType" />
+						<input type="text" name="vehicleTypeName" readonly="readonly" />
+					</td>
 					<td class="view_table_left">车架号：</td>
 					<td class="view_table_right">
 						<input type="text" name="vehicleIdentifyNo" readonly="readonly" /></td>
@@ -106,6 +108,7 @@
 						<input type="text" name="vehicleNumPeople" readonly="readonly" /></td> -->
 					<td class="view_table_left">燃油类型：</td>
 					<td class="view_table_right">
+						<input type="hidden" name="iolType" />
 						<input type="text" name="iolTypeName" readonly="readonly" />
 					</td>	
 					<td class="view_table_left">初次登记日期：</td>
@@ -132,6 +135,7 @@
 					</td>
 					<td class="view_table_left">车辆状态：</td>
 					<td class="view_table_right">
+						<input type="text" name="vehicleStatus" />	
 						<input type="text" name="vehicleStatusName" readonly="readonly"/>
 					</td>
 						<td class="view_table_left">提前报废天数：</td>
@@ -449,16 +453,16 @@
 						return false;
 					}
 					
-					if (appointmentNo.length != 17) {
+					if (appointmentNo.length != 15) {
 						alert("预约号输入位数错误！");
 						return false;
 					}
 					
-					if (!DateFormatter.DateISO(appointmentNo.substring(5, 13), "yyyyMMdd")) {
+					/* if (!DateFormatter.DateISO(appointmentNo.substring(5, 13), "yyyyMMdd")) {
 						// 日期格式不匹配
 						alert("输入的预约单号格式有误，请检查！");
 						return false;
-					}
+					} */
 					// 从服务器获取预约的车辆列表
 					$.ajax({
 						url : basePath + "/eliminatedApply/getAppointmentInfo.do?appointmentNo=" + appointmentNo,

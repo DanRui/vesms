@@ -126,7 +126,8 @@
 			<param-name>illegalChars</param-name>
 			<!-- <param-value>|,$,',&quot;,\',\&quot;,&lt;,>,+,CR,LF,\&quot;,&quot;,\,//,http,and</param-value> -->
 			<!-- <param-value>|,$,',\',\&quot;,&lt;,>,+,CR,LF,\,//,http,and</param-value> -->
-			<param-value>|,',\',\&quot;,&lt;,>,+,CR,LF,\,//,http,and</param-value>
+			<!-- <param-value>|,',\',\&quot;,&lt;,>,+,CR,LF,\,//,http,and</param-value> -->
+			<param-value>|,',\',\&quot;,&lt;,>,+,\,//,http,and</param-value>
 		</init-param>
 	</filter>
 

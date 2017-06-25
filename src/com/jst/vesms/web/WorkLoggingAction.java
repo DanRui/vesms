@@ -128,5 +128,74 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 		return list;
 	}
 	
+	/**
+	 * 
+	 * <p>Description: 获取操作人员列表</p>
+	 * @param name description type
+	 * @return String
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping("getActionUserList")
+	public String getActionUserList() throws Exception {
+		log.debug("WorkLoggingAction getPostList is start");
+		String list = null;
+		try {
+			// 岗位列表
+			list = workLoggingService.getActionUserList();
+		} catch (Exception e) {
+			log.error("WorkLoggingAction getPostList is Error:" + e, e);
+			list = null;
+		}
+		log.debug("WorkLoggingAction getPostList is end");
+		return list;
+	}
+	
+	/**
+	 * 
+	 * <p>Description: 获取操作动作列表</p>
+	 * @param name description type
+	 * @return String
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping("getActionNameList")
+	public String getActionNameList() throws Exception {
+		log.debug("WorkLoggingAction getPostList is start");
+		String list = null;
+		try {
+			// 岗位列表
+			list = workLoggingService.getActionNameList();
+		} catch (Exception e) {
+			log.error("WorkLoggingAction getPostList is Error:" + e, e);
+			list = null;
+		}
+		log.debug("WorkLoggingAction getPostList is end");
+		return list;
+	}
+	
+	/**
+	 * 
+	 * <p>Description: 获取操作结果列表</p>
+	 * @param name description type
+	 * @return String
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping("getActionResultList")
+	public String getActionResultList() throws Exception {
+		log.debug("WorkLoggingAction getActionResultList is start");
+		String list = null;
+		try {
+			// 岗位列表
+			list = workLoggingService.getActionResultList();
+		} catch (Exception e) {
+			log.error("WorkLoggingAction getActionResultList is Error:" + e, e);
+			list = null;
+		}
+		log.debug("WorkLoggingAction getActionResultList is end");
+		return list;
+	}
+	
 }
 

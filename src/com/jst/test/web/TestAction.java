@@ -289,7 +289,7 @@ public class TestAction extends BaseAction{
 		//System.out.println(TestModel.class.getSimpleName());
 		
 		System.out.println(EncryptUtil.encryptDES("1111111122222222", "asdasdasdasdasd"));
-		System.out.println(EncryptUtil.decryptDES("1111111122222222", "042ced78e4855ccca31fb50b883c1b3d"));
+		System.out.println(EncryptUtil.decryptDES("1122334455667788", "b74298a5de0dee4f62e5a7e42628ef038cf8c1bb450ccea7"));
 	}
 	
 	

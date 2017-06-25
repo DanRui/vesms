@@ -18,8 +18,13 @@ String basePath = request.getContextPath();
 		<br>
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>
+			<a id="excel_file"></a>
+			<br>
+			<a id="pdf_file"></a>
+		</tr>
+		<tr>
 		<td>
-			<input type="button" value="文件查看" class="button" id="ConfirmButton">
+			<input type="button" value="文件查看" class="button" id="queryButton">
 		</td>
 		</tr>
 	</table>
@@ -27,12 +32,35 @@ String basePath = request.getContextPath();
 	
 	<script type="text/javascript">
 	$().ready(function(){
-		$("#ConfirmButton").click(function(){
+		$("#excel_file").hide();
+		$("#pdf_file").hide();
+		$("#queryButton").click(function(){
 			$("#confirmId").form("submit", {
 				url : $("#confirmId").attr("action")+"?batchNo="+'${v.batchNo}',
 				success : function(data) {
-					Messager.alert("导出成功");
+					Messager.alert({
+						type : 'info',
+						title : '&nbsp',
+						content : "查看"
+					});
+					
+					
+					$("#excel_file").show();
+					$("#pdf_file").show();
+
+					var filepath = data.message.split(",");
+					
+					
+					var excelPath = '<%=basePath%>/payApply/fileDownload.do?batchNo='+'${v.batchNo}'+'&filepath=' + filepath[0];
+					$("#excel_file").attr("href", excelPath);
+					$("#excel_file").text("批次excel文件，请下载");
+					
+					var pdfPath = '<%=basePath%>/payApply/fileDownload.do?batchNo='+'${v.batchNo}'+'&filepath=' + filepath[1];
+					$("#pdf_file").attr("href", pdfPath);
+					$("#pdf_file").text("批次pdf文件，请下载");
 				}
+
+		
 			});
 		});
 	});

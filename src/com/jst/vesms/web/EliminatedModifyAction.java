@@ -211,6 +211,37 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		EliminatedApply object = eliminatedModifyService.getById(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		
+		// 获得图片附件表数据
+		// 获得附件表数据
+		// 报废回收证明
+		List callbackFiles = eliminatedModifyService.getAttachments("JDCHSZM", object.getApplyNo());
+		// 机动车注销证明
+		List vehicleCancelProofFiles = eliminatedModifyService.getAttachments("JDCZXZM", object.getApplyNo());
+		// 银行卡
+		List bankCardFiles = eliminatedModifyService.getAttachments("YHK", object.getApplyNo());
+		// 车主身份证明
+		List vehicleOwnerProofFiles = eliminatedModifyService.getAttachments("CZSFZM", object.getApplyNo());
+		// 非财政供养单位证明
+		List noFinanceProvideFiles = eliminatedModifyService.getAttachments("FCZGYZM", object.getApplyNo());
+		// 开户许可证
+		List openAccPromitFiles = eliminatedModifyService.getAttachments("KHXKZ", object.getApplyNo());
+		// 代理委托书
+		List agentProxyFiles = eliminatedModifyService.getAttachments("DLWTS", object.getApplyNo());
+		// 代理人身份证
+		List agentProofFiles = eliminatedModifyService.getAttachments("DLRSFZ", object.getApplyNo());
+		// 确认的受理表
+		List signedApplyFiles = eliminatedModifyService.getAttachments("QRSLB", object.getApplyNo());
+		
+		mv.addObject("callbackFiles", callbackFiles);
+		mv.addObject("vehicleCancelProofFiles", vehicleCancelProofFiles);
+		mv.addObject("bankCardFiles", bankCardFiles);
+		mv.addObject("vehicleOwnerProofFiles", vehicleOwnerProofFiles);
+		mv.addObject("noFinanceProvideFiles", noFinanceProvideFiles);
+		mv.addObject("openAccPromitFiles", openAccPromitFiles);
+		mv.addObject("agentProxyFiles", agentProxyFiles);
+		mv.addObject("agentProofFiles", agentProofFiles);
+		mv.addObject("signedApplyFiles", signedApplyFiles);
+		
 		mv.getModel().put("modifyTypes", modifyTypes);
 		mv.addObject("v", object);
 			

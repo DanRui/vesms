@@ -86,7 +86,9 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 				
 				// 获得使用性质
 				SysDict sysDictUseOfProperty = CacheRead.getSysDictByCode("USE_OF_PROPERTY", eliminatedApply.getUseOfProperty());
-				eliminatedApply.setUseOfPropertyName(sysDictUseOfProperty.getDictValue());
+				if (null != sysDictUseOfProperty) {
+					eliminatedApply.setUseOfPropertyName(sysDictUseOfProperty.getDictValue());
+				}
 				
 				// 获得燃油种类
 				SysDict sysDictIolType = CacheRead.getSysDictByCode("IOL_TYPE", eliminatedApply.getIolType());
@@ -106,13 +108,13 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
 				
 				// 解密经办人手机号 
-				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+				eliminatedApply.setAgentMobileNo(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
 				
 				// 解密车主身份证明号
-				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+				eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
 				
 				// 解密经办人身份证号
-				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+				eliminatedApply.setAgentIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 				
 				vehicleList.add(eliminatedApply);
 			}
@@ -439,13 +441,13 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
 		
 		// 解密经办人手机号 
-		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+		eliminatedApply.setAgentMobileNo(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
 		
 		// 解密车主身份证明号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+		eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
 		
 		// 解密经办人身份证号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+		eliminatedApply.setAgentIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 		
 		return eliminatedApply;
 	}
@@ -546,7 +548,7 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 	@Override
 	public List<ActionLog> getActionLogList(Integer id) throws Exception {
 		List list = new ArrayList<ActionLog>();
-		EliminatedApply apply = this.getById(id);
+		EliminatedApply apply = (EliminatedApply) this.get(id);
 		if (null != apply) {
 			// 按照处理时间顺序排列
 			list = actionLogDao.getByPropertys(new String[]{"applyNo"}, new Object[]{apply.getApplyNo()}, "1=1 order by actionTime asc");

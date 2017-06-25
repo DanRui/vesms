@@ -310,6 +310,7 @@ String basePath = request.getContextPath();
 			var basePath = "<%=basePath%>";
 			
 			var id = ${v.id};
+			var currentPost = '${v.currentPost}';
 			
 			// 点击审批按钮，触发事件
 			$("#btnBackCheck").click(function() {
@@ -325,7 +326,7 @@ String basePath = request.getContextPath();
 							          ]
 						   },
 					maximizable : true,
-					href : basePath+"/eliminatedCheck/checkView.do?ids="+id
+					href : basePath+"/eliminatedCheck/checkView.do?ids="+id+"&currentPost="+currentPost
 				});
 			});
 			

@@ -120,6 +120,7 @@
 		<aop:pointcut id="allManagerMethod" expression="execution(* com.jst.vesms.service.impl.*.*(..)) or execution(* com.jst.vesms.service.*.*(..)) or execution(* com.jst.common.service.*.*(..)) or execution(* com.jst.common.service.impl.*.*(..))"/>
 		<aop:advisor pointcut-ref="allManagerMethod" advice-ref="txAdvice" />
 
+		<!-- 
 	 	<aop:aspect id="serverA" ref="serviceAspect" order="5">
         	<aop:pointcut id="servicePoint" expression="execution(* com.jst.vesms.service.*.*(..))"/> 
         	<aop:before method="doBefore" pointcut-ref="servicePoint"/>
@@ -128,7 +129,8 @@
    		<aop:aspect id = "daoA" ref="serviceAspect" order="5">
     		<aop:pointcut expression="execution(* com.jst.vesms.dao.*.*(..))" id="methodPoint"/>
     		<aop:around method="doAround" pointcut-ref="methodPoint"/>
-    	</aop:aspect> 
+    	</aop:aspect>
+    	 --> 
 	</aop:config>
 	
 </beans>

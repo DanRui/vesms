@@ -18,6 +18,12 @@ public interface WorkLoggingService extends BaseService {
 	 *
 	 */
 	public String getActionPost() throws Exception;
+	
+	public String getActionUserList() throws Exception;
+	
+	public String getActionNameList() throws Exception;
+	
+	public String getActionResultList() throws Exception;
 
 	/**
 	 * 

@@ -184,10 +184,10 @@
 			$("#common-dialog-close").hide();
 			
 			// 调整页面大小高度，展示
-			$("#common-dialog").dialog("resize", {
+			/* $("#common-dialog").dialog("resize", {
 				width : 800,
 				height : 200
-			}).dialog("center");
+			}).dialog("center"); */
 			
 			// 上传确认的受理表时所处阶段
 			var stage = '${stage}';

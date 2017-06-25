@@ -128,9 +128,8 @@ implements PayResultService{
 	public Page getPageBySql(Page page,
 			String sql) throws Exception {
 		// TODO Auto-generated method stub
-		page=eliminatedApplyService.getPageBySql(page, sql);
-		page = eliminatedApplyService.getPageExtra(page);
-		return page;
+		Page retPage =eliminatedApplyService.getPageBySql(page, sql);
+		return eliminatedApplyService.getPageExtra(retPage);
 	}
 
 

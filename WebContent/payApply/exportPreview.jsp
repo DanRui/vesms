@@ -17,6 +17,7 @@ String basePath = request.getContextPath();
 	<form action="payApply/exportPreview.do" method="post" id="confirmId">
 		<br>
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
+		
 			<tr>
 			<td>
 				<input type="button" value="文件预览" class="button" id="ConfirmButton">
@@ -28,6 +29,8 @@ String basePath = request.getContextPath();
 	<script type="text/javascript">
 
 	$().ready(function(){
+		$("#excel_file").hide();
+		$("#pdf_file").hide();
 		$("#ConfirmButton").click(function(){
 			var password=$("#password").val();
 				 $("#confirmId").form("submit",{
@@ -37,7 +40,8 @@ String basePath = request.getContextPath();
 								type : "info",
 								title : "提示",
 								content : data.message
-							})
+							});
+							
 						}
 				}); 
 		});

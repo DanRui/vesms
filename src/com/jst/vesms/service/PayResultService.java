@@ -31,7 +31,7 @@ public interface PayResultService extends BaseService{
 	String markBatchApply(String ids, String payResStatus, String faultType, String faultDesc) throws Exception;
 
 	Page getPageBySql(Page page, String string) throws Exception;
-	
+		
 	Page filterRepeatedBatchPage(Page page) throws Exception;
 
 	Page filterBatchPage(Page page)throws Exception;

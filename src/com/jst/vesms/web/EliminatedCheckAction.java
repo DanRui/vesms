@@ -97,6 +97,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 				returnStr = writerPage(page);
 			} catch (Exception e) {
 				log.error("EliminatedCheckAction list is Error:" + e, e);
+				returnStr = e.getMessage();
 			}
 			log.debug("EliminatedCheckAction list is end");
 			return returnStr;
@@ -195,7 +196,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 	
 	@RequestMapping("check")
 	@ResponseBody
-	@Privilege(modelCode = "M_ELIMINATED_CHECK_PRVG", prvgCode = "CHECK")
+	//@Privilege(modelCode = "M_ELIMINATED_CHECK_PRVG", prvgCode = "CHECK")
 	public String check(@RequestParam("ids")String ids, @RequestParam("checkType")String checkType,
 						@RequestParam("faultType")String faultType, @RequestParam("checkOpinion")String checkOpinion, @RequestParam("currentPost")String currentPost) throws Exception {
 		log.debug("EliminatedCheckAction check is start");

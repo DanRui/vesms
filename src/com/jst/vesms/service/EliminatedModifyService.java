@@ -8,6 +8,7 @@ import com.jst.common.service.BaseService;
 import com.jst.common.utils.page.Page;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.ApplyModifyInfo;
+import com.jst.vesms.model.Attachment;
 import com.jst.vesms.model.EliminatedApply;
 
 public interface EliminatedModifyService extends BaseService {
@@ -28,6 +29,8 @@ public interface EliminatedModifyService extends BaseService {
 	public boolean saveAttachment(String type, Integer id, String absFilePath, String businessType) throws Exception;
 	
 	public List<ActionLog> getActionLogList(Integer id) throws Exception;
+	
+	public List<Attachment> getAttachments(String type, String applyNo) throws Exception;
 	
 }
 

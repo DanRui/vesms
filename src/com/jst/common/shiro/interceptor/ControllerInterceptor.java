@@ -185,7 +185,7 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 		if (StringUtil.isNotEmpty(pageMdlCode)) {
 			// 检查是否是审核模块的请求
 			log.debug("检查是否有当前审核岗位的权限");
-			if (requestUrlPath.contains("eliminatedCheck")) {
+			/*if (requestUrlPath.contains("eliminatedCheck")) {
 				boolean check = false;
 				if (StringUtil.isNotEmpty(currentPost)) {
 					if (pageMdlCode.substring(19, 24).equals(currentPost)) {
@@ -225,7 +225,7 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 					return false;
 					
 				}
-			}
+			}*/
 		}
 		
 		

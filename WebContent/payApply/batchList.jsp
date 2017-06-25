@@ -138,7 +138,7 @@ String basePath = request.getContextPath();
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"batchNo",title:"内部批次号：",type:"text"},
-			         {field:"batchStatus",title:"批次状态：",type:"combobox", url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
+			         {field:"batchStatus",title:"批次状态：",type:"combobox", panelHeight:true, url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
 					 {startField:"createStartDate",endField:"createEndDate",title:"批次生成时间:",type:"date",section:true}
 			        ],
 			tools:[		

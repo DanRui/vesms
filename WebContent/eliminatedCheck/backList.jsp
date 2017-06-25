@@ -265,8 +265,8 @@ String currentPost = request.getParameter("currentPost");
 				   }}, 
 				   {type:"QUERY"}],
 			module:"${param.mdlCode}",
-			shownum:3/* ,
-			debug:true */
+			shownum:3 ,
+			debug:true 
 		})
 
 	})

@@ -127,7 +127,7 @@ String basePath = request.getContextPath();
 					{startField:"createStartDate",endField:"createEndDate",title:"批次生成时间:",type:"date",section:true}
 			        ],
 			tools:[		
-			       {type:"CANCEL",icon:"icon-delete",title:"作废",text_width:100,
+			       {type:"CANCEL",icon:"icon-remove",title:"作废",text_width:100,
 				     	  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							var ids=[];
@@ -209,7 +209,7 @@ String basePath = request.getContextPath();
 				    },
 					   {type:"QUERY"} 
 				  ],
-			module:"M_TEST_MANAGER",
+			module:"M_NOR_BATCH_ADJUST",
 			shownum:3,
 			debug:true   
 		})

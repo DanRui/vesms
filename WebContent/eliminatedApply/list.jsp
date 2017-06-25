@@ -225,7 +225,7 @@ String basePath = request.getContextPath();
 								openDialog({
 								   	type : "confirm_apply",
 									title : "受理表确认",
-									width : 1040,
+									width : 1032,
 									height : 400,
 									param: {reset:false,save:false/* ,
 										buttons:[{

@@ -13,6 +13,7 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -37,23 +38,61 @@ import com.itextpdf.text.pdf.PdfWriter;
  */
 public class PDFUtil {
 
-	public static void generatePDF() {
+	public static void generatePDF(String headerName, String filepath, List<String[]> dataList) {
 		Document document = new Document();
 		try {
 			PdfWriter writer = PdfWriter.getInstance(document,
-					new FileOutputStream("AddTableExample.pdf"));
+					new FileOutputStream(filepath));
 			document.open();
 
-			PdfPTable table = new PdfPTable(3); // 3 columns.
+			BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/msyh.ttf",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+			Font font = new Font(baseFont);
+			
+			int columns = dataList.get(0).length;
+			
+			PdfPTable table = new PdfPTable(columns); // 3 columns.
 			table.setWidthPercentage(100); // Width 100%
 			table.setSpacingBefore(10f); // Space before table
 			table.setSpacingAfter(10f); // Space after table
 
 			// Set Column widths
-			float[] columnWidths = { 1f, 1f, 1f };
-			table.setWidths(columnWidths);
+			/*float[] columnWidths = { 1f, 1f, 1f };
+			table.setWidths(columnWidths);*/
+			
+			PdfPCell headerCell = new PdfPCell(new Paragraph(headerName, font));
+			headerCell.setColspan(columns);
+			headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			
+			PdfPCell columnCell1 = new PdfPCell(new Paragraph("序号", font));
+			PdfPCell columnCell2 = new PdfPCell(new Paragraph("金额", font));
+			PdfPCell columnCell3 = new PdfPCell(new Paragraph("经济分类编码", font));
+			PdfPCell columnCell4 = new PdfPCell(new Paragraph("收款人行别编码", font));
+			PdfPCell columnCell5 = new PdfPCell(new Paragraph("收款人名称", font));
+			PdfPCell columnCell6 = new PdfPCell(new Paragraph("收款人账户", font));
+			PdfPCell columnCell7 = new PdfPCell(new Paragraph("开户银行", font));
+			PdfPCell columnCell8 = new PdfPCell(new Paragraph("摘要", font));
+			
+			table.addCell(headerCell);
+			table.addCell(columnCell1);
+			table.addCell(columnCell2);
+			table.addCell(columnCell3);
+			table.addCell(columnCell4);
+			table.addCell(columnCell5);
+			table.addCell(columnCell6);
+			table.addCell(columnCell7);
+			table.addCell(columnCell8);
+			
+			for (int i = 0 ; i < dataList.size() ; i ++) {
+				String[] rowData = dataList.get(i);
+				for (int j = 0 ; j < rowData.length ; j ++) {
+					String data = rowData[j];
+					PdfPCell dataCell = new PdfPCell(new Paragraph(data, font));
+					table.addCell(dataCell);
+				}
+			}
+			
 
-			PdfPCell cell1 = new PdfPCell(new Paragraph("Cell 1"));
+			/*PdfPCell cell1 = new PdfPCell(new Paragraph("Cell 1"));
 			cell1.setBorderColor(BaseColor.BLUE);
 			cell1.setPaddingLeft(10);
 			cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -69,17 +108,13 @@ public class PDFUtil {
 			cell3.setBorderColor(BaseColor.RED);
 			cell3.setPaddingLeft(10);
 			cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
-			cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);*/
 
 			// To avoid having the cell border and the content overlap, if you
 			// are having thick cell borders
 			// cell1.setUserBorderPadding(true);
 			// cell2.setUserBorderPadding(true);
 			// cell3.setUserBorderPadding(true);
-
-			table.addCell(cell1);
-			table.addCell(cell2);
-			table.addCell(cell3);
 
 			document.add(table);
 
@@ -270,7 +305,13 @@ public class PDFUtil {
 		 * e.printStackTrace(); }
 		 */
 
+		List<String[]> dataList = new ArrayList<String[]>();
+		for (int i = 0 ; i < 100 ; i ++ ) {
+			String[] dataStrings = new String[] {(i+1)+"", "23000", "39999", "003", "B12133", "qwewqqwewqewqwqewewewwqe", "adasdsa", "B11037(第16批老旧车淘汰补贴)已核非公务卡结算(786)"};
+			dataList.add(dataStrings);
+		}
+		
 		// 生成带表格的pdf文件
-		generatePDF();
+		generatePDF("批次号", "D:/batch_no.pdf", dataList);
 	}
 }

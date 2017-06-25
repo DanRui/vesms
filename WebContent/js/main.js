@@ -153,7 +153,7 @@ $(function(){
 			var mdlCode = $(this).data("mdlCode");
 			if (mdlCode != undefined && mdlCode != null) {
 				// 过滤审核链接
-				if (href.indexOf("eliminatedCheck") > 0) {
+				if (href.indexOf("eliminatedCheck") >= 0) {
 					href = href + '&mdlCode=' + mdlCode;
 				}
 			}

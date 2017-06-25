@@ -25,6 +25,7 @@ import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
+import com.jst.test.web.PDFUtil;
 import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
@@ -112,7 +113,7 @@ public class PayApplyAction extends BaseAction{
 	
 	
 	@RequestMapping("view")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_ADD_BATCH",prvgCode = "VIEW")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
 		String view = "ELIMINATED_APPLY.VIEW";
 		EliminatedApply object = payApplyService.getById(id);
@@ -126,7 +127,7 @@ public class PayApplyAction extends BaseAction{
 	/**
 	 * 生成批次号
 	 */
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "create")
+	@Privilege(modelCode = "M_ADD_BATCH",prvgCode = "ADD_BATCH")
 	@ResponseBody
 	@RequestMapping(value = "create" ) 
 	public String createBatch(@RequestParam("ids")String ids) {
@@ -161,7 +162,7 @@ public class PayApplyAction extends BaseAction{
 	 *	正常内部可调整批次查询
 	 */
 	@RequestMapping("batchAdjustList")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
+	@Privilege(modelCode = "M_NOR_BATCH_ADJUST" ,prvgCode = "QUERY")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
 	public String batchAdjustList(@RequestParam(value="page", defaultValue="1")int pageNo, 
@@ -346,7 +347,7 @@ public class PayApplyAction extends BaseAction{
 	
 	// 去批次查看页面
 	@RequestMapping("batchView")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_NOR_BATCH_ADJUST",prvgCode = "VIEW")
 	public ModelAndView bastchView(@RequestParam("id")Integer id,@RequestParam(value = "type")String type) throws Exception {
 		log.debug("payApplyAction batchView is start");
 		String view = "PAY_APPLY.VIEW";
@@ -490,6 +491,7 @@ public class PayApplyAction extends BaseAction{
 	//批次作废
 	@ResponseBody
 	@RequestMapping("batchCancel")
+	@Privilege(modelCode = "M_NOR_BATCH_ADJUST" ,prvgCode = "CANCEL")
 	public String batchCancel(@RequestParam("ids")String ids) {
 		log.debug("PayApplyAction batchCancel is start");
 		String result=null;
@@ -723,9 +725,13 @@ public class PayApplyAction extends BaseAction{
 					isOk = false;
 					resString = "报财务失败！";
 				} else {
+					BatchMain batchMain = (BatchMain)payApplyService.get(id);
 					String exportPath = "";
-					String contextPath = request.getSession().getServletContext().getRealPath("/");
-					String excelPath = PropertyUtil.getPropertyValue("excelPath");
+					// String contextPath = request.getSession().getServletContext().getRealPath("/");
+				//	String excelPath = PropertyUtil.getPropertyValue("excelPath");
+					String excelPath = "D:/excel";
+				//	String filePath = excelPath+ new String(("batch_"+batchNo+".xls").getBytes(),"iso-8859-1");
+					// filePath = filePath.replace("_fxg", File.separator);
 					/*response.setHeader("Content-disposition", "attachment;  filename="
 							+ new String(("batch_"+batchNo+".xls").getBytes(), "iso-8859-1"));
 					// 定义输出类型
@@ -740,29 +746,34 @@ public class PayApplyAction extends BaseAction{
 						String des_key = PropertyUtil.getPropertyValue("DES_KEY");
 						apply.setBankAccountNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));
 						String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999","003",apply.getVehicleOwner().toString(),
-								apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+toFinanceNo+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
+								apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
 						dataList.add(strings);
 					}
-					exportPath = contextPath + excelPath + File.separator + "batch_"+batchNo+".xls";
+			//		exportPath = contextPath + excelPath + File.separator + "batch_"+batchNo+".xls";
 					//result = exportPath.replaceAll("\\\\", "\\/");
-					File savePath = new File(contextPath + File.separator + excelPath);
-	            	if (! savePath.exists()) {
-	            		savePath.mkdirs();
+	            	if (! new File(excelPath).exists()) {
+	            		new File(excelPath).mkdirs();
 	            	}
-					OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
+	            	File savePath = new File("D:" + File.separator + "excel"+ File.separator + "batch_"+batchNo+".xls");
+				
+	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
+	            	OutputStream outputStream = new FileOutputStream(savePath);
 	            	ExcelProperties excelProperties=new ExcelProperties();
-					excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+toFinanceNo+"批)");
+					excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)");
 					excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
 					int exportResult = ExportExcel.exportExcelInWebs(excelProperties, "ss", new int[] { 5,10,15,15,25,15,15,45 }, dataList, outputStream, password);
+					
+					PDFUtil.generatePDF("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "excel"+ "/" + "batch_"+batchNo+".pdf", dataList);
+					
 					outputStream.close();
 					if (exportResult != 1) {
 						isOk = false;
 						resString = "批次文件生成失败！";
 					} else {
 						// 后台调用导出存储过程
-						payApplyService.batchExport(id, exportPath);
+						payApplyService.batchExport(id, "D:" + "/" + "excel/" + "batch_"+batchNo+".xls"+","+"D:" + "/" + "excel/" + "batch_"+batchNo+".pdf");
 						isOk = true;
-						resString = exportPath;
+						resString = "D:" + "/" + "excel/" + "batch_"+batchNo+".xls"+","+"D:" + "/" + "excel/" + "batch_"+batchNo+".pdf";
 					}
 					
 					// 下载保存在服务器的文件到本地
@@ -838,7 +849,7 @@ public class PayApplyAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String vehicleType,String vehicleOwner, String applyNo,String vehicleIdentifyNo,String batchNo,String toFinanceStatus,String repeatedBatchNo,String currentPost,String bussinessStatus) throws Exception{
-		String returnStr = "";
+			String returnStr = "";
 		//判断条件 ：当前岗位在拨付申报岗，且业务状态为“正常”，且首报批次号 TO_FINANCE_STATUS) <= -2,且REPEATED_BATCH_NO is null
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
@@ -846,41 +857,45 @@ public class PayApplyAction extends BaseAction{
 			page.setPageSize(pageSize);
 			page.setOrder(order);
 			page.setOrderBy(orderBy);
+			StringBuffer sb = new StringBuffer("select * from t_eliminated_apply t where 1 = 1 ");
 			if(StringUtil.isNotEmpty(vehiclePlateNum)) {
-				list.add(new PropertyFilter("EQS_vehiclePlateNum",vehiclePlateNum));
+				sb.append("and t.vehicle_plate_num like '%").append(vehiclePlateNum).append("%' ");
 			}
 			if(StringUtil.isNotEmpty(vehiclePlateType)) {
-				list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
+				sb.append("and t.vehicle_plate_type = '").append(vehiclePlateType).append("' ");
 			}
 			if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-				list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
+				String key = PropertyUtil.getPropertyValue("DES_KEY");
+				vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
+				sb.append("and t.vehicle_identify_no = '").append(vehicleIdentifyNo).append("' ");
 			}
 			if(StringUtil.isNotEmpty(vehicleType)) {
-				list.add(new PropertyFilter("EQS_vehicleType",vehicleType));
-			}
-			if(StringUtil.isNotEmpty(applyNo)) {
-				list.add(new PropertyFilter("EQS_applyNo",applyNo));
+				sb.append("and t.vehicle_type = '").append(vehicleType).append("' ");
 			}
 			if(StringUtil.isNotEmpty(vehicleOwner)) {
-				list.add(new PropertyFilter("EQS_vehicleOwner",vehicleOwner));
+				sb.append("and t.vehicle_owner like '%").append(vehicleOwner).append("%' ");
 			}
+			if(StringUtil.isNotEmpty(applyNo)) {
+				sb.append("and t.apply_no = '").append(applyNo).append("' ");
+			}
+			if(StringUtil.isNotEmpty(batchNo)) {
+				sb.append("and t.batch_no = '").append(batchNo).append("' ");
+			}
+			if(StringUtil.isNotEmpty(vehicleOwner)) {
+				sb.append("and t.vehicleOwner = '").append(vehicleOwner).append("' ");
+			}
+			sb.append("and t.bussiness_status = '1' and t.current_post = 'BFSBG' and t.batch_no is not null and repeated_batch_no is null and to_number(TO_FINANCE_STATUS)<=-2");
 			try {
-				list.add(new PropertyFilter("EQS_bussinessStatus", "1"));
-				list.add(new PropertyFilter("EQS_currentPost", "BFSBG"));
-				
-				//page = payApplyService.getPageBySql(page, "select * from t_eliminated_apply where (batch_no is not null and current_post = 'BFSBG' and to_number(TO_FINANCE_STATUS) <= -2 and REPEATED_BATCH_NO is null)");
-				/*if (page.getTotalCount() != 0) {
-					page = payApplyService.getPage(page, list);
-				}*/
-				page = payApplyService.getApplyPage(page, list);
-				page = payApplyService.filterRepeatedBatchPage(page);
+				page = payApplyService.getPageBySql(page, sb.toString());
+				//page = payApplyService.getApplyPage(page, list);
+			 	//page = payApplyService.filterBatchPage(page);
 				returnStr = writerPage(page);
 			} catch (Exception e) {
 				log.error("PayApplyAction repList is Error:" + e, e);
 			}
 			
-			log.debug("PayApplyAction list is end");
-		return returnStr;
+			log.debug("PayApplyAction repLlist is end");
+		    return returnStr;
 	}
 	
 	
@@ -1046,6 +1061,8 @@ public class PayApplyAction extends BaseAction{
 				String lastBankName = (String)object[6];
 				//原开户账户
 				String lastAccountNo = (String)object[8];	
+				String key = PropertyUtil.getPropertyValue("DES_KEY");
+				lastAccountNo = EncryptUtil.decryptDES(key, lastAccountNo);
 				//变更后补贴对象
 				String thisBankName = (String)object[10];
 				//变更后银行
@@ -1054,6 +1071,12 @@ public class PayApplyAction extends BaseAction{
 				String thisAccountNo = (String)object[11];
 				//变更内容
 				String thisType = (String)object[12];
+				if(thisType == "1"){
+					thisType="一般资料修正";
+				}else if(thisType == "2"){
+					thisType="补贴账户错误修正";
+				}
+			//	thisType = EncryptUtil.decryptDES(key, thisType);
 				//当前报送序号
 				String thisToFinanceNo = (String)object[2];
 				String[] strings = new String[] {count+"",vehiclePlateNum,subsidiesMoney,
@@ -1072,7 +1095,7 @@ public class PayApplyAction extends BaseAction{
 			
 			ExcelProperties excelProperties=new ExcelProperties();
 			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表(预览)");
-			excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","批次号" });
+			excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","报送序号" });
 			ExportExcel.repExportExcelPreview(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
 		} catch (Exception e) {
 			log.error("PayApplyAction excelList is Error:"+e, e);
@@ -1570,6 +1593,8 @@ public class PayApplyAction extends BaseAction{
 					String lastBankName = (String)object[6];
 					//原开户账户
 					String lastAccountNo = (String)object[8];	
+					String key = PropertyUtil.getPropertyValue("DES_KEY");
+					lastAccountNo = EncryptUtil.decryptDES(key, lastAccountNo);
 					//变更后补贴对象
 					String thisBankName = (String)object[10];
 					//变更后银行
@@ -1578,6 +1603,11 @@ public class PayApplyAction extends BaseAction{
 					String thisAccountNo = (String)object[11];
 					//变更内容
 					String thisType = (String)object[12];
+					if(thisType == "1"){
+						thisType="一般资料修正";
+					}else if(thisType == "2"){
+						thisType="补贴账户错误修正";
+					}
 					//当前报送序号
 					BigDecimal thisToFinanceNoBigDecimal = (BigDecimal)object[2];
 					String thisToFinanceNo = thisToFinanceNoBigDecimal.toPlainString();
@@ -1691,5 +1721,46 @@ public class PayApplyAction extends BaseAction{
 			log.debug("PayApplyAction list is end");
 		    return returnStr;
 		}
+		
+	
+		//点击文件路径，下载文件
+		@ResponseBody
+		@RequestMapping("fileDownload")
+		public String fileDownload(String filepath, String batchNo, HttpServletResponse response) throws Exception {
+			log.debug("PayApplyAction fileDownload is start");
+			try {
+				String path="";
+				String pathString[] = filepath.split("/");
+				for (int i = 0; i < pathString.length; i++) {
+					path=pathString[pathString.length-1];
+				}
+				response.setHeader("Content-disposition", "attachment;  filename="
+						+ new String((path).getBytes(), "iso-8859-1"));
+				// 定义输出类型
+				response.setContentType("application/force-download");
+				//String filePath = "" ;
+				/*List<BatchExport> list = exportBatchService.getListByPorperty("batchNo", batchNo, null);
+				for (int i = 0; i < list.size(); i++) {
+					BatchExport apply = list.get(0);
+					filePath = apply.getExportRoute();
+				}*/
+				// 下载保存在服务器的文件到本地
+				FileInputStream inputStream = new FileInputStream(filepath);
+				OutputStream resOutStream = response.getOutputStream();
+				byte[] bytes = new byte[4096];
+				
+				while(inputStream.read(bytes) != -1) {
+					resOutStream.write(bytes, 0, bytes.length);
+				}
+				inputStream.close();
+				resOutStream.close();
+			} catch (Exception e) {
+				log.error("PayApplyAction fileDownload is Error:"+e, e);
+			}		
+			log.debug("PayApplyAction fileDownload is End");
+			return null;
+			
+		}
+		
 		
 }

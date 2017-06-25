@@ -212,8 +212,8 @@ String basePath = request.getContextPath();
 				   {type:"QUERY"}
 				   ],
 			module : 'M_ELIMINATED_MODIFY_UPA',
-			shownum : 3/* ,
-			debug:true  */  
+			shownum : 3,
+			debug:true  
 		})
 	})
 

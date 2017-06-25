@@ -30,6 +30,7 @@ String basePath = request.getContextPath();
 			rownumbers : true,
 			sortName : "id",
 			sortOrder : "desc",
+			pageSize:100,
 			columns : [ [ {
 				field : "id",
 				checkbox : true,

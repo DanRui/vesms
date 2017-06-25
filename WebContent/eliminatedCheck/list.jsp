@@ -274,7 +274,7 @@ String mdlCode = request.getParameter("mdlCode");
 				   {type:"QUERY"}],
 			module : '${param.mdlCode}',
 			shownum:3 ,
-			debug:false
+			debug:true
 		})
 
 	})

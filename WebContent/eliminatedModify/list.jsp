@@ -16,7 +16,7 @@ String basePath = request.getContextPath();
 			<div class="datagrid-header" id="editData-apply-grid-toolbar">
 				<table id="editData-apply-tool-table" style = "width:100%;">
 				</table>
-		</div>
+			</div>
 		<table id="editData-apply-grid" style = "height:97.5%"></table>
 	</div>
 
@@ -241,7 +241,7 @@ String basePath = request.getContextPath();
 				   ],
 			module : 'M_ELIMINATED_MODIFY_NOR',
 			shownum : 3 ,
-			debug : false   
+			debug : true   
 		})
 	})
 

@@ -14,11 +14,11 @@ import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.jst.common.hibernate.BaseDAO;
-import com.jst.common.model.SysDict;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.vesms.common.CacheRead;
 import com.jst.vesms.constant.SysConstant;
+import com.jst.vesms.dao.IActionLogDao;
 import com.jst.vesms.dao.IPostBaseInfoDao;
 import com.jst.vesms.dao.IWorkLoggingDao;
 import com.jst.vesms.model.PostBaseInfo;
@@ -33,6 +33,9 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 	
 	@Resource(name="workLoggingDao")
 	private IWorkLoggingDao workLoggingDao;
+	
+	@Resource(name="actionLogDao")
+	private IActionLogDao actionLogDao;
 	
 	@Override
 	public String getActionPost() throws Exception {
@@ -118,6 +121,30 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 		}
 		
 		return page;
+	}
+
+	@Override
+	public String getActionUserList() throws Exception {
+		List<Object[]> list = actionLogDao.getListBySql("select distinct action_user_code from t_action_log)");
+		if (null != list && list.size() > 0) {
+			for (Object obj : list) {
+				
+			}
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getActionNameList() throws Exception {
+		
+		return null;
+	}
+
+	@Override
+	public String getActionResultList() throws Exception {
+		
+		return null;
 	}
 
 }

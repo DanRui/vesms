@@ -128,7 +128,7 @@ public class ConcludeAction extends BaseAction{
 	
 	
 
-	@RequestMapping("faultList")
+	@RequestMapping("exceList")
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
