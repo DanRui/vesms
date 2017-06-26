@@ -265,7 +265,7 @@
 				<tr class="datagrid-row">
 					<td align="center" colspan="6">
 						<a id="btnAccUpload" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">上传</a>
-						<a id="btnFilePreview" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-view'">查看图片</a>
+						<!-- <a id="btnFilePreview" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-view'">查看图片</a> -->
 					</td>
 				</tr>
 			</table>
@@ -296,7 +296,7 @@
 						if (data.success) {
 							// 文件上传成功，将文件路径传到前台页面
 							$("input[name='accountChangeProofFiles']").val(data.message.accountChangeProof);
-							$("#btnFilePreview").show();
+							// $("#btnFilePreview").show();
 							//alert(data.message.accountChangeProof);
 							// 解析文件路径数组，显示图片预览
 						} else {
@@ -304,6 +304,31 @@
 						}
 					}
 				});
+			});
+			
+			$("#btnTakePhotoAccChangeProof").click(function() {
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedModify/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#accountChangeFileImg").text("补贴对象变更证明(1)");
+        			$("#accountChangeFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#accountChangeFileImg"+i+"' href='"+filepath+"' target='_blank'>补贴对象变更证明("+i+")</a>";
+	        				$("#accountChangeFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='accountChangeProofFiles']").val(parentValue.filepath);
+	        	}
 			});
 			
 			// 查看图片按钮

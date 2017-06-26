@@ -33,7 +33,6 @@ import com.jst.system.util.SystemUtil;
 import com.jst.type.DataType;
 import com.jst.util.DateUtil;
 import com.jst.util.EncryptUtil;
-import com.jst.util.JsonUtil;
 import com.jst.util.MessageHandlerUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.vesms.common.BFGSWebServiceClient;
@@ -365,22 +364,21 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 										+ "{\"column\":\"SUBSIDIES_MONEY\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
 										+ "]";*/
 						// 测试正确后打开
-						/*String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), null, "ADD"}, DataType.JSON);
+						String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), null, "ADD"}, DataType.JSON);
 						
 						MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
 						String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
-						String retMsg = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.BODY, DataType.JSON));
-						JSONObject json = JSONObject.fromObject(retMsg);
+						//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
 						if(Message.RET_CODE_SUCCESS.equals(retCode)) {
-							log.debug("生成校验码为：" + json.getString("chekcCode"));
+							String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
+							JSONObject json = JSONObject.fromObject(str);
+							log.debug("更新后校验码为：" + json.getString("checkCode"));
 							eliminatedApply.setVerifyCode(json.getString("checkCode"));
 						} else {
 							// 校验码生成失败，记录日志。
-							log.debug("生成校验码失败：" + json.getString("retMsg"));
+							log.debug("生成校验码失败");
 							eliminatedApply.setVerifyCode("1");
-						}*/
-						
-						eliminatedApply.setVerifyCode("1");
+						}
 						
 						// 数据更新时间
 						eliminatedApply.setUpdateTime(new Date());
@@ -559,8 +557,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				Date deadline = new Date(sqlDeadline.getTime());
 				
 				// 注销日期
-				java.sql.Date sqlDestroyDate = (java.sql.Date) result.get("15");
-				Date destroyDate = (sqlDestroyDate != null) ? new Date(sqlDestroyDate.getTime()) : new Date();
+				//java.sql.Date sqlDestroyDate = (java.sql.Date) result.get("15");
+				//Date destroyDate = (sqlDestroyDate != null) ? new Date(sqlDestroyDate.getTime()) : new Date();
 				
 				// 注销类别
 				String cancelReason = (String) result.get("16");
@@ -602,7 +600,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				eliminatedApply.setVehicleType(vehicleType);
 				eliminatedApply.setVehicleOwner(vehicleOwner);
 				eliminatedApply.setVehicleOwnerIdentity(vehicleOwnerIdentity);
-				eliminatedApply.setDestroyDate(destroyDate);
+				//eliminatedApply.setDestroyDate(destroyDate);
 				eliminatedApply.setRegisterDate(registerDate);
 				eliminatedApply.setVehicleStatus(vehicleStatus);
 				eliminatedApply.setEmissionStandard(emissionStandard);
@@ -993,22 +991,21 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
 				
 				// 服务未启动，测试通过后再开启
-				/*String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
+				String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
 				
 				MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
 				String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
-				String retMsg = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.BODY, DataType.JSON));
-				JSONObject json = JSONObject.fromObject(retMsg);
+				//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
 				if(Message.RET_CODE_SUCCESS.equals(retCode)) {
-					log.debug("更新后校验码为：" + json.getString("chekcCode"));
+					String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
+					JSONObject json = JSONObject.fromObject(str);
+					log.debug("更新后校验码为：" + json.getString("checkCode"));
 					apply.setVerifyCode(json.getString("checkCode"));
 				} else {
 					// 校验码生成失败，记录日志。
-					log.debug("更新校验码失败：" + json.getString("retMsg"));
+					log.debug("更新校验码失败");
 					apply.setVerifyCode("1");
-				}*/
-				
-				apply.setVerifyCode("1");
+				}
 				
 				EliminatedApply updateApply = (EliminatedApply) this.update((Serializable)id, apply);
 				if (null != updateApply) {
@@ -1099,22 +1096,21 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
 		
-		/*String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
+		String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
 		
 		MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
 		String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
-		String retMsg = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.BODY, DataType.JSON));
-		JSONObject json = JSONObject.fromObject(retMsg);
+		//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
 		if(Message.RET_CODE_SUCCESS.equals(retCode)) {
-			log.debug("更新后校验码为：" + json.getString("chekcCode"));
+			String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
+			JSONObject json = JSONObject.fromObject(str);
+			log.debug("更新后校验码为：" + json.getString("checkCode"));
 			eliminatedApply.setVerifyCode(json.getString("checkCode"));
 		} else {
 			// 校验码生成失败，记录日志。
-			log.debug("更新校验码失败：" + json.getString("retMsg"));
+			log.debug("更新校验码失败");
 			eliminatedApply.setVerifyCode("1");
-		}*/
-		
-		eliminatedApply.setVerifyCode("1");
+		}
 		
 		// 更新受理表数据，从页面取得是解密后数据，要再加密一遍才能与数据库保持一致。
 		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
@@ -1196,8 +1192,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		List list = new ArrayList<ActionLog>();
 		EliminatedApply apply = (EliminatedApply) this.get(id);
 		if (null != apply) {
-			// 按照处理时间顺序排列
-			list = actionLogDao.getByPropertys(new String[]{"applyNo"}, new Object[]{apply.getApplyNo()}, "1=1 order by actionTime asc");
+			// 按照最近处理时间倒序排列
+			list = actionLogDao.getByPropertys(new String[]{"applyNo"}, new Object[]{apply.getApplyNo()}, "1=1 order by actionTime desc");
 		}
 		return list;
 	}
@@ -1565,8 +1561,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		if (null != model) {
 			// 查询当前车辆是否有预约号
 			StringBuffer sb = new StringBuffer();
-			sb.append(" select a.* from t_appointment_vehicle a ");
-			sb.append(" inner join t_appointment b on a.appointment_no = b.appointment_no ");
+			sb.append(" select a.* from v_appointment_vehicle a ");
+			sb.append(" inner join v_appointment b on a.appointment_no = b.appointment_no ");
 			sb.append(" where a.vehicle_plate_num = '").append(model.getVehiclePlateNum()).append("' ");
 			sb.append(" and a.vehicle_plate_type = '").append(model.getVehiclePlateType()).append("' ");
 			sb.append(" and b.state = '1'");

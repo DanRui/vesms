@@ -18,22 +18,15 @@ String basePath = request.getContextPath();
 		<br>
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>
-			<a id="excel_file"></a>
-			<br>
-			<a id="pdf_file"></a>
-		</tr>
-		<tr>
-		<td>
-			<input type="button" value="文件查看" class="button" id="queryButton">
-		</td>
+			<td>
+				<a id="excel_file"></a>
+			<td>
 		</tr>
 	</table>
 	<form>
 	
 	<script type="text/javascript">
 	$().ready(function(){
-		$("#excel_file").hide();
-		$("#pdf_file").hide();
 		$("#queryButton").click(function(){
 			$("#confirmId").form("submit", {
 				url : $("#confirmId").attr("action")+"?batchNo="+'${v.batchNo}',

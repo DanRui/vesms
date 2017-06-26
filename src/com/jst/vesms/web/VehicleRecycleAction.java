@@ -37,6 +37,7 @@ import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.DateUtil;
+import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
@@ -81,19 +82,21 @@ public class VehicleRecycleAction extends BaseAction {
 			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-			list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
+			// 加密车架号
+			String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+			list.add(new PropertyFilter("EQS_vehicleIdentifyNo", EncryptUtil.encryptDES(des_key, vehicleIdentifyNo)));
 		}
 		if(StringUtil.isNotEmpty(recycleStartDate)) {
-			list.add(new PropertyFilter("GTD_recycleDate",recycleStartDate));
+			list.add(new PropertyFilter("GTD_recycleDate", recycleStartDate));
 		}
 		if(StringUtil.isNotEmpty(recycleEndDate)) {
-			list.add(new PropertyFilter("LTD_recycleDate",recycleEndDate));
+			list.add(new PropertyFilter("LTD_recycleDate", recycleEndDate));
 		}
 		if(StringUtil.isNotEmpty(inputStartTime)) {
-			list.add(new PropertyFilter("GTD_inputTime",inputStartTime));
+			list.add(new PropertyFilter("GTD_inputTime", inputStartTime));
 		}
 		if(StringUtil.isNotEmpty(inputEndTime)) {
-			list.add(new PropertyFilter("LTD_inputTime",inputEndTime));
+			list.add(new PropertyFilter("LTD_inputTime", inputEndTime));
 		}
 		try {
 			page = vehicleRecycleService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");

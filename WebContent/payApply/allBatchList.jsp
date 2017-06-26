@@ -128,7 +128,7 @@ String basePath = request.getContextPath();
 						return "color:blue";
 					}
 				}
-			} ,{
+			},{
 				field : "batchStatus",
 				title : "批次状态",
 				width : "8%",

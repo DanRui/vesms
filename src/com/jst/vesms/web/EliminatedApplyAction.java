@@ -135,6 +135,8 @@ public class EliminatedApplyAction extends BaseAction {
 			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
+			String key = PropertyUtil.getPropertyValue("DES_KEY");
+			vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
 			list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
@@ -490,7 +492,7 @@ public class EliminatedApplyAction extends BaseAction {
                 	isSuccess = false;
                 	break;
                 } else {
-                	// 保存文件记录到附件表，并置状态为有效
+                	// 写入文件成功，将文件路径传到页面
                 	json.put(filenameAttr, saveResult.get("imgSrc").toString());
                 }
             }
@@ -540,6 +542,8 @@ public class EliminatedApplyAction extends BaseAction {
 		List agentProofFiles = eliminatedApplyService.getAttachments("DLRSFZ", object.getApplyNo());
 		// 确认的受理表
 		List signedApplyFiles = eliminatedApplyService.getAttachments("QRSLB", object.getApplyNo());
+		// 补贴对象变更证明材料
+		List accountChangeProofFiles = eliminatedApplyService.getAttachments("BTZHMBGZM", object.getApplyNo());
 		
 		// 获取业务流水记录表数据
 		if (StringUtil.isNotEmpty(type) && "applyLog".equals(type)) {
@@ -555,7 +559,7 @@ public class EliminatedApplyAction extends BaseAction {
 		mv.addObject("openAccPromitFiles", openAccPromitFiles);
 		mv.addObject("agentProxyFiles", agentProxyFiles);
 		mv.addObject("agentProofFiles", agentProofFiles);
-		//mv.addObject("vehicleLicenses", vehicleLicenses);
+		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
 		
 		mv.addObject("v", object);
 			

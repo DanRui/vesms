@@ -40,6 +40,9 @@ public class ApplyModifyInfo {
 	// 补贴账户户名
 	private String bankAccountName;
 	
+	// 补贴账户银行Code
+	private String bankCode;
+	
 	// 补贴账户银行
 	private String bankName;
 	
@@ -144,6 +147,14 @@ public class ApplyModifyInfo {
 
 	public void setBankAccountName(String bankAccountName) {
 		this.bankAccountName = bankAccountName;
+	}
+
+	public String getBankCode() {
+		return bankCode;
+	}
+
+	public void setBankCode(String bankCode) {
+		this.bankCode = bankCode;
 	}
 
 	public String getBankName() {

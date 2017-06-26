@@ -173,11 +173,8 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 		outParams.put(5, OracleTypes.VARCHAR);
 		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
 		Map<String, Object> map = result.get(0);
-		if (map.get("4").toString().equals("-1")){
-			return "-1";
-		}else {
-			return map.get("5").toString();
-		}
+		String str = map.get("4").toString();
+		return str+"|"+map.get("5").toString();
 	}
 
 
@@ -296,10 +293,8 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 		outParams.put(5, OracleTypes.VARCHAR);
 		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
 		Map<String, Object> map = result.get(0);
-		if (map.get("4").toString()=="-1"){
-			return "-1";
-		}
-		return map.get("5").toString();
+		String str = map.get("4").toString();
+		return str+"|"+map.get("5").toString();
 	}
 
 

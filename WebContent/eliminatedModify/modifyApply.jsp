@@ -110,7 +110,8 @@
 				<tr id="accountInfo" class="datagrid-row">
 					<c:if test="${fn:contains(modifyTypes, '21')}">
 					<td class="view_table_left">新的开户银行：</td>
-					<td class="view_table_right"><input type="text" 
+					<td class="view_table_right">
+						<input type="text" 
 						name="bankName" class="easyui-validatebox"
 						data-options="required:true" />
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
@@ -127,28 +128,14 @@
 				</tr>
 				</c:if>
 				
-<!-- 				<tr class="datagrid-row">
-					<td class="view_table_left">机构类型：</td>
-					<td class="view_table_right">
-						公办
-					</td>
-					<td class="view_table_left">组织机构代码：</td>
-					<td class="view_table_right">
-						A985315
-					</td>							
-				</tr>
-				<tr class="datagrid-row">
-					<td class="view_table_left">新的组织机构代码：</td>
-					<td class="view_table_right">
-						<input type="text" name="orgCode"  class="easyui-validatebox"
-						data-options="required:true" />
-						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
-					</td>
-				</tr> -->
+				
+				
+				
 				<c:if test="${fn:contains(modifyTypes, '30') || fn:contains(modifyTypes, '31') || fn:contains(modifyTypes, '32') || fn:contains(modifyTypes, '33') || fn:contains(modifyTypes, '34') || fn:contains(modifyTypes, '35') || fn:contains(modifyTypes, '33') || fn:contains(modifyTypes, '33') || fn:contains(modifyTypes, '36') || fn:contains(modifyTypes, '37') || fn:contains(modifyTypes, '38') || fn:contains(modifyTypes, '39')}">
 				<tr class="datagrid-header-row classify-tr">
 					<td colspan="6">证明材料</td>
 				</tr>
+				<c:if test="${fn:contains(modifyTypes, '31')}">
 				<tr class="datagrid-row filesInfo">
 					<td class="view_table_left callbackProof" style="width:110px">报废汽车回收证明：</td>
 					<td class="view_table_right callbackProof">
@@ -161,6 +148,7 @@
 						<font color="red">&nbsp;*&nbsp;</font>
 					</td>
 				</tr>
+				</c:if>
 				<tr class="datagrid-row filesInfo">
 					<td class="view_table_left bankCard" style="width:120px">银行卡：</td>
 					<td class="view_table_right bankCard">

@@ -181,11 +181,11 @@ String basePath = request.getContextPath();
 				</TD>
 			</TR>
 			<TR>
-				<TD colspan="7" style="text-align:left;font-weight: bold">
+				<TD colspan="7" style="text-align:left;font-weight: bold;">
 					经办人申明：本人已核对以上信息且无异议；保证所提供的收款账户为车辆所有人拥有，银行账户名称与车辆注册登记的车主名称完全相同，且处正常状态。
 				</TD>
 			</TR>
-			<TR style="height: 30px">
+			<TR style="height: 60px">
 				<TD colspan="7" style="text-align: center;font-weight: bold">
 					申请人核对签名：______________ 日期：_____年_____月_____日
 				</TD>

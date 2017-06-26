@@ -17,9 +17,12 @@ String basePath = request.getContextPath();
 				<table id="toFinRepBatch-recycle-tool-table" style = "width:100%;">
 				</table>
 		</div>
+		
 		<table id=toFinRepBatch-grid style = "height:97.5%"></table>
 	</div>
-
+		<div>
+			<iframe id="iframeId" style="display:none;"/>
+		</div>
 	<script type="text/javascript">
 	$(function(){
 		var basePath = $("#basePath").val();
@@ -165,7 +168,29 @@ String basePath = request.getContextPath();
 					 {startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"报财务时间:",type:"date",section:true}
 			        ],
 			tools:[
-					{type:"FILE_QUERY",icon:"icon-add",title:"文件查看",text_width:100,
+			   	{
+				type:"FILE_QUERY",icon:"icon-add",title:"EXCEL文件查看",text_width:150,
+				fn:function() {
+					var selectedRows = this.datagrid("getSelections");
+					//var ids=[];
+					var infoMsg = null;
+					infoMsg =selectedRows.length < 1 ? "请选择一条记录" : (selectedRows.length > 1 ? "最多只能选择一条记录" : null);
+					if (null != infoMsg) {
+						Messager.alert({
+							type : "info",
+							title : "&nbsp;",
+							content : infoMsg
+						});
+					}else {
+						//文件查看
+						$.get(basePath+"/payApply/confirmRepBatchLook.do",{batchNo:selectedRows[0].batchNo},function(data) {
+							//document.frames[0].location.href = basePath+"/payApply/fileDownload.do?filePath="+data.message+"&batchNo="+selectedRows[0].batchNo;
+							$("#iframeId").attr("src", basePath+"/payApply/fileDownload.do?filepath="+data.message+"&batchNo="+selectedRows[0].batchNo);
+							$("#iframeId").show();
+						});
+					}
+					}},
+					{type:"PDF_QUERY",icon:"icon-add",title:"PDF文件查看",text_width:150,
 						  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							//var ids=[];
@@ -178,31 +203,15 @@ String basePath = request.getContextPath();
 									content : infoMsg
 								});
 							}else {
-								//文件预览 
-								if(selectedRows[0].isExported=="1"){
-									openDialog({
-										   	type : "batch_List",
-											title : "文件查看",
-											width : 300,
-											height : 200,
-											param: {reset:false,save:false},
-											maximizable : true,
-											href : basePath+"/payApply/repFinanceExcel.do?id="+selectedRows[0].id
-									});
-								}else {
-									openDialog({
-									   	type : "batch_toFinance",
-										title : "批次报财务",
-										width : 300,
-										height : 200,
-										param: {reset:false,save:false},
-										maximizable : true,
-										href : basePath+"/payApply/confirmRepExportExcel.do?id="+selectedRows[0].id
-								   });
-								}
-							}
-						  }
-					 },
+								//文件查看
+								$.get(basePath+"/payApply/confirmRepBatchPdf.do",{batchNo:selectedRows[0].batchNo},function(data) {
+									$("#iframeId").attr("src", basePath+"/payApply/fileDownload.do?filepath="+data.message+"&batchNo="+selectedRows[0].batchNo);
+									$("#iframeId").show();
+								});
+						  	}
+					}},
+			       
+			     
 					 {type:"QUERY"}
 				  ],
 			module:"M_TEST_MANAGER",

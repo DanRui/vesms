@@ -84,16 +84,16 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true
 			},{
-				field : "inputTime",
-				title : "录入时间",
+				field : "recycleDate",
+				title : "交售时间",
 				width : "10%",
 				align : "center",
 				halign : "center",
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.inputTime) {
-						return getNowFormatDate(new Date(row.inputTime.time))
+					if (row.recycleDate) {
+						return getNowFormatDate(new Date(row.recycleDate.time))
 					} else {
 						return "";
 					}
@@ -108,8 +108,7 @@ String basePath = request.getContextPath();
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
 					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					{field:"vehicleIdentifyNo",title:"车架号:",type:"text"},					
-					{startField:"recycleStartDate",endField:"recycleEndDate",title:"交售时间:",type:"date",section:true},
-					{startField:"inputStartTime",endField:"inputEndTime",title:"录入时间:",type:"date",section:true}
+					{startField:"recycleStartDate",endField:"recycleEndDate",title:"交售时间:",type:"date",section:true}
 					],
 			tools:[
 				  /*  {type:"UPDATE",title:"编辑",content:"报废车辆信息更新",width:1012,height:600,param:{

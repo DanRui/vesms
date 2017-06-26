@@ -264,7 +264,7 @@
 				<th>发生时间</th>
 				<th>经办人</th>
 				<th>操作结果</th>
-				<th>详情说明</th>
+				<th width="12%">详情说明</th>
 			</tr>
 			<c:forEach items="${actionLogs}" var="log">
 				<tr align="center">

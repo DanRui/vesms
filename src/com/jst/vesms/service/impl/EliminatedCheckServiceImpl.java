@@ -550,8 +550,8 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 		List list = new ArrayList<ActionLog>();
 		EliminatedApply apply = (EliminatedApply) this.get(id);
 		if (null != apply) {
-			// 按照处理时间顺序排列
-			list = actionLogDao.getByPropertys(new String[]{"applyNo"}, new Object[]{apply.getApplyNo()}, "1=1 order by actionTime asc");
+			// 按照最近处理时间倒序排列
+			list = actionLogDao.getByPropertys(new String[]{"applyNo"}, new Object[]{apply.getApplyNo()}, "1=1 order by actionTime desc");
 		}
 		return list;
 	}

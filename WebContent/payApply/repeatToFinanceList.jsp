@@ -119,7 +119,6 @@ String basePath = request.getContextPath();
 						   fn:function() {
 								var selectedRows = this.datagrid("getSelections");
 								var infoMsg = null;
-								var ids=[];
 								infoMsg =selectedRows.length < 1 ? "请选择一条记录" : (selectedRows.length > 1 ? "最多只能选择一条记录" : null);
 								if (null != infoMsg) {
 									Messager.alert({
@@ -129,7 +128,20 @@ String basePath = request.getContextPath();
 									});
 								}else {
 									$.messager.confirm('报财务确认','你确定将选中的批次进行报财务吗?',function(r){
-									if(r){
+										if(r){												
+											 	openDialog({
+												   	type : "batch_adjust",
+													title : "批次报财务",
+													width : 300,
+													height : 200,
+													param: {reset:false,save:false,close:false},
+													maximizable : true,
+													href : basePath+"/payApply/confirmRepExportExcel.do?id="+selectedRows[0].id
+											   });
+											}
+										
+										
+										/* 	if(r){
 									if (null != infoMsg) {
 										Messager.alert({
 											type : "info",
@@ -158,7 +170,9 @@ String basePath = request.getContextPath();
 											href : basePath+"/payApply/confirmRepExportExcel.do?id="+selectedRows[0].id
 									   });
 									}
-								}
+								} */
+									
+									
 								})
 								}
 						   }

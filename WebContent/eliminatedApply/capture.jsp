@@ -3,6 +3,7 @@
 <%@ page import="java.util.*"%>
 <%
 	String basePath = request.getContextPath();
+	String vehiclePlateNum = request.getParameter("vehiclePlateNum");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,6 +33,10 @@
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/editor/plugins/code/prettify.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/main.js"></script>
         <script language="javascript" type="text/javascript">
+        		// 定义全局号牌号码变量
+        		var vehiclePlateNum = "<%=vehiclePlateNum%>";
+        
+        
 		        var DeviceMain;//主头
 		        var DeviceAssist;//副头
 		        var VideoMain;//主头
@@ -874,7 +879,7 @@
 		                    var len = plugin().ImageList_GetCount(imgList);
 		                    for (var i = 0; i < len; i++) {
 		                        var img = plugin().ImageList_GetImage(imgList, i);
-		                        var Name = "C:\\" + GetTimeString() + ".jpg";
+		                        var Name = "D:\\LJCBT_PHOTO\\" + vehiclePlateNum + "_" + GetTimeString() + ".jpg";
 		                        var b = plugin().Image_Save(img, Name, 0);
 		                        if (b) {
 		                            MainView().View_PlayCaptureEffect();
@@ -1610,14 +1615,14 @@
             <input class="submit_01" type="button" value="停止"	onclick="StopMainRecord()" /> -->
             <!-- <input class="submit_01" type="button" value="副头录像"	onclick="StartAssistRecord()" />
             <input class="submit_01" type="button" value="停止"	onclick="StopAssistRecord()" />		 -->
-			<input class="submit_01" type="button" value="缩略图多张上传"	onclick="UploadThumbToServer()" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer()" />
             <!-- <input class="submit_01" type="button" value="上传本地文件"	onclick="UploadToHttpServer()" /> -->
-            <input class="submit_01" type="button" value="扫描直接上传"	onclick="ScanToHttpServer()" />
-			<br/>
+            <!-- <input class="submit_01" type="button" value="扫描直接上传"	onclick="ScanToHttpServer()" />
+			<br/> -->
             <!-- <input class="submit_01" type="button" value="条码/二维码识别"	onclick="Barcode()" />
             <input class="submit_01" type="button" value="MD5" onclick="GetImgMD5()" />
             -->
-            <input class="submit_01" type="button" value="OCR" onclick="OCR()" />
+            <!-- <input class="submit_01" type="button" value="OCR" onclick="OCR()" /> -->
             <br />
            <!--  <input class="submit_01" type="button" value="初始化"	onclick="InitBiokey()" />
             <input class="submit_01" type="button" value="采集指纹特征"	onclick="GetFeature()" />

@@ -105,59 +105,59 @@
 			<div title="首页" style="background-color: #FFFFFF">
 				<!-- <img src="images/welcome.jpg"> -->
 				<div style="margin: 30px 20px; width: 800px; height: 400px;">
-					<p class="notify-list" style="float: left; width: 100%; font-weight:bold;text-align:center;border-bottom:1px #66b5ff;"><font color="red">目前各个岗位等待处理的业务如下，请及时处理：</font>
+					<p class="notify-list" style="float: left; width: 100%; text-align:center;border-bottom:1px #66b5ff;"><font color="black">目前各个岗位等待处理的业务如下，请及时处理：</font>
 						<a id="btnFresh" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">刷新</a>
 					</p>
 					<table id="console" class="notify-list">
+						<tr style="color: red;font-weight:bold;">
+							<td>超期业务：</td>
+							<td>即将超期总量：<a href="javascript:void(0)" src="eliminatedApply/listAll.jsp" parent="业务综合查询"><%=list.get(9).get("COL2") %></a>&nbsp条</td>
+							<td>已经超期数量：<a href="javascript:void(0)" src="eliminatedApply/listAll.jsp" parent="业务综合查询"><%=list.get(9).get("COL3") %></a>&nbsp条</td>
+						</tr>
 						<tr>
 							<td>窗口受理岗：</td>
-							<td>受理未确认：<a href="javascript:void(0)" src="eliminatedApply/list.jsp" parent="补贴业务受理"><%=list.get(0).get("COL2") %></a>条</td>
-							<td>待资料修正：<a href="javascript:void(0)" src="eliminatedModify/list.jsp" parent="业务资料修正"><%=list.get(0).get("COL3") %></a>条</td>
+							<td>受理未确认：<a href="javascript:void(0)" src="eliminatedApply/list.jsp" parent="补贴业务受理"><%=list.get(0).get("COL2") %></a>&nbsp条</td>
+							<td>待资料修正：<a href="javascript:void(0)" src="eliminatedModify/list.jsp" parent="业务资料修正"><%=list.get(0).get("COL3") %></a>&nbsp条</td>
 						</tr>
 						<tr>
 							<td>会计初审岗：</td>
-							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=KJCSG" parent="会计初审管理"><%=list.get(1).get("COL2") %></a>条</td>
-							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=KJCSG" parent="会计初审管理"><%=list.get(1).get("COL3") %></a>条</td>
+							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=KJCSG" parent="会计初审管理"><%=list.get(1).get("COL2") %></a>&nbsp条</td>
+							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=KJCSG" parent="会计初审管理"><%=list.get(1).get("COL3") %></a>&nbsp条</td>
 						</tr>
 						<tr>
 							<td>窗口审核岗：</td>
-							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=CKSHG" parent="窗口审核管理"><%=list.get(2).get("COL2") %></a>条</td>
-							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=CKSHG" parent="窗口审核管理"><%=list.get(2).get("COL3") %></a>条</td>
+							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=CKSHG" parent="窗口审核管理"><%=list.get(2).get("COL2") %></a>&nbsp条</td>
+							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=CKSHG" parent="窗口审核管理"><%=list.get(2).get("COL3") %></a>&nbsp条</td>
 						</tr>
 						<tr>
 							<td>科长审核岗：</td>
-							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=KZSHG" parent="科长审核管理"><%=list.get(3).get("COL2") %></a>条</td>
-							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=KZSHG" parent="科长审核管理"><%=list.get(3).get("COL3") %></a>条</td>
+							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=KZSHG" parent="科长审核管理"><%=list.get(3).get("COL2") %></a>&nbsp条</td>
+							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=KZSHG" parent="科长审核管理"><%=list.get(3).get("COL3") %></a>&nbsp条</td>
 						</tr>
 						<tr>
 							<td>处长审核岗：</td>
-							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=CZSHG" parent="处长审核管理"><%=list.get(4).get("COL2") %></a>条</td>
-							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=CZSHG" parent="处长审核管理"><%=list.get(4).get("COL3") %></a>条</td>
+							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=CZSHG" parent="处长审核管理"><%=list.get(4).get("COL2") %></a>&nbsp条</td>
+							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=CZSHG" parent="处长审核管理"><%=list.get(4).get("COL3") %></a>&nbsp条</td>
 						</tr>
 						<tr>
 							<td>会计复审岗：</td>
-							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=KJFSG" parent="会计复审管理"><%=list.get(5).get("COL2") %></a>条</td>
-							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=KJFSG" parent="会计复审管理"><%=list.get(5).get("COL3") %></a>条</td>
+							<td>正常待审核：<a href="javascript:void(0)" src="eliminatedCheck/list.jsp?currentPost=KJFSG" parent="会计复审管理"><%=list.get(5).get("COL2") %></a>&nbsp条</td>
+							<td>修正待重审核：<a href="javascript:void(0)" src="eliminatedCheck/backList.jsp?currentPost=KJFSG" parent="会计复审管理"><%=list.get(5).get("COL3") %></a>&nbsp条</td>
 						</tr>
 						<tr>
 							<td>拨付申报岗：</td>
-							<td>待首次报财务：<a href="javascript:void(0)" src="payApply/allBatchList.jsp" parent="申报批次总查询"><%=list.get(6).get("COL2") %></a>条</td>
-							<td>待重新报财务：<a href="javascript:void(0)" src="payApply/allBatchList.jsp" parent="申报批次总查询"><%=list.get(6).get("COL3") %></a>条</td>
+							<td>待首次报财务：<a href="javascript:void(0)" src="payApply/allBatchList.jsp" parent="申报批次总查询"><%=list.get(6).get("COL2") %></a>&nbsp条</td>
+							<td>待重新报财务：<a href="javascript:void(0)" src="payApply/allBatchList.jsp" parent="申报批次总查询"><%=list.get(6).get("COL3") %></a>&nbsp条</td>
 						</tr>
 						<tr>
 							<td>拨付结果标记岗：</td>
-							<td>待首次拨付结果标记：<a href="javascript:void(0)" src="payResult/list.jsp" parent="拨付结果管理"><%=list.get(7).get("COL2") %></a>条</td>
-							<td>待重报拨付结果标记：<a href="javascript:void(0)" src="payResult/repeatList.jsp" parent="拨付结果管理"><%=list.get(7).get("COL3") %></a>条</td>
+							<td>待首次拨付结果标记：<a href="javascript:void(0)" src="payResult/list.jsp" parent="拨付结果管理"><%=list.get(7).get("COL2") %></a>&nbsp条</td>
+							<td>待重报拨付结果标记：<a href="javascript:void(0)" src="payResult/repeatList.jsp" parent="拨付结果管理"><%=list.get(7).get("COL3") %></a>&nbsp条</td>
 						</tr>
 						<tr>
 							<td>业务办结岗：</td>
-							<td>待正常办结：<a href="javascript:void(0)" src="concludeApply/list.jsp" parent="办结管理"><%=list.get(8).get("COL2") %></a>条</td>
-							<td>待终止办结：<a href="javascript:void(0)" src="concludeApply/exceList.jsp" parent="办结管理"><%=list.get(8).get("COL3") %></a>条</td>
-						</tr>
-						<tr>
-							<td>超期业务：</td>
-							<td>即将超期总量：<a href="javascript:void(0)" src="eliminatedApply/listAll.jsp" parent="业务综合查询"><%=list.get(9).get("COL2") %></a>条</td>
-							<td>已经超期数量：<a href="javascript:void(0)" src="eliminatedApply/listAll.jsp" parent="业务综合查询"><%=list.get(9).get("COL3") %></a>条</td>
+							<td>待正常办结：<a href="javascript:void(0)" src="concludeApply/list.jsp" parent="办结管理"><%=list.get(8).get("COL2") %></a>&nbsp条</td>
+							<td>待终止办结：<a href="javascript:void(0)" src="concludeApply/exceList.jsp" parent="办结管理"><%=list.get(8).get("COL3") %></a>&nbsp条</td>
 						</tr>
 					</table>
 					<!-- 
@@ -282,6 +282,7 @@ $(function(){
 		$.get(url);
 		// session更新成功，刷新页面
 		//window.location.href = "<%=basePath%>/login/redirect.do?page=INDEX";
+		window.location.reload();
 		window.location.reload(true);
 	});
 	

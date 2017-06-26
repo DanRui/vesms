@@ -131,11 +131,12 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">注销日期：</td>
 					<td class="view_table_right">
-						<input type="text" name="destroyDate" readonly="readonly"/>
+						<input id="destroyDate" type="text" name="destroyDate" class="easyui-datebox" options="editable:false,required:true,panelHeight:'auto'"/>
+						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					<td class="view_table_left">车辆状态：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehicleStatus" />	
+						<input type="hidden" name="vehicleStatus" />
 						<input type="text" name="vehicleStatusName" readonly="readonly"/>
 					</td>
 						<td class="view_table_left">提前报废天数：</td>
@@ -377,6 +378,15 @@
 				
 				var basePath = "<%=basePath%>";
 				
+				// 注销日期校验
+				/* $("#destroyDate").datebox({
+					validator: function(date) {
+						var now = new Date();
+						var d1 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+						return date <= d1;
+					}
+				}); */
+				
 				// 重新调整页面窗口大小和位置居中
 				/* $("#common-dialog").dialog({
 					title : "申报受理录入"
@@ -386,7 +396,7 @@
 				}).dialog("center"); */
 				
 				// 初始化号牌号码输出框，显示粤B开头
-				$("input[name='vehiclePlateNum']").val("粤B");
+				//$("input[name='vehiclePlateNum']").val("粤B");
 				
 				// 页面DOM加载完毕后,隐藏预约车辆列表区域
 				$("DIV#appoint-list").hide();
@@ -512,8 +522,17 @@
 				
 				// 报废回收证明抓拍上传
 				$("#btnTakePhotoCallbackProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -891,13 +910,23 @@
 				        		// 补贴标准
 				        		$("textarea[name='subsidiesStandard']").val(data.message.subsidiesStandard);
 				        		// 注销日期
-				        		$("input[name='destroyDate']").val(getNowFormatDate(new Date(data.message.destroyDate.time)));
+				        		//$("input[name='destroyDate']").val(getNowFormatDate(new Date(data.message.destroyDate.time)));
 				        		// 报废回收证明编号
 				        		$("textarea[name='callbackProofNo']").val(data.message.callbackProofNo);
 				        		
 			        		} else {
 			        			alert(data.message);
+			        			// 清空前一次输入留下的数据，主要是指表单控件、隐藏域、文件上传框等。
+								// 车辆信息、补贴对象信息、报废信息等表单控件
+								$("#form-apply-save :input").not("DIV#appoint-list :input").val("");
+								
+								// 证明材料区域清空文件框值和回显路径
+								$("#form-apply-upload").form("clear");
 			        		}
+			        	},
+			        	error : function(XMLHttpRequest, textStatus, errorThrown) {
+			        		alert("服务器异常，请联系后台管理人员！");
+			        		// 清空页面数据
 			        	}
 			        });
 					//alert("机动车未注销，不得受理！");
@@ -916,6 +945,11 @@
 					var isValid = $("#common-dialog form").form("enableValidation").form("validate");
 					
 					if (isValid) {
+						// 校验注销日期，必选大于交售日期
+						/* if (!checkDestroyDate()) {
+							return false;	
+						}  */
+						
 						// 点击下一步，校验必传文件是否上传
 						var hasFileUpload = checkAttachments();
 						if (!hasFileUpload) {
@@ -966,6 +1000,10 @@
 										title:"&nbsp;",
 										content:data.message.msg
 									});
+			                		$("#form-apply-save").form("clear");
+									
+									// 证明材料区域清空文件框值和回显路径
+									$("#form-apply-upload").form("clear");
 			                		//$("#common-dialog").dialog("close");
 			                	}
 			            	}
@@ -1023,7 +1061,14 @@
 				return isOk;
 			}
 			
+			// 双击预约车辆列表，获得预约车辆列表，并加载车辆数据。
 			function dblClickAppointInfo(i) {
+				// 车辆信息、补贴对象信息、报废信息等表单控件
+				/* $("#form-apply-save").form("clear");
+				
+				// 证明材料区域清空文件框值和回显路径
+				$("#form-apply-upload").form("clear"); */
+				
 				// 双击每一行时触发
 				var trId = "#appoint-"+i;
 				
@@ -1052,6 +1097,24 @@
 				// 设置开户银行和银行账号
 				$("#bankCode").combobox("setValue", bankCode);
 				$("#bankAccountNo").numberbox("setValue", bankAccountNo);
+			}
+			
+			function checkDestroyDate() {
+				var isOK = true;
+				var recycleDate = $("input[name='recycleDate']").val();
+				var destroyDate = $("input[name='destroyDate']").val();
+				if (destroyDate == "") {
+					alert("请填写注销日期！");
+					return false;
+				}
+				var stdt = new Date(recycleDate.replace("-","/"));
+				var etdt = new Date(destroyDate.replace("-","/"));
+				var now = new Date();
+				if (etdt < stdt || etdt > now) {
+					alert("注销日期不合法（注销日期应介于报废日期与今天之间），请重新填写！");
+					isOK = false;
+				}
+				return isOK;
 			}
 			
 		</script>

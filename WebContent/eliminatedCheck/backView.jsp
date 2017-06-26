@@ -251,7 +251,7 @@ String basePath = request.getContextPath();
 				<th>发生时间</th>
 				<th>处理人</th>
 				<th>操作结果</th>
-				<th>详情说明</th>
+				<th width="15%">详情说明</th>
 			</tr>
 			<c:forEach items="${actionLogs}" var="log">
 				<tr align="center">

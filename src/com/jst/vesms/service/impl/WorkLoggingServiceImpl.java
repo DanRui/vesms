@@ -125,10 +125,10 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 
 	@Override
 	public String getActionUserList() throws Exception {
-		List<Object[]> list = actionLogDao.getListBySql("select distinct action_user_code from t_action_log)");
+		List list = actionLogDao.getListBySql("select distinct action_user_code from t_action_log)");
 		if (null != list && list.size() > 0) {
 			for (Object obj : list) {
-				
+				System.out.println(obj);
 			}
 		}
 		

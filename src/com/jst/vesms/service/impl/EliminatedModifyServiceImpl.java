@@ -92,6 +92,7 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 		
 		// 拼接字符串
 		String baseInfoDetails = "";
+		String attachments = "";
 		String updateType = "1";
 		
 		// 更新一般资料信息，包括经办人信息、补贴账户信息等。
@@ -107,6 +108,10 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 			baseInfoDetails += "AGENT_MOBILE_NO:[" + applyModifyInfo.getAgentMobileNo() + "];";
 		}
 		
+		if (null != applyModifyInfo.getBankCode()) {
+			baseInfoDetails += "BANK_CODE:[" + applyModifyInfo.getBankCode() + "];";
+		}
+		
 		if (null != applyModifyInfo.getBankName()) {
 			baseInfoDetails += "BANK_NAME:[" + applyModifyInfo.getBankName() + "];";
 		}
@@ -120,9 +125,98 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 			baseInfoDetails += "BANK_ACCOUNT_NAME:[" + applyModifyInfo.getBankAccountName() + "];";
 		}
 		
+		// 如果有修改补贴对象户名的，则必须更新补贴账户变更的附件表数据
+		if ("2".equals(updateType)) {
+			// 更新补贴账户变更证明材料
+			if (null != applyModifyInfo.getAccountChangeFiles() && applyModifyInfo.getAccountChangeFiles().size() > 0) {
+				String btzhmFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getAccountChangeFiles().size() ; i ++) {
+					btzhmFiles += applyModifyInfo.getAccountChangeFiles().get(i) + "|";
+				}
+				attachments += "BTZHMBGZM:[" + btzhmFiles.substring(0, btzhmFiles.length() - 1) + "];";
+			}
+		}
+		
 		// 更新附件表信息
 		if (hasModifyFiles) {
 			// 拼接附件数据
+			// 更新报废回收证明材料
+			if (null != applyModifyInfo.getCallbackProofFile() && applyModifyInfo.getCallbackProofFile().size() > 0) {
+				String bfzhFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getCallbackProofFile().size() ; i ++) {
+					bfzhFiles += applyModifyInfo.getCallbackProofFile().get(i) + "|";
+				}
+				attachments += "JDCHSZM:[" + bfzhFiles.substring(0, bfzhFiles.length() - 1) + "];";
+			}
+			
+			// 更新机动车注销证明材料
+			if (null != applyModifyInfo.getVehicleCancelProofFiles() && applyModifyInfo.getVehicleCancelProofFiles().size() > 0) {
+				String zxzmFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getVehicleCancelProofFiles().size() ; i ++) {
+					zxzmFiles += applyModifyInfo.getVehicleCancelProofFiles().get(i) + "|";
+				}
+				attachments += "JDCZXZM:[" + zxzmFiles.substring(0, zxzmFiles.length() - 1) + "];";
+			}
+			
+			// 更新银行卡材料
+			if (null != applyModifyInfo.getBankCardFiles() && applyModifyInfo.getBankCardFiles().size() > 0) {
+				String yhkFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getBankCardFiles().size() ; i ++) {
+					yhkFiles += applyModifyInfo.getBankCardFiles().get(i) + "|";
+				}
+				attachments += "YHK:[" + yhkFiles.substring(0, yhkFiles.length() - 1) + "];";
+			}
+			// 更新车主身份证明材料
+			if (null != applyModifyInfo.getVehicleOwnerProofFiles() && applyModifyInfo.getVehicleOwnerProofFiles().size() > 0) {
+				String czsfzmFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getVehicleOwnerProofFiles().size() ; i ++) {
+					czsfzmFiles += applyModifyInfo.getVehicleOwnerProofFiles().get(i) + "|";
+				}
+				attachments += "CZSFZM:[" + czsfzmFiles.substring(0, czsfzmFiles.length() - 1) + "];";
+			}
+			// 更新非财政供养单位证明材料
+			if (null != applyModifyInfo.getNoFinanceProvideFiles() && applyModifyInfo.getNoFinanceProvideFiles().size() > 0) {
+				String fczgyFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getNoFinanceProvideFiles().size() ; i ++) {
+					fczgyFiles += applyModifyInfo.getNoFinanceProvideFiles().get(i) + "|";
+				}
+				attachments += "FCZGYZM:[" + fczgyFiles.substring(0, fczgyFiles.length() - 1) + "];";
+			}
+			// 更新代理人身份证明材料
+			if (null != applyModifyInfo.getAgentProofFiles() && applyModifyInfo.getAgentProofFiles().size() > 0) {
+				String dlrFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getAgentProofFiles().size() ; i ++) {
+					dlrFiles += applyModifyInfo.getAgentProofFiles().get(i) + "|";
+				}
+				attachments += "DLRSFZ:[" + dlrFiles.substring(0, dlrFiles.length() - 1) + "];";
+			}
+			// 更新代理委托书材料
+			if (null != applyModifyInfo.getAgentProxyFiles() && applyModifyInfo.getAgentProxyFiles().size() > 0) {
+				String dlwtsFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getAgentProxyFiles().size() ; i ++) {
+					dlwtsFiles += applyModifyInfo.getAgentProxyFiles().get(i) + "|";
+				}
+				attachments += "DLWTS:[" + dlwtsFiles.substring(0, dlwtsFiles.length() - 1) + "];";
+			}
+			// 更新开户许可证材料
+			if (null != applyModifyInfo.getOpenAccPermitFiles() && applyModifyInfo.getOpenAccPermitFiles().size() > 0) {
+				String khxuzFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getOpenAccPermitFiles().size() ; i ++) {
+					khxuzFiles += applyModifyInfo.getOpenAccPermitFiles().get(i) + "|";
+				}
+				attachments += "KHXKZ:[" + khxuzFiles.substring(0, khxuzFiles.length() - 1) + "];";
+			}
+			// 更新确认的受理表材料
+			if (null != applyModifyInfo.getSignedApplyFiles() && applyModifyInfo.getSignedApplyFiles().size() > 0) {
+				String qzslbFiles = "";
+				for (int i = 0 ; i < applyModifyInfo.getSignedApplyFiles().size() ; i ++) {
+					qzslbFiles += applyModifyInfo.getSignedApplyFiles().get(i) + "|";
+				}
+				attachments += "QRSLB:[" + qzslbFiles.substring(0, qzslbFiles.length() - 1) + "];";
+			}
+			
+			
+			
 		}
 		
 		// 调用修正资料存储过程，更新数据
@@ -140,7 +234,7 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 		inParams.put(4, updateType);
 		inParams.put(5, modifyResult);
 		inParams.put(6, baseInfoDetails);
-		inParams.put(7, "");
+		inParams.put(7, attachments);
 		
 		outParams.put(8, OracleTypes.VARCHAR); // 存储过程执行结果，消息字符串
 		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");

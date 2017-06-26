@@ -256,6 +256,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		JSONObject json = new JSONObject();
 		try {
 			// 更新受理单信息,包括一般资料修正和补贴账户变更
+			applyModifyInfo.setFaultType("1");
 			Map<String, Object> map = eliminatedModifyService.saveApplyInfo(applyModifyInfo);
 			if (map.get("isSuccess").equals(true)) {
 				saveOk = true;
@@ -283,6 +284,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		JSONObject json = new JSONObject();
 		try {
 			// 更新受理单信息,包括一般资料修正和补贴账户变更
+			applyModifyInfo.setFaultType("2");
 			Map<String, Object> map = eliminatedModifyService.saveApplyInfo(applyModifyInfo);
 			if (map.get("isSuccess").equals(true)) {
 				saveOk = true;

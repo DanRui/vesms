@@ -124,6 +124,86 @@ public class PDFUtil {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	public static void repGeneratePDF(String headerName, String filepath, List<String[]> dataList) {
+		Document document = new Document();
+		try {
+			PdfWriter writer = PdfWriter.getInstance(document,
+					new FileOutputStream(filepath));
+			document.open();
+
+			BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/msyh.ttf",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+			Font font = new Font(baseFont);
+			
+			int columns = dataList.get(0).length;
+			
+			PdfPTable table = new PdfPTable(columns); // 3 columns.
+			table.setWidthPercentage(100); // Width 100%
+			table.setSpacingBefore(10f); // Space before table
+			table.setSpacingAfter(10f); // Space after table
+
+			// Set Column widths
+			/*float[] columnWidths = { 1f, 1f, 1f };
+			table.setWidths(columnWidths);*/
+			
+			PdfPCell headerCell = new PdfPCell(new Paragraph(headerName, font));
+			headerCell.setColspan(columns);
+			headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			
+			PdfPCell columnCell1 = new PdfPCell(new Paragraph("序号", font));
+			PdfPCell columnCell2 = new PdfPCell(new Paragraph("车牌号码", font));
+			PdfPCell columnCell3 = new PdfPCell(new Paragraph("补贴金额", font));
+			PdfPCell columnCell4 = new PdfPCell(new Paragraph("车主姓名", font));
+			PdfPCell columnCell5 = new PdfPCell(new Paragraph("原开户银行", font));
+			PdfPCell columnCell6 = new PdfPCell(new Paragraph("原开户账户", font));
+			PdfPCell columnCell7 = new PdfPCell(new Paragraph("变更后补贴对象", font));
+			PdfPCell columnCell8 = new PdfPCell(new Paragraph("变更后银行", font));
+			PdfPCell columnCell9 = new PdfPCell(new Paragraph("变更后银行变更后银行账户", font));
+			PdfPCell columnCell10 = new PdfPCell(new Paragraph("变更内容", font));
+			PdfPCell columnCell11 = new PdfPCell(new Paragraph("报送序号", font));
+			
+			table.addCell(headerCell);
+			table.addCell(columnCell1);
+			table.addCell(columnCell2);
+			table.addCell(columnCell3);
+			table.addCell(columnCell4);
+			table.addCell(columnCell5);
+			table.addCell(columnCell6);
+			table.addCell(columnCell7);
+			table.addCell(columnCell8);
+			table.addCell(columnCell9);
+			table.addCell(columnCell10);
+			table.addCell(columnCell11);
+			
+			
+			for (int i = 0 ; i < dataList.size() ; i ++) {
+				String[] rowData = dataList.get(i);
+				for (int j = 0 ; j < rowData.length ; j ++) {
+					String data = rowData[j];
+					PdfPCell dataCell = new PdfPCell(new Paragraph(data, font));
+					table.addCell(dataCell);
+				}
+			}
+
+			document.add(table);
+
+			document.close();
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public static void generatePDFWithPage() {
 		/*List<String> ponum = new ArrayList<String>();

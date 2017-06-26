@@ -297,8 +297,68 @@ pageEncoding="utf-8"%>
 				}
 			});
 			
-			// 保存提交审核操作，后台更新受理表、动作流水日志表
+			// 正常审核保存提交审核操作，后台更新受理表、动作流水日志表
 			$("#common-dialog-check-submit").click(function() {
+				var checkType = $("#checkType").combobox("getValue");
+				var faultType = $("#faultType").combobox("getValue");
+				var checkOpinion = $("#checkOpinion").val();
+				
+				if (checkType == "" || (checkType != "1" && checkType != "2")) {
+					alert("请选择审批操作！");
+					return false;
+				}
+				
+				if (checkType == "2") {
+					if (faultType == "") {
+						alert("请选择退回类型！");
+						return false;
+					}
+					
+					if (checkOpinion == "") {
+						alert("请填写具体原因！");
+						return false;
+					}
+				}
+				
+				$.ajax({
+	                //cache: true,
+	                type : "POST",
+	                url : basePath+"/eliminatedCheck/check.do?ids="+checkIds,
+	                data : {"checkType":checkType,"faultType":faultType,"checkOpinion":checkOpinion, "currentPost":currentPost},//审核操作，传入后台
+	                async : true,
+	                success : function(data) {
+	                	
+	                	if(Object.prototype.toString.call(data) === "[object String]") {
+							data = eval("(" + data + ")");
+						}
+						
+						if(data.success) {
+							
+							Messager.alert({
+								type : "info",
+								title:"&nbsp;",
+								content:data.message.msg
+							});
+							
+							// 审批成功
+							$("#common-dialog").dialog("close");
+							
+							//var listUrl = basePath+"/eliminatedCheck/list.do";
+							$("#eliminated-check-list #eliminated-check-grid").datagrid("load");
+							$("#back-check-list #back-check-grid").datagrid("load");
+	                	} else {
+	                		Messager.alert({
+								type : "error",
+								title:"&nbsp;",
+								content:data.message
+							});
+	                	}
+	                }
+				});
+			});
+			
+			// 修正重审核保存提交审核操作，后台更新受理表、动作流水日志表
+			$("#common-dialog-back-check-submit").click(function() {
 				var checkType = $("#checkType").combobox("getValue");
 				var faultType = $("#faultType").combobox("getValue");
 				var checkOpinion = $("#checkOpinion").val();

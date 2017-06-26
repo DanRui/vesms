@@ -19,6 +19,8 @@ import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.common.utils.string.StringUtil;
 import com.jst.util.DateUtil;
+import com.jst.util.EncryptUtil;
+import com.jst.util.PropertyUtil;
 import com.jst.vesms.common.BFGSWebServiceClient;
 import com.jst.vesms.common.CacheRead;
 import com.jst.vesms.constant.SysConstant;
@@ -200,6 +202,12 @@ public class VehicleRecycleServiceImpl extends BaseServiceImpl implements Vehicl
 				if (null != sysDictIolType) {
 					vehicleRecycle.setIolTypeName(sysDictIolType.getDictValue());
 				}
+				
+				// 解密关键数据
+				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+				// 解密车架号
+				vehicleRecycle.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, vehicleRecycle.getVehicleIdentifyNo()));
+				
 				vehicleList.add(vehicleRecycle);
 			}
 			result.clear();
