@@ -255,6 +255,8 @@
 				<td class="view_table_right"><a href="images/fzrryhk.jpg" target="_blank">补贴账户变更证明</a></td>
 			</tr>
 			</c:if>
+			<tr>
+			<table id="table-action-log">
 			<tr class="datagrid-header-row classify-tr">
 				<td colspan="6">业务流水记录</td>
 			</tr>	
@@ -264,10 +266,10 @@
 				<th>发生时间</th>
 				<th>经办人</th>
 				<th>操作结果</th>
-				<th width="12%">详情说明</th>
+				<th width="25%">详情说明</th>
 			</tr>
 			<c:forEach items="${actionLogs}" var="log">
-				<tr align="center">
+				<tr align="center" height="25px">
 					<td>
 						<c:choose>
 							<c:when test="${log.currentPost eq 'CKSLG'}">
@@ -315,6 +317,8 @@
 					<td>${log.actionDetail}</td>
 				</tr>
 			</c:forEach>
+			</table>
+			</tr>
 			</table>
 		</div>
 </body>

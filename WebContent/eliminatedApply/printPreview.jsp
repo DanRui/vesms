@@ -23,8 +23,8 @@ String basePath = request.getContextPath();
 			<!-- <tr>
 				<td colspan="8" class="tdp1" style="text-align: center;font-weight: bold;">深圳市老旧车提前淘汰奖励补贴申请表</td>
 			</tr> -->
-			<tr class="datagrid-header-row classify-tr">
-				<td colspan="7" align="center">老旧车提前淘汰奖励补贴申请表</td>
+			<tr>
+				<td colspan="7" style="text-align: center;font-weight: bold;">老旧车提前淘汰奖励补贴申请表</td>
 			</tr>
 			<tr class="datagrid-row">
 				<td style="text-align: center;">系统ID号</td>

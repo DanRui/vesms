@@ -47,6 +47,9 @@ public class BatchExport extends BaseModel implements Serializable{
 	//更新时间
 	private Date updateTime;
 
+	//EXCEL文件加密密码
+	private String password;
+	
 	@SequenceGenerator(name = "generator",sequenceName = "SEQ_BATCH_EXPORT_ID", allocationSize = 1)
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
@@ -120,6 +123,15 @@ public class BatchExport extends BaseModel implements Serializable{
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+	
+	@Column(name = "PASSWORD", unique = false, nullable = true)
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 }

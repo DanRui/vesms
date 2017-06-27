@@ -218,7 +218,10 @@ String basePath = request.getContextPath();
 				
 					<td class="view_table_right"><a href="images/bfzm.jpg" target="_blank">报废汽车回收证明书</a></td>
 				
-					<td class="view_table_right"><a href="images/zxzm.jpg" target="_blank">机动车注销证明</a></td>
+					<td class="view_table_right">
+						<a href="images/zxzm.jpg" target="_blank">机动车注销证明1</a>
+						<a href="images/zxzm.jpg" target="_blank">机动车注销证明2</a>
+					</td>
 				</tr>
 				<tr class="datagrid-row">
 					<td class="view_table_right"><a href="images/jdczcdjzs.jpg" target="_blank">机动车注册登记证书</a></td>									

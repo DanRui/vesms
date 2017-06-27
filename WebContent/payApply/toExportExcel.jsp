@@ -18,13 +18,14 @@ String basePath = request.getContextPath();
 		<br>
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>
-			<td>设置导出文件的加密密码:</td>
 			<td>
-				<input id="password" name="password" type="text" class="easyui-validatebox" data-options="required:true"/>
+				<a id="excel_file"></a>
 			</td>
-			<a id="excel_file"></a>
-			<br>
-			<a id="pdf_file"></a>
+		</tr>
+		<tr>
+			<td>
+				<a id="pdf_file"></a>
+			</td>
 		</tr>
 		<tr>
 		<td>
@@ -40,10 +41,8 @@ String basePath = request.getContextPath();
 		$("#excel_file").hide();
 		$("#pdf_file").hide();
 		$("#ConfirmButton").click(function(){
-			var password=$("#password").val();
-			if (password!=""){
 			$("#confirmId").form("submit", {
-				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}'+"&password="+password,
+				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}',
 				success : function(data) {
 					var data = eval('(' + data + ')');
 					if (data.success) {
@@ -76,9 +75,6 @@ String basePath = request.getContextPath();
 					}
 				}
 			});
-			}else {
-				alert("请设置有效密码");
-			}
 		});
 	});
 	</script>

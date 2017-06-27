@@ -1007,16 +1007,12 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 					apply.setVerifyCode("1");
 				}
 				
-				EliminatedApply updateApply = (EliminatedApply) this.update((Serializable)id, apply);
-				if (null != updateApply) {
-					// 更新成功，报废车辆信息表受理状态更改为已受理
-					VehicleRecycle vehicle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
-					if (null != vehicle) {
-						vehicle.setStatus("1"); // 更新受理状态为已受理
-						vehicleRecycleService.update(vehicle);
-					} else {
-						return false;
-					}
+				eliminatedApplyDao.update(apply);
+				// 更新成功，报废车辆信息表受理状态更改为已受理
+				VehicleRecycle vehicle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
+				if (null != vehicle) {
+					vehicle.setStatus("1"); // 更新受理状态为已受理
+					vehicleRecycleService.update(vehicle);
 				} else {
 					return false;
 				}
@@ -1512,7 +1508,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select va.appointment_date, va.start_time, vav.vehicle_plate_num, vav.vehicle_plate_type, ");
-		sb.append(" vav.bank_code, vav.bank_name, vav.bank_account, ");
+		sb.append(" vav.bank_code, vav.bank_name, vav.bank_account, va.id_card, ");
 		sb.append(" decode((select count(*) from t_eliminated_apply tea where tea.vehicle_plate_num = vav.vehicle_plate_num and tea.vehicle_plate_type = vav.vehicle_plate_type), 0, '未受理', '已受理') if_shouli ");
 		sb.append(" from v_appointment va, v_appointment_vehicle vav ");
 		sb.append(" where va.appointment_no = vav.appointment_no ");
@@ -1539,8 +1535,12 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				String bankAccount = EncryptUtil.decryptDES(des_key, result[6].toString());
 				jsonObject.put("bankAccount", bankAccount);
 				
+				// 解密经办人身份证
+				String agentIdentify = EncryptUtil.decryptDES(des_key, result[7].toString());
+				jsonObject.put("agentIdentity", agentIdentify);
+				
 				// 判断受理状态
-				jsonObject.put("applyStatus", result[7]);
+				jsonObject.put("applyStatus", result[8]);
 				
 				jsonArray.add(jsonObject);
 			}
@@ -1557,7 +1557,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	public Map<String, Object> checkHasAppointed(Integer id) throws Exception {
 		boolean hasAppointed = false;
 		Map<String, Object> map = new HashMap<String, Object>();
-		EliminatedApply model = this.getById(id);
+		EliminatedApply model = (EliminatedApply) eliminatedApplyDao.get(id);
 		if (null != model) {
 			// 查询当前车辆是否有预约号
 			StringBuffer sb = new StringBuffer();

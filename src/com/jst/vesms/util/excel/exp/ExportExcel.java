@@ -15,6 +15,7 @@ import jxl.format.Alignment;
 import jxl.format.Border;
 import jxl.format.BorderLineStyle;
 import jxl.format.Colour;
+import jxl.format.Font;
 import jxl.format.UnderlineStyle;
 import jxl.format.VerticalAlignment;
 import jxl.write.Label;
@@ -53,7 +54,6 @@ public class ExportExcel {
 	//导出预览(不加密)
 	public static int exportExcelInWeb(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os) {
 		int result = 1;
-		
 		int colsNum = 0;
 		// 先判断是否传入原始数据
 		if (data == null || data.size() == 0) {
@@ -68,16 +68,26 @@ public class ExportExcel {
 					Label lable = new Label(0, 0, excelProperties.getHeader());
 					// lable.setCellFormat(new CellFormat)
 					// 设置字体
-					WritableFont font = new WritableFont(WritableFont.ARIAL,11,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.RED);
+					WritableFont font = new WritableFont(WritableFont.ARIAL,20,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.BLACK);
 					WritableCellFormat cellFormat = new WritableCellFormat(font);
-					// 居中
+					// 水平居中
 					cellFormat.setAlignment(Alignment.CENTRE);
+					// 垂直居中
+					cellFormat.setVerticalAlignment(VerticalAlignment.CENTRE); 
 					// 背景颜色
-					cellFormat.setBackground(Colour.YELLOW);
+					//cellFormat.setBackground(Colour.YELLOW);
 					lable.setCellFormat(cellFormat);
 					// 创建EXCEL工作表
 					WritableSheet ws = wwb.createSheet("默认", 0);
 					ws.addCell(lable);
+					// 取得LIST中的数组大小
+					colsNum = data.get(0).length;
+					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
+					ws.mergeCells(0, 0, colsNum - 1, 0);
+					// 设置标题行高
+					ws.setRowView(0, 800, false);
+					
+					
 					
 					// 取得LIST中的数组大小(对象的个数，excel中的列数)
 					colsNum = data.get(0).length;
@@ -85,30 +95,46 @@ public class ExportExcel {
 					ws.mergeCells(0, 0, colsNum - 1, 0);
 					// 行
 					int flag = 2;
+					WritableFont sideFont = new WritableFont(WritableFont.ARIAL,10,WritableFont.BOLD,false,UnderlineStyle.NO_UNDERLINE,Colour.BLACK);
 					// 处理内标题
+					WritableCellFormat tempFormat = new WritableCellFormat(sideFont);
+					// 水平居中
+					tempFormat.setAlignment(Alignment.CENTRE);
+					// 垂直居中
+					tempFormat.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					// 自动适应
+					tempFormat.setWrap(true);
 					String tempClosHeader[] = excelProperties.getColsHeader();
 					for (int i = 0; i < tempClosHeader.length; i++) {
 						lable = new Label(i, flag, tempClosHeader[i]);
+						lable.setCellFormat(tempFormat);
 						ws.addCell(lable);
 					}
 					if (tempClosHeader != null && tempClosHeader.length > 0) {
 						flag++;
 					}
-					
-					
 					Integer intnumbersum=0;
 					int j=0;
+					WritableCellFormat dataFormat = new WritableCellFormat();
+					// 水平居中
+					dataFormat.setAlignment(Alignment.CENTRE);
+					// 垂直居中
+					dataFormat.setVerticalAlignment(VerticalAlignment.CENTRE); 
+					// 自动适应
+					dataFormat.setWrap(true);
 					for (String temp[] : data) {
 						if (colsNum == temp.length) {
 							for (int i = 0; i < temp.length; i++) {
 								//金额，数字输出		
-								if(i==1){
-									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]));									
+								if(i==12){
+									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]),dataFormat);									
 									ws.addCell(number);
 									Double doublst=Double.parseDouble(temp[i]);
 									intnumbersum=intnumbersum+doublst.intValue();
 								}else{
 									lable = new Label(i, flag, temp[i]);
+									// 加入自适应
+									lable.setCellFormat(dataFormat);
 									ws.addCell(lable);
 								}
 							}
@@ -885,6 +911,6 @@ public class ExportExcel {
 		dataList.add(new String[] { "1", "粤B2000", "10000.0", "警世通企业有限公司", "农业银行", "543513434354", "警世通企业有限公司", "工商银行", "1234521312","银行账户有误重新变更","batch_1" });
 		dataList.add(new String[] { "2", "粤B900xxx", "20000.0", "张三", "农业银行", "543513434354", "张绍刚", "工商银行", "1234521312","银行账户有误重新变更","batch_1" });
 		repExportExcelPreview(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
-
+	 
 	}
 }

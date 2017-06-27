@@ -14,17 +14,17 @@ String basePath = request.getContextPath();
 	<div id = "vehicle-verify-query" class="easyui-panel easyui-panel-style" data-options="title: '资格查询',headerCls:'panel-title-center'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<div class="datagrid-header">
-				<table id="vehicle-verify-query-table" style="width:100%;">
-					<tr class="datagrid-row">
-						<td class="view_table_left">号牌号码：</td>
-						<td class="view_table_right">
+				<table id="vehicle-verify-query-table" style="width:100%;text-align: center;">
+					<tr class="datagrid-row" align="center">
+						<!-- <td class="view_table_left"></td> -->
+						<td>号牌号码：
 							<input type="text" name="vehiclePlateNum" data-options="required:true" value="粤B" class="easyui-validatebox"/>
 							<font color="red">&nbsp;*&nbsp;</font>
 						</td>
 					</tr>
 					<tr>
-						<td class="view_table_left">号牌种类：</td>
-						<td class="view_table_right">
+						<!-- <td class="view_table_left">号牌种类：</td> -->
+						<td>号牌种类：
 							<input id="vehiclePlateTypeQuery" class="easyui-combobox" name="vehiclePlateType" 
 							data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:'auto'"/>
 							<font color="red">&nbsp;*&nbsp;</font>
@@ -44,8 +44,8 @@ String basePath = request.getContextPath();
 						</td>
 					</tr> -->
 					<tr>
-						<td class="view_table_left">车架号：</td>
-						<td class="view_table_right">
+						<!-- <td class="view_table_left">车架号：</td> -->
+						<td>车架号：
 							<input type="text" name="vehicleIdentifyNo" class="easyui-validatebox"/>
 							<!-- <font color="red">&nbsp;*&nbsp;</font> -->
 						</td>

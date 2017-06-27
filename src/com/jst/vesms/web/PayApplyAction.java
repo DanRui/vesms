@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -293,16 +294,19 @@ public class PayApplyAction extends BaseAction{
 			for (int i = 0; i < list.size(); i++) {
 				EliminatedApply apply = list.get(i);
 				count++;
+				// 车架号解密
 				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+				apply.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));				
 				apply.setBankAccountNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));
-				String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999","003",apply.getVehicleOwner().toString(),
-						apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
+				String[] strings = new String[]{count+"", apply.getVehicleOwner(),apply.getVehiclePlateNum(),apply.getVehicleTypeName(),apply.getSubsidiesStandard(),
+						apply.getVehicleIdentifyNo(),apply.getAdvancedScrapDays().toString(),apply.getRecycleDate().toString(),"",apply.getIsPersonal().toString(),
+						apply.getBankName(),apply.getBankAccountNo(),apply.getSubsidiesMoney().toString()};
 				dataList.add(strings);
 			}
 			ExcelProperties excelProperties=new ExcelProperties();
-			excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
-			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表（预览）");
-			ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 5,10,15,15,25,15,15,45 }, dataList, outputStream);
+			excelProperties.setColsHeader(new String[] { "序号", "车主名称", "车牌号码", "车辆类型", "燃油类型及排放标准", "车架号", "提前淘汰时间(天)", "报废交售日期","注销类别","财政供养信息","开户银行","开户银行账号","补贴金额"});
+			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴车辆信息审批表(预览)");
+			ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 5,20,10,10,15,15,10,15,8,15,15,20,10 }, dataList, outputStream);
 		} catch (Exception e) {
 			log.error("PayApplyAction excelList is Error:"+e, e);
 		}		
@@ -713,11 +717,13 @@ public class PayApplyAction extends BaseAction{
 		//正常报财务批次导出(加密)
 		@RequestMapping(value = "confirmBatchExcel", produces={"text/html;charset=UTF-8;","application/json;"})
 		@ResponseBody
-		public String confirmBatchExcel(@RequestParam("id")Integer id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,String password,HttpServletResponse response,HttpServletRequest request) {
+		public String confirmBatchExcel(@RequestParam("id")Integer id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,HttpServletResponse response,HttpServletRequest request) {
 			log.debug("PayApplyAction confirmBatchPreview is start");
 			int count = 0;
 			boolean isOk = false;
 			String resString = "";
+			 int num = 0;//定义变量
+		     Random ne=new Random();//实例化一个random的对象
 			try {
 				
 				String confirmrResult = payApplyService.confirmBatch(id.toString());
@@ -732,6 +738,9 @@ public class PayApplyAction extends BaseAction{
 					isOk = false;
 					resString = str2;
 				} else {
+					// 设置随机数加密
+				     num=ne.nextInt(9999-1000+1)+1000;//为变量赋随机值1000-9999
+					String password = num+"";
 					BatchMain batchMain = (BatchMain)payApplyService.get(id);
 					// String contextPath = request.getSession().getServletContext().getRealPath("/");
 				//	String excelPath = PropertyUtil.getPropertyValue("excelPath");
@@ -761,16 +770,13 @@ public class PayApplyAction extends BaseAction{
 	            		new File(excelPath).mkdirs();
 	            	}
 	            	File savePath = new File("D:" + File.separator + "excel"+ File.separator + "batch_"+batchNo+".xls");
-				
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream = new FileOutputStream(savePath);
 	            	ExcelProperties excelProperties=new ExcelProperties();
 					excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)");
 					excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
 					int exportResult = ExportExcel.exportExcelInWebs(excelProperties, "ss", new int[] { 5,10,15,15,25,15,15,45 }, dataList, outputStream, password);
-					
 					PDFUtil.generatePDF("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "excel"+ "/" + "batch_"+batchNo+".pdf", dataList);
-					
 					outputStream.close();
 					if (exportResult != 1) {
 						isOk = false;
@@ -1097,6 +1103,8 @@ public class PayApplyAction extends BaseAction{
 				String thisAccountName = (String)object[9];
 				//变更后银行账号
 				String thisAccountNo = (String)object[11];
+				String key1 = PropertyUtil.getPropertyValue("DES_KEY");
+				thisAccountNo = EncryptUtil.decryptDES(key1, thisAccountNo);
 				//变更内容
 				String thisType = (String)object[12];
 				if(thisType.equals("1")){
@@ -1654,6 +1662,9 @@ public class PayApplyAction extends BaseAction{
 						String thisAccountName = (String)object[9];
 						//变更后银行账号
 						String thisAccountNo = (String)object[11];
+						String key1 = PropertyUtil.getPropertyValue("DES_KEY");
+						thisAccountNo = EncryptUtil.decryptDES(key1, thisAccountNo);
+						//变更后补贴对象
 						//变更内容
 						String thisType = (String)object[12];
 						if(thisType .equals("1")){

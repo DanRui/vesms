@@ -282,7 +282,6 @@ $(function(){
 		$.get(url);
 		// session更新成功，刷新页面
 		//window.location.href = "<%=basePath%>/login/redirect.do?page=INDEX";
-		window.location.reload();
 		window.location.reload(true);
 	});
 	

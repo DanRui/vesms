@@ -164,6 +164,7 @@ String basePath = request.getContextPath();
 													maximizable : true,
 													href : basePath+"/payApply/toFinanceExcel.do?id="+selectedRows[0].id
 											   });
+											 	$("#repFinance-list #repFinance-grid").datagrid("load");
 											}
 										})
 										}

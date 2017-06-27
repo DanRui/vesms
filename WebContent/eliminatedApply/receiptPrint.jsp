@@ -19,71 +19,72 @@
 	<!-- <div class="NOPRINT" style="text-align: center;font-size: 10pt">
 		<input type="button" value="打印回执单" class="button" onClick="printReceipt();">&nbsp;&nbsp;
 	</div> -->
+	</br>
 	<div id="printArea">
-		<table class="tabp" cellpadding="1" width= "90%" border= "1" align= "center" cellspacing= "0">
+		<table class="tabp" cellpadding="1" width= "90%" border= "1" align= "center" cellspacing= "0" style="border-collapse:collapse;">
 			<tr>
-				<td class=tdp colspan="5" align="center">老旧车提前淘汰业务受理回执单</td>
+				<td colspan="5" align="center">老旧车提前淘汰业务受理回执单</td>
 			</tr>
 			<tr>
-				<td class=tdp1 style="text-align: center;">受理单编号</td>
-				<td class=tdp style="text-align: center;">${ v.applyNo }</td>
+				<td style="text-align: center;">受理单编号</td>
+				<td style="text-align: center;">${ v.applyNo }</td>
 				<td colspan="3"></td>
 			</tr>
 			<TR>
-				<td width="6%" rowspan="6" class="tdp1" style="text-align: center;">报<br>废<br>车<br>辆<br>基<br>本<br>信<br>息</td>
-				<TD class=tdp style="text-align: center;" width="13%">车主</TD>
-				<TD class=tdp width="24%">
+				<td width="6%" rowspan="6"  style="text-align: center;">报<br>废<br>车<br>辆<br>基<br>本<br>信<br>息</td>
+				<TD  style="text-align: center;" width="13%">车主</TD>
+				<TD  width="24%">
 					${v.vehicleOwner}&nbsp;
 				</TD>
-				<TD class=tdp style="text-align: center;" width="13%">联系电话</TD>
-				<TD class=tdp width="24%">
+				<TD  style="text-align: center;" width="13%">经办人电话</TD>
+				<TD  width="24%">
 					${v.agentMobileNo}&nbsp;
 				</TD>
 			</TR>
 			<TR>
-				<TD class=tdp style="text-align: center;">号牌号码</TD>
-				<TD class=tdp>
+				<TD  style="text-align: center;">号牌号码</TD>
+				<TD >
 					${ v.vehiclePlateNum }
 				</TD>
-				<TD class="tdp" style="text-align: center;">号牌种类</TD>
-				<TD class=tdp>
+				<TD  style="text-align: center;">号牌种类</TD>
+				<TD >
 					${ v.vehiclePlateTypeName }
 				</TD>
 			</TR>
 			<TR>
-				<TD class=tdp style="text-align: center;">车辆类型</TD>
-				<TD class=tdp>
+				<TD  style="text-align: center;">车辆类型</TD>
+				<TD >
 					${ v.vehicleTypeName }
 				</TD>
-			<TD class=tdp style="text-align: center;">强制报废期限止</TD>
-				<TD class=tdp>
+			<TD  style="text-align: center;">强制报废期限止</TD>
+				<TD >
 					<fmt:formatDate value="${v.deadline}" type="date" pattern="yyyy-MM-dd"/>&nbsp;
 				</TD>
 			</TR>
 			<TR>
-				<TD width="8%" class=tdp style="text-align: center;">车架号</TD>
-				<TD width="16%" class=tdp>
+				<TD width="8%"  style="text-align: center;">车架号</TD>
+				<TD width="16%" >
 					${v.vehicleIdentifyNo}&nbsp;
 				</TD>
-				<TD class=tdp style="text-align: center;">发动机号</TD>
-				<TD class=tdp>
+				<TD  style="text-align: center;">发动机号</TD>
+				<TD >
 					${v.engineNo}&nbsp;
 				</TD>
 			</TR>
 			<TR>
-				<TD width="8%" class=tdp style="text-align: center;">补贴银行</TD>
-				<TD width="16%" class=tdp>
+				<TD width="8%"  style="text-align: center;">补贴银行</TD>
+				<TD width="16%" >
 					${v.bankName}&nbsp;
 				</TD>
-				<TD class=tdp style="text-align: center;">补贴账号</TD>
-				<TD class=tdp>
+				<TD  style="text-align: center;">补贴账号</TD>
+				<TD >
 					${v.bankAccountNo}
 				</TD>
 			</TR>
 			<tr>
 				</TD>
-				<TD class=tdp style="text-align: center;">补贴金额</TD>
-				<TD class=tdp colspan="3">
+				<TD  style="text-align: center;">补贴金额</TD>
+				<TD  colspan="3">
 					人民币：${v.subsidiesMoney}
 						&nbsp;&nbsp;&nbsp;&nbsp;元
 					 &nbsp;&nbsp;
@@ -91,12 +92,12 @@
 			</tr>
 			<!-- 
 			<TR>
-				<td class="tdp1" style="text-align: center; line-height: 17pt">申请 <br>事项</td>
-				<TD class=tdp style="text-align: left;" colspan="4">老旧车提前淘汰奖励补贴申请</TD>
+				<td  style="text-align: center; line-height: 17pt">申请 <br>事项</td>
+				<TD  style="text-align: left;" colspan="4">老旧车提前淘汰奖励补贴申请</TD>
 			</TR>
 			<TR>
-				<TD class=tdp1 style="text-align: center;">提<br>交<br>资<br>料<br>清<br>单</TD>
-				<TD class=tdp style="text-align: left;" colspan="4">
+				<TD style="text-align: center;">提<br>交<br>资<br>料<br>清<br>单</TD>
+				<TD  style="text-align: left;" colspan="4">
 					<input type="checkbox" name="check">1.报废汽车回收证明（原件一份）<br>
 					<input type="checkbox" name="check">2.机动车注销证明（原件一份）<br>
 					<input type="checkbox" name="check">3.银行卡（复印件一份）<br>
@@ -113,11 +114,11 @@
 				</TD>
 			</TR> -->	
 			<TR>
-				<TD class=tdp1 style="text-align: center;">受理<br>信息</TD>
-				<TD class=tdp style="text-align: center;">
+				<TD style="text-align: center;">受理<br>信息</TD>
+				<TD  style="text-align: center;">
 					受理确认时间
 				</TD>
-				<TD class=tdp>
+				<TD  colspan="3">
 					<fmt:formatDate value="${v.applyConfirmTime}" type="date" pattern="yyyy-MM-dd"/>
 				</TD>
 			</TR>

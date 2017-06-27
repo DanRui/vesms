@@ -296,8 +296,14 @@ String basePath = request.getContextPath();
 					<tr class="datagrid-row">
 						<td class="view_table_left">签字确认的受理表：</td>
 						<td class="view_table_right">
-							<c:forEach items="${signedApplyFiles}" var="signedApplyFile">
-								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a>
+							<c:forEach items="${signedApplyFiles}" var="signedApplyFile" varStatus="status">
+								<c:if test="status.index % 2 eq 1">
+									<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a></br>
+								</c:if>
+								<c:if test="status.index % 2 eq 0">
+									<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a>
+								</c:if>
+								
 							</c:forEach>
 						</td>
 					</tr>

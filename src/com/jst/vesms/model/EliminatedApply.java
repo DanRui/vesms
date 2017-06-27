@@ -44,6 +44,9 @@ public class EliminatedApply extends BaseModel implements Serializable {
 	// 是否财政供养
 	private String isFinancialSupport;
 	
+	// 是否财政供养名称
+	private String isFinancialSupportName;
+	
 	// 申报受理单号
 	private String applyNo;
 	
@@ -280,6 +283,15 @@ public class EliminatedApply extends BaseModel implements Serializable {
 		this.isFinancialSupport = isFinancialSupport;
 	}
 	
+	@Transient
+	public String getIsFinancialSupportName() {
+		return isFinancialSupportName;
+	}
+
+	public void setIsFinancialSupportName(String isFinancialSupportName) {
+		this.isFinancialSupportName = isFinancialSupportName;
+	}
+
 	@Column(name = "APPLY_NO", unique = true, nullable = false, length = 20)
 	public String getApplyNo() {
 		return applyNo;
