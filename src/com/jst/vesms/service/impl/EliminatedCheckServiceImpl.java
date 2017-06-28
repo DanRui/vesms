@@ -27,10 +27,12 @@ import com.jst.util.PropertyUtil;
 import com.jst.vesms.common.BFGSWebServiceClient;
 import com.jst.vesms.common.CacheRead;
 import com.jst.vesms.dao.IActionLogDao;
+import com.jst.vesms.dao.IAttachmentDao;
 import com.jst.vesms.dao.ICallDao;
 import com.jst.vesms.dao.IEliminatedApplyDao;
 import com.jst.vesms.dao.IPostBaseInfoDao;
 import com.jst.vesms.model.ActionLog;
+import com.jst.vesms.model.Attachment;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.model.PostBaseInfo;
 import com.jst.vesms.model.VehicleRecycle;
@@ -58,6 +60,9 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 	
 	@Resource
 	private BFGSWebServiceClient bfgsWebServiceClient;
+	
+	@Resource(name="attachmentDao")
+	private IAttachmentDao attachmentDao;
 
 	/*public void seteliminatedApplyDao(IeliminatedApplyDao eliminatedApplyDao) {
 		this.eliminatedApplyDao = eliminatedApplyDao;
@@ -553,6 +558,19 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 			// 按照最近处理时间倒序排列
 			list = actionLogDao.getByPropertys(new String[]{"applyNo"}, new Object[]{apply.getApplyNo()}, "1=1 order by actionTime desc");
 		}
+		return list;
+	}
+
+	@Override
+	public List<Attachment> getAttachments(String type, String applyNo)
+			throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from t_attachment t ");
+		sb.append("where 1 = 1 and t.type = '").append(type).append("' ");
+		sb.append("and t.apply_no = '").append(applyNo).append("' ");
+		sb.append("and t.status = '1' ");
+		List<Attachment> list = attachmentDao.getListBySql(sb.toString());
 		return list;
 	}
 	

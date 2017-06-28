@@ -35,6 +35,14 @@ String basePath = request.getContextPath();
 				checkbox : true,
 				width : "2%"
 			},{
+				field : "toFinanceNo",
+				title : "报送序号",
+				width : "8%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
+			},{
 				field : "batchNo",
 				title : "批次号",
 				width : "10%",
@@ -153,6 +161,7 @@ String basePath = request.getContextPath();
 			}
 		}).datagrid("initSearch",{
 			columns:[
+			         {field:"toFinanceNo",title:"报送序号:",type:"text"},
 					 {field:"batchNo",title:"批次号:",type:"text"},
 					 {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
 					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},

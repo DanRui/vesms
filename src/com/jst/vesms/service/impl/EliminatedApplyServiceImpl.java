@@ -1110,34 +1110,47 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		// 更新受理表数据，从页面取得是解密后数据，要再加密一遍才能与数据库保持一致。
 		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-		// 解密车架号
+		// 加密车架号
 		eliminatedApply.setVehicleIdentifyNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getVehicleIdentifyNo()));
 		
-		// 解密银行账号
+		// 加密银行账号
 		eliminatedApply.setBankAccountNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getBankAccountNo()));
 		
-		// 解密车主手机号
+		// 加密车主手机号
 		eliminatedApply.setMobile(EncryptUtil.encryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
 		
-		// 解密经办人手机号 
+		// 加密经办人手机号 
 		eliminatedApply.setAgentMobileNo(EncryptUtil.encryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
 		
-		// 解密车主身份证明号
+		// 加密车主身份证明号
 		eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.encryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
 		
-		// 解密经办人身份证号
+		// 加密经办人身份证号
 		eliminatedApply.setAgentIdentity(EncryptUtil.encryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 		
 		EliminatedApply updatedApply = (EliminatedApply) this.update(id, eliminatedApply);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (null != updatedApply) {
-			map.put("isSuccess", true);
+			// 更新附件表数据
+			Map<String, Object> saveFilesRes = this.updateAttachments(updatedApply.getApplyNo(), callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
+			if (saveFilesRes.get("isSave").equals(true)) {
+				map.put("isSuccess", true);
+				map.put("id", updatedApply.getId());
+				map.put("msg", "受理单更新成功！");
+				log.debug("证明材料表新增成功");
+			} else {
+				map.put("isSuccess", false);
+				map.put("msg", "受理单证明材料保存失败！");
+				log.debug("受理单证明材料保存失败");
+			}
+			
+			/*map.put("isSuccess", true);
 			map.put("id", updatedApply.getId());
 			map.put("applyNo", updatedApply.getApplyNo());
 			map.put("archiveBoxNo", updatedApply.getArchiveBoxNo());
 			map.put("archivedInnerNo", updatedApply.getArchivedInnerNo());
-			map.put("msg", "受理单更新成功！");
+			map.put("msg", "受理单更新成功！");*/
 			log.debug("EliminatedApplyServiceImpl update is success");
 		} else {
 			map.put("isSuccess", false);

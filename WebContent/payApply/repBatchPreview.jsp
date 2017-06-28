@@ -14,7 +14,7 @@ String basePath = request.getContextPath();
 <title>导出预览</title>
 </head>
 <body>
-	<form action="payApply/repBatchPreview.do" enctype="multipart/form-data" method="post" id="confirmId">
+	<form action="payApply/exportPreview.do" enctype="multipart/form-data" method="post" id="confirmId">
 		<br>
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>

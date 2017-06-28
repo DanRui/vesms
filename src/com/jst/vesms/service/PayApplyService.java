@@ -31,7 +31,7 @@ public interface PayApplyService extends BaseService {
 
 	public EliminatedApply  getById(Integer id) throws Exception;
 
-	public String batchExport(Integer id, String exportPath) throws Exception;
+	public String batchExport(Integer id, String exportPath,String password) throws Exception;
 
 	public String deleteApply(String batchId, String ids)  throws Exception;
 
@@ -53,7 +53,7 @@ public interface PayApplyService extends BaseService {
 
 	public Page getPageBySql(Page page, String sql) throws Exception;
 
-	public String batchRepExport(Integer id,String exportPath)throws Exception;
+	public String batchRepExport(Integer id,String exportPath,String password)throws Exception;
 
 	public List<EliminatedApply> getBatchApplyList(String batchNo) throws Exception;
 
@@ -67,7 +67,8 @@ public interface PayApplyService extends BaseService {
 
 	public Page filterBatchPage(Page page);
 
-
-
+	public List<String[]> batchExcelList(String batchNo,String type,Integer id) throws Exception ;
+	
+	public List getListBySql(String sql) throws Exception;
 
 }

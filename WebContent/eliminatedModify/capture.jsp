@@ -3,6 +3,7 @@
 <%@ page import="java.util.*"%>
 <%
 	String basePath = request.getContextPath();
+	String vehiclePlateNum = request.getParameter("vehiclePlateNum");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,6 +33,9 @@
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/editor/plugins/code/prettify.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/main.js"></script>
         <script language="javascript" type="text/javascript">
+        		// 定义全局变量，号牌号码
+        		var vehiclePlateNum = "<%=vehiclePlateNum%>";
+        
 		        var DeviceMain;//主头
 		        var DeviceAssist;//副头
 		        var VideoMain;//主头
@@ -874,7 +878,7 @@
 		                    var len = plugin().ImageList_GetCount(imgList);
 		                    for (var i = 0; i < len; i++) {
 		                        var img = plugin().ImageList_GetImage(imgList, i);
-		                        var Name = "C:\\" + GetTimeString() + ".jpg";
+		                        var Name = "D:\\" + vehiclePlateNum + "_modify_" + GetTimeString() + ".jpg";
 		                        var b = plugin().Image_Save(img, Name, 0);
 		                        if (b) {
 		                            MainView().View_PlayCaptureEffect();
@@ -975,7 +979,7 @@
 					//http://localhost:8080/vesmsDemo/servlet/FileSteamUpload?
 							
 					//fileCaptureUpload
-					var http = thumb1().Thumbnail_HttpUploadCheckImage("http://localhost:8080/vesmsDemo/eliminatedApply/fileCaptureUpload.do?", 1);
+					var http = thumb1().Thumbnail_HttpUploadCheckImage("http://localhost:8080/vesmsDemo/eliminatedModify/fileCaptureUpload.do?", 1);
 					if(http)
 					{
 						var htInfo = thumb1().Thumbnail_GetHttpServerInfo();

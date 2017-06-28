@@ -425,6 +425,8 @@
 								$("#noFinanceProvide").attr("required","true");
 								$("#openAccPromit").attr("required","true");
 								// 设置经办人信息必填
+								// 企业清空经办人手填
+								$("input[name='agent']").val("");
 								$("input[name='agent']").attr("required", "true");
 								$("input[name='agentMobileNo']").attr("required", "true");
 								$("input[name='agentIdentity']").attr("required", "true");
@@ -441,7 +443,7 @@
 								// 设置经办人信息非必填
 								$("input[name='agent']").val($("textarea[name='vehicleOwner']").val());
 								$("input[name='agent']").attr("required", "false");
-								$("input[name='agentMobileNo']").attr("required", "false");
+								//$("input[name='agentMobileNo']").attr("required", "false");
 								$("input[name='agentIdentity']").attr("required", "false");
 								// 更新财政供养为个人
 								if ($("#isProxy").combobox("getValue") == "N") {
@@ -523,7 +525,7 @@
 			        			var th = "<tr border='1'><td colspan='9'>预约车辆列表：(<font color='red'>请双击选择车辆进行受理</font>)</td></tr>";
 			        			table.append(th);
 			        			for (var i = 0 ; i < data.message.total ; i ++) {
-			        				var tr = "<tr id='appoint-"+i+"' onDblClick='dblClickAppointInfo("+i+");'>"
+			        				var tr = "<tr id='appoint-"+i+"' class='change mouseOn' onDblClick='dblClickAppointInfo("+i+");'>"
 			        					   + "<td>号牌号码</td><td>"+list[i].vehiclePlateNum+"</td>"
 			        				       + "<td>号牌种类</td><td>"+list[i].vehiclePlateTypeName+"<input type='hidden' name='appointVehPlateCode' value='"+ list[i].vehiclePlateType +"'/></td>"
 			        				       + "<td>补贴银行</td><td>"+list[i].bankName+"<input type='hidden' name='appointBankCode' value='"+ list[i].bankCode +"'/></td>"
@@ -580,6 +582,15 @@
 				
 				// 机动车注销证明
 				$("#btnTakePhotoVehicleCancelProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
 					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
@@ -606,6 +617,15 @@
 				
 				// 车主身份证明
 				$("#btnTakePhotoVehicleOwnerProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
 					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
@@ -632,6 +652,15 @@
 				
 				// 银行卡
 				$("#btnTakePhotoBankCard").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
 					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
@@ -658,6 +687,15 @@
 				
 				// 非财政供养单位证明
 				$("#btnTakePhotoNoFinanceProvide").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
 					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
@@ -684,6 +722,15 @@
 				
 				// 开户许可证
 				$("#btnTakePhotoOpenAccPromit").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
 					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
@@ -710,6 +757,15 @@
 				
 				// 代理委托书
 				$("#btnTakePhotoAgentProxyProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
 					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
@@ -736,6 +792,15 @@
 				
 				// 代理人身份证
 				$("#btnTakePhotoAgentProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
 					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
@@ -1247,6 +1312,8 @@
 				
 				// 双击每一行时触发
 				var trId = "#appoint-"+i;
+				$(trId).css("background-color", "red").siblings(".change").css("background-color","#fff");
+				
 				
 				// 受理状态
 				var applyStatus = $(trId).find("td:eq(8)").html();

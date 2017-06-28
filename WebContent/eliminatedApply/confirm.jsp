@@ -169,6 +169,7 @@
 			</table>
 		</div>
 	</form>
+	
 	<input type="hidden" name="signedApplyFiles"/>
 	<div id="confirm" align="center">
 		<a id="btnPrintAgain" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-print'">重新打印受理表</a>
@@ -192,6 +193,7 @@
 			// 上传确认的受理表时所处阶段
 			var stage = '${stage}';
 			var id = ${v.id};
+			var vehiclePlateNum = '${v.vehiclePlateNum}';
 			if (stage == "confirm") {
 				// 点击上一步按钮，跳转到受理表更新页面
 				 $("#btnConfirmPrevStep").click(function() {
@@ -292,6 +294,33 @@
 			$("#btnPrintAgain").click(function() {
 				var url = basePath+"/eliminatedApply/applyPreview.do?&id="+id;
 				$("#common-dialog").dialog("refresh", url);
+			});
+			
+			// 点击拍照进行抓拍确认受理表
+			$("#btnTakePhotoConfirmFile").click(function() {
+				var vehiclePlateNum = '${v.vehiclePlateNum}';
+				// 弹出高拍仪抓拍图片界面
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+        	
+	        	//alert(parentValue.filepath);
+	        	
+	        	// 抓拍返回，设置图片路径到页面字段
+	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
+	        		var files = parentValue.filepath.split(",");
+	        		// 多张图片预览
+	        		$("#signedApplyFileImg").text("签字受理表(1)");
+        			$("#signedApplyFileImg").attr("href", basePath+'/'+files[0]);
+	        		if (files.length > 1) {
+	        			for (var i = 2 ; i <= files.length ; i ++) {
+	        				var filepath = basePath + '/' + files[i-1];
+	        				var _a = "&nbsp<a id='#signedApplyFileImg"+i+"' href='"+filepath+"' target='_blank'>签字受理表("+i+")</a>";
+	        				$("#signedApplyFileImg").append(_a);
+	        			}
+	        		} 
+	        		
+        			// 设置隐藏字段传递到后台
+    				$("input[name='signedApplyFiles']").val(parentValue.filepath);
+	        	}
 			});
 			
 		});

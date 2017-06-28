@@ -184,6 +184,27 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		
 		// 获得图片附件表数据
+		// 获得附件表数据
+		// 报废回收证明
+		List callbackFiles = eliminatedCheckService.getAttachments("JDCHSZM", object.getApplyNo());
+		// 机动车注销证明
+		List vehicleCancelProofFiles = eliminatedCheckService.getAttachments("JDCZXZM", object.getApplyNo());
+		// 银行卡
+		List bankCardFiles = eliminatedCheckService.getAttachments("YHK", object.getApplyNo());
+		// 车主身份证明
+		List vehicleOwnerProofFiles = eliminatedCheckService.getAttachments("CZSFZM", object.getApplyNo());
+		// 非财政供养单位证明
+		List noFinanceProvideFiles = eliminatedCheckService.getAttachments("FCZGYZM", object.getApplyNo());
+		// 开户许可证
+		List openAccPromitFiles = eliminatedCheckService.getAttachments("KHXKZ", object.getApplyNo());
+		// 代理委托书
+		List agentProxyFiles = eliminatedCheckService.getAttachments("DLWTS", object.getApplyNo());
+		// 代理人身份证
+		List agentProofFiles = eliminatedCheckService.getAttachments("DLRSFZ", object.getApplyNo());
+		// 确认的受理表
+		List signedApplyFiles = eliminatedCheckService.getAttachments("QRSLB", object.getApplyNo());
+		// 补贴对象变更证明材料
+		List accountChangeProofFiles = eliminatedCheckService.getAttachments("BTZHMBGZM", object.getApplyNo());
 		
 		// 获取业务流水记录表数据
 		List<ActionLog> actionLogList = eliminatedCheckService.getActionLogList(id);

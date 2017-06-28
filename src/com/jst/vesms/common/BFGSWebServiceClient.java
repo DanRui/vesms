@@ -28,10 +28,12 @@ public class BFGSWebServiceClient {
 	private static final Log log = LogFactory.getLog(BFGSWebServiceClient.class);
 	
 	//服务地址前缀
-	private static final String SERVICE_URL_PREFIX = "http://hbc.szjdc.net/mobileservice.asmx";
+	//private static final String SERVICE_URL_PREFIX = "http://hbc.szjdc.net/mobileservice.asmx";
+	private static final String SERVICE_URL_PREFIX = "http://localhost:8080/vesmsWebService/services/SyncVehicleInfoService?wsdl";
 	
 	//目标命名空间
-	private static final String TARGET_NAMESPACE = "http://hbc.szjdc.net/";
+	//private static final String TARGET_NAMESPACE = "http://hbc.szjdc.net/";
+	private static final String TARGET_NAMESPACE = "http://webservice.vesmsWebService.jst.com";
 	
 	/**
 	 * @see 调用接口
@@ -98,7 +100,8 @@ public class BFGSWebServiceClient {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		List<MobileInfo> recycleInfoEntity =  BFGSWebServiceClient.invoke(SERVICE_URL_PREFIX, TARGET_NAMESPACE, "GetMobileInfoByDate", new String[] {"start", "end"}, new String[] {"2017-05-01 00:00:00", "2017-05-10 23:59:59"});
+		//List<MobileInfo> recycleInfoEntity =  BFGSWebServiceClient.invoke(SERVICE_URL_PREFIX, TARGET_NAMESPACE, "GetMobileInfoByDate", new String[] {"start", "end"}, new String[] {"2017-05-01 00:00:00", "2017-05-10 23:59:59"});
+		List<MobileInfo> recycleInfoEntity =  BFGSWebServiceClient.invoke(SERVICE_URL_PREFIX, TARGET_NAMESPACE, "getVehicleInfo", new String[] {"startTime", "endTime"}, new String[] {"2017-05-01 00:00:00", "2017-05-10 23:59:59"});
 
 		System.out.println(recycleInfoEntity);
 	}

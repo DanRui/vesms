@@ -117,3 +117,8 @@
 .panel-title-center {
 	text-align : center;
 }
+
+#appoint-table tr.mouseOn:hover
+{
+	background-color:#00FF00;
+}

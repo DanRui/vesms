@@ -27,103 +27,119 @@
 				</tr>
 			</table>
 		</div>
-		<div id="modify-apply" class="easyui-panel"/>
+		<!-- 报废汽车回收证明 -->
+		<input type="hidden" name="callbackProofFile"/>
+		<!-- 机动车注销证明 -->
+		<input type="hidden" name="vehicleCancelProofFiles"/>
+		<!-- 银行卡 -->
+		<input type="hidden" name="bankCardFiles"/>
+		<!-- 车主身份证明 -->
+		<input type="hidden" name="vehicleOwnerProofFiles"/>
+		<!-- 代理委托书 -->
+		<input type="hidden" name="agentProxyFiles"/>
+		<!-- 代理人身份证 -->
+		<input type="hidden" name="agentProofFiles"/>
+		<!-- 非财政供养单位证明 -->
+		<input type="hidden" name="noFinanceProvideFiles"/>
+		<!-- 开户许可证 -->
+		<input type="hidden" name="openAccPromitFiles"/>
 	</form>
+	<div id="modify-apply" class="easyui-panel"/>
 		
-		<script type="text/javascript">
-			$(function() {
-				var basePath = $("#basePath").val();
-				//获取所有可以修改的字段(补贴账户、经办人、证明资料)，上传至服务器
-				/* $("#btnConfirmModifyType").click(function() {
-					var selected = $("#modifyType").combotree("getValues");
-					if (selected == "") {
-						alert("请选择修正类型！");
-						return false;
-					}
-					
-				}); */
+	<script type="text/javascript">
+		$(function() {
+			var basePath = $("#basePath").val();
+			//获取所有可以修改的字段(补贴账户、经办人、证明资料)，上传至服务器
+			/* $("#btnConfirmModifyType").click(function() {
+				var selected = $("#modifyType").combotree("getValues");
+				if (selected == "") {
+					alert("请选择修正类型！");
+					return false;
+				}
 				
-				$("#modifyType").combotree({
-					onChange : function() {
-						var selected = $(this).combotree("getValues");
-						$("#modify-apply").panel({
-							href : basePath+"/eliminatedModify/modifyApply.do?modifyTypes="+selected.toString()+"&id="+'${v.id}',
-							onLoad : function() {
-								//根据传递的值，显示相应的内容
-								
-							} 
-						});
-					}
-				});
-				
-				
-				// 点击提交按钮，更新数据
-				$("#common-dialog-choose_modify_type").click(function() {
-					var isValid = $("#form-apply-modify form").form("enableValidation").form("validate");
-					var modifyTypes = $("#modifyType").combotree("getValues");
-					var id = '${v.id}';
-					
-					if(isValid) {
-						$("#form-apply-modify").form("submit", {
-							url : $(this).attr("action"),
-							onSubmit : function(param) {
-								param.modifyTypes = modifyTypes;
-								param.id = id;
-							},
-							success : function(data) {
-								var result = eval('(' + data + ')');
-		        		 		if (result.success) {
-		        		 			alert(result.message.msg);
-		        		 			$("#common-dialog").dialog("close");
-		        		 			
-		        		 			$("#editData-apply-list #editData-apply-grid").datagrid("load");
-		        		 			
-		        		 			/* $.messager.defaults = { ok: "结束修正", cancel: "待继续修正" };
-		        		 			Messager.confirm({
-		        		 				title : "提示",
-		        		 				content : "保存修改成功，请选择：",
-		        		 				handler : function(result) {
-		        		 					if (result) {
-		        		 						// 结束修正，则更新流程到窗口会计初审岗
-		        		 						$.ajax({
-		        		 							url : basePath + '/eliminatedModify/modifySave.do',
-		        		 							method : 'POST',
-		        		 							data : {
-		        		 										modifyTypes : modifyTypes,
-		        		 										id : id
-		        		 									},
-		        		 							success : function(result) {
-		        		 								result = eval('(' + result + ')');
-		        		 								
-		        		 								if (result.success) {
-		        		 									$("#common-dialog").dialog("close");
-		        		 								}
-		        		 							}
-		        		 						});
-		        		 					} else {
-		        		 					// 继续修正
-	        		 							//
-	        		 							$("#common-dialog").dialog("close");
-		        		 					}
-		        		 					
-		        		 				}
-		        		 			}); */
-		        		 			
-		        		 		} else {
-		        		 			alert(result.message.msg);
-		        		 			$("#common-dialog").dialog("close");
-		        		 			
-		        		 			$("#editData-apply-list #editData-apply-grid").datagrid("load");
- 		        		 		}
-							}
+			}); */
+			
+			$("#modifyType").combotree({
+				onChange : function() {
+					var selected = $(this).combotree("getValues");
+					$("#modify-apply").panel({
+						href : basePath+"/eliminatedModify/modifyApply.do?modifyTypes="+selected.toString()+"&id="+'${v.id}',
+						onLoad : function() {
+							//根据传递的值，显示相应的内容
 							
-						});
-					}
-					
-				});
+						} 
+					});
+				}
+			});
+			
+			
+			// 点击提交按钮，更新数据
+			$("#common-dialog-choose_modify_type").click(function() {
+				var isValid = $("#form-apply-modify form").form("enableValidation").form("validate");
+				var modifyTypes = $("#modifyType").combotree("getValues");
+				var id = '${v.id}';
+				
+				if(isValid) {
+					$("#form-apply-modify").form("submit", {
+						url : $(this).attr("action"),
+						onSubmit : function(param) {
+							param.modifyTypes = modifyTypes;
+							param.id = id;
+						},
+						success : function(data) {
+							var result = eval('(' + data + ')');
+	        		 		if (result.success) {
+	        		 			alert(result.message.msg);
+	        		 			$("#common-dialog").dialog("close");
+	        		 			
+	        		 			$("#editData-apply-list #editData-apply-grid").datagrid("load");
+	        		 			
+	        		 			/* $.messager.defaults = { ok: "结束修正", cancel: "待继续修正" };
+	        		 			Messager.confirm({
+	        		 				title : "提示",
+	        		 				content : "保存修改成功，请选择：",
+	        		 				handler : function(result) {
+	        		 					if (result) {
+	        		 						// 结束修正，则更新流程到窗口会计初审岗
+	        		 						$.ajax({
+	        		 							url : basePath + '/eliminatedModify/modifySave.do',
+	        		 							method : 'POST',
+	        		 							data : {
+	        		 										modifyTypes : modifyTypes,
+	        		 										id : id
+	        		 									},
+	        		 							success : function(result) {
+	        		 								result = eval('(' + result + ')');
+	        		 								
+	        		 								if (result.success) {
+	        		 									$("#common-dialog").dialog("close");
+	        		 								}
+	        		 							}
+	        		 						});
+	        		 					} else {
+	        		 					// 继续修正
+        		 							//
+        		 							$("#common-dialog").dialog("close");
+	        		 					}
+	        		 					
+	        		 				}
+	        		 			}); */
+	        		 			
+	        		 		} else {
+	        		 			alert(result.message.msg);
+	        		 			$("#common-dialog").dialog("close");
+	        		 			
+	        		 			$("#editData-apply-list #editData-apply-grid").datagrid("load");
+		        		 		}
+						}
+						
+					});
+				}
 				
 			});
-		</script>
+			
+		});
+	</script>
 		
 </body>
 </html>

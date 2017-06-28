@@ -58,7 +58,7 @@ public class PayResultAction extends BaseAction{
 		String returnStr = "";
 		
 		
-		StringBuffer sb = new StringBuffer("select * from t_eliminated_apply t where 1 = 1 ");
+		StringBuffer sb = new StringBuffer("select t.*,m.to_Finance_No from t_eliminated_apply t inner join t_batch_main m on t.batch_no=m.batch_no  where 1 = 1 ");
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
 			sb.append("and t.vehicle_plate_num like '%").append(vehiclePlateNum).append("%' ");
 		}
@@ -85,7 +85,7 @@ public class PayResultAction extends BaseAction{
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
 			sb.append("and t.vehicleOwner = '").append(vehicleOwner).append("' ");
 		}
-		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and t.batch_no is not null and repeated_batch_no is null ");
+		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and t.batch_no is not null and repeated_batch_no is null");
 		try {
 			page = payResultService.getPageBySql(page, sb.toString());
 			returnStr = writerPage(page);

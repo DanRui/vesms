@@ -18,13 +18,21 @@ String basePath = request.getContextPath();
 		<br>
 		<table id="searchTable"class="list_table" cellspacing="1" cellpadding="1" align="center">
 		<tr>
-			<td>设置导出文件的加密密码:</td>
 			<td>
-				<input id="password" name="password" type="text" class="easyui-validatebox" data-options="required:true"/>
-			</td>
 			<a id="excel_file"></a>
-			<br>
+			<td>	
+		</tr>
+		<tr></tr>
+		<tr>
+			<td>
 			<a id="pdf_file"></a>
+			</td>
+		</tr>
+		<tr></tr>
+		<tr>
+			<td>
+			<a id="preview_file"></a>
+			</td>
 		</tr>
 		<tr>
 		<td>
@@ -41,9 +49,8 @@ String basePath = request.getContextPath();
 		$("#pdf_file").hide();
 		$("#ConfirmButton").click(function(){
 			var password=$("#password").val();
-			if (password!=""){
 			$("#confirmId").form("submit", {
-				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}'+"&password="+password,
+				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}',
 				success : function(data) {
 					var data = eval('(' + data + ')');
 					if (data.success) {
@@ -61,11 +68,15 @@ String basePath = request.getContextPath();
 						
 						var excelPath = '<%=basePath%>/payApply/fileDownload.do?batchNo='+'${v.batchNo}'+'&filepath=' + filepath[0];
 						$("#excel_file").attr("href", excelPath);
-						$("#excel_file").text("批次excel文件，请下载");
+						$("#excel_file").text("批次excel文件，点击下载");
 						
 						var pdfPath = '<%=basePath%>/payApply/fileDownload.do?batchNo='+'${v.batchNo}'+'&filepath=' + filepath[1];
 						$("#pdf_file").attr("href", pdfPath);
-						$("#pdf_file").text("批次pdf文件，请下载");
+						$("#pdf_file").text("批次pdf文件，点击下载");
+						
+						var previewPath = '<%=basePath%>/payApply/fileDownload.do?batchNo='+'${v.batchNo}'+'&filepath=' + filepath[2];
+						$("#preview_file").attr("href", previewPath);
+						$("#preview_file").text("预览文件，点击下载");
 						
 					} else {
 						Messager.alert({
@@ -76,9 +87,6 @@ String basePath = request.getContextPath();
 					}
 				}
 			});
-			}else {
-				alert("请设置有效密码");
-			}
 		});
 	});
 	</script>

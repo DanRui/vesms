@@ -243,7 +243,7 @@
 		</table>
 		</div>
 	</form>
-	<form id="form-acc-change-upload" action="eliminatedModify/fileUpload.do" method="post" enctype="multipart/form-data">
+	<form id="form-acc-change-upload" action="eliminatedModify/fileUploadAccChange.do" method="post" enctype="multipart/form-data">
 		<div class="datagrid-header">
 			<table class="datagrid-table-s datagrid-htable">
 				<tr class="datagrid-header-row classify-tr">
@@ -279,6 +279,8 @@
 			
 			var basePath = "<%=basePath%>";
 			
+			var vehiclePlateNum = "${v.vehiclePlateNum}";
+			
 			// 默认修正结果为结束修正
 			$("input[type='radio'][name='modifyResult'][value='1']").attr("checked", true);
 			
@@ -290,7 +292,7 @@
 					return false;
 				}
 				$("#form-acc-change-upload").form("submit", {
-					url : basePath+"/eliminatedModify/fileUpload.do?id="+'${v.id}',
+					url : basePath+"/eliminatedModify/fileUploadAccChange.do?id="+'${v.id}',
 					success : function(data) {
 						var data = eval('(' + data + ')');
 						if (data.success) {
@@ -307,8 +309,9 @@
 			});
 			
 			$("#btnTakePhotoAccChangeProof").click(function() {
+				var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 				// 弹出高拍仪抓拍图片界面
-				var parentValue = window.showModalDialog("eliminatedModify/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+				var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
         	
 	        	//alert(parentValue.filepath);
 	        	

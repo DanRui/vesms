@@ -125,7 +125,7 @@ public class BatchExport extends BaseModel implements Serializable{
 		this.updateTime = updateTime;
 	}
 	
-	@Column(name = "PASSWORD", unique = false, nullable = true)
+	@Column(name = "FILE_PASSWORD", unique = false, nullable = true)
 	public String getPassword() {
 		return password;
 	}

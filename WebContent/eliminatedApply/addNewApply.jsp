@@ -22,7 +22,7 @@
 				<tr class="datagrid-header-row">
 					<td class="view_table_left">请输入预约单号：</td>
 					<td class="view_table_right" colspan="2">
-						<input type="text" name="appointmentNo" value="${appointmentNo}"/>
+						<input type="text" name="appointmentNo"/>
 						<a id="btnAppointment" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-baofei-message'">获取预约数据</a>
 					</td>
 				</tr>
@@ -30,26 +30,6 @@
 					<td colspan="6">
 						<div id="appoint-list">
 						</div>
-					</td>
-				</tr>
-				<tr class="datagrid-header-row">
-					<td class="view_table_left">车主类型：</td>
-					<td class="view_table_right" colspan="2">
-						<select id="isPersonal" name="isPersonal" class="easyui-combobox" data-options="editable:false,required:true,width:160,panelHeight:'auto'">
-							<option selected>请选择是自然人或企业</option> 
-							<option value="Y">自然人</option>
-							<option value="N">企业</option>
-						</select>
-						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
-					</td>
-					<td class="view_table_left">办理类型：</td>
-					<td class="view_table_right" colspan="2" >					
-						<select id="isProxy" name="isProxy" class="easyui-combobox" data-options="editable:false,required:true,width:75,panelHeight:'auto'">
-							<option selected>请选择</option>
-							<option value="Y">自办</option>
-							<option value="N">代办</option>
-						</select>
-						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 				</tr>
 				<tr class="datagrid-header-row classify-tr">
@@ -63,14 +43,16 @@
 					</td>
 					<td class="view_table_left">号牌种类：</td>
 					<td class="view_table_right">
-						<input id="vehiclePlateTypeNew" name="vehiclePlateType"/>
+						<input id="vehiclePlateTypeNew" name="vehiclePlateTypeNew"/>
+						<!-- <input id="vehiclePlateTypeNew" class="easyui-combobox" name="vehiclePlateType" 
+						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:'auto'"/> -->
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
-						<a id="btnApplyVerify" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-baofei-message'">取机动车数据</a>
+						<a id="btnApplyVerify" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-baofei-message'">获取数据</a>
 					</td>
 					<td class="view_table_left">厂牌型号：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehicleModelNo" readonly="readonly"/></td>
-
+						<input type="text" name="vehicleModelNo" readonly="readonly"/>
+					</td>
 				</tr>
 				<tr class="datagrid-row">
 					<td class="view_table_left">车辆类型：</td>
@@ -130,11 +112,12 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">注销日期：</td>
 					<td class="view_table_right">
-						<input type="text" name="destroyDate" readonly="readonly"/>
+						<input id="destroyDate" type="text" name="destroyDate" class="easyui-datebox" options="editable:false,required:true,panelHeight:'auto'"/>
+						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					<td class="view_table_left">车辆状态：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehicleStatus" />
+						<input type="hidden" name="vehicleStatus" />
 						<input type="text" name="vehicleStatusName" readonly="readonly"/>
 					</td>
 						<td class="view_table_left">提前报废天数：</td>
@@ -153,18 +136,19 @@
 					</td>	
 					<td class="view_table_left ">是否财政供养：</td>
 					<td class="view_table_right">
-						<!-- <input type="text" name="isFinancialSupport" readonly="readonly"/> -->
-						<select id="isFinancialSupport" name="isFinancialSupport" class="easyui-combobox" data-options="editable:false,required:true,width:118,panelHeight:'auto'">
+						<input type="hidden" name="isFinancialSupport"/>
+						<input type="text" name="isFinancialSupportName" readonly="readonly"/>
+						<!-- <select id="isFinancialSupport" name="isFinancialSupport" class="easyui-combobox" data-options="editable:false,required:true,width:118,panelHeight:'auto'">
 							<option value="1">个人</option>
 							<option value="2">车主自证非财政供养</option>
-						</select>
-						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
+						</select> -->
+						<!-- <span style="color:red;text-align:center">&nbsp;*&nbsp;</span> -->
 					</td>		
 				</tr>
 				<tr class="datagrid-header-row classify-tr">
 					<td colspan="6">报废信息</td>
 				<tr class="datagrid-row">
-					<td class="view_table_left" style="width:110px">报废回收证明编号：</td>
+					<td class="view_table_left" style="width:130px">报废回收证明编号：</td>
 					<td class="view_table_right">
 						<textarea rows="2" name="callbackProofNo" readonly="readonly"></textarea>
 						<!-- <input type="text" name="callbackProofNo" readonly="readonly"  /> -->
@@ -172,6 +156,29 @@
 					<td class="view_table_left">交售日期：</td>
 					<td class="view_table_right">
 						<input  type="text" name="recycleDate" readonly="readonly" />
+					</td>
+				</tr>
+				<tr class="datagrid-header-row classify-tr">
+					<td colspan="6">办理类型</td>
+				</tr>
+				<tr class="datagrid-header-row">
+					<td class="view_table_left">车主类型：</td>
+					<td class="view_table_right">
+						<select id="isPersonal" name="isPersonal" class="easyui-combobox" data-options="editable:false,required:true,width:160,panelHeight:'auto'">
+							<option selected>请选择是自然人或企业</option> 
+							<option value="Y">自然人</option>
+							<option value="N">企业</option>
+						</select>
+						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
+					</td>
+					<td class="view_table_left">办理类型：</td>
+					<td class="view_table_right">					
+						<select id="isProxy" name="isProxy" class="easyui-combobox" data-options="editable:false,required:true,width:75,panelHeight:'auto'">
+							<option selected>请选择</option>
+							<option value="Y">自办</option>
+							<option value="N">代办</option>
+						</select>
+						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 				</tr>
 				<tr class="datagrid-header-row classify-tr">
@@ -183,7 +190,7 @@
 						<!-- <input type="text" name="vehicleOwner" readonly="readonly"/> -->
 						<textarea  name="vehicleOwner" class="easyui-validatebox" readonly="readonly"></textarea>
 					</td>
-					<td class="view_table_left">车主身份证号码或其它证明：</td>
+					<td class="view_table_left">车主身份证号码：</td>
 					<td class="view_table_right">
 						<input type="text" name="vehicleOwnerIdentity" class="easyui-validatebox" data-options="required:true"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
@@ -196,17 +203,17 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">经办人：</td>
 					<td class="view_table_right">
-						<input type="text" name="agent" class="easyui-validatebox" data-options="required:true"/>
+						<input type="text" name="agent" class="easyui-validatebox"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					<td class="view_table_left">经办人手机号：</td>
 					<td class="view_table_right">
-						<input type="text" name="agentMobileNo" class="easyui-numberbox" data-options="required:true"/>
+						<input type="text" name="agentMobileNo" class="validatebox"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					<td class="view_table_left">经办人身份证号：</td>
 					<td class="view_table_right">
-						<input type="text" name="agentIdentity" class="easyui-validatebox" data-options="required:true"/>
+						<input type="text" name="agentIdentity" class="easyui-validatebox"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 				</tr>
@@ -219,7 +226,7 @@
 					</td>
 					<td class="view_table_left">开户银行：</td>
 					<td class="view_table_right">
-						<input id="bankName" class="easyui-combobox" name="bankName" 
+						<input id="bankCodeAdd" class="easyui-combobox" name="bankCode" 
 						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=BANK_CODE',panelHeight:150"/>
 						<!-- <input type="text" name="bankName" class="easyui-validatebox" data-options="required:true" /> -->
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
@@ -376,6 +383,16 @@
 				
 				var basePath = "<%=basePath%>";
 				
+				// 重新调整页面窗口大小和位置居中
+				/* $("#common-dialog").dialog({
+					title : "申报受理录入"
+				}).dialog("resize", {
+					width : 1132,
+					height : 800 
+				}).dialog("center"); */
+				
+				// 初始化号牌号码输出框，显示粤B开头
+				//$("input[name='vehiclePlateNum']").val("粤B");
 				// 页面渲染完成，构造号牌种类下拉框
 				//"editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:'auto'"
 				$("#vehiclePlateTypeNew").combobox({
@@ -397,7 +414,7 @@
 				}).dialog("center"); */
 				
 				// 初始化号牌号码输出框，显示粤B开头
-				$("input[name='vehiclePlateNum']").val("粤B");
+				//$("input[name='vehiclePlateNum']").val("粤B");
 				
 				// 录入时判断是否预约过
 				var appointmentNo = $("input[name='appointmentNo']").val();
@@ -415,11 +432,11 @@
 	        			var th = "<tr border='1'><td colspan='9'>预约车辆列表：(<font color='red'>请双击选择车辆进行受理</font>)</td></tr>";
 	        			table.append(th);
 	        			for (var i = 0 ; i < appointList.total ; i ++) {
-	        				var tr = "<tr id='appoint-"+i+"' onDblClick='dblClickAppointInfo("+i+");'>"
+	        				var tr = "<tr id='appoint-"+i+"' class='change mouseOn' onDblClick='dblClickAppointInfo("+i+");'>"
 	        					   + "<td>号牌号码</td><td>"+appointList.list[i].vehiclePlateNum+"</td>"
 	        				       + "<td>号牌种类</td><td>"+appointList.list[i].vehiclePlateTypeName+"<input type='hidden' name='appointVehPlateCode' value='"+ appointList.list[i].vehiclePlateType +"'/></td>"
 	        				       + "<td>补贴银行</td><td>"+appointList.list[i].bankName+"<input type='hidden' name='appointBankCode' value='"+ appointList.list[i].bankCode +"'/></td>"
-	        				       + "<td>银行账号</td><td>"+appointList.list[i].bankAccount+"</td>"
+	        				       + "<td>银行账号</td><td>"+list[i].bankAccount+"<input type='hidden' name='appointAgentIdentity' value='"+ list[i].agentIdentity +"'/></td>"
 	        				       + "<td>"+appointList.list[i].applyStatus+"</td>"
 	        				       + "</tr>";
 	        				table.append(tr);
@@ -450,6 +467,15 @@
 								$(this).show();
 								$("#noFinanceProvide").attr("required","true");
 								$("#openAccPromit").attr("required","true");
+								// 设置经办人信息必填
+								// 企业清空经办人手填
+								$("input[name='agent']").val("");
+								$("input[name='agent']").attr("required", "true");
+								$("input[name='agentMobileNo']").attr("required", "true");
+								$("input[name='agentIdentity']").attr("required", "true");
+								// 更新财政供养为个人
+								$("input[name='isFinancialSupport']").val("2");
+								$("input[name='isFinancialSupportName']").val("车主自证非财政供养");
 								//$("textarea[name='checkOpinion']").attr("required","true");
 								//$("#checkOpinion").validatebox({required:true});
 							} else if (isPersonal == "Y") {
@@ -457,6 +483,17 @@
 								// 车主类型是个人,隐藏开户许可证和非财政供养单位证明
 								$("#noFinanceProvide").attr("required","false");
 								$("#openAccPromit").attr("required","false");
+								// 设置经办人信息非必填
+								$("input[name='agent']").val($("textarea[name='vehicleOwner']").val());
+								$("input[name='agent']").attr("required", "false");
+								//$("input[name='agentMobileNo']").attr("required", "false");
+								$("input[name='agentIdentity']").attr("required", "false");
+								// 更新财政供养为个人
+								if ($("#isProxy").combobox("getValue") == "N") {
+									$("#isProxy").combobox("setValue", "请选择");
+								}
+								$("input[name='isFinancialSupport']").val("1");
+								$("input[name='isFinancialSupportName']").val("个人");
 								//$("#checkOpinion").validatebox({required:true});
 							}
 						});
@@ -501,10 +538,9 @@
 					
 					/* if (!DateFormatter.DateISO(appointmentNo.substring(5, 13), "yyyyMMdd")) {
 						// 日期格式不匹配
-						alert("输入的预约单号有误，请检查！");
+						alert("输入的预约单号格式有误，请检查！");
 						return false;
 					} */
-					// $("DIV#appoint-list").empty();
 					// 从服务器获取预约的车辆列表
 					$.ajax({
 						url : basePath + "/eliminatedApply/getAppointmentInfo.do?appointmentNo=" + appointmentNo,
@@ -524,25 +560,25 @@
 			        			if (data.message.total <= 0) {
 			        				alert("当前预约号内无预约车辆数据！");
 			        				return false;
-			        			} else {
-				        			var list = data.message.list;
-				        			$("DIV#appoint-list").show();
-				        			var appointDiv = $("DIV#appoint-list");
-				        			var table = $("<table style='border-collapse:collapse' id='appoint-table' bordercolor='#111111' cellspacing='0' cellpadding='2' border='1'></table>");
-				        			var th = "<tr border='1'><td colspan='9'>预约车辆列表：(<font color='red'>请双击选择车辆进行受理</font>)</td></tr>";
-				        			table.append(th);
-				        			for (var i = 0 ; i < data.message.total ; i ++) {
-				        				var tr = "<tr id='appoint-"+i+"' onDblClick='dblClickAppointInfo("+i+");'>"
-				        					   + "<td>号牌号码</td><td>"+list[i].vehiclePlateNum+"</td>"
-				        				       + "<td>号牌种类</td><td>"+list[i].vehiclePlateTypeName+"<input type='hidden' name='appointVehPlateCode' value='"+ list[i].vehiclePlateType +"'/></td>"
-				        				       + "<td>补贴银行</td><td>"+list[i].bankName+"<input type='hidden' name='appointBankCode' value='"+ list[i].bankCode +"'/></td>"
-				        				       + "<td>银行账号</td><td>"+list[i].bankAccount+"</td>"
-				        				       + "<td>"+list[i].applyStatus+"</td>"
-				        				       + "</tr>";
-				        				table.append(tr);
-				        			}
-				        			appointDiv.append(table);
 			        			}
+			        			var list = data.message.list;
+			        			$("DIV#appoint-list").show();
+			        			var appointDiv = $("DIV#appoint-list");
+			        			var table = $("<table style='border-collapse:collapse' id='appoint-table' bordercolor='#111111' cellspacing='0' cellpadding='2' border='1'></table>");
+			        			var th = "<tr border='1'><td colspan='9'>预约车辆列表：(<font color='red'>请双击选择车辆进行受理</font>)</td></tr>";
+			        			table.append(th);
+			        			for (var i = 0 ; i < data.message.total ; i ++) {
+			        				var tr = "<tr id='appoint-"+i+"' class='change mouseOn' onDblClick='dblClickAppointInfo("+i+");'>"
+			        					   + "<td>号牌号码</td><td>"+list[i].vehiclePlateNum+"</td>"
+			        				       + "<td>号牌种类</td><td>"+list[i].vehiclePlateTypeName+"<input type='hidden' name='appointVehPlateCode' value='"+ list[i].vehiclePlateType +"'/></td>"
+			        				       + "<td>补贴银行</td><td>"+list[i].bankName+"<input type='hidden' name='appointBankCode' value='"+ list[i].bankCode +"'/></td>"
+			        				       + "<td>银行账号</td><td>"+list[i].bankAccount+"<input type='hidden' name='appointAgentIdentity' value='"+ list[i].agentIdentity +"'/></td>"
+			        				       + "<td>"+list[i].applyStatus+"</td>"
+			        				       + "</tr>";
+			        				table.append(tr);
+			        			}
+			        			
+			        			appointDiv.append(table);
 			        			
 			        		} else {
 			        			alert(data.message);
@@ -554,8 +590,17 @@
 				
 				// 报废回收证明抓拍上传
 				$("#btnTakePhotoCallbackProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -580,8 +625,17 @@
 				
 				// 机动车注销证明
 				$("#btnTakePhotoVehicleCancelProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -606,8 +660,17 @@
 				
 				// 车主身份证明
 				$("#btnTakePhotoVehicleOwnerProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -632,8 +695,17 @@
 				
 				// 银行卡
 				$("#btnTakePhotoBankCard").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -658,8 +730,17 @@
 				
 				// 非财政供养单位证明
 				$("#btnTakePhotoNoFinanceProvide").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -684,8 +765,17 @@
 				
 				// 开户许可证
 				$("#btnTakePhotoOpenAccPromit").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -710,8 +800,17 @@
 				
 				// 代理委托书
 				$("#btnTakePhotoAgentProxyProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -736,8 +835,17 @@
 				
 				// 代理人身份证
 				$("#btnTakePhotoAgentProof").click(function() {
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp", "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -854,20 +962,139 @@
 	        	 	
 		        });
 				
-				// 取报废录入数据和交警接口数据
-				$("#btnApplyVerify").bind("click", function() {
+				Callback.onsubmit = function() {
+					// 点击下一步，页面提交前的特殊处理
+					return true;
+				}
+				
+				// 下一步按钮点击事件处理函数
+				$("#btnNextStep").click(function() {
+					var isPersonal = $("#isPersonal").combobox("getValue");
+				   	var isProxy = $("#isProxy").combobox("getValue");
+				   
+				   	if (isPersonal != "Y" && isPersonal != "N") {
+					   alert("请选择车主类型！");
+					   return false;
+				   	}
+				   
+				   	if (isProxy != "Y" && isProxy != "N") {
+					   alert("请选择办理类型！");
+					   return false;
+				   	}
+					   
+					var isValid = $("#common-dialog form").form("enableValidation").form("validate");
+					
+					if (isValid) {
+						// 校验注销日期，必选大于交售日期
+						/* if (!checkDestroyDate()) {
+							return false;	
+						}  */
+						
+						// 校验经办人信息是否必填
+						if (!checkAgentInfo(isPersonal)) {
+							alert("请填写经办人信息！");
+							return false;
+						}
+						
+						// 点击下一步，校验必传文件是否上传
+						var hasFileUpload = checkAttachments();
+						if (!hasFileUpload) {
+							alert("还有证明材料未上传，请先拍照上传！");
+							return false;
+						}
+						
+						$.ajax({
+			                //cache: true,
+			                type: "POST",
+			                url:$("#form-apply-save").attr("action"),
+			                data:$("#form-apply-save").serialize(),//
+			                async: true,
+			                success: function(data) {
+			                	
+			                	if(Object.prototype.toString.call(data) === "[object String]") {
+									data = eval("(" + data + ")");
+								}
+								
+								if(data.success) {
+									
+									Messager.show({
+										title:"&nbsp;",
+										content:data.message.msg
+									});
+									// 设置受理单号、受理表Id、档案盒编号
+									$("input[name='id']").val(data.message.id);
+									$("input[name='applyNo']").val(data.message.applyNo);
+									//$("input[name='archiveBoxNo']").val(data.message.archiveBoxNo);
+									//$("input[name='archivedInnerNo']").val(data.message.archivedInnerNo);
+									
+									// 页面刷新前，先移除下一步按钮点击事件
+									/* if(window.addEventListener) { // Mozilla, Netscape, Firefox   
+										obj.removeEventListener('click', handler, false);    
+									} else if(window.attachEvent) { // IE   
+										obj.detachEvent('onclick', handler);   
+								    } else {  
+								    	obj.onclick= "";
+								    } */
+									
+									// 资格校验成功，受理表信息保存，页面跳转到受理表打印预览页面
+									var url = basePath+"/eliminatedApply/applyPreview.do?id="+data.message.id;
+									$("#common-dialog").dialog("refresh", url);
+									
+			                	} else {
+			                		Messager.alert({
+			                			type:"error",
+										title:"&nbsp;",
+										content:data.message.msg
+									});
+			                		
+			                		// 清空表单元素
+			                		var filters = [
+			                		        {
+			                					type : "hidden",
+			                					name : "appointVehPlateCode"
+			                				},
+			                				{
+			                					type : "hidden",
+			                					name : "appointBankCode"
+			                				},
+			                				{
+			                					type : "hidden",
+			                					name : "appointAgentIdentity"
+			                				}
+			                			]
+			                		clearForm("form-apply-save", filters);
+			                		
+			                		//$("#form-apply-save").form("clear");
+									
+									// 证明材料区域清空文件框值和回显路径
+									$("#form-apply-upload").form("clear");
+			                		//$("#common-dialog").dialog("close");
+			                	}
+			            	},
+			            	error :function(XMLHttpRequest, textStatus, errorThrown) {
+				        		alert("服务器异常，请联系后台管理人员！");
+				        		return;
+			            	}
+						});
+					} else {
+						alert("请先填写受理表信息");
+						return;
+					}
+				});
+				
+				var verify = function() {
 					//校验输入的号牌号码和号牌种类，判断是否在系统中录入的车辆，过滤不符合资格或者补贴金额为0的车辆。
 					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
 					if(vehiclePlateNum!=null && vehiclePlateNum.indexOf("粤") != -1) {
 						vehiclePlateNum = vehiclePlateNum.substring(1);
 					}
-					if (vehiclePlateNum == "" || vehiclePlateNum < 6) {
-						alert("号牌号码为空！");
+					if (vehiclePlateNum == "" || vehiclePlateNum.length < 6) {
+						alert("请输入号牌号码！");
 						return false;
 					}
 					var vehiclePlateType = $("#vehiclePlateTypeNew").combobox("getValue");
 					if (vehiclePlateType == "") {
-						alert("号牌种类为空！");
+						alert("请选择号牌种类！");
 						return false;
 					}
 					
@@ -880,6 +1107,8 @@
 			        		if (null == vehiclePlateNum || null == vehiclePlateType) {
 			        			return false;
 			        		}
+			        		// 提交表单前格式化号牌号码，截取粤字
+			        		//$(input[name='vehiclePlateNum']).val();
 			        	},
 			        	success : function(data) {
 			        		if (data.success) {
@@ -931,92 +1160,131 @@
 				        		// 补贴标准
 				        		$("textarea[name='subsidiesStandard']").val(data.message.subsidiesStandard);
 				        		// 注销日期
-				        		$("input[name='destroyDate']").val(getNowFormatDate(new Date(data.message.destroyDate.time)));
+				        		//$("input[name='destroyDate']").val(getNowFormatDate(new Date(data.message.destroyDate.time)));
 				        		// 报废回收证明编号
 				        		$("textarea[name='callbackProofNo']").val(data.message.callbackProofNo);
 				        		
 			        		} else {
-			        			alert("报废数据获取失败!");
+			        			alert(data.message);
+			        			// 清空前一次输入留下的数据，主要是指表单控件、隐藏域、文件上传框等。
+								// 车辆信息、补贴对象信息、报废信息等表单控件
+								$("#form-apply-save :input").not("DIV#appoint-list :input").val("");
+								
+								// 证明材料区域清空文件框值和回显路径
+								$("#form-apply-upload").form("clear");
 			        		}
+			        	},
+			        	error : function(XMLHttpRequest, textStatus, errorThrown) {
+			        		alert("服务器异常，请联系后台管理人员！");
+			        		// 清空页面数据
 			        	}
 			        });
-					//alert("机动车未注销，不得受理！");
-					//$("#common-dialog").dialog("close");
-				});
-				
-				
-				Callback.onsubmit = function() {
-					// 点击下一步，页面提交前的特殊处理
-					return true;
-					
 				}
 				
-				// 下一步按钮点击事件处理函数
-				$("#btnNextStep").click(function() {
-					var isValid = $("#common-dialog form").form("enableValidation").form("validate");
-					
-					if (isValid) {
-						// 点击下一步，校验必传文件是否上传
-						var hasFileUpload = checkAttachments();
-						if (!hasFileUpload) {
-							alert("还有证明材料未上传，请先拍照上传！");
-							return false;
-						}
-						
-						$.ajax({
-			                //cache: true,
-			                type: "POST",
-			                url:$("#form-apply-save").attr("action"),
-			                data:$("#form-apply-save").serialize(),//
-			                async: true,
-			                success: function(data) {
-			                	
-			                	if(Object.prototype.toString.call(data) === "[object String]") {
-									data = eval("(" + data + ")");
-								}
-								
-								if(data.success) {
-									
-									Messager.show({
-										title:"&nbsp;",
-										content:data.message.msg
-									});
-									// 设置受理单号、受理表Id、档案盒编号
-									$("input[name='id']").val(data.message.id);
-									$("input[name='applyNo']").val(data.message.applyNo);
-									//$("input[name='archiveBoxNo']").val(data.message.archiveBoxNo);
-									//$("input[name='archivedInnerNo']").val(data.message.archivedInnerNo);
-									
-									// 页面刷新前，先移除下一步按钮点击事件
-									/* if(window.addEventListener) { // Mozilla, Netscape, Firefox   
-										obj.removeEventListener('click', handler, false);    
-									} else if(window.attachEvent) { // IE   
-										obj.detachEvent('onclick', handler);   
-								    } else {  
-								    	obj.onclick= "";
-								    } */
-									
-									// 资格校验成功，受理表信息保存，页面跳转到受理表打印预览页面
-									var url = basePath+"/eliminatedApply/applyPreview.do?id="+data.message.id;
-									$("#common-dialog").dialog("refresh", url);
-									
-			                	} else {
-			                		Messager.show({
-										title:"&nbsp;",
-										content:data.message
-									});
-			                		$("#common-dialog").dialog("close");
-			                	}
-			            	}
-						});
-					} else {
-						alert("请先填写受理表信息");
-						// 校验证明材料是否上传齐全
-					}
-				
-				});
+				// 取报废录入数据和交警接口数据
+				$("#btnApplyVerify").click(verify);
 				
 			});
+			
+			function verifyApply() {
+				var basePath = "<%=basePath%>";
+				//校验输入的号牌号码和号牌种类，判断是否在系统中录入的车辆，过滤不符合资格或者补贴金额为0的车辆。
+				var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+				if(vehiclePlateNum!=null && vehiclePlateNum.indexOf("粤") != -1) {
+					vehiclePlateNum = vehiclePlateNum.substring(1);
+				}
+				if (vehiclePlateNum == "" || vehiclePlateNum.length < 6) {
+					alert("请输入号牌号码！");
+					return false;
+				}
+				var vehiclePlateType = $("#vehiclePlateTypeNew").combobox("getValue");
+				if (vehiclePlateType == "") {
+					alert("请选择号牌种类！");
+					return false;
+				}
+				
+		        $.ajax({
+		        	url : basePath + "/eliminatedApply/getVehicleInfo.do?vehiclePlateNum=" + vehiclePlateNum + "&vehiclePlateType=" + vehiclePlateType,
+		        	async : true,
+		        	type : "POST",
+		        	dataType : "json",
+		        	beforeSend : function() {
+		        		if (null == vehiclePlateNum || null == vehiclePlateType) {
+		        			return false;
+		        		}
+		        		// 提交表单前格式化号牌号码，截取粤字
+		        		//$(input[name='vehiclePlateNum']).val();
+		        	},
+		        	success : function(data) {
+		        		if (data.success) {
+			        		//将获取到的数据填充到页面字段，并显示。
+			        		// 厂牌型号
+			        		$("input[name='vehicleModelNo']").val(data.message.vehicleModelNo);
+			        		// 车辆类型
+			        		$("input[name='vehicleType']").val(data.message.vehicleType);
+			        		$("input[name='vehicleTypeName']").val(data.message.vehicleTypeName);
+			        		// 发动机型号
+			        		$("input[name='engineNo']").val(data.message.engineNo);
+			        		// 车辆状态
+			        		$("input[name='vehicleStatus']").val(data.message.vehicleStatus);
+			        		$("input[name='vehicleStatusName']").val(data.message.vehicleStatusName);
+			        		// 车架号
+			        		$("input[name='vehicleIdentifyNo']").val(data.message.vehicleIdentifyNo);
+			        		// 使用性质
+			        		$("input[name='useOfProperty']").val(data.message.useOfProperty);
+			        		$("input[name='useOfPropertyName']").val(data.message.useOfPropertyName);
+			        		// 燃油种类
+			        		$("input[name='iolType']").val(data.message.iolType);
+			        		$("input[name='iolTypeName']").val(data.message.iolTypeName);
+			        		// 总质量
+			        		$("input[name='totalWeight']").val(data.message.totalWeight);
+			        		// 核定载客数
+			        		$("input[name='vehicleNumPeople']").val(data.message.vehicleNumPeople);
+			        		// 初次登记日期
+			        		$("input[name='registerDate']").val(getNowFormatDate(new Date(data.message.registerDate.time)));
+			        		// 强制报废期止
+			        		$("input[name='deadline']").val(getNowFormatDate(new Date(data.message.deadline.time)));
+			        		// 车主
+			        		$("textarea[name='vehicleOwner']").val(data.message.vehicleOwner);
+			        		// 交售日期
+			        		$("input[name='recycleDate']").val(getNowFormatDate(new Date(data.message.recycleDate.time)));
+			        		// 排放标准
+			        		$("input[name='emissionStandard']").val(data.message.emissionStandard);
+			        		// 提前报废时长（天）
+			        		$("input[name='advancedScrapDays']").val(data.message.advancedScrapDays);
+			        		// 注销类别
+			        		$("input[name='cancelReason']").val(data.message.cancelReason);
+			        		// 车主身份号或者其它证明号码
+			        		$("input[name='vehicleOwnerIdentity']").val(data.message.vehicleOwnerIdentity);
+			        		// 车主手机号码
+			        		$("input[name='mobile']").val(data.message.mobile);
+			        		// 补贴账户名称
+			        		$("textarea[name='bankAccountName']").val(data.message.bankAccountName);
+			        		// 补贴金额
+			        		$("input[name='subsidiesMoney']").val(data.message.subsidiesMoney);
+			        		// 补贴标准
+			        		$("textarea[name='subsidiesStandard']").val(data.message.subsidiesStandard);
+			        		// 注销日期
+			        		//$("input[name='destroyDate']").val(getNowFormatDate(new Date(data.message.destroyDate.time)));
+			        		// 报废回收证明编号
+			        		$("textarea[name='callbackProofNo']").val(data.message.callbackProofNo);
+			        		
+		        		} else {
+		        			alert(data.message);
+		        			// 清空前一次输入留下的数据，主要是指表单控件、隐藏域、文件上传框等。
+							// 车辆信息、补贴对象信息、报废信息等表单控件
+							$("#form-apply-save :input").not("DIV#appoint-list :input").val("");
+							
+							// 证明材料区域清空文件框值和回显路径
+							$("#form-apply-upload").form("clear");
+		        		}
+		        	},
+		        	error : function(XMLHttpRequest, textStatus, errorThrown) {
+		        		alert("服务器异常，请联系后台管理人员！");
+		        		// 清空页面数据
+		        	}
+		        });
+			}
 			
 			function checkAttachments() {
 				var isOk = true;
@@ -1062,9 +1330,33 @@
 				return isOk;
 			}
 			
+			// 双击预约车辆列表，获得预约车辆列表，并加载车辆数据。
 			function dblClickAppointInfo(i) {
+				// 车辆信息、补贴对象信息、报废信息等表单控件
+				var filters = [
+                		        {
+                					type : "hidden",
+                					name : "appointVehPlateCode"
+                				},
+                				{
+                					type : "hidden",
+                					name : "appointBankCode"
+                				},
+                				{
+                					type : "hidden",
+                					name : "appointAgentIdentity"
+                				}
+			    ]
+				clearForm("form-apply-save", filters);
+				/* $("#form-apply-save").form("clear");
+				
+				// 证明材料区域清空文件框值和回显路径
+				$("#form-apply-upload").form("clear"); */
+				
 				// 双击每一行时触发
 				var trId = "#appoint-"+i;
+				$(trId).css("background-color", "red").siblings(".change").css("background-color","#fff");
+				
 				
 				// 受理状态
 				var applyStatus = $(trId).find("td:eq(8)").html();
@@ -1084,13 +1376,102 @@
 				// 补贴账户卡号
 				var bankAccountNo = $(trId).find("td:eq(7)").html();
 				
+				// 经办人身份证
+				var agentIdentity = $(trId).find("td:eq(7)").find("input[name='appointAgentIdentity']").val();
+				
 				// 设置受理页面的号牌号码和号牌种类值
 				$("input[name='vehiclePlateNum']").val(vehiclePlateNum);
 				$("#vehiclePlateTypeNew").combobox("setValue", vehiclePlateType);
 				
+				// 直接调用后台资格校验接口返回机动车数据
+				verifyApply();
+				
 				// 设置开户银行和银行账号
-				$("#bankName").combobox("setValue", bankCode);
 				$("#bankAccountNo").numberbox("setValue", bankAccountNo);
+				$("#bankCodeAdd").combobox("setValue", bankCode);
+				//$("#bankCode").combobox("select", bankCode);
+				
+				// 设置经办人身份证
+				$("input[name='agentIdentity']").val(agentIdentity);
+			}
+			
+			function checkDestroyDate() {
+				var isOK = true;
+				var recycleDate = $("input[name='recycleDate']").val();
+				var destroyDate = $("input[name='destroyDate']").val();
+				if (destroyDate == "") {
+					alert("请填写注销日期！");
+					return false;
+				}
+				var stdt = new Date(recycleDate.replace("-","/"));
+				var etdt = new Date(destroyDate.replace("-","/"));
+				var now = new Date();
+				if (etdt < stdt || etdt > now) {
+					alert("注销日期不合法（注销日期应介于报废日期与今天之间），请重新填写！");
+					isOK = false;
+				}
+				return isOK;
+			}
+			
+			function checkAgentInfo(isPersonal) {
+				var isOk = true;
+				if (isPersonal == "N") {
+					// 获取经办人信息
+					var agent = $("input[name='agent']").val();
+					var agentMobileNo = $("input[name='agentMobileNo']").val();
+					var agentIdentity = $("input[name='agentIdentity']").val();
+					
+					if (agent == "") {
+						isOk = false;
+					}
+					
+					if (agentMobileNo == "") {
+						isOk = false;
+					}
+					
+					if (agentIdentity == "") {
+						isOk = false;
+					}
+				}
+				return isOk;
+			}
+			
+			function clearForm(id, filters) {
+				// 获取form表单
+				var objId = $(id);
+				if (objId == undefined) {
+					return;
+				}
+				
+				// 获取排除的组件值
+				var originObj = [];
+				if (filters !== null) {
+					for (var i = 0 ; i < filters.length ; i ++) {
+						if (filters[i].type == "hidden" && filters[i].name != "") {
+							var obj = new Object();
+							obj.name = filters[i].name;
+							obj.value = $("input[name='"+filters[i].name+"']").val();
+						}
+					}
+				} else {
+					return;
+				}
+				
+				$(id).form("clear");
+				$("#vehiclePlateTypeNew").combobox("clear");
+				$("#bankCodeAdd").combobox("clear");
+				
+				//还原过滤的控件值
+				if (originObj !== null) {
+					for (var i = 0 ; i < originObj.length ; i ++) {
+						if (originObj[i].name != "") {
+							$("input[name='"+originObj[i].name+"']").val(originObj[i].value);
+						}
+					}
+				} else {
+					return;
+				}
+				
 			}
 			
 		</script>

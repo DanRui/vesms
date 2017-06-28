@@ -302,9 +302,9 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		return JsonUtil.toErrorMsg(json.toString());
 	}
 	
-	@RequestMapping("fileUpload")
+	@RequestMapping("fileUploadAccChange")
 	@ResponseBody
-	public String fileUpload(@RequestParam("id")Integer id, HttpServletRequest request) throws Exception {
+	public String fileUploadAccChange(@RequestParam("id")Integer id, HttpServletRequest request) throws Exception {
 		log.debug("eliminatedModifyAction uploadConfirm is start");
 		long startTime = System.currentTimeMillis();
 		String contextPath = request.getSession().getServletContext().getRealPath("/");
@@ -431,6 +431,155 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		mv.addObject("v", object);
 			
 		return mv;
+	}
+	
+	/**
+	 * 进行文件上传
+	 */
+	@ResponseBody
+	@RequestMapping(value="fileUpload", produces={"text/html;charset=UTF-8;","application/json;"})
+	public String fileUpload(/*@RequestParam("callbackProofFile") CommonsMultipartFile callbackProofFile,
+			@RequestParam("vehicleRegisterProof") CommonsMultipartFile vehicleRegisterProof,
+			@RequestParam("vehicleLicense") CommonsMultipartFile vehicleLicense,*/
+			String isPersonal, String isProxy,
+			HttpServletRequest request) throws Exception {
+		log.debug("eliminatedModifyAction fileUpload is start");
+		long startTime = System.currentTimeMillis();
+		String contextPath = request.getSession().getServletContext().getRealPath("/");
+		String tmpDir = PropertyUtil.getPropertyValue("uploadTmpDir");
+		System.out.println("----tmpDir: "+tmpDir);
+		boolean isSuccess = false;
+		JSONObject json = new JSONObject();
+         // 将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+                request.getSession().getServletContext());
+        multipartResolver.setDefaultEncoding("utf-8");
+        // 检查form中是否有enctype="multipart/form-data"
+        if(multipartResolver.isMultipart(request))
+        {
+            // 将request变成多部分request
+        	DefaultMultipartHttpServletRequest multipartRequest = (DefaultMultipartHttpServletRequest) request;
+            //获取multiRequest 中所有的文件名
+            System.out.println(multipartRequest.getFile("callbackProofFiles"));
+            Iterator<String> iter = multipartRequest.getFileNames();
+            int count = 0;
+            while(iter.hasNext())
+            {
+                // 依次遍历所有文件
+            	count ++;
+            	String filenameAttr = iter.next();
+                MultipartFile file = multipartRequest.getFile(filenameAttr.toString());
+                
+                // 依次保存报废回收证明、机动车注销证明、银行卡、车主身份证明等到临时目录中。
+                if (filenameAttr.equals("callbackProofFiles") || filenameAttr.equals("vehicleCancelProof") || filenameAttr.equals("bankCard") || filenameAttr.equals("vehicleOwnerProof")) {
+                	if (file.getSize() <= 0) {
+                		isSuccess = false;
+                		break;
+                	}
+                }
+                
+                // 办理类型是代办，则代理委托书和代理人身份证必需上传
+                if (isProxy.equals("N") && (filenameAttr.equals("agentProxy") || filenameAttr.equals("agentProof")) && file.getSize() <= 0) {
+                	isSuccess = false;
+                	break;
+                }
+                
+                // 车主类型是企业，则非财政供养单位证明和开户许可证必需上传
+                if (isPersonal.equals("N") && (filenameAttr.equals("noFinanceProvide") || filenameAttr.equals("openAccPromit")) && file.getSize() <= 0) {
+                	isSuccess = false;
+                	break;
+                }
+                // 其它资料种类
+                if (file.getSize() == 0) {
+                	json.put(filenameAttr, "");
+                	continue;
+                }
+                Map<String, Object> saveResult = saveFile(file, tmpDir, contextPath);
+                if (saveResult.get("isSuccess").equals(false)) {
+                	isSuccess = false;
+                	break;
+                } else {
+                	// 保存文件记录到附件表，并置状态为有效
+                	json.put(filenameAttr, saveResult.get("imgSrc").toString());
+                }
+            }
+            if (multipartRequest.getFileMap().keySet().size() == count) {
+            	isSuccess = true;
+            }
+        }
+        long endTime = System.currentTimeMillis();
+		log.debug("eliminatedModifyAction fileUpload is end");
+        if (isSuccess) {
+        	System.out.println("上传文件的花费时间："+String.valueOf(endTime-startTime)+"ms");
+        	return JsonUtil.toSuccessMsg(JsonUtil.parse(json).toString());
+        } else {
+        	return JsonUtil.toErrorMsg("文件上传失败！");
+        } 
+	}
+	
+	/**
+	 * 测试高拍仪抓拍上传文件
+	 * @param request
+	 * @param image
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("fileCaptureUpload")
+	public String fileCaptureUpload(HttpServletRequest request) throws Exception {
+		log.debug("eliminatedModifyAction fileCaptureUpload is start");
+		long startTime = System.currentTimeMillis();
+		String contextPath = request.getSession().getServletContext().getRealPath("/");
+		String tmpDir = PropertyUtil.getPropertyValue("uploadTmpDir");
+		System.out.println("----tmpDir: "+tmpDir);
+		boolean isSuccess = false;
+		JSONObject json = new JSONObject();
+         // 将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+                request.getSession().getServletContext());
+        multipartResolver.setDefaultEncoding("utf-8");
+        // 检查form中是否有enctype="multipart/form-data"
+        if(multipartResolver.isMultipart(request))
+        {
+            // 将request变成多部分request
+        	DefaultMultipartHttpServletRequest multipartRequest = (DefaultMultipartHttpServletRequest) request;
+            //获取multiRequest 中所有的文件名
+            Iterator<String> iter = multipartRequest.getFileNames();
+            int count = 0;
+            while(iter.hasNext())
+            {
+                // 依次遍历所有文件
+            	count ++;
+            	String filenameAttr = iter.next();
+                MultipartFile file = multipartRequest.getFile(filenameAttr.toString());
+                
+                // 依次保存报废回收证明、机动车注销证明、银行卡、车主身份证明等到临时目录中。
+                // 其它资料种类
+                if (file.getSize() <= 0) {
+                	isSuccess = false;
+            		break;
+                }
+                Map<String, Object> saveResult = saveFile(file, tmpDir, contextPath);
+                if (saveResult.get("isSuccess").equals(false)) {
+                	isSuccess = false;
+                	break;
+                } else {
+                	// 写入文件成功，将文件路径传到页面
+                	json.put(filenameAttr, saveResult.get("imgSrc").toString());
+                }
+            }
+            if (multipartRequest.getFileMap().keySet().size() == count) {
+            	isSuccess = true;
+            }
+        }
+        long endTime = System.currentTimeMillis();
+		log.debug("eliminatedModifyAction fileCaptureUpload is end");
+        if (isSuccess) {
+        	System.out.println("上传文件的花费时间："+String.valueOf(endTime-startTime)+"ms");
+        	return JsonUtil.toSuccessMsg(JsonUtil.parse(json).toString());
+        } else {
+        	return JsonUtil.toErrorMsg("文件上传失败！");
+        } 
 	}
 	
 }

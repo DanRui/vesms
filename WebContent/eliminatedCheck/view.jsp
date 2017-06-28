@@ -211,40 +211,115 @@ String basePath = request.getContextPath();
 					${v.subsidiesStandard}
 				</td>
 			</tr>
-				<tr class="datagrid-header-row classify-tr">
-						<td colspan="6">证明材料</td>
-				</tr>						
-				<tr class="datagrid-row">
-				
-					<td class="view_table_right"><a href="images/bfzm.jpg" target="_blank">报废汽车回收证明书</a></td>
-				
+			<tr class="datagrid-header-row classify-tr">
+					<td colspan="6">证明材料</td>
+			</tr>						
+			<c:if test="${!empty callbackFiles && !empty vehicleCancelProofFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">报废汽车回收证明：</td>
+				<c:if test="${!empty callbackFiles}">
+				<td class="view_table_right">
+					<c:forEach items="${callbackFiles}" var="callbackFile">
+						<a href="${callbackFile.filePath}" target="_blank">${callbackFile.name}</a>
+					</c:forEach>
+				</td>
+				</c:if>
+				<td class="view_table_left">机动车注销证明：</td>
+				<c:if test="${!empty vehicleCancelProofFiles}">
+				<td class="view_table_right">
+					<c:forEach items="${vehicleCancelProofFiles}" var="vehicleCancelProofFile">
+						<a href="${vehicleCancelProofFile.filePath}" target="_blank">${vehicleCancelProofFile.name}</a>
+					</c:forEach>
+				</td>
+				</c:if>
+			</tr>
+			</c:if>
+			<c:if test="${!empty vehicleOwnerProofFiles && !empty bankCardFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">车主身份证明：</td>
+				<c:if test="${!empty vehicleOwnerProofFiles}">
+				<td class="view_table_right">
+					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile">
+						<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+					</c:forEach>
+				</td>
+				</c:if>
+				<td class="view_table_left">银行卡：</td>
+				<c:if test="${!empty bankCardFiles}">
+				<td class="view_table_right">
+					<c:forEach items="${bankCardFiles}" var="bankCardFile">
+						<a href="${bankCardFile.filePath}" target="_blank">${bankCardFile.name}</a>
+					</c:forEach>
+				</td>
+				</c:if>
+			</tr>
+			</c:if>
+			<c:if test="${v.isPersonal == 'N'}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">非财政供养单位证明：</td>
+				<c:if test="${!empty noFinanceProvideFiles}">
+				<td class="view_table_right">
+					<c:forEach items="${noFinanceProvideFiles}" var="noFinanceProvideFile">
+						<a href="${noFinanceProvideFile.filePath}" target="_blank">${noFinanceProvideFile.name}</a>
+					</c:forEach>
+				</td>
+				</c:if>
+				<td class="view_table_left">开户许可证：</td>
+				<c:if test="${!empty callbackFiles}">
 					<td class="view_table_right">
-						<a href="images/zxzm.jpg" target="_blank">机动车注销证明1</a>
-						<a href="images/zxzm.jpg" target="_blank">机动车注销证明2</a>
+						<c:forEach items="${openAccPromitFiles}" var="openAccPromitFile">
+							<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a>
+						</c:forEach>
 					</td>
-				</tr>
-				<tr class="datagrid-row">
-					<td class="view_table_right"><a href="images/jdczcdjzs.jpg" target="_blank">机动车注册登记证书</a></td>									
-				
-					<td class="view_table_right"><a href="images/zrryhk.jpg" target="_blank">银行卡</a></td>
-				</tr>
-				<tr class="datagrid-row">
-					<td class="view_table_right"><a href="images/zrrsfz.jpg" target="_blank">车主身份证明</a></td>
-					<td class="view_table_right"><a href="images/dlrsfz.jpg" target="_blank">补贴受理确认表</a></td>
-				</tr>
-
-				<c:if test="${v.isProxy == 'N'}">
-				<tr class="datagrid-row">
-					<td class="view_table_right"><a href="images/dlwts.jpg" target="_blank">代理委托书</a></td>
-					<td class="view_table_right"><a href="images/dlrsfz.jpg" target="_blank">代理人身份证</a></td>
-				</tr>
 				</c:if>
-				<c:if test="${v.isPersonal == 'N'}">
-				<tr class="datagrid-row">
-					<td class="view_table_right"><a href="images/fzrryhk.jpg" target="_blank">开户许可证</a></td>
-					<td class="view_table_right"><a href="images/fzrrsfz.jpg" target="_blank">非财政供养单位证明</a></td>						
-				</tr>
+			</tr>
+			</c:if>
+			<c:if test="${v.isProxy == 'N'}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">代理委托书：</td>
+				<c:if test="${!empty agentProxyFiles}">
+				<td class="view_table_right">
+					<c:forEach items="${agentProxyFiles}" var="agentProxyFile">
+						<a href="${agentProxyFile.filePath}" target="_blank">${agentProxyFile.name}</a>
+					</c:forEach>
+				</td>
 				</c:if>
+				<td class="view_table_left">代理人身份证：</td>
+				<c:if test="${!empty agentProofFiles}">
+				<td class="view_table_right">
+					<c:forEach items="${agentProofFiles}" var="agentProofFile">
+						<a href="${agentProofFile.filePath}" target="_blank">${agentProofFile.name}</a>
+					</c:forEach>
+				</td>
+				</c:if>
+			</tr>
+			</c:if>
+			<c:if test="${!empty signedApplyFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">签字确认的受理表：</td>
+				<td class="view_table_right">
+					<c:forEach items="${signedApplyFiles}" var="signedApplyFile" varStatus="status">
+						<c:if test="status.index % 2 eq 1">
+							<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a></br>
+						</c:if>
+						<c:if test="status.index % 2 eq 0">
+							<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a>
+						</c:if>
+						
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>
+			<c:if test="${!empty accountChangeProofFiles}">
+			<tr class="datagrid-row">
+				<td class="view_table_left">补贴对象变更证明材料：</td>
+				<td class="view_table_right">
+					<c:forEach items="${accountChangeProofFiles}" var="accountChangeProofFile">
+						<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}</a>
+					</c:forEach>
+				</td>
+			</tr>
+			</c:if>		
 			<tr class="datagrid-header-row classify-tr">
 				<td colspan="6">业务流水记录</td>
 			</tr>	

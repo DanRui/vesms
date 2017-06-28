@@ -19,7 +19,10 @@ import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
+import com.jst.util.EncryptUtil;
+import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
+import com.jst.vesms.constant.SysConstant;
 import com.jst.vesms.dao.ICallDao;
 import com.jst.vesms.dao.IPayApplyDao;
 import com.jst.vesms.dao.impl.CallDao;
@@ -92,21 +95,22 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	 */
 
 	@Override
-	public String batchExport(Integer id,String exportPath) throws Exception {
+	public String batchExport(Integer id,String exportPath,String password) throws Exception {
 		// TODO Auto-generated method stub
 		//	File file = new File("D:\\123.txt");
 			String sid=id+"";
-			String callName = "{call PKG_BATCH.p_normal_batch_export(?,?,?,?,?)}";
+			String callName = "{call PKG_BATCH.p_normal_batch_export(?,?,?,?,?,?)}";
 			Map<Integer, Object> inParams = new HashMap<Integer, Object>();
 			Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
 			inParams.put(1, "用户code");
 			inParams.put(2, "用户名称");
 			inParams.put(3, sid);
 			inParams.put(4, exportPath);
-			outParams.put(5, OracleTypes.VARCHAR);
+			inParams.put(5, password);
+			outParams.put(6, OracleTypes.VARCHAR);
 			List<Map<String, Object>> result1 = callDao.call(callName, inParams, outParams, "procedure");		
 			Map<String, Object> map = result1.get(0);
-		return map.get("5").toString();
+		return map.get("6").toString();
 	}
 
 
@@ -212,7 +216,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 
 	
 	//重报批次导出
-	public String batchRepExport(Integer id,String exportPath) throws Exception {
+	public String batchRepExport(Integer id,String exportPath,String password) throws Exception {
 		// TODO Auto-generated method stub
 			String sid=id+"";
 			//File file = new File("D:\\123.txt");
@@ -223,10 +227,11 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 			inParams.put(2, "用户名称");
 			inParams.put(3, sid);
 			inParams.put(4, exportPath);
-			outParams.put(5, OracleTypes.VARCHAR);
+			inParams.put(5, password);
+			outParams.put(6, OracleTypes.VARCHAR);
 			List<Map<String, Object>> result1 = callDao.call(callName, inParams, outParams, "procedure");		
 			Map<String, Object> map = result1.get(0);
-		return map.get("5").toString();
+		return map.get("6").toString();
 	}
 
 
@@ -311,7 +316,11 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 		return eliminatedApplyService.getPageExtra(retPage);
 	}
 
-
+	
+	public List getListBySql(String sql) throws Exception{
+		List list = payApplyDao.getTableList(sql, null);
+		return list;
+	}
 	@Override
 	public List<EliminatedApply> getBatchApplyList(String batchNo) throws Exception {
 		// TODO Auto-generated method stub
@@ -408,5 +417,92 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 		return filterPage;
 	}
 	
+	
+	// 正常批次excel文件数据获取
+	public List<String[]> batchExcelList(String batchNo,String type,Integer id) throws Exception {
+		// TODO Auto-generated method stub
+		int count =0;
+		List<EliminatedApply> list = new ArrayList<EliminatedApply>();
+		list = getBatchApplyList(batchNo);
+		List<String[]> dataList = new ArrayList<String[]>();
+		
+		if(type.equals("1")){
+			for (int i = 0; i < list.size(); i++) {
+				EliminatedApply apply = list.get(i);
+				String vehicleIdentifyNo = "";
+				String bankAccountNo = "";
+				count++;
+				// 车架号解密
+				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+				vehicleIdentifyNo=EncryptUtil.decryptDES(des_key, apply.getVehicleIdentifyNo());			
+				bankAccountNo=EncryptUtil.decryptDES(des_key, apply.getBankAccountNo());
+				// 获得号牌种类名称(从字典表获取)
+				String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(apply.getVehiclePlateType());
+				apply.setVehiclePlateTypeName(vehiclePlateTypeName);
+				String[] strings = new String[]{count+"", apply.getVehicleOwner(),apply.getVehiclePlateNum(),apply.getVehiclePlateTypeName(),apply.getSubsidiesStandard(),
+						vehicleIdentifyNo,apply.getAdvancedScrapDays().toString(),apply.getRecycleDate().toString(),"",apply.getIsPersonal().toString(),
+						apply.getBankName(),bankAccountNo,apply.getSubsidiesMoney().toString()};
+				dataList.add(strings);
+			}
+		}else if(type.equals("2")){
+			BatchMain batchMain = (BatchMain)get(id);
+			for (int i = 0; i < list.size(); i++) {
+				EliminatedApply apply = list.get(i);
+				String bankAccountNo = "";
+				count++;
+				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+				bankAccountNo = EncryptUtil.decryptDES(des_key, apply.getBankAccountNo());
+				String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999",apply.getBankCode(),apply.getVehicleOwner().toString(),
+						bankAccountNo,apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
+				dataList.add(strings);
+			}
+		}
+		return dataList;
+		
+	}
+	
+	
+	// 重报批次excel文件数据获取
+	
+	public List<String[]> repBatchExcelList(String batchNo,String type,Integer id) throws Exception {
+		// TODO Auto-generated method stub
+		int count =0;
+		List<EliminatedApply> list = new ArrayList<EliminatedApply>();
+		list = getBatchApplyList(batchNo);
+		List<String[]> dataList = new ArrayList<String[]>();
+		
+		if(type.equals("1")){
+			for (int i = 0; i < list.size(); i++) {
+				EliminatedApply apply = list.get(i);
+				count++;
+				// 车架号解密
+				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+				apply.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));				
+				apply.setBankAccountNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));
+				// 获得号牌种类名称(从字典表获取)
+				String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(apply.getVehiclePlateType());
+				apply.setVehiclePlateTypeName(vehiclePlateTypeName);
+				String[] strings = new String[]{count+"", apply.getVehicleOwner(),apply.getVehiclePlateNum(),apply.getVehicleTypeName(),apply.getSubsidiesStandard(),
+						apply.getVehicleIdentifyNo(),apply.getAdvancedScrapDays().toString(),apply.getRecycleDate().toString(),"",apply.getIsPersonal().toString(),
+						apply.getBankName(),apply.getBankAccountNo(),apply.getSubsidiesMoney().toString()};
+				dataList.add(strings);
+			}
+		}else if(type.equals("1")){
+			BatchMain batchMain = (BatchMain)get(id);
+			for (int i = 0; i < list.size(); i++) {
+				EliminatedApply apply = list.get(i);
+				count++;
+				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+				apply.setBankAccountNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));
+				String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999",apply.getBankCode(),apply.getVehicleOwner().toString(),
+						apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
+				dataList.add(strings);
+			}
+		}
+		return dataList;
+		
+	}
+
+
 
 }

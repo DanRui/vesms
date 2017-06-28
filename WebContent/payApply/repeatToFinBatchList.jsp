@@ -168,8 +168,9 @@ String basePath = request.getContextPath();
 					 {startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"报财务时间:",type:"date",section:true}
 			        ],
 			tools:[
+				{type:"QUERY"},
 			   	{
-				type:"FILE_QUERY",icon:"icon-add",title:"EXCEL文件查看",text_width:150,
+				type:"FILE_QUERY",icon:"icon-add",title:"报财务文件查看",text_width:150,
 				fn:function() {
 					var selectedRows = this.datagrid("getSelections");
 					//var ids=[];
@@ -190,7 +191,7 @@ String basePath = request.getContextPath();
 						});
 					}
 					}},
-					{type:"PDF_QUERY",icon:"icon-add",title:"PDF文件查看",text_width:150,
+					{type:"PDF_QUERY",icon:"icon-add",title:"图片文件查看",text_width:150,
 						  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							//var ids=[];
@@ -210,9 +211,26 @@ String basePath = request.getContextPath();
 								});
 						  	}
 					}},
-			       
-			     
-					 {type:"QUERY"}
+					{type:"PREVIEW_QUERY",icon:"icon-add",title:"详情文件查看",text_width:150,
+						  fn:function() {
+							var selectedRows = this.datagrid("getSelections");
+							//var ids=[];
+							var infoMsg = null;
+							infoMsg =selectedRows.length < 1 ? "请选择一条记录" : (selectedRows.length > 1 ? "最多只能选择一条记录" : null);
+							if (null != infoMsg) {
+								Messager.alert({
+									type : "info",
+									title : "&nbsp;",
+									content : infoMsg
+								});
+							}else {
+								//文件查看
+								$.get(basePath+"/payApply/confirmRepBatchPreview.do",{batchNo:selectedRows[0].batchNo},function(data) {
+									$("#iframeId").attr("src", basePath+"/payApply/fileDownload.do?filepath="+data.message+"&batchNo="+selectedRows[0].batchNo);
+									$("#iframeId").show();
+								});
+						  	}
+					}}
 				  ],
 			module:"M_TEST_MANAGER",
 			shownum:3,

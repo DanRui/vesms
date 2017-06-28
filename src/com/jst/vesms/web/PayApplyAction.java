@@ -98,6 +98,8 @@ public class PayApplyAction extends BaseAction{
 		}
 		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFSBG' and t.batch_no is null ");
 		try {
+			
+		//	list = payApplyService.getListBySql(sql);
 			page = payApplyService.getPageBySql(page, sb.toString());
 			//page = payApplyService.getApplyPage(page, list);
 		 	//page = payApplyService.filterBatchPage(page);
@@ -137,11 +139,13 @@ public class PayApplyAction extends BaseAction{
 		String result = null;
 		String strids = "" ;
 		try {
-			String idString[] = ids.split(",");
-			for (int i = 0; i < idString.length; i++) {
+		
+			strids = ids.replaceAll("," , "|");
+		/*		String idString[] = ids.split(",");
+		 * for (int i = 0; i < idString.length; i++) {
 				strids=strids+idString[i].concat("|");
 			}
-			strids=strids.substring(0, strids.length()-1);
+			strids=strids.substring(0, strids.length()-1);*/
 			result = payApplyService.createBatch(strids);
 			/*if(null != result) {
 				createOk = true;
@@ -281,28 +285,14 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("exportPreview")
 	public String exportPreview (Integer id,String batchNo,HttpServletResponse response) {
 		log.debug("PayApplyAction excelList is start");
-		int count=0;
 		try {
 			response.setHeader("Content-disposition", "attachment;  filename="
 					+ new String(("view_batch_"+batchNo+".xls").getBytes(), "iso-8859-1"));
 			// 定义输出类型
 			response.setContentType("application/vnd.ms-excel");
 			OutputStream outputStream = response.getOutputStream();
-			List<EliminatedApply> list = new ArrayList<EliminatedApply>();
-			list = payApplyService.getBatchApplyList(batchNo);
 			List<String[]> dataList = new ArrayList<String[]>();
-			for (int i = 0; i < list.size(); i++) {
-				EliminatedApply apply = list.get(i);
-				count++;
-				// 车架号解密
-				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-				apply.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));				
-				apply.setBankAccountNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));
-				String[] strings = new String[]{count+"", apply.getVehicleOwner(),apply.getVehiclePlateNum(),apply.getVehicleTypeName(),apply.getSubsidiesStandard(),
-						apply.getVehicleIdentifyNo(),apply.getAdvancedScrapDays().toString(),apply.getRecycleDate().toString(),"",apply.getIsPersonal().toString(),
-						apply.getBankName(),apply.getBankAccountNo(),apply.getSubsidiesMoney().toString()};
-				dataList.add(strings);
-			}
+			dataList=payApplyService.batchExcelList(batchNo,"1",id);
 			ExcelProperties excelProperties=new ExcelProperties();
 			excelProperties.setColsHeader(new String[] { "序号", "车主名称", "车牌号码", "车辆类型", "燃油类型及排放标准", "车架号", "提前淘汰时间(天)", "报废交售日期","注销类别","财政供养信息","开户银行","开户银行账号","补贴金额"});
 			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴车辆信息审批表(预览)");
@@ -741,10 +731,11 @@ public class PayApplyAction extends BaseAction{
 					// 设置随机数加密
 				     num=ne.nextInt(9999-1000+1)+1000;//为变量赋随机值1000-9999
 					String password = num+"";
-					BatchMain batchMain = (BatchMain)payApplyService.get(id);
+					
 					// String contextPath = request.getSession().getServletContext().getRealPath("/");
 				//	String excelPath = PropertyUtil.getPropertyValue("excelPath");
 					String excelPath = "D:/excel";
+					String preview = "D:/preview";
 				//	String filePath = excelPath+ new String(("batch_"+batchNo+".xls").getBytes(),"iso-8859-1");
 					// filePath = filePath.replace("_fxg", File.separator);
 					/*response.setHeader("Content-disposition", "attachment;  filename="
@@ -752,10 +743,11 @@ public class PayApplyAction extends BaseAction{
 					// 定义输出类型
 					response.setContentType("application/vnd.ms-excel");*/
 					//OutputStream outputStream = response.getOutputStream();
-					List<EliminatedApply> list = new ArrayList<EliminatedApply>();
-					list = payApplyService.getBatchApplyList(batchNo);
-					List<String[]> dataList = new ArrayList<String[]>();
-					for (int i = 0; i < list.size(); i++) {
+				/*	List<EliminatedApply> list = new ArrayList<EliminatedApply>();
+					list = payApplyService.getBatchApplyList(batchNo);*/
+					
+					
+				/*	for (int i = 0; i < list.size(); i++) {
 						EliminatedApply apply = list.get(i);
 						count++;
 						String des_key = PropertyUtil.getPropertyValue("DES_KEY");
@@ -763,41 +755,55 @@ public class PayApplyAction extends BaseAction{
 						String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999","003",apply.getVehicleOwner().toString(),
 								apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
 						dataList.add(strings);
-					}
+					}*/
+					
 			//		exportPath = contextPath + excelPath + File.separator + "batch_"+batchNo+".xls";
 					//result = exportPath.replaceAll("\\\\", "\\/");
+					
+					ExcelProperties excelProperties=new ExcelProperties();
 	            	if (! new File(excelPath).exists()) {
 	            		new File(excelPath).mkdirs();
 	            	}
-	            	File savePath = new File("D:" + File.separator + "excel"+ File.separator + "batch_"+batchNo+".xls");
+	            	if (! new File(preview).exists()) {
+	            		new File(preview).mkdirs();
+	            	}
+	            	
+	            	// 导出预览excel文件
+	            	File savePath = new File("D:" + File.separator + "preview"+ File.separator + "view_"+batchNo+".xls");
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream = new FileOutputStream(savePath);
-	            	ExcelProperties excelProperties=new ExcelProperties();
-					excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)");
-					excelProperties.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
-					int exportResult = ExportExcel.exportExcelInWebs(excelProperties, "ss", new int[] { 5,10,15,15,25,15,15,45 }, dataList, outputStream, password);
-					PDFUtil.generatePDF("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "excel"+ "/" + "batch_"+batchNo+".pdf", dataList);
+	            	List<String[]> dataList=payApplyService.batchExcelList(batchNo,"1",id);
+	    			excelProperties.setColsHeader(new String[] { "序号", "车主名称", "车牌号码", "车辆类型", "燃油类型及排放标准", "车架号", "提前淘汰时间(天)", "报废交售日期","注销类别","财政供养信息","开户银行","开户银行账号","补贴金额"});
+	    			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴车辆信息审批表(预览)");
+	    			int exportPreview = ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 5,20,10,10,15,15,10,15,8,15,15,20,10 }, dataList, outputStream);
+	            	
+	    			BatchMain batchMain = (BatchMain)payApplyService.get(id);
+	            	// 导出报财务excel报表
+	            	File savePath1 = new File("D:" + File.separator + "excel"+ File.separator + "batch_"+batchNo+".xls");
+	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
+	            	OutputStream outputStream1 = new FileOutputStream(savePath1);
+	            	ExcelProperties excelProperties1=new ExcelProperties();
+	            	List<String[]> dataList1=payApplyService.batchExcelList(batchNo,"2",id);
+					excelProperties1.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)");
+					excelProperties1.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
+					//exportPreview(id, batchNo, response);
+					int exportResult = ExportExcel.exportExcelInWebs(excelProperties1, "sss", new int[] { 5,10,15,15,25,15,15,45 }, dataList1, outputStream1, password);
+					
+					
+					// 调用pdf 
+					PDFUtil.generatePDF("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "excel"+ "/" + "batch_"+batchNo+".pdf", dataList1);
+					
 					outputStream.close();
-					if (exportResult != 1) {
+					outputStream1.close();
+					if (exportResult !=1 && exportPreview!=1 ) {
 						isOk = false;
 						resString = "批次文件生成失败！";
 					} else {
 						// 后台调用导出存储过程
-						payApplyService.batchExport(id, "D:" + "/" + "excel/" + "batch_"+batchNo+".xls"+","+"D:" + "/" + "excel/" + "batch_"+batchNo+".pdf");
+						payApplyService.batchExport(id, "D:/excel/" + "batch_"+batchNo+".xls"+","+"D:/excel/" + "batch_"+batchNo+".pdf,"+"D:/preview/" + "view_"+batchNo+".xls",password);
 						isOk = true;
-						resString = "D:" + "/" + "excel/" + "batch_"+batchNo+".xls"+","+"D:" + "/" + "excel/" + "batch_"+batchNo+".pdf";
+						resString = "D:/excel/"+"batch_"+batchNo+".xls"+","+"D:/excel/" + "batch_"+batchNo+".pdf,"+"D:/preview/" + "view_"+batchNo+".xls";
 					}
-					
-					// 下载保存在服务器的文件到本地
-					/*FileInputStream inputStream = new FileInputStream(exportPath);
-					OutputStream resOutStream = response.getOutputStream();
-					byte[] bytes = new byte[4096];
-					
-					while(inputStream.read(bytes) != -1) {
-						resOutStream.write(bytes, 0, bytes.length);
-					}
-					inputStream.close();
-					resOutStream.close();*/
 				}
 				
 			} catch (Exception e) {
@@ -817,7 +823,7 @@ public class PayApplyAction extends BaseAction{
 	//正常报财务excel文件查看
 		@RequestMapping("confirmBatchLook")
 		@ResponseBody
-		public String confirmBatchLook(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
+		public String confirmBatchLook(@RequestParam("batchNo")String batchNo) {
 			log.debug("PayApplyAction confirmBatchLook is start");
 			String excelPath = "";
 			try {
@@ -870,6 +876,32 @@ public class PayApplyAction extends BaseAction{
 			return JsonUtil.toSuccessMsg(excelPath);
 		}	
 	
+		
+		
+		//正常报财务pdf文件查看
+		@RequestMapping("confirmBatchPreview")
+		@ResponseBody
+		public String confirmBatchPreview(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
+			log.debug("PayApplyAction confirmBatchPdf is start");
+			String excelPath = "";
+			try {
+				String filePath = "" ;
+				List<BatchExport> list = exportBatchService.getListByPorperty("batchNo", batchNo, null);
+				for (int i = 0; i < list.size(); i++) {
+					BatchExport apply = list.get(0);
+					filePath = apply.getExportRoute();
+				}
+				String pathString[]=filePath.split(",");
+				for (int i = 0; i < pathString.length; i++) {
+					excelPath = pathString[2];
+				}
+			//	fileDownload(excelPath, batchNo, response);
+			} catch (Exception e) {
+				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
+			}		
+			log.debug("PayApplyAction confirmBatchPdf is End");
+			return JsonUtil.toSuccessMsg(excelPath);
+		}
 	/*----------------------------------------------------------------------*/
 	
 	
@@ -1131,7 +1163,7 @@ public class PayApplyAction extends BaseAction{
 			
 			ExcelProperties excelProperties=new ExcelProperties();
 			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表(预览)");
-			excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","报送序号" });
+			excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","报送批号" });
 			ExportExcel.repExportExcelPreview(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
 		} catch (Exception e) {
 			log.error("PayApplyAction excelList is Error:"+e, e);
@@ -1605,15 +1637,41 @@ public class PayApplyAction extends BaseAction{
 		}	
 		
 		
+		//详情文件查看
+		@RequestMapping("confirmRepBatchPreview")
+		@ResponseBody
+		public String confirmRepBatchPreview(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
+			log.debug("PayApplyAction confirmBatchPdf is start");
+			String excelPath = "";
+			try {
+				String filePath = "" ;
+				List<BatchExport> list = exportBatchService.getListByPorperty("batchNo", batchNo, null);
+				for (int i = 0; i < list.size(); i++) {
+					BatchExport apply = list.get(0);
+					filePath = apply.getExportRoute();
+				}
+				String pathString[]=filePath.split(",");
+				for (int i = 0; i < pathString.length; i++) {
+					excelPath = pathString[2];
+				}
+			//	fileDownload(excelPath, batchNo, response);
+			} catch (Exception e) {
+				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
+			}		
+			log.debug("PayApplyAction confirmBatchPdf is End");
+			return JsonUtil.toSuccessMsg(excelPath);
+		}	
 		
 		//重报报财务批次导出(加密)
 		@RequestMapping("confirmRepBatchExcel")
 		@ResponseBody
-		public String confirmRepBatchExcel(@RequestParam("id")Integer id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,String password,HttpServletResponse response,HttpServletRequest request) {
+		public String confirmRepBatchExcel(@RequestParam("id")Integer id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,HttpServletResponse response,HttpServletRequest request) {
 			log.debug("PayApplyAction confirmRepBatchExcel is start");
 			int count = 0;
 			boolean isOk = false;
 			String resString = "";
+			int num = 0;
+			Random ne = new Random();
 			try {
 				// 报财务确认
 				String confirmResult = payApplyService.confirmRepBatch(id.toString());
@@ -1628,8 +1686,12 @@ public class PayApplyAction extends BaseAction{
 					isOk = false;
 					resString = str2;
 				} else {
+					// 设置随机数加密
+				     num=ne.nextInt(9999-1000+1)+1000;//为变量赋随机值1000-9999
+					String password = num+"";
 					BatchMain batchMain = (BatchMain)payApplyService.get(id);
 					String excelPath = "D:/repExcel";
+					String preview = "D:/preview";
 				/*	response.setHeader("Content-disposition", "attachment;  filename="
 							+ new String(("batch_"+batchNo+".xls").getBytes(), "iso-8859-1"));*/
 					// 定义输出类型
@@ -1683,12 +1745,15 @@ public class PayApplyAction extends BaseAction{
 	            	if (! new File(excelPath).exists()) {
 	            		new File(excelPath).mkdirs();
 	            	}
+	            	if (! new File(preview).exists()) {
+	            		new File(preview).mkdirs();
+	            	}
 	            	File savePath = new File("D:" + File.separator + "repExcel"+ File.separator + "batch_"+batchNo+".xls");
 	            	OutputStream outputStream = new FileOutputStream(savePath);
 	            	ExcelProperties excelProperties=new ExcelProperties();
 					
 					excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表(第"+batchMain.getToFinanceNo()+"批)");
-					excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","批次号" });
+					excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","报送批号" });
 					int exportResult = ExportExcel.repExportExcelToFinance(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream,password);
 					PDFUtil.repGeneratePDF("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表((第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "repExcel"+ "/" + "batch_"+batchNo+".pdf", dataList);
 					outputStream.close();
@@ -1697,9 +1762,9 @@ public class PayApplyAction extends BaseAction{
 						resString = "批次文件生成失败！";
 					} else {
 						// 后台调用导出存储过程
-						payApplyService.batchRepExport(id, "D:" + "/" + "repExcel/" + "batch_"+batchNo+".xls"+","+"D:" + "/" + "repExcel/" + "batch_"+batchNo+".pdf");
+						payApplyService.batchRepExport(id, "D:/repExcel/" + "batch_"+batchNo+".xls"+","+"D:" + "/" + "repExcel/" + "batch_"+batchNo+".pdf",password);
 						isOk = true;
-						resString = "D:" + "/" + "repExcel/" + "batch_"+batchNo+".xls"+","+"D:" + "/" + "repExcel/" + "batch_"+batchNo+".pdf";
+						resString = "D:/repExcel/batch_"+batchNo+".xls"+","+"D:/repExcel/batch_"+batchNo+".pdf";
 					}
 				}
 			} catch (Exception e) {
