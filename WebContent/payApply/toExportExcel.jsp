@@ -49,20 +49,21 @@ String basePath = request.getContextPath();
 		$("#pdf_file").hide();
 		$("#ConfirmButton").click(function(){
 			$("#confirmId").form("submit", {
-				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}',
+				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 				success : function(data) {
 					var data = eval('(' + data + ')');
 					if (data.success) {
 						Messager.alert({
 							type : 'info',
 							title : '&nbsp',
-							content : "批次报财务成功"
+							content : "批次报财务成功!"
 						});
+						
+						$("#repFinance-list #repFinance-grid").datagrid("load");
 						
 						$("#excel_file").show();
 						$("#pdf_file").show();
 						$("#preview_file").show();
-						$("#ConfirmButton").hide();
 						var filepath = data.message.split(",");
 						
 						

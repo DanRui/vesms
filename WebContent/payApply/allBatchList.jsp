@@ -207,7 +207,8 @@ String basePath = request.getContextPath();
 					 {startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"批次报财务时间:",type:"date",section:true}
 			        ],
 			tools:[			       
-					   {type:"QUERY"}
+					   {type:"QUERY"},
+					   {type:"CLEAR"}
 				  ],
 			module:"M_TEST_MANAGER",
 			shownum:3,

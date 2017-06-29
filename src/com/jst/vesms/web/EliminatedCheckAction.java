@@ -92,7 +92,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 				list.add(new PropertyFilter("EQS_currentPost", currentPost));// 当前岗位是在当前登陆用户的岗位的数据
 			}
 			try {
-				page = eliminatedCheckService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+				page = eliminatedCheckService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
 				page = eliminatedCheckService.getPageExtra(page);
 				returnStr = writerPage(page);
 			} catch (Exception e) {
@@ -151,7 +151,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 			list.add(new PropertyFilter("EQS_bussinessStatus", "1"));
 			list.add(new PropertyFilter("EQS_isFault", "1"));
 			try {
-				page = eliminatedCheckService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+				page = eliminatedCheckService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
 				page = eliminatedCheckService.getPageExtra(page);
 				returnStr = writerPage(page);
 			} catch (Exception e) {

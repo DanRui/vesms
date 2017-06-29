@@ -101,12 +101,12 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:950,height:680,url:basePath+"/vehicleRecycle/view.do?id="+rowData.id+"&type=view",
+				$(this).datagrid("view",{width:950,height:380,url:basePath+"/vehicleRecycle/view.do?id="+rowData.id+"&type=view",
 						content:"报废车辆信息查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					{field:"vehicleIdentifyNo",title:"车架号:",type:"text"},					
 					{startField:"recycleStartDate",endField:"recycleEndDate",title:"交售时间:",type:"date",section:true}
 					],

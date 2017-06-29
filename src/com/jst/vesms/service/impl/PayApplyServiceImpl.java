@@ -97,7 +97,6 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	@Override
 	public String batchExport(Integer id,String exportPath,String password) throws Exception {
 		// TODO Auto-generated method stub
-		//	File file = new File("D:\\123.txt");
 			String sid=id+"";
 			String callName = "{call PKG_BATCH.p_normal_batch_export(?,?,?,?,?,?)}";
 			Map<Integer, Object> inParams = new HashMap<Integer, Object>();
@@ -220,7 +219,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 		// TODO Auto-generated method stub
 			String sid=id+"";
 			//File file = new File("D:\\123.txt");
-			String callName = "{call PKG_BATCH.p_repeat_batch_export(?,?,?,?,?)}";
+			String callName = "{call PKG_BATCH.p_repeat_batch_export(?,?,?,?,?,?)}";
 			Map<Integer, Object> inParams = new HashMap<Integer, Object>();
 			Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
 			inParams.put(1, "用户code");
@@ -321,10 +320,13 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 		List list = payApplyDao.getTableList(sql, null);
 		return list;
 	}
+	
+	// 通过批次返回对应的业务数据
 	@Override
 	public List<EliminatedApply> getBatchApplyList(String batchNo) throws Exception {
 		// TODO Auto-generated method stub
 	    // ArrayList<EliminatedApply> list =  (ArrayList<EliminatedApply>) eliminatedApplyService.getAllList();
+		// List<EliminatedApply> list = null ;
 		List<EliminatedApply> list = eliminatedApplyService.getListByPorperty("batchNo", batchNo, null);
 		return list;
 	}
@@ -347,7 +349,31 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 
 	@Override
 	public List getBySql(String batchNo) throws Exception{
-		String sql = "select rownum xuhao,"
+		StringBuffer sb = new StringBuffer();
+		sb.append("select rownum xuhao,");
+		sb.append("thisbatchno,thistofinanceno,vehicle_plate_num,vehicle_plate_type,subsidies_money,");
+		sb.append("lastbankname,lastaccountname,lastaccountno,");
+		sb.append("thisbankname,thisaccountname,thisaccountno,thisfaultType,");
+		sb.append("'第'||tofinancecishu||'次报送，上一次报送批号：'||lasttofinanceno note from");
+		sb.append(" (select tbm.batch_no thisbatchno,tbm.to_finance_no thistofinanceno,");
+		sb.append("tea.vehicle_plate_num, tea.vehicle_plate_type,");
+		sb.append("tea.subsidies_money,tbd.remark,");
+		sb.append("abs(tea.to_finance_status) tofinancecishu,");
+		sb.append("f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'PCH:','|') lastbatchno,");
+		sb.append("f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'BSXH:','|') lasttofinanceno,");
+		sb.append("f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'KHYH:','|') lastbankname,");
+		sb.append("f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'KHHM:','|') lastaccountname,");
+		sb.append("f_getitemvalue(replace(substr(tbd.remark,instr(tbd.remark,'[',-1)+1),']',''),'YHZH:','|') lastaccountno,");
+		sb.append("tea.bank_name thisbankname,");
+		sb.append("tea.bank_account_name thisaccountname,");
+		sb.append("tea.bank_account_no thisaccountno,tea.fault_type thisfaultType ");
+		sb.append("from t_eliminated_apply tea,t_batch_detail tbd,t_batch_main tbm ");
+		sb.append("where tbm.batch_no= '"+batchNo+"' ");
+		sb.append("and tbm.batch_no=tbd.batch_no ");
+		sb.append("and tea.apply_no=tbd.apply_no ");
+		sb.append("order by tea.apply_confirm_time)");
+		String sql = sb.toString();
+		/* String sql = "select rownum xuhao,"
 				+ "thisbatchno,thistofinanceno,vehicle_plate_num,vehicle_plate_type,subsidies_money,"
 				+ "lastbankname,lastaccountname,lastaccountno,"
 				+ "thisbankname,thisaccountname,thisaccountno,thisfaultType,"
@@ -372,7 +398,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 				+ "where tbm.batch_no= '"+batchNo+"' "
 				+ "and tbm.batch_no=tbd.batch_no "
 				+ "and tea.apply_no=tbd.apply_no "
-				+ "order by tea.apply_confirm_time)";
+				+ "order by tea.apply_confirm_time)";*/
 			List list = payApplyDao.getTableList(sql, null);
 			return list;
 	}
@@ -418,15 +444,48 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	}
 	
 	
-	// 正常批次excel文件数据获取
-	public List<String[]> batchExcelList(String batchNo,String type,Integer id) throws Exception {
+	// 正常批次excel文件数据获取(正常预览 重报预览  正常报财务excel报表 正常报财务预览   重报报财务预览  同时调用这个方法)
+	public List<String[]> batchExcelList(String batchNo,String type,String batchType,Integer id) throws Exception {
 		// TODO Auto-generated method stub
 		int count =0;
 		List<EliminatedApply> list = new ArrayList<EliminatedApply>();
-		list = getBatchApplyList(batchNo);
-		List<String[]> dataList = new ArrayList<String[]>();
 		
-		if(type.equals("1")){
+		List<String[]> dataList = new ArrayList<String[]>();
+		if(batchType.equals("1")){
+			list = getBatchApplyList(batchNo);
+			if(type.equals("1")){
+				for (int i = 0; i < list.size(); i++) {
+					EliminatedApply apply = list.get(i);
+					String vehicleIdentifyNo = "";
+					String bankAccountNo = "";
+					count++;
+					// 车架号解密
+					String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+					vehicleIdentifyNo=EncryptUtil.decryptDES(des_key, apply.getVehicleIdentifyNo());			
+					bankAccountNo=EncryptUtil.decryptDES(des_key, apply.getBankAccountNo());
+					// 获得号牌种类名称(从字典表获取)
+					String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(apply.getVehiclePlateType());
+					apply.setVehiclePlateTypeName(vehiclePlateTypeName);
+					String[] strings = new String[]{count+"", apply.getVehicleOwner(),apply.getVehiclePlateNum(),apply.getVehiclePlateTypeName(),apply.getSubsidiesStandard(),
+							vehicleIdentifyNo,apply.getAdvancedScrapDays().toString(),apply.getRecycleDate().toString(),"",apply.getIsPersonal().toString(),
+							apply.getBankName(),bankAccountNo,apply.getSubsidiesMoney().toString()};
+					dataList.add(strings);
+				}
+			}else if(type.equals("2")){
+				BatchMain batchMain = (BatchMain)get(id);
+				for (int i = 0; i < list.size(); i++) {
+					EliminatedApply apply = list.get(i);
+					String bankAccountNo = "";
+					count++;
+					String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+					bankAccountNo = EncryptUtil.decryptDES(des_key, apply.getBankAccountNo());
+					String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999",apply.getBankCode(),apply.getVehicleOwner().toString(),
+							bankAccountNo,apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
+					dataList.add(strings);
+				}
+			}
+		}else if(batchType.equals("2")){
+			list = getRepBatchApplyList(batchNo);
 			for (int i = 0; i < list.size(); i++) {
 				EliminatedApply apply = list.get(i);
 				String vehicleIdentifyNo = "";
@@ -444,65 +503,11 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 						apply.getBankName(),bankAccountNo,apply.getSubsidiesMoney().toString()};
 				dataList.add(strings);
 			}
-		}else if(type.equals("2")){
-			BatchMain batchMain = (BatchMain)get(id);
-			for (int i = 0; i < list.size(); i++) {
-				EliminatedApply apply = list.get(i);
-				String bankAccountNo = "";
-				count++;
-				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-				bankAccountNo = EncryptUtil.decryptDES(des_key, apply.getBankAccountNo());
-				String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999",apply.getBankCode(),apply.getVehicleOwner().toString(),
-						bankAccountNo,apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
-				dataList.add(strings);
-			}
 		}
 		return dataList;
 		
 	}
 	
-	
-	// 重报批次excel文件数据获取
-	
-	public List<String[]> repBatchExcelList(String batchNo,String type,Integer id) throws Exception {
-		// TODO Auto-generated method stub
-		int count =0;
-		List<EliminatedApply> list = new ArrayList<EliminatedApply>();
-		list = getBatchApplyList(batchNo);
-		List<String[]> dataList = new ArrayList<String[]>();
-		
-		if(type.equals("1")){
-			for (int i = 0; i < list.size(); i++) {
-				EliminatedApply apply = list.get(i);
-				count++;
-				// 车架号解密
-				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-				apply.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));				
-				apply.setBankAccountNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));
-				// 获得号牌种类名称(从字典表获取)
-				String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(apply.getVehiclePlateType());
-				apply.setVehiclePlateTypeName(vehiclePlateTypeName);
-				String[] strings = new String[]{count+"", apply.getVehicleOwner(),apply.getVehiclePlateNum(),apply.getVehicleTypeName(),apply.getSubsidiesStandard(),
-						apply.getVehicleIdentifyNo(),apply.getAdvancedScrapDays().toString(),apply.getRecycleDate().toString(),"",apply.getIsPersonal().toString(),
-						apply.getBankName(),apply.getBankAccountNo(),apply.getSubsidiesMoney().toString()};
-				dataList.add(strings);
-			}
-		}else if(type.equals("1")){
-			BatchMain batchMain = (BatchMain)get(id);
-			for (int i = 0; i < list.size(); i++) {
-				EliminatedApply apply = list.get(i);
-				count++;
-				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-				apply.setBankAccountNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));
-				String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999",apply.getBankCode(),apply.getVehicleOwner().toString(),
-						apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
-				dataList.add(strings);
-			}
-		}
-		return dataList;
-		
-	}
-
 
 
 }

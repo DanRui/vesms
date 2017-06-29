@@ -69,7 +69,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "applyNo",
 				title : "受理单号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -182,15 +182,16 @@ String basePath = request.getContextPath();
 			} */
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:900,height:800,url:basePath+"/payApply/view.do?id="+rowData.id+"&type=view",content:"重报批次受理单明细",param:{close:false}});
+				$(this).datagrid("view",{width:900,height:800,url:basePath+"/eliminatedApply/view.do?id="+rowData.id+"&type=applyLog",
+					content:"受理单查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[
 					 {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
 					 {field:"applyNo",title:"受理单号:",type:"text"},
-					 {field:"toFinanceStatus",title:"业务报财务状态:",type:"combobox"},
+					 {field:"toFinanceStatus",title:"业务报财务状态:",type:"combobox",url:basePath+"/data/toFinanceStatus.json",text:"name",value:"value"},
 					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/data/vehiclePlateType.json", text:"name", value:"value"},
-					 {field:"vehicleType",title:"车辆类型:",type:"combobox",url:basePath+"/data/carType.json",text:"name", value:"value"},
+					 {field:"vehicleType",title:"车辆类型:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE",text:"name", value:"value"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"}
 					 
@@ -228,7 +229,8 @@ String basePath = request.getContextPath();
 			     	  }
 			    	   
 			       },
-			       {type:"QUERY"}
+			       {type:"QUERY"},
+			       {type:"CLEAR"}
 				   ],
 			module:"M_TEST_MANAGER",
 			shownum:3,

@@ -43,6 +43,9 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 		JSONArray jsonArray = new JSONArray();
 		List<PostBaseInfo> postList = postBaseInfoDao.getAllList();
 		for (PostBaseInfo post : postList) {
+			if (post.getPostCode().equals("BFLRG")) {
+				continue;
+			}
 			JSONObject json = new JSONObject();
 			json.put("value", post.getPostName());
 			json.put("code", post.getPostCode());

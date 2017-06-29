@@ -28,7 +28,7 @@ String basePath = request.getContextPath();
 			url : basePath+"/eliminatedModify/list.do",
 			method : "post",
 			rownumbers : true,
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			columns : [ [ {
 				field : "id",

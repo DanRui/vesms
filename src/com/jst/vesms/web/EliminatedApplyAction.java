@@ -37,13 +37,13 @@ import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.DateUtil;
-import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.EliminatedApplyService;
+import com.jst.vesms.util.EncryptUtils;
 
 @RequestMapping("/eliminatedApply")
 @Controller
@@ -83,7 +83,7 @@ public class EliminatedApplyAction extends BaseAction {
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
 			String key = PropertyUtil.getPropertyValue("DES_KEY");
-			vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
+			vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
 			sb.append("and t.vehicle_identify_no = '").append(vehicleIdentifyNo).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
@@ -98,7 +98,7 @@ public class EliminatedApplyAction extends BaseAction {
 		if(StringUtil.isNotEmpty(endTime)) {
 			sb.append("and t.apply_time <= to_date('").append(endTime).append("', 'yyyy-MM-dd') ");
 		}
-		sb.append("and t.apply_confirm_time is null ");
+		sb.append("and t.apply_confirm_time is null order by t.last_update_time desc ");
 		try {
 			page = eliminatedApplyService.getPageBySql(page, sb.toString());
 			//page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
@@ -136,7 +136,7 @@ public class EliminatedApplyAction extends BaseAction {
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
 			String key = PropertyUtil.getPropertyValue("DES_KEY");
-			vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
+			vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
 			list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
@@ -172,7 +172,7 @@ public class EliminatedApplyAction extends BaseAction {
 		
 		try {
 			//page = eliminatedApplyService.getPageBySql(page, "select * from t_eliminated_apply where apply_confirm_time is null");
-			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
 			page = eliminatedApplyService.getPageExtra(page);
 			returnStr = writerPage(page);
 		} catch (Exception e) {

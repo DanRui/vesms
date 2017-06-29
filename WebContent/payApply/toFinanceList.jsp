@@ -113,7 +113,7 @@ String basePath = request.getContextPath();
 		}).datagrid("initSearch",{
 			columns:[{field:"batchNo",title:"内部批次号：",type:"text"},
 					{field:"payBatchTotalAmount",title:"拨付总金额（元）:",type:"text"},
-					{startField:"batchCreateStartDate",endField:"batchCreateEndDate",title:"批次生成时间:",type:"date",section:true}
+					{startField:"createStartDate",endField:"createEndDate",title:"批次生成时间:",type:"date",section:true}
 			        ],
 			tools:[			       
 				    {type:"CONFIRM_APPLY",icon:"icon-ok",title:"报财务确认",text_width:100,
@@ -171,7 +171,8 @@ String basePath = request.getContextPath();
 								}
 						   }
 					   },
-					   {type:"QUERY"}
+					   {type:"QUERY"},
+					   {type:"CLEAR"}
 				  ],
 			module:"M_TEST_MANAGER",
 			shownum:3,

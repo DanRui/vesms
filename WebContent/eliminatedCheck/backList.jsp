@@ -30,7 +30,7 @@ String currentPost = request.getParameter("currentPost");
 			toolbar : "#backCheckList-grid-toolbar",
 			url : basePath+"/eliminatedCheck/backList.do?currentPost="+currentPost,
 			method : "post",
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {

@@ -19,7 +19,6 @@ import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.common.utils.string.StringUtil;
 import com.jst.util.DateUtil;
-import com.jst.util.EncryptUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.vesms.common.BFGSWebServiceClient;
 import com.jst.vesms.common.CacheRead;
@@ -31,6 +30,7 @@ import com.jst.vesms.model.Attachment;
 import com.jst.vesms.model.RecycleInfoEntity;
 import com.jst.vesms.model.VehicleRecycle;
 import com.jst.vesms.service.VehicleRecycleService;
+import com.jst.vesms.util.EncryptUtils;
 import com.jst.vesms.util.PhotoUtil;
 
 @Service("vehicleRecycleServiceImpl")
@@ -183,19 +183,25 @@ public class VehicleRecycleServiceImpl extends BaseServiceImpl implements Vehicl
 						SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
 						if (null != sysDictVehiclePlateType) {
 							vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
+						} else {
+							vehiclePlateTypeName = vehicleRecycle.getVehiclePlateType();
 						}
-					}
+					} 
 					vehicleRecycle.setVehiclePlateType(vehiclePlateType);
 					vehicleRecycle.setVehiclePlateTypeName(vehiclePlateTypeName);
 				}
 				
 				// 获得车辆类型名称
 				SysDict sysDictVehicleType = CacheRead.getSysDictByCode("VEHICLE_TYPE", vehicleRecycle.getVehicleType());
-				vehicleRecycle.setVehicleTypeName(sysDictVehicleType.getDictValue());
+				if (null != sysDictVehicleType) {
+					vehicleRecycle.setVehicleTypeName(sysDictVehicleType.getDictValue());
+				}
 				
 				// 获得使用性质
 				SysDict sysDictUseOfProperty = CacheRead.getSysDictByCode("USE_OF_PROPERTY", vehicleRecycle.getUseOfProperty());
-				vehicleRecycle.setUseOfPropertyName(sysDictUseOfProperty.getDictValue());
+				if (null != sysDictUseOfProperty) {
+					vehicleRecycle.setUseOfPropertyName(sysDictUseOfProperty.getDictValue());
+				}
 				
 				// 获得燃油种类
 				SysDict sysDictIolType = CacheRead.getSysDictByCode("IOL_TYPE", vehicleRecycle.getIolType());
@@ -206,7 +212,7 @@ public class VehicleRecycleServiceImpl extends BaseServiceImpl implements Vehicl
 				// 解密关键数据
 				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
 				// 解密车架号
-				vehicleRecycle.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, vehicleRecycle.getVehicleIdentifyNo()));
+				vehicleRecycle.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, vehicleRecycle.getVehicleIdentifyNo()));
 				
 				vehicleList.add(vehicleRecycle);
 			}
@@ -333,6 +339,11 @@ public class VehicleRecycleServiceImpl extends BaseServiceImpl implements Vehicl
 				vehicleRecycle.setVehicleStatusName(vehicleStatusName);
 			}
 		}
+		
+		// 解密车架号
+		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+		// 解密车架号
+		vehicleRecycle.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, vehicleRecycle.getVehicleIdentifyNo()));
 		
 		return vehicleRecycle;
 	}

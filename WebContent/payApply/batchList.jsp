@@ -168,7 +168,8 @@ String basePath = request.getContextPath();
 							}
 					 	  }
 				       },
-					   {type:"QUERY"}
+					   {type:"QUERY"},
+					   {type:"CLEAR"}
 				  ],
 			module:"M_TEST_MANAGER",
 			shownum:3,

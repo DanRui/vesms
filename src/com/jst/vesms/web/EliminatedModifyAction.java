@@ -94,7 +94,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		faultTypes.add("2");
 		list.add(new PropertyFilter("INS_faultType", faultTypes));
 		try {
-			page = eliminatedModifyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+			page = eliminatedModifyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
 			page = eliminatedModifyService.getPageExtra(page);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
@@ -144,7 +144,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		list.add(new PropertyFilter("EQS_currentPost", "CKSLG"));
 		list.add(new PropertyFilter("EQS_faultType", "2"));
 		try {
-			page = eliminatedModifyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+			page = eliminatedModifyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
 			page = eliminatedModifyService.getPageExtra(page);
 			returnStr = writerPage(page);
 		} catch (Exception e) {

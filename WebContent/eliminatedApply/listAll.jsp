@@ -27,7 +27,7 @@ String basePath = request.getContextPath();
 			toolbar : "#elimiApplyListAll-grid-toolbar",
 			url : basePath+"/eliminatedApply/listAll.do",
 			method : "post",
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {

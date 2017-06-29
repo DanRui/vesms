@@ -751,7 +751,7 @@ $.extend($.fn.datagrid.defaults,{
 	pagination:true,
 	method : "post",
 	pageSize : 10,
-	pageList : [ 10, 20, 50, 100, 200 ],
+	pageList : [ 10, 20, 50, 100, 200, 500 ],
 	loadMsg : "数据加载中..."
 });
 

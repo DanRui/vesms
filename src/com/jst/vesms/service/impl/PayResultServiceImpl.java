@@ -15,7 +15,9 @@ import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
+import com.jst.common.utils.string.StringUtil;
 import com.jst.vesms.dao.ICallDao;
+import com.jst.vesms.dao.IEliminatedApplyDao;
 import com.jst.vesms.dao.IPayResultDao;
 import com.jst.vesms.model.BatchMain;
 import com.jst.vesms.model.EliminatedApply;
@@ -30,6 +32,8 @@ implements PayResultService{
 	@Resource(name = "eliminatedApplyServiceImpl")
 	private EliminatedApplyService eliminatedApplyService;
 	
+	@Resource(name="eliminatedApplyDao")
+	private IEliminatedApplyDao eliminatedApplyDao;
 	
 	@Override
 	public BaseDAO getHibernateBaseDAO() {
@@ -133,6 +137,37 @@ implements PayResultService{
 	}
 
 
+	// 正常业务拨付结果标记
+	public Page getPageSql(Page page,String sql) throws Exception {
+/*		StringBuffer sb = new StringBuffer();
+		sb.append("select t.*,m.to_Finance_No from t_eliminated_apply t inner join ");
+		sb.append(" t_batch_main m on t.batch_no=m.batch_no  where 1 = 1");
+		sb.append(" and t.vehicle_plate_num like '%vehiclePlateNum%' and t.vehicle_plate_type = 'vehiclePlateType'");
+		sb.append(" and t.vehicle_identify_no = 'vehicleIdentifyNo' and t.vehicle_type = 'vehicleType' ");
+		sb.append(" and t.vehicle_owner like '%vehicleOwner%'  and t.apply_no = 'applyNo' ");
+		sb.append("and t.batch_no = 'batchNo' and t.vehicleOwner = 'vehicleOwner'");
+		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' ");
+		sb.append("and t.batch_no is not null and repeated_batch_no is null");*/
+	
+		List<Object[]> list = eliminatedApplyDao.executeSql(sql);
+		if (StringUtil.isEmpty(sql)) {
+		//	return this.getPageExtra(page);
+		} else {
+			List list1 = eliminatedApplyDao.getListBySql(sql, null, page);
+			long count = eliminatedApplyDao.getListCounter("select count(*) from (" + sql + ") ");
+			if (null != list && list.size() > 0) {
+				page.setTotalCount(count);
+				page.setResult(list);
+			}
+			eliminatedApplyService.getPageExtra(page);
+		}
+		return page;
+	}
+	
+	
+	
+	
+	
 
 	@Override
 	public Page filterRepeatedBatchPage(Page page) throws Exception {

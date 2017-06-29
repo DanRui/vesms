@@ -86,7 +86,7 @@ String basePath = request.getContextPath();
 							<fmt:formatDate value="${v.inputTime }" pattern="yyyy-MM-dd hh:mm:ss" type="date" dateStyle="long" />
 						</td>
 					</tr>
-					<tr class="datagrid-header-row classify-tr">
+					<%-- <tr class="datagrid-header-row classify-tr">
 						<td colspan="6">证明材料</td>
 					</tr>
 					<c:if test="${!empty callbackFiles}">
@@ -118,7 +118,7 @@ String basePath = request.getContextPath();
 								</c:forEach>
 							</td>
 						</tr>
-					</c:if>
+					</c:if> --%>
 				</table>
 			</div>
 

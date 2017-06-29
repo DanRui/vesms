@@ -32,7 +32,7 @@ String mdlCode = request.getParameter("mdlCode");
 			toolbar : "#elimiCheckList-grid-toolbar",
 			url : basePath+"/eliminatedCheck/list.do?currentPost="+currentPost,
 			method : "post",
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			rownumbers : true,
 			/* pageSize : 100, */

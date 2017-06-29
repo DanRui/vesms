@@ -25,6 +25,9 @@ public final class SysConstant {
 	// 黑牌对应----06
 	private static final String VEHICLE_PLATE_COLOR_BLACK = "黑牌";
 	
+	// 学牌对应----16
+	private static final String VEHICLE_PLATE_COLOR_XUE = "学";
+	
 	// 号牌颜色与种类的对应关系
 	public static final Map<String, String> VEHICLE_PLATE_COLOR = new HashMap<String, String>();
 	
@@ -36,6 +39,7 @@ public final class SysConstant {
 		VEHICLE_PLATE_COLOR.put(VEHICLE_PLATE_COLOR_YELLOW, "01");
 		VEHICLE_PLATE_COLOR.put(VEHICLE_PLATE_COLOR_BLUE, "02");
 		VEHICLE_PLATE_COLOR.put(VEHICLE_PLATE_COLOR_BLACK, "06");
+		VEHICLE_PLATE_COLOR.put(VEHICLE_PLATE_COLOR_XUE, "16");
 		
 		// 生成号牌种类Code和Value对应关系
 		VEHICLE_PALTE_TYPE.put("01", "大型汽车");

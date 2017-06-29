@@ -32,7 +32,6 @@ import com.jst.platformClient.utils.Constants;
 import com.jst.system.util.SystemUtil;
 import com.jst.type.DataType;
 import com.jst.util.DateUtil;
-import com.jst.util.EncryptUtil;
 import com.jst.util.MessageHandlerUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.vesms.common.BFGSWebServiceClient;
@@ -54,6 +53,7 @@ import com.jst.vesms.model.VehicleRecycle;
 import com.jst.vesms.service.EliminatedApplyService;
 import com.jst.vesms.service.SysDictService;
 import com.jst.vesms.service.VehicleRecycleService;
+import com.jst.vesms.util.EncryptUtils;
 import com.jst.vesms.util.PhotoUtil;
 
 @Service("eliminatedApplyServiceImpl")
@@ -132,22 +132,22 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				// 解密关键数据
 				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
 				// 解密车架号
-				eliminatedApply.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, eliminatedApply.getVehicleIdentifyNo()));
+				eliminatedApply.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getVehicleIdentifyNo()));
 				
 				// 解密银行账号
-				eliminatedApply.setBankAccountNo(EncryptUtil.decryptDES(des_key, eliminatedApply.getBankAccountNo()));
+				eliminatedApply.setBankAccountNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getBankAccountNo()));
 				
 				// 解密车主手机号
-				eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
+				eliminatedApply.setMobile(EncryptUtils.decryptDes(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
 				
 				// 解密经办人手机号 
-				eliminatedApply.setAgentMobileNo(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+				eliminatedApply.setAgentMobileNo(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
 				
 				// 解密车主身份证明号
-				eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+				eliminatedApply.setVehicleOwnerIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
 				
 				// 解密经办人身份证号
-				eliminatedApply.setAgentIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+				eliminatedApply.setAgentIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 				
 				vehicleList.add(eliminatedApply);
 			}
@@ -208,8 +208,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 							// 从交警接口获取数据
 							eliminatedApply.setVehiclePlateTypeName(jiaoJingVehicle.getVehiclePlateTypeName());
 							// 车架号
-							//EncryptUtil.encryptDES(des_key, jiaoJingVehicle.getVehicleIdentifyNo())
-							eliminatedApply.setVehicleIdentifyNo(EncryptUtil.encryptDES(des_key, jiaoJingVehicle.getVehicleIdentifyNo()));
+							//EncryptUtils.encryptDes(des_key, jiaoJingVehicle.getVehicleIdentifyNo())
+							eliminatedApply.setVehicleIdentifyNo(EncryptUtils.encryptDes(des_key, jiaoJingVehicle.getVehicleIdentifyNo()));
 							// 燃料种类
 							eliminatedApply.setIolType(jiaoJingVehicle.getIolType());
 							eliminatedApply.setIolTypeName(jiaoJingVehicle.getIolTypeName());
@@ -262,23 +262,23 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 						
 						// 加密车架号
 						String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-						//EncryptUtil.encryptDES(des_key, jiaoJingVehicle.getVehicleIdentifyNo())
-						eliminatedApply.setVehicleIdentifyNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getVehicleIdentifyNo()));
+						//EncryptUtils.encryptDes(des_key, jiaoJingVehicle.getVehicleIdentifyNo())
+						eliminatedApply.setVehicleIdentifyNo(EncryptUtils.encryptDes(des_key, eliminatedApply.getVehicleIdentifyNo()));
 						
 						// 加密银行账号
-						eliminatedApply.setBankAccountNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getBankAccountNo()));
+						eliminatedApply.setBankAccountNo(EncryptUtils.encryptDes(des_key, eliminatedApply.getBankAccountNo()));
 						
 						// 加密车主手机号
-						eliminatedApply.setMobile(EncryptUtil.encryptDES(des_key, eliminatedApply.getMobile()));
+						eliminatedApply.setMobile(EncryptUtils.encryptDes(des_key, eliminatedApply.getMobile()));
 						
 						// 加密经办人手机号
-						eliminatedApply.setAgentMobileNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getAgentMobileNo()));
+						eliminatedApply.setAgentMobileNo(EncryptUtils.encryptDes(des_key, eliminatedApply.getAgentMobileNo()));
 						
 						// 加密车主身份证明号
-						eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.encryptDES(des_key, eliminatedApply.getVehicleOwnerIdentity()));
+						eliminatedApply.setVehicleOwnerIdentity(EncryptUtils.encryptDes(des_key, eliminatedApply.getVehicleOwnerIdentity()));
 						
 						// 加密经办人身份证明号
-						eliminatedApply.setAgentIdentity(EncryptUtil.encryptDES(des_key, eliminatedApply.getAgentIdentity()));
+						eliminatedApply.setAgentIdentity(EncryptUtils.encryptDes(des_key, eliminatedApply.getAgentIdentity()));
 						
 						// 正常，无退回
 						eliminatedApply.setIsFault("0");
@@ -498,22 +498,22 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
 		// 解密车架号
-		eliminatedApply.setVehicleIdentifyNo(EncryptUtil.decryptDES(des_key, eliminatedApply.getVehicleIdentifyNo()));
+		eliminatedApply.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getVehicleIdentifyNo()));
 		
 		// 解密银行账号
-		eliminatedApply.setBankAccountNo(EncryptUtil.decryptDES(des_key, eliminatedApply.getBankAccountNo()));
+		eliminatedApply.setBankAccountNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getBankAccountNo()));
 		
 		// 解密车主手机号
-		eliminatedApply.setMobile(EncryptUtil.decryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
+		eliminatedApply.setMobile(EncryptUtils.decryptDes(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
 		
 		// 解密经办人手机号 
-		eliminatedApply.setAgentMobileNo(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+		eliminatedApply.setAgentMobileNo(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
 		
 		// 解密车主身份证明号
-		eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+		eliminatedApply.setVehicleOwnerIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
 		
 		// 解密经办人身份证号
-		eliminatedApply.setAgentIdentity(EncryptUtil.decryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+		eliminatedApply.setAgentIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 		
 		return eliminatedApply;
 	}
@@ -1111,22 +1111,22 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		// 更新受理表数据，从页面取得是解密后数据，要再加密一遍才能与数据库保持一致。
 		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
 		// 加密车架号
-		eliminatedApply.setVehicleIdentifyNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getVehicleIdentifyNo()));
+		eliminatedApply.setVehicleIdentifyNo(EncryptUtils.encryptDes(des_key, eliminatedApply.getVehicleIdentifyNo()));
 		
 		// 加密银行账号
-		eliminatedApply.setBankAccountNo(EncryptUtil.encryptDES(des_key, eliminatedApply.getBankAccountNo()));
+		eliminatedApply.setBankAccountNo(EncryptUtils.encryptDes(des_key, eliminatedApply.getBankAccountNo()));
 		
 		// 加密车主手机号
-		eliminatedApply.setMobile(EncryptUtil.encryptDES(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
+		eliminatedApply.setMobile(EncryptUtils.encryptDes(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
 		
 		// 加密经办人手机号 
-		eliminatedApply.setAgentMobileNo(EncryptUtil.encryptDES(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+		eliminatedApply.setAgentMobileNo(EncryptUtils.encryptDes(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
 		
 		// 加密车主身份证明号
-		eliminatedApply.setVehicleOwnerIdentity(EncryptUtil.encryptDES(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+		eliminatedApply.setVehicleOwnerIdentity(EncryptUtils.encryptDes(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
 		
 		// 加密经办人身份证号
-		eliminatedApply.setAgentIdentity(EncryptUtil.encryptDES(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+		eliminatedApply.setAgentIdentity(EncryptUtils.encryptDes(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 		
 		EliminatedApply updatedApply = (EliminatedApply) this.update(id, eliminatedApply);
 		
@@ -1545,11 +1545,11 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				
 				jsonObject.put("bankCode", result[4]);
 				jsonObject.put("bankName", result[5]);
-				String bankAccount = EncryptUtil.decryptDES(des_key, result[6].toString());
+				String bankAccount = EncryptUtils.decryptDes(des_key, result[6].toString());
 				jsonObject.put("bankAccount", bankAccount);
 				
 				// 解密经办人身份证
-				String agentIdentify = EncryptUtil.decryptDES(des_key, result[7].toString());
+				String agentIdentify = EncryptUtils.decryptDes(des_key, result[7].toString());
 				jsonObject.put("agentIdentity", agentIdentify);
 				
 				// 判断受理状态

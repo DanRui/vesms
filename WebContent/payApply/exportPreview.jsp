@@ -29,12 +29,10 @@ String basePath = request.getContextPath();
 	<script type="text/javascript">
 
 	$().ready(function(){
-		$("#excel_file").hide();
-		$("#pdf_file").hide();
 		$("#ConfirmButton").click(function(){
 			var password=$("#password").val();
 				 $("#confirmId").form("submit",{
-						url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}',
+						url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 						success : function(data) {
 							Messager.alert({
 								type : "info",

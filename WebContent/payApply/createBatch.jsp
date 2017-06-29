@@ -46,7 +46,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "applyNo",
 				title : "受理单号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -150,7 +150,8 @@ String basePath = request.getContextPath();
 			} */
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:900,height:800,url:basePath+"/payApply/view.do?id="+rowData.id+"&type=view",content:"受理单查看",param:{close:false}});
+				$(this).datagrid("view",{width:900,height:800,url:basePath+"/eliminatedApply/view.do?id="+rowData.id+"&type=applyLog",
+						content:"受理单查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[
@@ -181,6 +182,9 @@ String basePath = request.getContextPath();
 									content : infoMsg
 								});
 							}else{
+								$.ajaxSetup({  
+								    async : false  
+								});  
 							//ajax请求，返回成功后再处理
 						 		$.get(basePath+"/payApply/create.do",{ids:ids},function(data) {
 						 			 Messager.alert({
@@ -194,8 +198,8 @@ String basePath = request.getContextPath();
 						}
 						
 				 	  },
-			    	   
-			       {type:"QUERY"}
+			       {type:"QUERY"},
+			       {type:"CLEAR"}
 				  ],
 			module:"M_ADD_BATCH",
 			shownum:3 ,

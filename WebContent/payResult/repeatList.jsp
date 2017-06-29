@@ -157,7 +157,7 @@ String basePath = request.getContextPath();
 			} */
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:900,height:800,url:basePath+"/payApply/view.do?id="+rowData.id+"&type=view",content:"受理单查看",param:{close:false}});
+				$(this).datagrid("view",{width:900,height:800,url:basePath+"/eliminatedApply/view.do?id="+rowData.id+"&type=applyLog",content:"受理单查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[

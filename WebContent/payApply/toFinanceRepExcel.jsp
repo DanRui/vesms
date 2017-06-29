@@ -47,21 +47,25 @@ String basePath = request.getContextPath();
 		
 		$("#excel_file").hide();
 		$("#pdf_file").hide();
+		$("#preview_file").hide();
 		$("#ConfirmButton").click(function(){
 			var password=$("#password").val();
 			$("#confirmId").form("submit", {
-				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}',
+				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 				success : function(data) {
 					var data = eval('(' + data + ')');
 					if (data.success) {
 						Messager.alert({
 							type : 'info',
 							title : '&nbsp',
-							content : "批次报财务成功"
+							content : "批次报财务成功!"
 						});
+						
+						$("#repeatToFinance-list #repeatToFinance-grid").datagrid("load");
 						
 						$("#excel_file").show();
 						$("#pdf_file").show();
+						$("#preview_file").show();
 						
 						var filepath = data.message.split(",");
 						

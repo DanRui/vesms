@@ -48,7 +48,7 @@ public class PayResultAction extends BaseAction{
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String vehicleType, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String batchNo) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String vehicleType, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String batchNo,String toFinanceNo) throws Exception{
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -56,8 +56,6 @@ public class PayResultAction extends BaseAction{
 		page.setOrder(order);
 		page.setOrderBy(orderBy);
 		String returnStr = "";
-		
-		
 		StringBuffer sb = new StringBuffer("select t.*,m.to_Finance_No from t_eliminated_apply t inner join t_batch_main m on t.batch_no=m.batch_no  where 1 = 1 ");
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
 			sb.append("and t.vehicle_plate_num like '%").append(vehiclePlateNum).append("%' ");
@@ -85,9 +83,12 @@ public class PayResultAction extends BaseAction{
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
 			sb.append("and t.vehicleOwner = '").append(vehicleOwner).append("' ");
 		}
+		if(StringUtil.isNotEmpty(toFinanceNo)) {
+			sb.append("and m.toFinanceNo = '").append(toFinanceNo).append("' ");
+		}
 		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and t.batch_no is not null and repeated_batch_no is null");
 		try {
-			page = payResultService.getPageBySql(page, sb.toString());
+			page = payResultService.getPageSql(page, sb.toString());
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("PayResultAction list is Error:" + e, e);

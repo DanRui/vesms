@@ -51,8 +51,8 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.expRecentDate) {
-						return getNowFormatDate(new Date(row.expRecentDate.time))
+					if (row.createDate) {
+						return getNowFormatDate(new Date(row.createDate.time))
 					} else {
 						return "";
 					}
@@ -128,7 +128,7 @@ String basePath = request.getContextPath();
 									});
 								}else {
 									$.messager.confirm('报财务确认','你确定将选中的批次进行报财务吗?',function(r){
-										if(r){												
+										if(r){							
 											 	openDialog({
 												   	type : "batch_adjust",
 													title : "批次报财务",

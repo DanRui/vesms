@@ -350,7 +350,7 @@ public class ExportExcel {
 	
 	
 	//重报导出预览
-	public static int repExportExcelPreview(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os) {
+/*	public static int repExportExcelPreview(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os) {
 		int result = 1;
 		int colsNum = 0;
 		// 先判断是否传入原始数据
@@ -383,7 +383,7 @@ public class ExportExcel {
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, 0, colsNum - 1, 0);
 					// 设置标题行高
-					ws.setRowView(0, 1200, false);
+					ws.setRowView(0, 800, false);
 
 					// 处理内标题
 					int flag = 2;
@@ -495,7 +495,7 @@ public class ExportExcel {
 			}
 		}
 		return result;
-	}	
+	}	*/
 	
 	
 	
@@ -538,7 +538,7 @@ public class ExportExcel {
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, 0, colsNum - 1, 0);
 					// 设置标题行高
-					ws.setRowView(0, 1200, false);
+					ws.setRowView(0, 800, false);
 
 					// 处理内标题
 					int flag = 2;
@@ -910,7 +910,7 @@ public class ExportExcel {
 		List<String[]> dataList = new ArrayList<String[]>();
 		dataList.add(new String[] { "1", "粤B2000", "10000.0", "警世通企业有限公司", "农业银行", "543513434354", "警世通企业有限公司", "工商银行", "1234521312","银行账户有误重新变更","batch_1" });
 		dataList.add(new String[] { "2", "粤B900xxx", "20000.0", "张三", "农业银行", "543513434354", "张绍刚", "工商银行", "1234521312","银行账户有误重新变更","batch_1" });
-		repExportExcelPreview(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
+	//	repExportExcelPreview(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
 	 
 	}
 }

@@ -207,7 +207,9 @@ String basePath = request.getContextPath();
 							}
 				    	}	   
 				    },
-					   {type:"QUERY"} 
+					   {type:"QUERY"}, 
+					   {type:"CLEAR"} 
+				    
 				  ],
 			module:"M_NOR_BATCH_ADJUST",
 			shownum:3,

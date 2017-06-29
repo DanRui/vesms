@@ -167,7 +167,6 @@ String basePath = request.getContextPath();
 					{startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"报财务时间:",type:"date",section:true}
 			        ],
 			tools:[
-					{type:"QUERY"},
 					{type:"FILE_QUERY",icon:"icon-add",title:"EXCEL文件查看",text_width:150,
 						  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
@@ -239,9 +238,11 @@ String basePath = request.getContextPath();
 											$("#iframeLoad").show();
 										});
 								  	}
-							}}
-					 
+							}},
+							{type:"QUERY"},
+							{type:"CLEAR"}
 				  ],
+				 
 			module:"M_TEST_MANAGER",
 			shownum:3,
 			debug:true   

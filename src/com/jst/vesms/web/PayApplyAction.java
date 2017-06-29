@@ -118,7 +118,7 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("view")
 	@Privilege(modelCode = "M_ADD_BATCH",prvgCode = "VIEW")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
-		String view = "ELIMINATED_APPLY.VIEW";
+		String view = "ELIMINATED_APPLY.";
 		EliminatedApply object = payApplyService.getById(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
@@ -139,13 +139,12 @@ public class PayApplyAction extends BaseAction{
 		String result = null;
 		String strids = "" ;
 		try {
-		
-			strids = ids.replaceAll("," , "|");
-		/*		String idString[] = ids.split(",");
-		 * for (int i = 0; i < idString.length; i++) {
+		//	strids = ids.replaceAll("," , "|");
+				String idString[] = ids.split(",");
+		  for (int i = 0; i < idString.length; i++) {
 				strids=strids+idString[i].concat("|");
 			}
-			strids=strids.substring(0, strids.length()-1);*/
+			strids=strids.substring(0, strids.length()-1);
 			result = payApplyService.createBatch(strids);
 			/*if(null != result) {
 				createOk = true;
@@ -227,7 +226,7 @@ public class PayApplyAction extends BaseAction{
 	public String getBatchList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, String batchNo,String toFinanceStatus,String payResStatus,String payBatchTotalAmount, String createStartDate , String createEndDate,String batchType) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String batchNo,String toFinanceStatus,String payResStatus,String payBatchTotalAmount, String createStartDate , String createEndDate,String batchType,String batchStatus) throws Exception{
 		log.debug("PayApplyAction getBatchList is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
@@ -253,6 +252,9 @@ public class PayApplyAction extends BaseAction{
 		}
 		if(StringUtil.isNotEmpty(createEndDate)) {
 			list.add(new PropertyFilter("LTD_createDate",createEndDate));
+		}
+		if(StringUtil.isNotEmpty(batchStatus)) {
+			list.add(new PropertyFilter("EQS_batchStatus",batchStatus));
 		}
 		list.add(new PropertyFilter("EQS_batchType","1"));
 		list.add(new PropertyFilter("EQS_toFinanceStatus","0"));
@@ -281,9 +283,9 @@ public class PayApplyAction extends BaseAction{
 	
 
 	
-	//正常内部批次文件预览
+	//内部批次文件预览
 	@RequestMapping("exportPreview")
-	public String exportPreview (Integer id,String batchNo,HttpServletResponse response) {
+	public String exportPreview (Integer id,String batchNo,String batchType,HttpServletResponse response) {
 		log.debug("PayApplyAction excelList is start");
 		try {
 			response.setHeader("Content-disposition", "attachment;  filename="
@@ -292,7 +294,7 @@ public class PayApplyAction extends BaseAction{
 			response.setContentType("application/vnd.ms-excel");
 			OutputStream outputStream = response.getOutputStream();
 			List<String[]> dataList = new ArrayList<String[]>();
-			dataList=payApplyService.batchExcelList(batchNo,"1",id);
+			dataList=payApplyService.batchExcelList(batchNo,"1",batchType,id);
 			ExcelProperties excelProperties=new ExcelProperties();
 			excelProperties.setColsHeader(new String[] { "序号", "车主名称", "车牌号码", "车辆类型", "燃油类型及排放标准", "车架号", "提前淘汰时间(天)", "报废交售日期","注销类别","财政供养信息","开户银行","开户银行账号","补贴金额"});
 			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴车辆信息审批表(预览)");
@@ -324,19 +326,6 @@ public class PayApplyAction extends BaseAction{
 	 * 
 	 * */
 	
-	// 去重报批次查看页面
-	@RequestMapping("repBatchView")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
-	public ModelAndView repBatchView(@RequestParam("id")Integer id,@RequestParam(value = "type")String type) throws Exception {
-		log.debug("payApplyAction repBatchView is start");
-		String view = "PAY_APPLY.REP_VIEW";
-		BatchMain object =  payApplyService.batchNoView(id);
-		log.debug("payApplyAction repBatchView is end");
-		ModelAndView mv = new ModelAndView(getReturnPage(view));
-		mv.addObject("v", object);			
-		return mv;
-	}
-	
 	
 	
 	// 去批次查看页面
@@ -354,8 +343,21 @@ public class PayApplyAction extends BaseAction{
 	
 	
 	
+	// 去重报批次查看页面
+	@RequestMapping("repBatchView")
+	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	public ModelAndView repBatchView(@RequestParam("id")Integer id,@RequestParam(value = "type")String type) throws Exception {
+		log.debug("payApplyAction repBatchView is start");
+		String view = "PAY_APPLY.REP_VIEW";
+		BatchMain object =  payApplyService.batchNoView(id);
+		log.debug("payApplyAction repBatchView is end");
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		mv.addObject("v", object);			
+		return mv;
+	}
 	
 	
+
 	//查询该批次内业务数据	
 	@RequestMapping("batchApplyList")
 	@ResponseBody
@@ -707,17 +709,18 @@ public class PayApplyAction extends BaseAction{
 		//正常报财务批次导出(加密)
 		@RequestMapping(value = "confirmBatchExcel", produces={"text/html;charset=UTF-8;","application/json;"})
 		@ResponseBody
-		public String confirmBatchExcel(@RequestParam("id")Integer id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,HttpServletResponse response,HttpServletRequest request) {
+		public String confirmBatchExcel(@RequestParam("id")Integer id,@RequestParam("batchNo")String batchNo,@RequestParam("batchType")String batchType,HttpServletResponse response,HttpServletRequest request) {
 			log.debug("PayApplyAction confirmBatchPreview is start");
 			int count = 0;
 			boolean isOk = false;
 			String resString = "";
 			 int num = 0;//定义变量
+			 String password="";
 		     Random ne=new Random();//实例化一个random的对象
 			try {
 				
 				String confirmrResult = payApplyService.confirmBatch(id.toString());
-				String str[]=confirmrResult.split("|");
+				String str[]=confirmrResult.split("\\|");
 				String str1 = "" ;
 				String str2 = "" ;
 				for (int i = 0; i < str.length; i++) {
@@ -730,7 +733,7 @@ public class PayApplyAction extends BaseAction{
 				} else {
 					// 设置随机数加密
 				     num=ne.nextInt(9999-1000+1)+1000;//为变量赋随机值1000-9999
-					String password = num+"";
+					password = num+"";
 					
 					// String contextPath = request.getSession().getServletContext().getRealPath("/");
 				//	String excelPath = PropertyUtil.getPropertyValue("excelPath");
@@ -772,7 +775,7 @@ public class PayApplyAction extends BaseAction{
 	            	File savePath = new File("D:" + File.separator + "preview"+ File.separator + "view_"+batchNo+".xls");
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream = new FileOutputStream(savePath);
-	            	List<String[]> dataList=payApplyService.batchExcelList(batchNo,"1",id);
+	            	List<String[]> dataList=payApplyService.batchExcelList(batchNo,"1",batchType,id);
 	    			excelProperties.setColsHeader(new String[] { "序号", "车主名称", "车牌号码", "车辆类型", "燃油类型及排放标准", "车架号", "提前淘汰时间(天)", "报废交售日期","注销类别","财政供养信息","开户银行","开户银行账号","补贴金额"});
 	    			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴车辆信息审批表(预览)");
 	    			int exportPreview = ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 5,20,10,10,15,15,10,15,8,15,15,20,10 }, dataList, outputStream);
@@ -783,22 +786,22 @@ public class PayApplyAction extends BaseAction{
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream1 = new FileOutputStream(savePath1);
 	            	ExcelProperties excelProperties1=new ExcelProperties();
-	            	List<String[]> dataList1=payApplyService.batchExcelList(batchNo,"2",id);
+	            	List<String[]> dataList1=payApplyService.batchExcelList(batchNo,"2",batchType,id);
 					excelProperties1.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)");
 					excelProperties1.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
 					//exportPreview(id, batchNo, response);
 					int exportResult = ExportExcel.exportExcelInWebs(excelProperties1, "sss", new int[] { 5,10,15,15,25,15,15,45 }, dataList1, outputStream1, password);
-					
-					
 					// 调用pdf 
 					PDFUtil.generatePDF("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "excel"+ "/" + "batch_"+batchNo+".pdf", dataList1);
 					
 					outputStream.close();
 					outputStream1.close();
-					if (exportResult !=1 && exportPreview!=1 ) {
+					if (exportResult !=1 ) {
 						isOk = false;
 						resString = "批次文件生成失败！";
-					} else {
+					}else if (exportPreview!=1) {
+						resString = "预览文件生成失败！";
+					}else {
 						// 后台调用导出存储过程
 						payApplyService.batchExport(id, "D:/excel/" + "batch_"+batchNo+".xls"+","+"D:/excel/" + "batch_"+batchNo+".pdf,"+"D:/preview/" + "view_"+batchNo+".xls",password);
 						isOk = true;
@@ -1094,7 +1097,7 @@ public class PayApplyAction extends BaseAction{
 	
 	
 	//导出重报批次预览
-	@RequestMapping("repBatchPreview")
+/*	@RequestMapping("repBatchPreview")
 	@ResponseBody
 	public String repBatchPreview (Integer id,String batchNo,HttpServletResponse response) {
 		log.debug("PayApplyAction excelList is start");
@@ -1152,15 +1155,6 @@ public class PayApplyAction extends BaseAction{
 						thisType,thisToFinanceNo};
 				dataList.add(strings);
 			}
-			
-			/*for (int i = 0; i < list.size(); i++) {
-				EliminatedApply apply = list.get(i);
-				count++;
-				String[] strings = new String[]{count+"", apply.getVehiclePlateNum().toString(),apply.getSubsidiesStandard().toString(),apply.getVehicleOwner().toString(),
-						};
-				dataList.add(strings);
-			}*/
-			
 			ExcelProperties excelProperties=new ExcelProperties();
 			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表(预览)");
 			excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","报送批号" });
@@ -1171,7 +1165,7 @@ public class PayApplyAction extends BaseAction{
 		log.debug("PayApplyAction excelList is End");
 		return null;
 	}
-	
+	*/
 	
 	
 
@@ -1181,7 +1175,6 @@ public class PayApplyAction extends BaseAction{
 	 *	重报批次报财务 查询
 	 */
 	@RequestMapping("repBatchAdjust")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
 	public String repBatchAdjust(@RequestParam(value="page", defaultValue="1")int pageNo, 
@@ -1665,17 +1658,18 @@ public class PayApplyAction extends BaseAction{
 		//重报报财务批次导出(加密)
 		@RequestMapping("confirmRepBatchExcel")
 		@ResponseBody
-		public String confirmRepBatchExcel(@RequestParam("id")Integer id,@RequestParam("toFinanceNo")Integer toFinanceNo,@RequestParam("batchNo")String batchNo,HttpServletResponse response,HttpServletRequest request) {
+		public String confirmRepBatchExcel(@RequestParam("id")Integer id,@RequestParam("batchNo")String batchNo,@RequestParam("batchType")String batchType,HttpServletResponse response,HttpServletRequest request) {
 			log.debug("PayApplyAction confirmRepBatchExcel is start");
 			int count = 0;
 			boolean isOk = false;
 			String resString = "";
 			int num = 0;
+			String password ="";
 			Random ne = new Random();
 			try {
 				// 报财务确认
 				String confirmResult = payApplyService.confirmRepBatch(id.toString());
-				String str[]=confirmResult.split("|");
+				String str[]=confirmResult.split("\\|");
 				String str1 = "" ;
 				String str2 = "" ;
 				for (int i = 0; i < str.length; i++) {
@@ -1686,9 +1680,9 @@ public class PayApplyAction extends BaseAction{
 					isOk = false;
 					resString = str2;
 				} else {
-					// 设置随机数加密
-				     num=ne.nextInt(9999-1000+1)+1000;//为变量赋随机值1000-9999
-					String password = num+"";
+					// 设置4位数随机密码加密
+				    num=ne.nextInt(9999-1000+1)+1000;//为变量赋随机值1000-9999
+					password = num+"";
 					BatchMain batchMain = (BatchMain)payApplyService.get(id);
 					String excelPath = "D:/repExcel";
 					String preview = "D:/preview";
@@ -1755,16 +1749,34 @@ public class PayApplyAction extends BaseAction{
 					excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表(第"+batchMain.getToFinanceNo()+"批)");
 					excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","报送批号" });
 					int exportResult = ExportExcel.repExportExcelToFinance(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream,password);
+					
+					
+					// 调用pdf
 					PDFUtil.repGeneratePDF("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表((第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "repExcel"+ "/" + "batch_"+batchNo+".pdf", dataList);
+					
+					
+					// 导出预览excel文件
+					ExcelProperties excelProperties1=new ExcelProperties();
+	            	File savePath1 = new File("D:" + File.separator + "preview"+ File.separator + "view_"+batchNo+".xls");
+	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
+	            	OutputStream outputStream1 = new FileOutputStream(savePath1);
+	            	List<String[]> dataList1=payApplyService.batchExcelList(batchNo,"1",batchType,id);
+	    			excelProperties1.setColsHeader(new String[] { "序号", "车主名称", "车牌号码", "车辆类型", "燃油类型及排放标准", "车架号", "提前淘汰时间(天)", "报废交售日期","注销类别","财政供养信息","开户银行","开户银行账号","补贴金额"});
+	    			excelProperties1.setHeader("深圳市老旧车提前淘汰奖励补贴车辆信息审批表(预览)");
+	    			int exportPreview = ExportExcel.exportExcelInWeb(excelProperties1, "ss", new int[] { 5,20,10,10,15,15,10,15,8,15,15,20,10 }, dataList1, outputStream1);
+					
 					outputStream.close();
+					outputStream1.close();
 					if (exportResult != 1) {
 						isOk = false;
-						resString = "批次文件生成失败！";
-					} else {
+						resString = "报财务报表文件生成失败！";
+					} else if (exportPreview!= 1) {
+						resString = "预览文件生成失败";
+					}else {
 						// 后台调用导出存储过程
-						payApplyService.batchRepExport(id, "D:/repExcel/" + "batch_"+batchNo+".xls"+","+"D:" + "/" + "repExcel/" + "batch_"+batchNo+".pdf",password);
+						payApplyService.batchRepExport(id, "D:/repExcel/" + "batch_"+batchNo+".xls"+","+"D:/repExcel/" + "batch_"+batchNo+".pdf"+","+"D:/preview/"+"view_"+batchNo+".xls",password);
 						isOk = true;
-						resString = "D:/repExcel/batch_"+batchNo+".xls"+","+"D:/repExcel/batch_"+batchNo+".pdf";
+						resString = "D:/repExcel/batch_"+batchNo+".xls"+","+"D:/repExcel/batch_"+batchNo+".pdf"+","+"D:/preview/"+"view_"+batchNo+".xls";
 					}
 				}
 			} catch (Exception e) {

@@ -51,8 +51,8 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.expRecentDate) {
-						return getNowFormatDate(new Date(row.expRecentDate.time))
+					if (row.createDate) {
+						return getNowFormatDate(new Date(row.createDate.time))
 					} else {
 						return "";
 					}
@@ -134,7 +134,7 @@ String basePath = request.getContextPath();
 		}).datagrid("initSearch",{
 			columns:[{field:"batchNo",title:"重报内部批次号：",type:"text"},
 			         {field:"batchStatus",title:"批次状态：",type:"combobox", url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
-					 {startField:"batchCreateStartDate",endField:"batchCreateEndDate",title:"重报批次生成时间:",type:"date",section:true}
+					 {startField:"createStartDate",endField:"createEndDate",title:"重报批次生成时间:",type:"date",section:true}
 			        ],
 			tools:[{type:"BATCH_PREVIEW",icon:"icon-add",title:"文件预览",text_width:100,
 		     	  fn:function() {
@@ -157,12 +157,13 @@ String basePath = request.getContextPath();
 										height : 200,
 										param: {reset:false,save:false},
 										maximizable : true,
-										href : basePath+"/payApply/toExportRepBatch.do?id="+selectedRows[0].id
+										href : basePath+"/payApply/toExcelPreview.do?id="+selectedRows[0].id
 								   });
 						}
 				 	  }
 			       },			    
-				   {type:"QUERY"}
+				   {type:"QUERY"},
+				   {type:"CLEAR"}
 				  ],
 			module:"M_TEST_MANAGER",
 			shownum:3,

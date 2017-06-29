@@ -91,7 +91,7 @@ String basePath = request.getContextPath();
 						return "";
 					}
 				}
-			},{
+			},/*{
 				field : "isExported",
 				title : "导出状态",
 				width : "10%",
@@ -113,7 +113,7 @@ String basePath = request.getContextPath();
 						return "color:green";
 					}
 				}
-			},{
+			},*/{
 				field : "payBussCount",
 				title : "业务单数",
 				width : "7%",
@@ -163,7 +163,7 @@ String basePath = request.getContextPath();
 			columns:[{field:"toFinanceNo",title:"报送序号：",type:"text"},
 			         {field:"batchNo",title:"内部批次号：",type:"text"},
 					 {field:"payBatchTotalAmount",title:"拨付总金额（元）:",type:"text"},
-					 {field:"isExported",title:"导出状态：",type:"combobox", url:basePath+"/data/batchExpStatus.json", text:"name", value:"value"},
+				  // {field:"isExported",title:"导出状态：",type:"combobox", url:basePath+"/data/batchExpStatus.json", text:"name", value:"value"},
 					 {startField:"createStartDate",endField:"createEndDate",title:"批次生成时间:",type:"date",section:true},
 					 {startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"报财务时间:",type:"date",section:true}
 			        ],

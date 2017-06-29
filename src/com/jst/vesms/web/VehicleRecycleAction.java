@@ -37,12 +37,12 @@ import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.DateUtil;
-import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
 import com.jst.vesms.model.VehicleRecycle;
 import com.jst.vesms.service.VehicleRecycleService;
+import com.jst.vesms.util.EncryptUtils;
 
 @RequestMapping("/vehicleRecycle")
 @Controller
@@ -84,7 +84,7 @@ public class VehicleRecycleAction extends BaseAction {
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
 			// 加密车架号
 			String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-			list.add(new PropertyFilter("EQS_vehicleIdentifyNo", EncryptUtil.encryptDES(des_key, vehicleIdentifyNo)));
+			list.add(new PropertyFilter("EQS_vehicleIdentifyNo", EncryptUtils.encryptDes(des_key, vehicleIdentifyNo)));
 		}
 		if(StringUtil.isNotEmpty(recycleStartDate)) {
 			list.add(new PropertyFilter("GTD_recycleDate", recycleStartDate));
