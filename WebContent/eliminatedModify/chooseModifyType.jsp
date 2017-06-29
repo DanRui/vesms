@@ -130,7 +130,7 @@
 	        		 			$("#common-dialog").dialog("close");
 	        		 			
 	        		 			$("#editData-apply-list #editData-apply-grid").datagrid("load");
-		        		 		}
+		        		 	}
 						}
 						
 					});

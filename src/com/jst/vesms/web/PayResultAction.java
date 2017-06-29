@@ -17,13 +17,12 @@ import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
 import com.jst.common.utils.page.Page;
-import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
-import com.jst.vesms.model.BatchMain;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.PayResultService;
+import com.jst.vesms.util.EncryptUtils;
 
 
 @RequestMapping("/payResult")
@@ -56,7 +55,10 @@ public class PayResultAction extends BaseAction{
 		page.setOrder(order);
 		page.setOrderBy(orderBy);
 		String returnStr = "";
-		StringBuffer sb = new StringBuffer("select t.*,m.to_Finance_No from t_eliminated_apply t inner join t_batch_main m on t.batch_no=m.batch_no  where 1 = 1 ");
+		StringBuffer sb = new StringBuffer("select t.id,m.to_finance_No,t.batch_No,t.apply_no,t.vehicle_Plate_Num,t.vehicle_Plate_Type,t.vehicle_Type,");
+		sb.append(" t.vehicle_identify_no,t.vehicle_Owner,t.subsidies_Money,t.apply_Time");
+		sb.append(" from t_eliminated_apply t ");
+		sb.append("inner join t_batch_main m on t.batch_no=m.batch_no  where 1 = 1 ");
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
 			sb.append("and t.vehicle_plate_num like '%").append(vehiclePlateNum).append("%' ");
 		}
@@ -65,7 +67,7 @@ public class PayResultAction extends BaseAction{
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
 			String key = PropertyUtil.getPropertyValue("DES_KEY");
-			vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
+			vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
 			sb.append("and t.vehicle_identify_no = '").append(vehicleIdentifyNo).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleType)) {
@@ -159,7 +161,7 @@ public class PayResultAction extends BaseAction{
 	public String getRepBatchList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum,String vehicleType, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String repeatedBatchNo) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum,String vehicleType, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String repeatedBatchNo,String toFinanceNo) throws Exception{
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -167,7 +169,10 @@ public class PayResultAction extends BaseAction{
 		page.setOrder(order);
 		page.setOrderBy(orderBy);
 		String returnStr = "";
-		StringBuffer sb = new StringBuffer("select * from t_eliminated_apply t where 1 = 1 ");
+		StringBuffer sb = new StringBuffer("select t.id,m.to_finance_No,t.repeated_batch_No,t.apply_no,t.vehicle_Plate_Num,t.vehicle_Plate_Type,t.vehicle_Type,");
+		sb.append(" t.vehicle_identify_no,t.vehicle_Owner,t.subsidies_Money,t.apply_Time");
+		sb.append(" from t_eliminated_apply t ");
+		sb.append("inner join t_batch_main m on t.batch_no=m.batch_no  where 1 = 1 ");
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
 			sb.append("and t.vehicle_plate_num like '%").append(vehiclePlateNum).append("%' ");
 		}
@@ -176,11 +181,8 @@ public class PayResultAction extends BaseAction{
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
 			String key = PropertyUtil.getPropertyValue("DES_KEY");
-			vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
+			vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
 			sb.append("and t.vehicle_identify_no = '").append(vehicleIdentifyNo).append("' ");
-		}
-		if(StringUtil.isNotEmpty(repeatedBatchNo)) {
-			sb.append("and t.repeated_Batch_No = '").append(repeatedBatchNo).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleType)) {
 			sb.append("and t.vehicle_type = '").append(vehicleType).append("' ");
@@ -191,9 +193,18 @@ public class PayResultAction extends BaseAction{
 		if(StringUtil.isNotEmpty(applyNo)) {
 			sb.append("and t.apply_no = '").append(applyNo).append("' ");
 		}
-		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and t.repeated_batch_no is not null ");
+		if(StringUtil.isNotEmpty(repeatedBatchNo)) {
+			sb.append("and t.repeated_batch_No = '").append(repeatedBatchNo).append("' ");
+		}
+		if(StringUtil.isNotEmpty(vehicleOwner)) {
+			sb.append("and t.vehicleOwner = '").append(vehicleOwner).append("' ");
+		}
+		if(StringUtil.isNotEmpty(toFinanceNo)) {
+			sb.append("and m.toFinanceNo = '").append(toFinanceNo).append("' ");
+		}
+		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and repeated_batch_no is not null");
 		try {
-			page = payResultService.getPageBySql(page, sb.toString());
+			page = payResultService.getRepPageSql(page, sb.toString());
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("PayResultAction list is Error:" + e, e);

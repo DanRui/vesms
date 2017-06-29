@@ -37,4 +37,6 @@ public interface PayResultService extends BaseService{
 	Page filterBatchPage(Page page)throws Exception;
 	
 	public Page getPageSql(Page page,String sql) throws Exception ;
+	
+	public Page getRepPageSql(Page page,String sql) throws Exception ;
 }

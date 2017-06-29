@@ -13,7 +13,7 @@ public class PayResult  implements Serializable {
 	// 主键ID
 	private Integer id;
 	// 报送序号
-	private String toFinanceNo;
+	private Integer toFinanceNo;
 	// 批次号
 	private String batchNo; 
 	// 业务单号
@@ -32,17 +32,21 @@ public class PayResult  implements Serializable {
 	private Double subsidiesMoney;
 	// 受理时间
 	private Date applyTime;
+	//重报批次号
+	private String repeatedBatchNo;
 	
+	
+
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getToFinanceNo() {
+	public Integer getToFinanceNo() {
 		return toFinanceNo;
 	}
-	public void setToFinanceNo(String toFinanceNo) {
+	public void setToFinanceNo(Integer toFinanceNo) {
 		this.toFinanceNo = toFinanceNo;
 	}
 	public String getBatchNo() {
@@ -99,7 +103,12 @@ public class PayResult  implements Serializable {
 	public void setApplyTime(Date applyTime) {
 		this.applyTime = applyTime;
 	}
-
+	public String getRepeatedBatchNo() {
+		return repeatedBatchNo;
+	}
+	public void setRepeatedBatchNo(String repeatedBatchNo) {
+		this.repeatedBatchNo = repeatedBatchNo;
+	}
 	
 	
 	

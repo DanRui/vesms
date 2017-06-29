@@ -2,7 +2,6 @@ package com.jst.vesms.service.impl;
 
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,24 +13,19 @@ import oracle.jdbc.OracleTypes;
 
 import org.springframework.stereotype.Service;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
-import com.jst.util.EncryptUtil;
 import com.jst.util.PropertyUtil;
-import com.jst.util.StringUtil;
 import com.jst.vesms.constant.SysConstant;
 import com.jst.vesms.dao.ICallDao;
 import com.jst.vesms.dao.IPayApplyDao;
-import com.jst.vesms.dao.impl.CallDao;
-import com.jst.vesms.dao.impl.EliminatedApplyDao;
-import com.jst.vesms.dao.impl.PayApplyDao;
 import com.jst.vesms.model.BatchMain;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.EliminatedApplyService;
 import com.jst.vesms.service.PayApplyService;
+import com.jst.vesms.util.EncryptUtils;
 
 
 @Service("payApplyServiceImpl")
@@ -81,7 +75,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 	@Override
 	public Page getApplyPage(Page page, List<PropertyFilter> list) {
 		try {
-			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
 			page = eliminatedApplyService.getPageExtra(page);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -461,8 +455,8 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 					count++;
 					// 车架号解密
 					String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-					vehicleIdentifyNo=EncryptUtil.decryptDES(des_key, apply.getVehicleIdentifyNo());			
-					bankAccountNo=EncryptUtil.decryptDES(des_key, apply.getBankAccountNo());
+					vehicleIdentifyNo=EncryptUtils.decryptDes(des_key, apply.getVehicleIdentifyNo());			
+					bankAccountNo=EncryptUtils.decryptDes(des_key, apply.getBankAccountNo());
 					// 获得号牌种类名称(从字典表获取)
 					String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(apply.getVehiclePlateType());
 					apply.setVehiclePlateTypeName(vehiclePlateTypeName);
@@ -478,7 +472,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 					String bankAccountNo = "";
 					count++;
 					String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-					bankAccountNo = EncryptUtil.decryptDES(des_key, apply.getBankAccountNo());
+					bankAccountNo = EncryptUtils.decryptDes(des_key, apply.getBankAccountNo());
 					String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999",apply.getBankCode(),apply.getVehicleOwner().toString(),
 							bankAccountNo,apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
 					dataList.add(strings);
@@ -493,8 +487,8 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 				count++;
 				// 车架号解密
 				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-				vehicleIdentifyNo=EncryptUtil.decryptDES(des_key, apply.getVehicleIdentifyNo());			
-				bankAccountNo=EncryptUtil.decryptDES(des_key, apply.getBankAccountNo());
+				vehicleIdentifyNo=EncryptUtils.decryptDes(des_key, apply.getVehicleIdentifyNo());			
+				bankAccountNo=EncryptUtils.decryptDes(des_key, apply.getBankAccountNo());
 				// 获得号牌种类名称(从字典表获取)
 				String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(apply.getVehiclePlateType());
 				apply.setVehiclePlateTypeName(vehiclePlateTypeName);

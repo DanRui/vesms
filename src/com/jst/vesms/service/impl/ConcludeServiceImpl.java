@@ -75,7 +75,7 @@ implements ConcludeService{
 	@Override
 	public Page getApplyPage(Page page, List<PropertyFilter> list) {
 		try {
-			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
 			page = eliminatedApplyService.getPageExtra(page);
 		} catch (Exception e) {
 			e.printStackTrace();

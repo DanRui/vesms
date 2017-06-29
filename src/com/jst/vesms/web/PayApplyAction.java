@@ -36,6 +36,7 @@ import com.jst.vesms.model.BatchMain;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.ExportBatchService;
 import com.jst.vesms.service.PayApplyService;
+import com.jst.vesms.util.EncryptUtils;
 import com.jst.vesms.util.excel.ExcelProperties;
 import com.jst.vesms.util.excel.exp.ExportExcel;
 
@@ -81,7 +82,7 @@ public class PayApplyAction extends BaseAction{
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
 			String key = PropertyUtil.getPropertyValue("DES_KEY");
-			vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
+			vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
 			sb.append("and t.vehicle_identify_no = '").append(vehicleIdentifyNo).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleType)) {
@@ -303,7 +304,7 @@ public class PayApplyAction extends BaseAction{
 			log.error("PayApplyAction excelList is Error:"+e, e);
 		}		
 		log.debug("PayApplyAction excelList is End");
-		return "";
+		return null;
 	}
 	
 	
@@ -754,7 +755,7 @@ public class PayApplyAction extends BaseAction{
 						EliminatedApply apply = list.get(i);
 						count++;
 						String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-						apply.setBankAccountNo(EncryptUtil.decryptDES(des_key, apply.getBankAccountNo()));
+						apply.setBankAccountNo(EncryptUtils.decryptDes(des_key, apply.getBankAccountNo()));
 						String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999","003",apply.getVehicleOwner().toString(),
 								apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
 						dataList.add(strings);
@@ -935,7 +936,7 @@ public class PayApplyAction extends BaseAction{
 			}
 			if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
 				String key = PropertyUtil.getPropertyValue("DES_KEY");
-				vehicleIdentifyNo = EncryptUtil.encryptDES(key, vehicleIdentifyNo);
+				vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
 				sb.append("and t.vehicle_identify_no = '").append(vehicleIdentifyNo).append("' ");
 			}
 			if(StringUtil.isNotEmpty(vehicleType)) {
@@ -1131,7 +1132,7 @@ public class PayApplyAction extends BaseAction{
 				//原开户账户
 				String lastAccountNo = (String)object[8];	
 				String key = PropertyUtil.getPropertyValue("DES_KEY");
-				lastAccountNo = EncryptUtil.decryptDES(key, lastAccountNo);
+				lastAccountNo = EncryptUtils.decryptDes(key, lastAccountNo);
 				//变更后补贴对象
 				String thisBankName = (String)object[10];
 				//变更后银行
@@ -1139,7 +1140,7 @@ public class PayApplyAction extends BaseAction{
 				//变更后银行账号
 				String thisAccountNo = (String)object[11];
 				String key1 = PropertyUtil.getPropertyValue("DES_KEY");
-				thisAccountNo = EncryptUtil.decryptDES(key1, thisAccountNo);
+				thisAccountNo = EncryptUtils.decryptDes(key1, thisAccountNo);
 				//变更内容
 				String thisType = (String)object[12];
 				if(thisType.equals("1")){
@@ -1147,7 +1148,7 @@ public class PayApplyAction extends BaseAction{
 				}else if(thisType.equals("2")){
 					thisType="补贴账户错误修正";
 				}
-			//	thisType = EncryptUtil.decryptDES(key, thisType);
+			//	thisType = EncryptUtils.decryptDes(key, thisType);
 				//当前报送序号
 				String thisToFinanceNo = (String)object[2];
 				String[] strings = new String[] {count+"",vehiclePlateNum,subsidiesMoney,
@@ -1711,7 +1712,7 @@ public class PayApplyAction extends BaseAction{
 						//原开户账户
 						String lastAccountNo = (String)object[8];	
 						String key = PropertyUtil.getPropertyValue("DES_KEY");
-						lastAccountNo = EncryptUtil.decryptDES(key, lastAccountNo);
+						lastAccountNo = EncryptUtils.decryptDes(key, lastAccountNo);
 						//变更后补贴对象
 						String thisBankName = (String)object[10];
 						//变更后银行
@@ -1719,7 +1720,7 @@ public class PayApplyAction extends BaseAction{
 						//变更后银行账号
 						String thisAccountNo = (String)object[11];
 						String key1 = PropertyUtil.getPropertyValue("DES_KEY");
-						thisAccountNo = EncryptUtil.decryptDES(key1, thisAccountNo);
+						thisAccountNo = EncryptUtils.decryptDes(key1, thisAccountNo);
 						//变更后补贴对象
 						//变更内容
 						String thisType = (String)object[12];

@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+	String basePath = request.getContextPath();
+%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page isELIgnored="false"%>
@@ -176,7 +179,7 @@
 					<td class="view_table_left" style="width:110px">机动车注销证明：</td>
 					<td class="view_table_right" colspan="2">
 						<input id="vehicleCancelProof" class="easyui-filebox" name="vehicleCancelProof" data-options="editable:false,required:false,buttonText:'请选择'"/>
-						<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoVehicleCancelProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
 					<td class="view_table_right" colspan="3">
@@ -197,7 +200,7 @@
 					<td class="view_table_left" style="width:120px">银行卡：</td>
 					<td class="view_table_right" colspan="2">
 						<input id="bankCard" class="easyui-filebox" name="bankCard" data-options="editable:false,required:false,buttonText:'请选择'"/>
-						<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoBankCardUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
 					<td class="view_table_right" colspan="3">
@@ -219,7 +222,7 @@
 					<td class="view_table_right" colspan="2">
 						<input type="file" name="vehicleOwnerProof" multiple="multiple" />
 						<!-- <input id="vehicleOwnerProof" class="easyui-filebox" name="vehicleOwnerProof" data-options="editable:false,required:true,buttonText:'请选择'"/> -->
-						<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoVehicleOwnerProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
 					<td class="view_table_right" colspan="3">
@@ -241,7 +244,7 @@
 					<td class="view_table_left" style="width:120px">代理委托书：</td>
 					<td class="view_table_right" colspan="2">
 						<input id="agentProxy" class="easyui-filebox" name="agentProxy" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
-						<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoAgentProxyProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
 					<td class="view_table_right" colspan="3">
@@ -262,7 +265,7 @@
 					<td class="view_table_left" style="width:110px">代理人身份证：</td>
 					<td class="view_table_right" colspan="2">
 						<input id="agentProof" class="easyui-filebox" name="agentProof" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
-						<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoAgentProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
 					<td class="view_table_right" colspan="3">
@@ -285,7 +288,7 @@
 					<td class="view_table_left" style="width:120px">非财政供养单位证明：</td>
 					<td class="view_table_right" colspan="2">
 						<input id="noFinanceProvide" class="easyui-filebox" name="noFinanceProvide" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
-						<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoNoFinanceProvideUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
 					<td class="view_table_right" colspan="3">
@@ -307,7 +310,7 @@
 					<td class="view_table_right" colspan="2">
 						<input type="file" name="openAccPromit" multiple="multiple" />
 						<!-- <input id="openAccPromit" class="easyui-filebox" name="openAccPromit" data-options="editable:false,required:true,width:141,buttonText:'请选择'"/> -->
-						<!-- <font color="red">&nbsp;*&nbsp;</font> -->
+						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoOpenAccPromitUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
 					<td class="view_table_right" colspan="3">
@@ -343,7 +346,7 @@
 		<script type="text/javascript">
 		
 			$(function() {
-				var basePath = $("#basePath").val();
+				//var basePath = $("#basePath").val();
 				
 				// 默认选择结束修正
 				$("input[type='radio'][name='modifyResult'][value='1']").attr("checked", true);
@@ -386,21 +389,13 @@
 				   var isPersonal = '${v.isPersonal}';
 				   var isProxy = '${v.isProxy}';
 				   
-				   if (isPersonal != "Y" && isPersonal != "N") {
-					   alert("请选择车主类型！");
-					   return false;
-				   }
-				   
-				   if (isProxy != "Y" && isProxy != "N") {
-					   alert("请选择办理类型！");
-					   return false;
-				   }
-				   
 				   //文件框页面校验，必填
 				   var ifValid = $("#form-modify-apply-upload form").form("enableValidation").form("validate");
 				   
 				   if (ifValid) {
 					
+					   
+					   
 					   var url =  $("#form-modify-apply-upload").attr("action")+"?isPersonal="+isPersonal+"&isProxy="+isProxy;
 					   $("#form-modify-apply-upload").form({
 		        			url  : url,
@@ -700,7 +695,53 @@
 				
 			});
 				
-		
+			function checkAttachments() {
+				var isOk = true;
+				var isPersonal = '${v.isPersonal}';
+			    var isProxy = '${v.isProxy}';
+				
+				// 报废回收证明
+				if ($("input[name='callbackProofFile']").val() == "") {
+					isOk = false;
+				}
+				
+				// 机动车注销证明
+				if ($("input[name='vehicleCancelProofFiles']").val() == "") {
+					isOk = false;
+				}
+				// 车主身份证明
+				if ($("input[name='vehicleOwnerProofFiles']").val() == "") {
+					isOk = false;
+				}
+				// 银行卡
+				if ($("input[name='bankCardFiles']").val() == "") {
+					isOk = false;
+				}
+				// 银行卡
+				/* if ($("input[name='bankCardFiles']").val() == "") {
+					isOk = false;
+				} */
+				// 企业需要非财政供养单位证明、开户许可证
+				if (isPersonal == 'N') {
+					if ($("input[name='noFinanceProvideFiles']").val() == "") {
+						isOk = false;
+					}
+					if ($("input[name='openAccPromitFiles']").val() == "") {
+						isOk = false;
+					}
+				}
+				// 代理需要代理委托书、代理人身份证
+				if (isProxy == "N") {
+					if ($("input[name='agentProxyFiles']").val() == "") {
+						isOk = false;
+					}
+					if ($("input[name='agentProofFiles']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				return isOk;
+			}
 		
 		</script>
 		

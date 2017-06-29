@@ -34,6 +34,9 @@ String basePath = request.getContextPath();
 				 $("#confirmId").form("submit",{
 						url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 						success : function(data) {
+							$.ajaxSetup({  
+							    async : false  
+							});  
 							Messager.alert({
 								type : "info",
 								title : "提示",

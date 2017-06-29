@@ -1,6 +1,9 @@
 package com.jst.vesms.service.impl;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,16 +16,22 @@ import org.springframework.stereotype.Service;
 
 import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.hibernate.PropertyFilter;
+import com.jst.common.model.SysDict;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.common.utils.string.StringUtil;
+import com.jst.util.PropertyUtil;
+import com.jst.vesms.common.CacheRead;
+import com.jst.vesms.constant.SysConstant;
 import com.jst.vesms.dao.ICallDao;
 import com.jst.vesms.dao.IEliminatedApplyDao;
 import com.jst.vesms.dao.IPayResultDao;
 import com.jst.vesms.model.BatchMain;
 import com.jst.vesms.model.EliminatedApply;
+import com.jst.vesms.model.PayResult;
 import com.jst.vesms.service.EliminatedApplyService;
 import com.jst.vesms.service.PayResultService;
+import com.jst.vesms.util.EncryptUtils;
 
 
 @Service("payResultServiceImpl")
@@ -99,7 +108,7 @@ implements PayResultService{
 	public Page getApplyPage(Page page, List<PropertyFilter> list) {
 		// TODO Auto-generated method stub
 		try {
-			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName");
+			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
 			page = eliminatedApplyService.getPageExtra(page);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,33 +148,160 @@ implements PayResultService{
 
 	// 正常业务拨付结果标记
 	public Page getPageSql(Page page,String sql) throws Exception {
-/*		StringBuffer sb = new StringBuffer();
-		sb.append("select t.*,m.to_Finance_No from t_eliminated_apply t inner join ");
-		sb.append(" t_batch_main m on t.batch_no=m.batch_no  where 1 = 1");
-		sb.append(" and t.vehicle_plate_num like '%vehiclePlateNum%' and t.vehicle_plate_type = 'vehiclePlateType'");
-		sb.append(" and t.vehicle_identify_no = 'vehicleIdentifyNo' and t.vehicle_type = 'vehicleType' ");
-		sb.append(" and t.vehicle_owner like '%vehicleOwner%'  and t.apply_no = 'applyNo' ");
-		sb.append("and t.batch_no = 'batchNo' and t.vehicleOwner = 'vehicleOwner'");
-		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' ");
-		sb.append("and t.batch_no is not null and repeated_batch_no is null");*/
-	
-		List<Object[]> list = eliminatedApplyDao.executeSql(sql);
-		if (StringUtil.isEmpty(sql)) {
-		//	return this.getPageExtra(page);
-		} else {
-			List list1 = eliminatedApplyDao.getListBySql(sql, null, page);
-			long count = eliminatedApplyDao.getListCounter("select count(*) from (" + sql + ") ");
+			List<PayResult> list2 = new ArrayList<PayResult>();
+			List list = payResultDao.getTableList(sql, page);
+			long count = payResultDao.getListCounter("select count(*) from (" + sql + ")");
 			if (null != list && list.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					Object[] objs = (Object[]) list.get(i);
+					PayResult payResult = new PayResult();
+					
+					BigDecimal idBigDecimal = (BigDecimal)objs[0];
+					Integer id = idBigDecimal.intValue();
+					payResult.setId(id);
+					
+					BigDecimal toFinanceNoBigDecimal = (BigDecimal)objs[1];
+					Integer toFinanceNo = toFinanceNoBigDecimal.intValue();
+					payResult.setToFinanceNo(toFinanceNo);
+					
+					String batchNo = (String) objs[2];
+					payResult.setBatchNo(batchNo);
+					
+					String applyNo = (String) objs[3];
+					payResult.setApplyNo(applyNo);
+					
+					String vehiclePlateNum = (String) objs[4];
+					payResult.setVehiclePlateNum(vehiclePlateNum);
+					
+					// 号牌种类
+					String vehiclePlateType = (String) objs[5];
+					if (StringUtil.isNotEmpty(vehiclePlateType)) {
+						String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(vehiclePlateType);
+						if (null == vehiclePlateTypeName) {
+							SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
+							if (null != sysDictVehiclePlateType) {
+								vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
+							}
+						}
+						payResult.setVehiclePlateTypeName(vehiclePlateTypeName);
+					}
+					
+					// 车辆类型
+					String vehicleType = (String) objs[6];;
+					if (StringUtil.isNotEmpty(vehicleType)) {
+						SysDict sysDictVehicleType = CacheRead.getSysDictByCode("VEHICLE_TYPE", vehicleType);
+						if (null != sysDictVehicleType) {
+							String vehicleTypeName = sysDictVehicleType.getDictValue();
+							//eliminatedApply.setVehicleType(vehicleType);
+							payResult.setVehicleTypeName(vehicleTypeName);
+						}
+					}
+					
+					String vehicleIdentifyNo = (String) objs[7];
+					String key = PropertyUtil.getPropertyValue("DES_KEY");
+					vehicleIdentifyNo = EncryptUtils.decryptDes(key, vehicleIdentifyNo);
+					payResult.setVehicleIdentifyNo(vehicleIdentifyNo);
+					
+					String vehicleOwner = (String) objs[8];
+					payResult.setVehicleOwner(vehicleOwner);
+					
+					BigDecimal subsidiesMoneyBigDecimal = (BigDecimal)objs[9];
+					Double subsidiesMoney = subsidiesMoneyBigDecimal.doubleValue();
+					payResult.setSubsidiesMoney(subsidiesMoney);
+					
+					java.sql.Timestamp applyDate = (Timestamp) objs[10];
+					if (applyDate != null){
+						Date applyTime = new Date(applyDate.getTime());
+						payResult.setApplyTime(applyTime);
+					}
+					list2.add(payResult);
+				}
+				
 				page.setTotalCount(count);
-				page.setResult(list);
+				page.setResult(list2);
 			}
-			eliminatedApplyService.getPageExtra(page);
-		}
+		
 		return page;
 	}
 	
 	
+	public Page getRepPageSql(Page page,String sql) throws Exception {
+		List<PayResult> list2 = new ArrayList<PayResult>();
+		List list = payResultDao.getTableList(sql, page);
+		long count = payResultDao.getListCounter("select count(*) from (" + sql + ")");
+		if (null != list && list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				Object[] objs = (Object[]) list.get(i);
+				PayResult payResult = new PayResult();
+				
+				BigDecimal idBigDecimal = (BigDecimal)objs[0];
+				Integer id = idBigDecimal.intValue();
+				payResult.setId(id);
+				
+				BigDecimal toFinanceNoBigDecimal = (BigDecimal)objs[1];
+				Integer toFinanceNo = toFinanceNoBigDecimal.intValue();
+				payResult.setToFinanceNo(toFinanceNo);
+				
+				String repeatedBatchNo = (String) objs[2];
+				payResult.setRepeatedBatchNo(repeatedBatchNo);
+				
+				String applyNo = (String) objs[3];
+				payResult.setApplyNo(applyNo);
+				
+				String vehiclePlateNum = (String) objs[4];
+				payResult.setVehiclePlateNum(vehiclePlateNum);
+				
+				// 号牌种类
+				String vehiclePlateType = (String) objs[5];
+				if (StringUtil.isNotEmpty(vehiclePlateType)) {
+					String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(vehiclePlateType);
+					if (null == vehiclePlateTypeName) {
+						SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", vehiclePlateType);
+						if (null != sysDictVehiclePlateType) {
+							vehiclePlateTypeName = sysDictVehiclePlateType.getDictValue();
+						}
+					}
+					payResult.setVehiclePlateTypeName(vehiclePlateTypeName);
+				}
+				
+				// 车辆类型
+				String vehicleType = (String) objs[6];;
+				if (StringUtil.isNotEmpty(vehicleType)) {
+					SysDict sysDictVehicleType = CacheRead.getSysDictByCode("VEHICLE_TYPE", vehicleType);
+					if (null != sysDictVehicleType) {
+						String vehicleTypeName = sysDictVehicleType.getDictValue();
+						//eliminatedApply.setVehicleType(vehicleType);
+						payResult.setVehicleTypeName(vehicleTypeName);
+					}
+				}
+				
+				String vehicleIdentifyNo = (String) objs[7];
+				String key = PropertyUtil.getPropertyValue("DES_KEY");
+				vehicleIdentifyNo = EncryptUtils.decryptDes(key, vehicleIdentifyNo);
+				payResult.setVehicleIdentifyNo(vehicleIdentifyNo);
+				
+				String vehicleOwner = (String) objs[8];
+				payResult.setVehicleOwner(vehicleOwner);
+				
+				BigDecimal subsidiesMoneyBigDecimal = (BigDecimal)objs[9];
+				Double subsidiesMoney = subsidiesMoneyBigDecimal.doubleValue();
+				payResult.setSubsidiesMoney(subsidiesMoney);
+				
+				java.sql.Timestamp applyDate = (Timestamp) objs[10];
+				if (applyDate != null){
+					Date applyTime = new Date(applyDate.getTime());
+					payResult.setApplyTime(applyTime);
+				}
+				list2.add(payResult);
+			}
+			
+			page.setTotalCount(count);
+			page.setResult(list2);
+		}
 	
+	return page;
+}
+
 	
 	
 
