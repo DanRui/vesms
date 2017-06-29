@@ -139,10 +139,11 @@
 		<form id="form-modify-apply-upload" action="eliminatedModify/fileUpload.do" method="post" enctype="multipart/form-data">
 		<div id="div-modify-apply-upload" class="datagrid-header">
 			<table class="datagrid-table-s datagrid-htable">
-				<c:if test="${fn:contains(modifyTypes, '30') || fn:contains(modifyTypes, '31') || fn:contains(modifyTypes, '32') || fn:contains(modifyTypes, '33') || fn:contains(modifyTypes, '34') || fn:contains(modifyTypes, '35') || fn:contains(modifyTypes, '33') || fn:contains(modifyTypes, '33') || fn:contains(modifyTypes, '36') || fn:contains(modifyTypes, '37') || fn:contains(modifyTypes, '38') || fn:contains(modifyTypes, '39')}">
+				<c:if test="${fn:contains(modifyTypes, '30') || fn:contains(modifyTypes, '31') || fn:contains(modifyTypes, '32') || fn:contains(modifyTypes, '33') || fn:contains(modifyTypes, '34') || fn:contains(modifyTypes, '35') || fn:contains(modifyTypes, '36') || fn:contains(modifyTypes, '37') || fn:contains(modifyTypes, '38') || fn:contains(modifyTypes, '39')}">
 				<tr class="datagrid-header-row classify-tr">
 					<td colspan="6">证明材料</td>
 				</tr>
+				<c:if test="${fn:contains(modifyTypes, '31')}">
 				<c:if test="${!empty callbackFiles}">
 				<tr class="datagrid-row">
 					<td class="view_table_left">原报废汽车回收证明：</td>
@@ -165,6 +166,8 @@
 						<a id="callbackProofFileImg" href="#" target="_blank"></a>
 					</td>
 				</tr>
+				</c:if>
+				<c:if test="${fn:contains(modifyTypes, '32')}">
 				<c:if test="${!empty vehicleCancelProofFiles}">
 				<tr class="datagrid-row">
 					<td class="view_table_left">原机动车注销证明：</td>
@@ -186,6 +189,8 @@
 						<a id="vehicleCancelProofFileImg" href="#" target="_blank"></a>
 					</td>
 				</tr>
+				</c:if>
+				<c:if test="${fn:contains(modifyTypes, '34')}">
 				<c:if test="${!empty bankCardFiles}">
 				<tr class="datagrid-row">
 					<td class="view_table_left">原银行卡：</td>
@@ -207,6 +212,8 @@
 						<a id="bankCardFileImg" href="#" target="_blank"></a>
 					</td>
 				</tr>
+				</c:if>
+				<c:if test="${fn:contains(modifyTypes, '33')}">
 				<c:if test="${!empty vehicleOwnerProofFiles}">
 				<tr class="datagrid-row">
 					<td class="view_table_left">原车主身份证明：</td>
@@ -229,7 +236,9 @@
 						<a id="vehicleOwnerProofFileImg" href="#" target="_blank"></a>
 					</td>
 				</tr>
+				</c:if>
 				<c:if test="${v.isProxy eq 'N'}">
+				<c:if test="${fn:contains(modifyTypes, '36')}">
 				<c:if test="${!empty agentProxyFiles}">
 				<tr class="datagrid-row">
 					<td class="view_table_left">原代理委托书：</td>
@@ -251,6 +260,8 @@
 						<a id="agentProxyFileImg" href="#" target="_blank"></a>
 					</td>
 				</tr>
+				</c:if>
+				<c:if test="${fn:contains(modifyTypes, '37')}">
 				<c:if test="${!empty agentProofFiles}">
 				<tr class="datagrid-row">
 					<td class="view_table_left">原代理人身份证：</td>
@@ -273,7 +284,9 @@
 					</td>
 				</tr>
 				</c:if>
+				</c:if>
 				<c:if test="${v.isPersonal eq 'N'}">
+				<c:if test="${fn:contains(modifyTypes, '35')}">
 				<c:if test="${!empty noFinanceProvideFiles}">
 				<tr class="datagrid-row">
 					<td class="view_table_left">原非财政供养单位证明：</td>
@@ -295,6 +308,8 @@
 						<a id="noFinanceProvideFileImg" href="#" target="_blank"></a>
 					</td>
 				</tr>
+				</c:if>
+				<c:if test="${fn:contains(modifyTypes, '38')}">
 				<c:if test="${!empty openAccPromitFiles}">
 				<tr class="datagrid-row">
 					<td class="view_table_left">原开户许可证：</td>
@@ -317,6 +332,7 @@
 						<a id="openAccPromitFileImg" href="#" target="_blank"></a>
 					</td>
 				</tr>
+				</c:if>
 				</c:if>
 				<!-- <tr class="datagrid-row filesInfo">
 					<td class="view_table_left vehicleRegFile" style="width:120px">签字确认的受理表：</td>
@@ -389,12 +405,18 @@
 				   var isPersonal = '${v.isPersonal}';
 				   var isProxy = '${v.isProxy}';
 				   
+				   var modifyTypes = '${modifyTypes}';
+				   
 				   //文件框页面校验，必填
 				   var ifValid = $("#form-modify-apply-upload form").form("enableValidation").form("validate");
 				   
 				   if (ifValid) {
 					
-					   
+					   // 校验文件是否上传
+					   if (!checkAttachments(modifyTypes)) {
+						   alert("还有证明材料没有上传，请先上传！");
+						   return false;
+					   }
 					   
 					   var url =  $("#form-modify-apply-upload").attr("action")+"?isPersonal="+isPersonal+"&isProxy="+isProxy;
 					   $("#form-modify-apply-upload").form({
@@ -695,51 +717,71 @@
 				
 			});
 				
-			function checkAttachments() {
+			function checkAttachments(modifyTypes) {
 				var isOk = true;
 				var isPersonal = '${v.isPersonal}';
 			    var isProxy = '${v.isProxy}';
 				
-				// 报废回收证明
-				if ($("input[name='callbackProofFile']").val() == "") {
-					isOk = false;
-				}
+			    //alert(modifyTypes);
+			    
+		    	if (modifyTypes.includes("31")) {
+			    	// 报废回收证明
+					if ($("#callbackProofFiles").filebox("getValue") == "") {
+						isOk = false;
+					}
+		    	}
 				
-				// 机动车注销证明
-				if ($("input[name='vehicleCancelProofFiles']").val() == "") {
-					isOk = false;
-				}
-				// 车主身份证明
-				if ($("input[name='vehicleOwnerProofFiles']").val() == "") {
-					isOk = false;
-				}
-				// 银行卡
-				if ($("input[name='bankCardFiles']").val() == "") {
-					isOk = false;
-				}
+		    	if (modifyTypes.includes("32")) {
+					// 机动车注销证明
+					if ($("#vehicleCancelProof").filebox("getValue").val() == "") {
+						isOk = false;
+					}
+		    	}
+		    	
+		    	if (modifyTypes.includes("33")) {
+					// 车主身份证明
+					if ($("input[name='vehicleOwnerProof']").val() == "") {
+						isOk = false;
+					}
+		    	}
+		    	
+		    	if (modifyTypes.includes("34")) {
+					// 银行卡
+					if ($("#bankCard").filebox("getValue").val() == "") {
+						isOk = false;
+					}
+		    	}
 				// 银行卡
 				/* if ($("input[name='bankCardFiles']").val() == "") {
 					isOk = false;
 				} */
+				
 				// 企业需要非财政供养单位证明、开户许可证
 				if (isPersonal == 'N') {
-					if ($("input[name='noFinanceProvideFiles']").val() == "") {
-						isOk = false;
+					if (modifyTypes.includes("35")) {
+						if ($("#noFinanceProvide").filebox("getValue").val() == "") {
+							isOk = false;
+						}
 					}
-					if ($("input[name='openAccPromitFiles']").val() == "") {
-						isOk = false;
+					if (modifyTypes.includes("38")) {
+						if ($("input[name='openAccPromitFiles']").val() == "") {
+							isOk = false;
+						}
 					}
 				}
 				// 代理需要代理委托书、代理人身份证
 				if (isProxy == "N") {
-					if ($("input[name='agentProxyFiles']").val() == "") {
-						isOk = false;
+					if (modifyTypes.includes("36")) {
+						if ($("#agentProxy").filebox("getValue").val() == "") {
+							isOk = false;
+						}
 					}
-					if ($("input[name='agentProofFiles']").val() == "") {
-						isOk = false;
+					if (modifyTypes.includes("37")) {
+						if ($("#agentProof").filebox("getValue").val() == "") {
+							isOk = false;
+						}
 					}
 				}
-				
 				return isOk;
 			}
 		

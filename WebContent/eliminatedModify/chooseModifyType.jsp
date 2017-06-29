@@ -78,6 +78,8 @@
 				var isValid = $("#form-apply-modify form").form("enableValidation").form("validate");
 				var modifyTypes = $("#modifyType").combotree("getValues");
 				var id = '${v.id}';
+				var modifyResult = $('input[name="modifyResult"]:checked').val();
+				//alert(modifyResult);
 				
 				if(isValid) {
 					$("#form-apply-modify").form("submit", {
@@ -85,11 +87,17 @@
 						onSubmit : function(param) {
 							param.modifyTypes = modifyTypes;
 							param.id = id;
+							param.modifyResult = modifyResult;
 						},
 						success : function(data) {
 							var result = eval('(' + data + ')');
 	        		 		if (result.success) {
-	        		 			alert(result.message.msg);
+	        		 			Messager.alert({
+	        		 				type : 'info',
+	        		 				title : '&nbsp;',
+	        		 				content : result.message.msg
+	        		 			});
+	        		 			//alert(result.message.msg);
 	        		 			$("#common-dialog").dialog("close");
 	        		 			
 	        		 			$("#editData-apply-list #editData-apply-grid").datagrid("load");
@@ -126,7 +134,12 @@
 	        		 			}); */
 	        		 			
 	        		 		} else {
-	        		 			alert(result.message.msg);
+	        		 			Messager.alert({
+	        		 				type : 'error',
+	        		 				title : '&nbsp;',
+	        		 				content : result.message.msg
+	        		 			});
+	        		 			//alert(result.message.msg);
 	        		 			$("#common-dialog").dialog("close");
 	        		 			
 	        		 			$("#editData-apply-list #editData-apply-grid").datagrid("load");
