@@ -737,9 +737,11 @@ public class PayApplyAction extends BaseAction{
 					password = num+"";
 					
 					// String contextPath = request.getSession().getServletContext().getRealPath("/");
-				//	String excelPath = PropertyUtil.getPropertyValue("excelPath");
-					String excelPath = "D:/excel";
-					String preview = "D:/preview";
+					String excelPath = PropertyUtil.getPropertyValue("excelPath");
+					String preview = PropertyUtil.getPropertyValue("excelPreview");
+
+					//String excelPath = "D:/excel";
+					//String preview = "D:/preview";
 				//	String filePath = excelPath+ new String(("batch_"+batchNo+".xls").getBytes(),"iso-8859-1");
 					// filePath = filePath.replace("_fxg", File.separator);
 					/*response.setHeader("Content-disposition", "attachment;  filename="
@@ -773,7 +775,7 @@ public class PayApplyAction extends BaseAction{
 	            	}
 	            	
 	            	// 导出预览excel文件
-	            	File savePath = new File("D:" + File.separator + "preview"+ File.separator + "view_"+batchNo+".xls");
+	            	File savePath = new File(preview + File.separator + "view_"+batchNo+".xls");
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream = new FileOutputStream(savePath);
 	            	List<String[]> dataList=payApplyService.batchExcelList(batchNo,"1",batchType,id);
@@ -783,7 +785,7 @@ public class PayApplyAction extends BaseAction{
 	            	
 	    			BatchMain batchMain = (BatchMain)payApplyService.get(id);
 	            	// 导出报财务excel报表
-	            	File savePath1 = new File("D:" + File.separator + "excel"+ File.separator + "batch_"+batchNo+".xls");
+	            	File savePath1 = new File(excelPath + File.separator + "batch_"+batchNo+".xls");
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream1 = new FileOutputStream(savePath1);
 	            	ExcelProperties excelProperties1=new ExcelProperties();
