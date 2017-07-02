@@ -17,16 +17,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.model.SysDict;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
+import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
 import com.jst.vesms.constant.SysConstant;
+import com.jst.vesms.model.ActionLog;
+import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.SysDictService;
 import com.jst.vesms.service.WorkLoggingService;
+import com.jst.vesms.util.EncryptUtils;
 
 @RequestMapping("/workLogging")
 @Controller
@@ -45,6 +51,34 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 
 	/**
 	 * 
+	 * <p>Description: 进入工作记录查询页面</p>
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("listView")
+	@Privilege(modelCode="M_COMMON_QUERY_WORK", prvgCode="QUERY")
+	public ModelAndView listView() throws Exception {
+		String view = "COMMON_QUERY_WORK.LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	/**
+	 * 
+	 * <p>Description: 进入受理综合查询页面</p>
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("listApplyView")
+	@Privilege(modelCode="M_COMMON_QUERY_ALL", prvgCode="QUERY")
+	public ModelAndView listApplyView() throws Exception {
+		String view = "COMMON_QUERY_ALL.LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	/**
+	 * 
 	 * <p>Description: 根据查询条件，获取工作记录列表</p>
 	 * @param name description type
 	 * @return String
@@ -52,7 +86,7 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 	 */
 	@RequestMapping("list")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_COMMON_QUERY_WORK", prvgCode = "QUERY")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -197,5 +231,201 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 		return list;
 	}
 	
+	@RequestMapping("listApply")
+	@ResponseBody
+	@Privilege(modelCode = "M_COMMON_QUERY_ALL", prvgCode = "QUERY")
+	public String listApply(@RequestParam(value="page", defaultValue="1")int pageNo, 
+					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
+					   @RequestParam(value="order", defaultValue="DESC")String order, 
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleType, 
+					   String vehicleOwner, String applyNo, String vehicleIdentifyNo, String startTime, String endTime, String batchNo, String archiveBoxNo,
+					   String subsidiesMoney, String concludeStatus, String businessStatus, String currentPost) throws Exception{
+		log.debug("WorkLoggingAction listApply is start");
+		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
+		Page page = new Page();
+		page.setPageNo(pageNo);
+		page.setPageSize(pageSize);
+		page.setOrder(order);
+		page.setOrderBy(orderBy);
+		String returnStr = "";
+		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
+			list.add(new PropertyFilter("EQS_vehiclePlateNum",vehiclePlateNum));
+		}
+		if(StringUtil.isNotEmpty(vehiclePlateType)) {
+			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
+		}
+		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
+			String key = PropertyUtil.getPropertyValue("DES_KEY");
+			vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
+			list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
+		}
+		if(StringUtil.isNotEmpty(vehicleOwner)) {
+			list.add(new PropertyFilter("LIKES_vehicleOwner",vehicleOwner));
+		}
+		if(StringUtil.isNotEmpty(applyNo)) {
+			list.add(new PropertyFilter("EQS_applyNo",applyNo));
+		}
+		if(StringUtil.isNotEmpty(startTime)) {
+			list.add(new PropertyFilter("GTD_applyConfirmTime",startTime));
+		}
+		if(StringUtil.isNotEmpty(endTime)) {
+			list.add(new PropertyFilter("LTD_applyConfirmTime",endTime));
+		}
+		if(StringUtil.isNotEmpty(batchNo)) {
+			list.add(new PropertyFilter("EQS_batchNo",batchNo));
+		}
+		if(StringUtil.isNotEmpty(archiveBoxNo)) {
+			list.add(new PropertyFilter("EQS_archiveBoxNo",archiveBoxNo));
+		}
+		if(StringUtil.isNotEmpty(subsidiesMoney)) {
+			list.add(new PropertyFilter("EQN_subsidiesMoney",subsidiesMoney));
+		}
+		if(StringUtil.isNotEmpty(concludeStatus)) {
+			list.add(new PropertyFilter("EQS_concludeStatus",concludeStatus));
+		}
+		if(StringUtil.isNotEmpty(businessStatus)) {
+			list.add(new PropertyFilter("EQS_bussinessStatus",businessStatus));
+		}
+		if(StringUtil.isNotEmpty(currentPost)) {
+			list.add(new PropertyFilter("EQS_currentPost",currentPost));
+		}
+		
+		try {
+			page = workLoggingService.getApplyPage(list, page);
+			returnStr = writerPage(page);
+		} catch (Exception e) {
+			log.error("WorkLoggingAction listApply is Error:" + e, e);
+		}
+		log.debug("WorkLoggingAction listApply is end");
+	    return returnStr;
+	}
+	
+	@RequestMapping("view")
+	@Privilege(modelCode = "M_COMMON_QUERY_ALL", prvgCode = "VIEW")
+	public ModelAndView view(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
+		String view = "ELIMINATED_APPLY.VIEW";
+		if(StringUtil.isNotEmpty(type) && "update".equals(type)) {
+			view = "ELIMINATED_APPLY.EDIT";
+		} else if (StringUtil.isNotEmpty(type) && "applyLog".equals(type)) {
+			view = "ELIMINATED_APPLY.LOG_VIEW";
+		}
+		EliminatedApply object = workLoggingService.getApplyById(id);
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		
+		// 获得图片附件表数据
+		// 获得附件表数据
+		// 报废回收证明
+		List callbackFiles = workLoggingService.getAttachments("JDCHSZM", object.getApplyNo());
+		// 机动车注销证明
+		List vehicleCancelProofFiles = workLoggingService.getAttachments("JDCZXZM", object.getApplyNo());
+		// 银行卡
+		List bankCardFiles = workLoggingService.getAttachments("YHK", object.getApplyNo());
+		// 车主身份证明
+		List vehicleOwnerProofFiles = workLoggingService.getAttachments("CZSFZM", object.getApplyNo());
+		// 非财政供养单位证明
+		List noFinanceProvideFiles = workLoggingService.getAttachments("FCZGYZM", object.getApplyNo());
+		// 开户许可证
+		List openAccPromitFiles = workLoggingService.getAttachments("KHXKZ", object.getApplyNo());
+		// 代理委托书
+		List agentProxyFiles = workLoggingService.getAttachments("DLWTS", object.getApplyNo());
+		// 代理人身份证
+		List agentProofFiles = workLoggingService.getAttachments("DLRSFZ", object.getApplyNo());
+		// 确认的受理表
+		List signedApplyFiles = workLoggingService.getAttachments("QRSLB", object.getApplyNo());
+		// 补贴对象变更证明材料
+		List accountChangeProofFiles = workLoggingService.getAttachments("BTZHMBGZM", object.getApplyNo());
+		
+		// 获取业务流水记录表数据
+		if (StringUtil.isNotEmpty(type) && "applyLog".equals(type)) {
+			List<ActionLog> actionLogList = workLoggingService.getActionLogList(id);
+			mv.addObject("actionLogs", actionLogList);
+		}
+		
+		mv.addObject("callbackFiles", callbackFiles);
+		mv.addObject("vehicleCancelProofFiles", vehicleCancelProofFiles);
+		mv.addObject("bankCardFiles", bankCardFiles);
+		mv.addObject("vehicleOwnerProofFiles", vehicleOwnerProofFiles);
+		mv.addObject("noFinanceProvideFiles", noFinanceProvideFiles);
+		mv.addObject("openAccPromitFiles", openAccPromitFiles);
+		mv.addObject("agentProxyFiles", agentProxyFiles);
+		mv.addObject("agentProofFiles", agentProofFiles);
+		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
+		
+		mv.addObject("v", object);
+			
+		return mv;
+	}
+	
+	
+	@RequestMapping("workLogView")
+	@Privilege(modelCode = "M_COMMON_QUERY_WORK", prvgCode = "VIEW")
+	public ModelAndView workLogView(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
+		String view = "ELIMINATED_APPLY.VIEW";
+		if(StringUtil.isNotEmpty(type) && "update".equals(type)) {
+			view = "ELIMINATED_APPLY.EDIT";
+		} else if (StringUtil.isNotEmpty(type) && "applyLog".equals(type)) {
+			view = "ELIMINATED_APPLY.LOG_VIEW";
+		}
+		EliminatedApply object = workLoggingService.getApplyById(id);
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		
+		// 获得图片附件表数据
+		// 获得附件表数据
+		// 报废回收证明
+		List callbackFiles = workLoggingService.getAttachments("JDCHSZM", object.getApplyNo());
+		// 机动车注销证明
+		List vehicleCancelProofFiles = workLoggingService.getAttachments("JDCZXZM", object.getApplyNo());
+		// 银行卡
+		List bankCardFiles = workLoggingService.getAttachments("YHK", object.getApplyNo());
+		// 车主身份证明
+		List vehicleOwnerProofFiles = workLoggingService.getAttachments("CZSFZM", object.getApplyNo());
+		// 非财政供养单位证明
+		List noFinanceProvideFiles = workLoggingService.getAttachments("FCZGYZM", object.getApplyNo());
+		// 开户许可证
+		List openAccPromitFiles = workLoggingService.getAttachments("KHXKZ", object.getApplyNo());
+		// 代理委托书
+		List agentProxyFiles = workLoggingService.getAttachments("DLWTS", object.getApplyNo());
+		// 代理人身份证
+		List agentProofFiles = workLoggingService.getAttachments("DLRSFZ", object.getApplyNo());
+		// 确认的受理表
+		List signedApplyFiles = workLoggingService.getAttachments("QRSLB", object.getApplyNo());
+		// 补贴对象变更证明材料
+		List accountChangeProofFiles = workLoggingService.getAttachments("BTZHMBGZM", object.getApplyNo());
+		
+		// 获取业务流水记录表数据
+		if (StringUtil.isNotEmpty(type) && "applyLog".equals(type)) {
+			List<ActionLog> actionLogList = workLoggingService.getActionLogList(id);
+			mv.addObject("actionLogs", actionLogList);
+		}
+		
+		mv.addObject("callbackFiles", callbackFiles);
+		mv.addObject("vehicleCancelProofFiles", vehicleCancelProofFiles);
+		mv.addObject("bankCardFiles", bankCardFiles);
+		mv.addObject("vehicleOwnerProofFiles", vehicleOwnerProofFiles);
+		mv.addObject("noFinanceProvideFiles", noFinanceProvideFiles);
+		mv.addObject("openAccPromitFiles", openAccPromitFiles);
+		mv.addObject("agentProxyFiles", agentProxyFiles);
+		mv.addObject("agentProofFiles", agentProofFiles);
+		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
+		
+		mv.addObject("v", object);
+		
+		return mv;
+	}
+	
+	@RequestMapping("receiptPreview")
+	@Privilege(modelCode="M_COMMON_QUERY_ALL", prvgCode="PRINT_RECEIPT")
+	public ModelAndView receiptPreview(@RequestParam("id")Integer id) throws Exception {
+		String view = "ELIMINATED_APPLY.RECEIPT";
+		String stage = "over";
+		
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		mv.getModel().put("stage", stage);
+		
+		EliminatedApply model = workLoggingService.getApplyById(id);
+		
+		mv.addObject("v", model);
+		return mv;
+	} 
 }
 

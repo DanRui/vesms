@@ -174,10 +174,10 @@ String basePath = request.getContextPath();
 							}
 							
 						  },
-				   {type:"QUERY"}],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true
+				   {type:"QUERY"},
+				   {type:"CLEAR"}],
+			module:"M_NOR_APPLY_CONCLUDE",
+			shownum:3
 		})
 
 	})

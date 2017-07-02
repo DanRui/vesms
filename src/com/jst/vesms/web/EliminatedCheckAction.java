@@ -39,15 +39,50 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 	@Resource(name = "cacheService")
 	private CacheService cacheService;
 	
+	
 	/**
 	 * 
-	  * <p>Description: 描述</p>
+	 * <p>Description: 进入正常审核页面</p>
+	 * @param currentPost 当前岗位  String
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("listView")
+	@Privilege(modelCode="M_ELIMINATED_CHECK_PRVG", prvgCode="QUERY")
+	public ModelAndView listView(String currentPost) throws Exception {
+		String view = "ELIMINATED_CHECK.LIST_VIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		mv.getModel().put("currentPost", currentPost);
+		return mv;
+	}
+	
+	/**
+	 * 
+	 * <p>Description: 进入修正业务重审核页面</p>
+	 * @param currentPost 当前岗位  String
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("backListView")
+	@Privilege(modelCode="M_ELIMINATED_CHECK_PRVG", prvgCode="QUERY")
+	public ModelAndView backListView(String currentPost) throws Exception {
+		String view = "ELIMINATED_CHECK.BACK_LIST_VIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		mv.getModel().put("currentPost", currentPost);
+		return mv;
+	}
+	
+	
+	/**
+	 * 
+	  * <p>Description: 正常审核查询列表方法</p>
 	  * @param name description type
 	  * @return List
 	  *
 	 */
 	@RequestMapping("list")
 	@ResponseBody
+	@Privilege(modelCode="M_ELIMINATED_CHECK_PRVG", prvgCode="QUERY")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 			   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 			   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -105,6 +140,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 	
 	@RequestMapping("backList")
 	@ResponseBody
+	@Privilege(modelCode="M_ELIMINATED_CHECK_PRVG", prvgCode="QUERY")
 	public String backList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 			   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 			   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -162,7 +198,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 		}
 	
 	@RequestMapping("checkView")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_ELIMINATED_CHECK_PRVG",prvgCode = "CHECK")
 	public ModelAndView checkView(@RequestParam("ids")String ids, @RequestParam("currentPost")String currentPost) throws Exception {
 		String view = "ELIMINATED_CHECK.CHECK_VIEW";
 		//EliminatedApply object = eliminatedCheckService.getById(ids);
@@ -174,7 +210,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 	}
 	
 	@RequestMapping("view")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_ELIMINATED_CHECK_PRVG",prvgCode = "VIEW")
 	public ModelAndView view(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
 		String view = "ELIMINATED_CHECK.NORMAL_CHECK";
 		if(StringUtil.isNotEmpty(type)&&"back".equals(type)) {
@@ -217,7 +253,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 	
 	@RequestMapping("check")
 	@ResponseBody
-	//@Privilege(modelCode = "M_ELIMINATED_CHECK_PRVG", prvgCode = "CHECK")
+	@Privilege(modelCode = "M_ELIMINATED_CHECK_PRVG", prvgCode = "CHECK")
 	public String check(@RequestParam("ids")String ids, @RequestParam("checkType")String checkType,
 						@RequestParam("faultType")String faultType, @RequestParam("checkOpinion")String checkOpinion, @RequestParam("currentPost")String currentPost) throws Exception {
 		log.debug("EliminatedCheckAction check is start");

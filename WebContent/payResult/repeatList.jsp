@@ -188,7 +188,7 @@ String basePath = request.getContextPath();
 							});
 						} else {
 							Dialog.create("pay_res_mark", {
-								type : "single_mark",
+								type : "RESULT_MARK",
 								title : "拨付结果标记",
 								width : 700,
 								height : 300,
@@ -211,9 +211,6 @@ String basePath = request.getContextPath();
 												$("#pay_res_mark").dialog("close");
 												$("#repeatPay-result-list #repeatPay-result-grid").datagrid('load');
 											}
-										}},
-										{id:"pay_res_mark_cancel",text:"取消",iconCls:"icon-cancel",handler:function(){
-											$("#pay_res_mark").dialog("close");
 										}}
 									]
 								},
@@ -222,10 +219,11 @@ String basePath = request.getContextPath();
 							});
 						} 
 				 	}},
-				   {type:"QUERY"}],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true
+				   {type:"QUERY"},
+				   {type:"CLEAR"}
+				 	],
+			module:"M_MARK_REP_APPLY",
+			shownum:3
 		})
 
 	})

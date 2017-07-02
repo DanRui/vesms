@@ -56,6 +56,108 @@ public class PayApplyAction extends BaseAction{
 	@Resource(name = "exportBatchServiceImpl")
 	private ExportBatchService exportBatchService;
 	
+	
+	@RequestMapping("addBatchView")
+	@Privilege(modelCode = "M_ADD_BATCH",prvgCode = "QUERY")
+	public ModelAndView addBatchView() throws Exception {
+		String view = "PAY_APPLY.CREATE_BATCH";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("adjustView")
+	@Privilege(modelCode = "M_NOR_BATCH_ADJUST",prvgCode = "QUERY")
+	public ModelAndView adjustView() throws Exception {
+		String view = "PAY_APPLY.BATCH_ADJUST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("batchListView")
+	@Privilege(modelCode = "M_NOR_BATCH_LIST",prvgCode = "QUERY")
+	public ModelAndView batchListView() throws Exception {
+		String view = "PAY_APPLY.BATCH_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("toFinView")
+	@Privilege(modelCode = "M_TO_FIN_CONFIRM",prvgCode = "QUERY")
+	public ModelAndView toFinView() throws Exception {
+		String view = "PAY_APPLY.TO_FINANCE_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("toFinBatchView")
+	@Privilege(modelCode = "M_TO_FIN_LIST",prvgCode = "QUERY")
+	public ModelAndView toFinBatchView() throws Exception {
+		String view = "PAY_APPLY.TO_FIN_BATCH_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("repAddBatchView")
+	@Privilege(modelCode = "M_REP_ADD_BATCH",prvgCode = "QUERY")
+	public ModelAndView repAddBatchView() throws Exception {
+		String view = "PAY_APPLY.REPEAT_CREATE_BATCH";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("repAjustView")
+	@Privilege(modelCode = "M_REP_BATCH_ADJUST",prvgCode = "QUERY")
+	public ModelAndView repAjustView() throws Exception {
+		String view = "PAY_APPLY.REPEAT_BATCH_ADJUST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("repBatchListView")
+	@Privilege(modelCode = "M_REP_BATCH_LIST",prvgCode = "QUERY")
+	public ModelAndView repBatchListView() throws Exception {
+		String view = "PAY_APPLY.REPEAT_BATCH_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("repToFinView")
+	@Privilege(modelCode = "M_REP_TO_FIN_CONFIRM",prvgCode = "QUERY")
+	public ModelAndView repToFinView() throws Exception {
+		String view = "PAY_APPLY.REPEAT_TO_FINANCE_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+		
+	
+	@RequestMapping("repToFinBatchView")
+	@Privilege(modelCode = "M_REP_TO_FIN_LIST",prvgCode = "QUERY")
+	public ModelAndView repToFinBatchView() throws Exception {
+		String view = "PAY_APPLY.REPEAT_TO_FIN_BATCH_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	@RequestMapping("allBatchView")
+	@Privilege(modelCode = "M_ALL_BATCH_LIST_QUERY",prvgCode = "QUERY")
+	public ModelAndView allBatchView() throws Exception {
+		String view = "PAY_APPLY.ALL_BATCH_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	
+	
+	
 	/**
 	 * 进行查询数据
 	 */
@@ -119,7 +221,7 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("view")
 	@Privilege(modelCode = "M_ADD_BATCH",prvgCode = "VIEW")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
-		String view = "ELIMINATED_APPLY.";
+		String view = "ELIMINATED_APPLY.VIEW";
 		EliminatedApply object = payApplyService.getById(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
@@ -221,9 +323,8 @@ public class PayApplyAction extends BaseAction{
 	 *	正常内部批次查询
 	 */
 	@RequestMapping("batchList")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_NOR_BATCH_LIST", prvgCode = "QUERY")
 	public String getBatchList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -274,6 +375,7 @@ public class PayApplyAction extends BaseAction{
 	
 	//去导出预览页面
 	@RequestMapping("toExcelPreview")
+	@Privilege(modelCode = "M_REP_BATCH_LIST", prvgCode = "BATCH_PREVIEW")
 	public ModelAndView toExcelPreview(@RequestParam("id")Integer id) throws Exception {
 		String view = "PAY_APPLY.EXPORT_PREVIEW";
 		BatchMain object = payApplyService.getObj(id);
@@ -286,6 +388,7 @@ public class PayApplyAction extends BaseAction{
 	
 	//内部批次文件预览
 	@RequestMapping("exportPreview")
+	@Privilege(modelCode = "M_NOR_BATCH_LIST",prvgCode = "BATCH_PREVIEW")
 	public String exportPreview (Integer id,String batchNo,String batchType,HttpServletResponse response) {
 		log.debug("PayApplyAction excelList is start");
 		try {
@@ -331,7 +434,7 @@ public class PayApplyAction extends BaseAction{
 	
 	// 去批次查看页面
 	@RequestMapping("batchView")
-	@Privilege(modelCode = "M_NOR_BATCH_ADJUST",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_NOR_BATCH_LIST",prvgCode = "VIEW")
 	public ModelAndView bastchView(@RequestParam("id")Integer id,@RequestParam(value = "type")String type) throws Exception {
 		log.debug("payApplyAction batchView is start");
 		String view = "PAY_APPLY.VIEW";
@@ -346,7 +449,7 @@ public class PayApplyAction extends BaseAction{
 	
 	// 去重报批次查看页面
 	@RequestMapping("repBatchView")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_REP_BATCH_LIST",prvgCode = "VIEW")
 	public ModelAndView repBatchView(@RequestParam("id")Integer id,@RequestParam(value = "type")String type) throws Exception {
 		log.debug("payApplyAction repBatchView is start");
 		String view = "PAY_APPLY.REP_VIEW";
@@ -406,6 +509,7 @@ public class PayApplyAction extends BaseAction{
 	//去批次调整页面
 	@RequestMapping(value="batchNoList")
 	@ResponseBody
+	@Privilege(modelCode = "M_NOR_BATCH_ADJUST", prvgCode = "ADJUST")
 	public ModelAndView batchNoList(@RequestParam("id")Integer id){
 		log.debug("PayApplyAction batchNoList is start");
 		String adjust = "PAY_APPLY.ADJUST";
@@ -601,6 +705,7 @@ public class PayApplyAction extends BaseAction{
 	//正常报财务批次查询
 		@ResponseBody
 		@RequestMapping("toFinanceList")
+		@Privilege(modelCode = "M_TO_FIN_LIST" ,prvgCode = "QUERY")
 		public String getToFinanceList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 				   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 				   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -699,6 +804,7 @@ public class PayApplyAction extends BaseAction{
 	
 	//去报财务导出页面
 		@RequestMapping("toFinanceExcel")
+		@Privilege(modelCode = "M_TO_FIN_CONFIRM", prvgCode = "CONFIRM_APPLY")
 		public ModelAndView toFinanceExcel(@RequestParam("id")Integer id) {
 			String view = "PAY_APPLY.TO_EXPORT_EXCEL";
 			BatchMain object = payApplyService.getObj(id);
@@ -739,33 +845,16 @@ public class PayApplyAction extends BaseAction{
 					// String contextPath = request.getSession().getServletContext().getRealPath("/");
 					String excelPath = PropertyUtil.getPropertyValue("excelPath");
 					String preview = PropertyUtil.getPropertyValue("excelPreview");
-
-					//String excelPath = "D:/excel";
-					//String preview = "D:/preview";
+					String path = "";
 				//	String filePath = excelPath+ new String(("batch_"+batchNo+".xls").getBytes(),"iso-8859-1");
+					
 					// filePath = filePath.replace("_fxg", File.separator);
+					
 					/*response.setHeader("Content-disposition", "attachment;  filename="
 							+ new String(("batch_"+batchNo+".xls").getBytes(), "iso-8859-1"));
 					// 定义输出类型
 					response.setContentType("application/vnd.ms-excel");*/
-					//OutputStream outputStream = response.getOutputStream();
-				/*	List<EliminatedApply> list = new ArrayList<EliminatedApply>();
-					list = payApplyService.getBatchApplyList(batchNo);*/
-					
-					
-				/*	for (int i = 0; i < list.size(); i++) {
-						EliminatedApply apply = list.get(i);
-						count++;
-						String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-						apply.setBankAccountNo(EncryptUtils.decryptDes(des_key, apply.getBankAccountNo()));
-						String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999","003",apply.getVehicleOwner().toString(),
-								apply.getBankAccountNo().toString(),apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
-						dataList.add(strings);
-					}*/
-					
-			//		exportPath = contextPath + excelPath + File.separator + "batch_"+batchNo+".xls";
-					//result = exportPath.replaceAll("\\\\", "\\/");
-					
+				
 					ExcelProperties excelProperties=new ExcelProperties();
 	            	if (! new File(excelPath).exists()) {
 	            		new File(excelPath).mkdirs();
@@ -773,9 +862,13 @@ public class PayApplyAction extends BaseAction{
 	            	if (! new File(preview).exists()) {
 	            		new File(preview).mkdirs();
 	            	}
-	            	
+	            	String batchPath=excelPath+ File.separator + "batch_"+batchNo+".xls";
+					String pdfPath=excelPath+ File.separator + "batch_"+batchNo+".pdf";
+					String viewPath=preview+ File.separator + "view_"+batchNo+".xls";
+
 	            	// 导出预览excel文件
-	            	File savePath = new File(preview + File.separator + "view_"+batchNo+".xls");
+	            	File savePath = new File(viewPath);
+
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream = new FileOutputStream(savePath);
 	            	List<String[]> dataList=payApplyService.batchExcelList(batchNo,"1",batchType,id);
@@ -785,7 +878,9 @@ public class PayApplyAction extends BaseAction{
 	            	
 	    			BatchMain batchMain = (BatchMain)payApplyService.get(id);
 	            	// 导出报财务excel报表
-	            	File savePath1 = new File(excelPath + File.separator + "batch_"+batchNo+".xls");
+					
+	            	File savePath1 = new File(batchPath);
+					
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream1 = new FileOutputStream(savePath1);
 	            	ExcelProperties excelProperties1=new ExcelProperties();
@@ -795,7 +890,7 @@ public class PayApplyAction extends BaseAction{
 					//exportPreview(id, batchNo, response);
 					int exportResult = ExportExcel.exportExcelInWebs(excelProperties1, "sss", new int[] { 5,10,15,15,25,15,15,45 }, dataList1, outputStream1, password);
 					// 调用pdf 
-					PDFUtil.generatePDF("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "excel"+ "/" + "batch_"+batchNo+".pdf", dataList1);
+					PDFUtil.generatePDF("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)", pdfPath, dataList1);
 					
 					outputStream.close();
 					outputStream1.close();
@@ -805,10 +900,12 @@ public class PayApplyAction extends BaseAction{
 					}else if (exportPreview!=1) {
 						resString = "预览文件生成失败！";
 					}else {
+						path=batchPath+","+pdfPath+","+viewPath;
+						path =path.replace(File.separator,"_exc");
 						// 后台调用导出存储过程
-						payApplyService.batchExport(id, "D:/excel/" + "batch_"+batchNo+".xls"+","+"D:/excel/" + "batch_"+batchNo+".pdf,"+"D:/preview/" + "view_"+batchNo+".xls",password);
+						payApplyService.batchExport(id,path,password);
 						isOk = true;
-						resString = "D:/excel/"+"batch_"+batchNo+".xls"+","+"D:/excel/" + "batch_"+batchNo+".pdf,"+"D:/preview/" + "view_"+batchNo+".xls";
+						resString =path.replace("_exc", "/");
 					}
 				}
 				
@@ -829,6 +926,7 @@ public class PayApplyAction extends BaseAction{
 	//正常报财务excel文件查看
 		@RequestMapping("confirmBatchLook")
 		@ResponseBody
+		// @Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "FILE_QUERY")
 		public String confirmBatchLook(@RequestParam("batchNo")String batchNo) {
 			log.debug("PayApplyAction confirmBatchLook is start");
 			String excelPath = "";
@@ -847,6 +945,7 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[0];
 				}
+				excelPath =excelPath.replace("_exc", "/");
 			// 	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchLook is Error:"+e, e);
@@ -860,6 +959,7 @@ public class PayApplyAction extends BaseAction{
 		//正常报财务pdf文件查看
 		@RequestMapping("confirmBatchPdf")
 		@ResponseBody
+		// @Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "FILE_QUERY")
 		public String confirmBatchPdf(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPdf is start");
 			String excelPath = "";
@@ -874,6 +974,7 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[1];
 				}
+				excelPath =excelPath.replace("_exc", "/");
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
@@ -884,9 +985,10 @@ public class PayApplyAction extends BaseAction{
 	
 		
 		
-		//正常报财务pdf文件查看
+		//正常报财务预览文件查看
 		@RequestMapping("confirmBatchPreview")
 		@ResponseBody
+		//@Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "PREVIEW_QUERY")
 		public String confirmBatchPreview(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPdf is start");
 			String excelPath = "";
@@ -901,6 +1003,7 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[2];
 				}
+				excelPath =excelPath.replace("_exc", "/");
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
@@ -916,7 +1019,7 @@ public class PayApplyAction extends BaseAction{
 	 */
 	@RequestMapping("repList")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_REP_ADD_BATCH", prvgCode = "QUERY")
 	public String repList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -989,9 +1092,9 @@ public class PayApplyAction extends BaseAction{
 	/**
 	 * 生成重报批次号
 	 */
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "create")
 	@ResponseBody
 	@RequestMapping(value = "repCreate" ) 
+	@Privilege(modelCode = "M_REP_ADD_BATCH", prvgCode = "ADD_BATCH")
 	public String createRepBatch(@RequestParam("ids")String ids) {
 		log.debug("PayApplyAction createBatch is start");
 		boolean createOk = false;
@@ -1179,7 +1282,7 @@ public class PayApplyAction extends BaseAction{
 	 */
 	@RequestMapping("repBatchAdjust")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_REP_BATCH_ADJUST", prvgCode = "QUERY")
 	public String repBatchAdjust(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -1231,13 +1334,12 @@ public class PayApplyAction extends BaseAction{
 	 *	重报内部批次查询
 	 */
 	@RequestMapping("repBatchList")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_REP_BATCH_LIST", prvgCode = "QUERY")
 	public String getRepBatchList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, Integer toFinanceNo,String batchNo,String isExported,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String expStartDate,String expEndDate, String createStartDate , String createEndDate,String batchType ) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String batchNo,String batchStatus, String createStartDate , String createEndDate,String batchType ) throws Exception{
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -1245,25 +1347,22 @@ public class PayApplyAction extends BaseAction{
 		page.setOrder(order);
 		page.setOrderBy(orderBy);
 		String returnStr = "";
+		StringBuffer sb = new StringBuffer("select * from t_batch_main t where 1 = 1 ");
 		if(StringUtil.isNotEmpty(batchNo)) {
-			list.add(new PropertyFilter("EQS_batchNo",batchNo));
+			sb.append("and t.batch_no = '").append(batchNo).append("' ");
 		}
-		if(StringUtil.isNotEmpty(payResStatus)) {
-			list.add(new PropertyFilter("EQS_payResStatus",payResStatus));
+		if(StringUtil.isNotEmpty(batchStatus)) {
+			sb.append("and t.batch_status = '").append(batchStatus).append("' ");
 		}
 		if(StringUtil.isNotEmpty(createStartDate)) {
-			list.add(new PropertyFilter("GTD_createDate",createStartDate));
+			sb.append("and t.create_date >='").append(createStartDate).append("' ");
 		}
 		if(StringUtil.isNotEmpty(createEndDate)) {
-			list.add(new PropertyFilter("LTD_createDate",createEndDate));
+			sb.append("and t.create_date <='").append(createEndDate).append("' ");
 		}
-		if(StringUtil.isNotEmpty(toFinanceNo+"")) {
-			list.add(new PropertyFilter("EQS_toFinanceNo",toFinanceNo+""));
-		}
-		list.add(new PropertyFilter("EQS_batchType","2"));
-		list.add(new PropertyFilter("EQS_toFinanceStatus","0"));
+		sb.append("and t.batch_type = '2' and to_number(t.to_Finance_status)<=-2 ");
 		try {
-			page = payApplyService.getPage(page, list);
+			page = payApplyService.getPageBySql(page, sb.toString());
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("PayApplyAction list is Error:" + e, e);
@@ -1279,6 +1378,7 @@ public class PayApplyAction extends BaseAction{
 		//重报批次调整页面
 		@RequestMapping(value="repBatchNoList")
 		@ResponseBody
+		@Privilege(modelCode = "M_REP_BATCH_ADJUST", prvgCode = "ADJUST")
 		public ModelAndView repBatchNoList(@RequestParam("id")Integer id){
 			log.debug("PayApplyAction batchNoList is start");
 			String adjust = "PAY_APPLY.REPADJUST";
@@ -1364,6 +1464,7 @@ public class PayApplyAction extends BaseAction{
 		//批次作废
 		@ResponseBody
 		@RequestMapping("repBatchCancel")
+		@Privilege(modelCode = "M_REP_BATCH_ADJUST", prvgCode = "CANCEL")
 		public String repBatchCancel(@RequestParam("ids")String ids) {
 			log.debug("PayApplyAction batchCancel is start");
 			boolean cancelBatch = false;
@@ -1486,6 +1587,7 @@ public class PayApplyAction extends BaseAction{
 		//重报财务批次查询
 			@ResponseBody
 			@RequestMapping("repToFinanceList")
+			@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "QUERY")
 			public String repToFinanceList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -1542,6 +1644,7 @@ public class PayApplyAction extends BaseAction{
 			
 			
 			@RequestMapping("confirmRepExportExcel")
+			@Privilege(modelCode = "M_REP_TO_FIN_CONFIRM", prvgCode = "CONFIRM_APPLY")
 			public ModelAndView confirmRepExportExcel(@RequestParam("id")Integer id) throws Exception {
 				String view = "PAY_APPLY.CONFIRM_REP_EXCEL";
 				BatchMain object = payApplyService.getObj(id);
@@ -1580,8 +1683,8 @@ public class PayApplyAction extends BaseAction{
 		//重报报财务批次excel查看
 		@RequestMapping("confirmRepBatchLook")
 		@ResponseBody
+		//@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "FILE_QUERY")
 		public String confirmRepBatchLook(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
-			
 			log.debug("PayApplyAction confirmBatchLook is start");
 			String excelPath = "";
 			try {
@@ -1599,6 +1702,7 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[0];
 				}
+				excelPath =excelPath.replace("_exc", "/");
 			// 	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchLook is Error:"+e, e);
@@ -1610,6 +1714,7 @@ public class PayApplyAction extends BaseAction{
 		//重报报财务批次pdf查看
 		@RequestMapping("confirmRepBatchPdf")
 		@ResponseBody
+		//@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "PDF_QUERY")
 		public String confirmRepBatchPdf(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPdf is start");
 			String excelPath = "";
@@ -1624,6 +1729,7 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[1];
 				}
+				excelPath =excelPath.replace("_exc", "/");
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
@@ -1636,6 +1742,7 @@ public class PayApplyAction extends BaseAction{
 		//详情文件查看
 		@RequestMapping("confirmRepBatchPreview")
 		@ResponseBody
+		//@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "PREVIEW_QUERY")
 		public String confirmRepBatchPreview(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPdf is start");
 			String excelPath = "";
@@ -1650,6 +1757,7 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[2];
 				}
+				excelPath =excelPath.replace("_exc", "/");
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
@@ -1687,8 +1795,9 @@ public class PayApplyAction extends BaseAction{
 				    num=ne.nextInt(9999-1000+1)+1000;//为变量赋随机值1000-9999
 					password = num+"";
 					BatchMain batchMain = (BatchMain)payApplyService.get(id);
-					String excelPath = "D:/repExcel";
-					String preview = "D:/preview";
+					String path = "";
+					String excelPath = PropertyUtil.getPropertyValue("repExcelPath");
+					String preview = PropertyUtil.getPropertyValue("excelPreview");
 				/*	response.setHeader("Content-disposition", "attachment;  filename="
 							+ new String(("batch_"+batchNo+".xls").getBytes(), "iso-8859-1"));*/
 					// 定义输出类型
@@ -1745,7 +1854,11 @@ public class PayApplyAction extends BaseAction{
 	            	if (! new File(preview).exists()) {
 	            		new File(preview).mkdirs();
 	            	}
-	            	File savePath = new File("D:" + File.separator + "repExcel"+ File.separator + "batch_"+batchNo+".xls");
+	            	String repBatchPath=excelPath+ File.separator + "batch_"+batchNo+".xls";
+					String repPdfPath=excelPath+ File.separator + "batch_"+batchNo+".pdf";
+					String repViewPath=preview+ File.separator + "view_"+batchNo+".xls";
+					
+	            	File savePath = new File(repBatchPath);
 	            	OutputStream outputStream = new FileOutputStream(savePath);
 	            	ExcelProperties excelProperties=new ExcelProperties();
 					
@@ -1755,12 +1868,12 @@ public class PayApplyAction extends BaseAction{
 					
 					
 					// 调用pdf
-					PDFUtil.repGeneratePDF("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表((第"+batchMain.getToFinanceNo()+"批)", "D:" + "/" + "repExcel"+ "/" + "batch_"+batchNo+".pdf", dataList);
+					PDFUtil.repGeneratePDF("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表((第"+batchMain.getToFinanceNo()+"批)",repPdfPath , dataList);
 					
 					
 					// 导出预览excel文件
 					ExcelProperties excelProperties1=new ExcelProperties();
-	            	File savePath1 = new File("D:" + File.separator + "preview"+ File.separator + "view_"+batchNo+".xls");
+	            	File savePath1 = new File(repViewPath);
 	            	//	OutputStream outputStream = new FileOutputStream(new File(savePath, "batch_"+batchNo+".xls"));
 	            	OutputStream outputStream1 = new FileOutputStream(savePath1);
 	            	List<String[]> dataList1=payApplyService.batchExcelList(batchNo,"1",batchType,id);
@@ -1777,9 +1890,12 @@ public class PayApplyAction extends BaseAction{
 						resString = "预览文件生成失败";
 					}else {
 						// 后台调用导出存储过程
-						payApplyService.batchRepExport(id, "D:/repExcel/" + "batch_"+batchNo+".xls"+","+"D:/repExcel/" + "batch_"+batchNo+".pdf"+","+"D:/preview/"+"view_"+batchNo+".xls",password);
+						path = repBatchPath+","+repPdfPath+","+repViewPath;
+						path =path.replace(File.separator,"_exc");
+						payApplyService.batchRepExport(id, path,password);
 						isOk = true;
-						resString = "D:/repExcel/batch_"+batchNo+".xls"+","+"D:/repExcel/batch_"+batchNo+".pdf"+","+"D:/preview/"+"view_"+batchNo+".xls";
+						path =path.replace("_exc", "/");
+						resString = path;
 					}
 				}
 			} catch (Exception e) {
@@ -1816,8 +1932,7 @@ public class PayApplyAction extends BaseAction{
 		//申报批次总查询
 		@RequestMapping("batchAllList")
 		@ResponseBody
-		//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
-		//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+		@Privilege(modelCode = "M_ALL_BATCH_LIST_QUERY", prvgCode = "QUERY")
 		public String getBatchAllList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 						   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 						   @RequestParam(value="order", defaultValue="DESC")String order, 

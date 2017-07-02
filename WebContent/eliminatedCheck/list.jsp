@@ -3,7 +3,7 @@ pageEncoding="utf-8"%>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%
 String basePath = request.getContextPath();
-String currentPost = request.getParameter("currentPost");
+//String currentPost = request.getParameter("currentPost");
 String mdlCode = request.getParameter("mdlCode");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -25,7 +25,7 @@ String mdlCode = request.getParameter("mdlCode");
 	<script type="text/javascript">
 	$(function(){
 		var basePath = $("#basePath").val();
-		var currentPost = "<%=currentPost%>";
+		var currentPost = '${currentPost}';
 		var mdlCode = "<%=mdlCode%>";
 		
 		$("#eliminated-check-list #eliminated-check-grid").datagrid({
@@ -274,7 +274,7 @@ String mdlCode = request.getParameter("mdlCode");
 				   {type:"QUERY"}],
 			module : '${param.mdlCode}',
 			shownum:3 ,
-			debug:true
+			debug:false
 		})
 
 	})

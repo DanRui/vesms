@@ -213,7 +213,7 @@ String basePath = request.getContextPath();
 				   ],
 			module : 'M_ELIMINATED_MODIFY_UPA',
 			shownum : 3,
-			debug:true  
+			debug:false  
 		})
 	})
 

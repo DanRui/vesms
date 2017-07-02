@@ -48,6 +48,9 @@ String basePath = request.getContextPath();
 		$("#excel_file").hide();
 		$("#pdf_file").hide();
 		$("#ConfirmButton").click(function(){
+			$.ajaxSetup({  
+			    async : false  
+			});  
 			$("#confirmId").form("submit", {
 				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 				success : function(data) {

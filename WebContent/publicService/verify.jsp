@@ -103,7 +103,7 @@ String basePath = request.getContextPath();
 		        	success : function(data) {
 		        		if (data.success) {
 		        			// 有补贴资格，尽量显示多车辆信息和补贴金额
-		        			var verify_result_page = basePath + "/eliminatedApply/verifyResult.do?vehiclePlateNum=" + vehiclePlateNum + "&vehiclePlateType=" + vehiclePlateType + "&vehicleIdentifyNo=" + vehicleIdentifyNo;
+		        			var verify_result_page = basePath + "/publicService/verifyResult.do?vehiclePlateNum=" + vehiclePlateNum + "&vehiclePlateType=" + vehiclePlateType + "&vehicleIdentifyNo=" + vehicleIdentifyNo;
 		        			openDialog({
 		        				type : "verify_result",
 								title : "车辆补贴资格说明",

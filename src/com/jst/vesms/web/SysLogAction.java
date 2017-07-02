@@ -12,10 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.ISystemLogService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.StringUtil;
 
@@ -27,6 +29,20 @@ public class SysLogAction extends BaseAction {
 	
 	@Resource(name="systemLogService")
 	private ISystemLogService systemLogService;
+	
+	/**
+	 * 
+	 * <p>Description: 进入系统日志查询页面</p>
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("listView")
+	@Privilege(modelCode="M_SYS_LOG_QUERY", prvgCode="QUERY")
+	public ModelAndView listView() throws Exception {
+		String view = "SYS_LOG.QUERY";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
 	
 	@ResponseBody
 	@RequestMapping("list")

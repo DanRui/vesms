@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.JsonUtil;
 import com.jst.util.StringUtil;
@@ -35,14 +36,29 @@ public class ConcludeAction extends BaseAction{
 	@Resource(name = "cacheService")
 	private CacheService cacheService;
 	
+	
+	@RequestMapping("concludeView")
+	@Privilege(modelCode = "M_NOR_APPLY_CONCLUDE", prvgCode = "QUERY")
+	public ModelAndView concludeView() throws Exception {
+		String view = "CONCLUDE.LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	@RequestMapping("conculdeFaultView")
+	@Privilege(modelCode = "M_FAULT_APPLY_CONCLUDE", prvgCode = "QUERY")
+	public ModelAndView conculdeFaultView() throws Exception {
+		String view = "CONCLUDE.FAULT_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
 	/**
 	 * 进行查询数据
 	 */
-	
 	@RequestMapping("list")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_NOR_APPLY_CONCLUDE", prvgCode = "QUERY")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -104,9 +120,9 @@ public class ConcludeAction extends BaseAction{
 	
 	
 
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "create")
 	@ResponseBody
 	@RequestMapping(value = "conclude" ) 
+	@Privilege(modelCode = "M_NOR_APPLY_CONCLUDE",prvgCode = "CONCLUDE_MARK")
 	public String concludeApply(@RequestParam("ids")String ids,@RequestParam("concludeStatus")String concludeStatus) {
 		log.debug("ConcludeAction concludeApply is start");
 		String result = null;
@@ -128,10 +144,9 @@ public class ConcludeAction extends BaseAction{
 	
 	
 
-	@RequestMapping("exceList")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
+	@RequestMapping("faultList")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_FAULT_APPLY_CONCLUDE", prvgCode = "QUERY")
 	public String getFaultpList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 

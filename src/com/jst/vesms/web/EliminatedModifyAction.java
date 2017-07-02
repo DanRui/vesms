@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.DateUtil;
 import com.jst.util.JsonUtil;
@@ -49,6 +50,34 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	
 	@Resource(name = "cacheService")
 	private CacheService cacheService;
+	
+	/**
+	 * 
+	 * <p>Description: 进入一般资料修正列表页面</p>
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("listView")
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_NOR", prvgCode="QUERY")
+	public ModelAndView listView() throws Exception {
+		String view = "ELIMINATED_APPLY.NOR_VIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	/**
+	 * 
+	 * <p>Description: 进入补贴对象变更列表页面</p>
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("updateAccListView")
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_UPA", prvgCode="QUERY")
+	public ModelAndView updateAccListView() throws Exception {
+		String view = "ELIMINATED_APPLY.UPA_VIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
 	
 	
 	@RequestMapping("list")
@@ -184,6 +213,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	 *
 	 */
 	@RequestMapping("updateAccountView")
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_UPA", prvgCode="UPDATE_ACCOUNT")
 	public ModelAndView updateAccountView(@RequestParam("id")Integer id) throws Exception {
 		String view = "ELIMINATED_MODIFY.UPDATE_ACCOUNT";
 		EliminatedApply object = eliminatedModifyService.getById(id);
@@ -203,6 +233,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	 *
 	 */
 	@RequestMapping("modifyApply")
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_NOR", prvgCode="MODIFY")
 	public ModelAndView modifyApply(@RequestParam("id")Integer id, String modifyTypes) throws Exception {
 		String view = "ELIMINATED_MODIFY.MODIFY_APPLY";
 		/*if(StringUtil.isNotEmpty(faultType)&&"2".equals(faultType)) {
@@ -249,6 +280,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	}
 	
 	@ResponseBody
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_NOR", prvgCode="MODIFY")
 	@RequestMapping(value="modifySave", produces={"text/html;charset=UTF-8;","application/json;"})
 	public String modifySave(ApplyModifyInfo applyModifyInfo) throws Exception {
 		log.debug("EliminatedModifyAction modifySave is start");
@@ -277,6 +309,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	}
 	
 	@ResponseBody
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_UPA", prvgCode="UPDATE_ACCOUNT")
 	@RequestMapping(value="accountSave", produces={"text/html;charset=UTF-8;","application/json;"})
 	public String accountSave(ApplyModifyInfo applyModifyInfo) throws Exception {
 		log.debug("EliminatedModifyAction accountSave is start");
@@ -413,7 +446,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	}
 	
 	@RequestMapping("view")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_ELIMINATED_MODIFY_NOR",prvgCode = "VIEW")
 	public ModelAndView view(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
 		String view = "ELIMINATED_MODIFY.COMMON_VIEW";
 		if(StringUtil.isNotEmpty(type)&&"account".equals(type)) {
@@ -423,10 +456,91 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		
 		// 获得图片附件表数据
+		// 获得附件表数据
+		// 报废回收证明
+		List callbackFiles = eliminatedModifyService.getAttachments("JDCHSZM", object.getApplyNo());
+		// 机动车注销证明
+		List vehicleCancelProofFiles = eliminatedModifyService.getAttachments("JDCZXZM", object.getApplyNo());
+		// 银行卡
+		List bankCardFiles = eliminatedModifyService.getAttachments("YHK", object.getApplyNo());
+		// 车主身份证明
+		List vehicleOwnerProofFiles = eliminatedModifyService.getAttachments("CZSFZM", object.getApplyNo());
+		// 非财政供养单位证明
+		List noFinanceProvideFiles = eliminatedModifyService.getAttachments("FCZGYZM", object.getApplyNo());
+		// 开户许可证
+		List openAccPromitFiles = eliminatedModifyService.getAttachments("KHXKZ", object.getApplyNo());
+		// 代理委托书
+		List agentProxyFiles = eliminatedModifyService.getAttachments("DLWTS", object.getApplyNo());
+		// 代理人身份证
+		List agentProofFiles = eliminatedModifyService.getAttachments("DLRSFZ", object.getApplyNo());
+		// 确认的受理表
+		List signedApplyFiles = eliminatedModifyService.getAttachments("QRSLB", object.getApplyNo());
+		// 补贴对象变更证明材料
+		List accountChangeProofFiles = eliminatedModifyService.getAttachments("BTZHMBGZM", object.getApplyNo());
+		
+		mv.addObject("callbackFiles", callbackFiles);
+		mv.addObject("vehicleCancelProofFiles", vehicleCancelProofFiles);
+		mv.addObject("bankCardFiles", bankCardFiles);
+		mv.addObject("vehicleOwnerProofFiles", vehicleOwnerProofFiles);
+		mv.addObject("noFinanceProvideFiles", noFinanceProvideFiles);
+		mv.addObject("openAccPromitFiles", openAccPromitFiles);
+		mv.addObject("agentProxyFiles", agentProxyFiles);
+		mv.addObject("agentProofFiles", agentProofFiles);
+		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
 		
 		// 获取业务流水记录表数据
 		List<ActionLog> actionLogList = eliminatedModifyService.getActionLogList(id);
-		//mv.getModel().put("busStatus", type);
+		mv.addObject("actionLogs", actionLogList);
+		mv.addObject("v", object);
+			
+		return mv;
+	}
+	
+	@RequestMapping("viewUpdateAccount")
+	@Privilege(modelCode = "M_ELIMINATED_MODIFY_UPA",prvgCode = "VIEW")
+	public ModelAndView viewUpdateAccount(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
+		String view = "ELIMINATED_MODIFY.COMMON_VIEW";
+		if(StringUtil.isNotEmpty(type)&&"account".equals(type)) {
+			view = "ELIMINATED_MODIFY.ACCOUNT_CHANGE";
+		}
+		EliminatedApply object = eliminatedModifyService.getById(id);
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		
+		// 获得图片附件表数据
+		// 获得附件表数据
+		// 报废回收证明
+		List callbackFiles = eliminatedModifyService.getAttachments("JDCHSZM", object.getApplyNo());
+		// 机动车注销证明
+		List vehicleCancelProofFiles = eliminatedModifyService.getAttachments("JDCZXZM", object.getApplyNo());
+		// 银行卡
+		List bankCardFiles = eliminatedModifyService.getAttachments("YHK", object.getApplyNo());
+		// 车主身份证明
+		List vehicleOwnerProofFiles = eliminatedModifyService.getAttachments("CZSFZM", object.getApplyNo());
+		// 非财政供养单位证明
+		List noFinanceProvideFiles = eliminatedModifyService.getAttachments("FCZGYZM", object.getApplyNo());
+		// 开户许可证
+		List openAccPromitFiles = eliminatedModifyService.getAttachments("KHXKZ", object.getApplyNo());
+		// 代理委托书
+		List agentProxyFiles = eliminatedModifyService.getAttachments("DLWTS", object.getApplyNo());
+		// 代理人身份证
+		List agentProofFiles = eliminatedModifyService.getAttachments("DLRSFZ", object.getApplyNo());
+		// 确认的受理表
+		List signedApplyFiles = eliminatedModifyService.getAttachments("QRSLB", object.getApplyNo());
+		// 补贴对象变更证明材料
+		List accountChangeProofFiles = eliminatedModifyService.getAttachments("BTZHMBGZM", object.getApplyNo());
+		
+		mv.addObject("callbackFiles", callbackFiles);
+		mv.addObject("vehicleCancelProofFiles", vehicleCancelProofFiles);
+		mv.addObject("bankCardFiles", bankCardFiles);
+		mv.addObject("vehicleOwnerProofFiles", vehicleOwnerProofFiles);
+		mv.addObject("noFinanceProvideFiles", noFinanceProvideFiles);
+		mv.addObject("openAccPromitFiles", openAccPromitFiles);
+		mv.addObject("agentProxyFiles", agentProxyFiles);
+		mv.addObject("agentProofFiles", agentProofFiles);
+		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
+		
+		// 获取业务流水记录表数据
+		List<ActionLog> actionLogList = eliminatedModifyService.getActionLogList(id);
 		mv.addObject("actionLogs", actionLogList);
 		mv.addObject("v", object);
 			

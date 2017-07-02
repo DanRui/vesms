@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.StringUtil;
 import com.jst.vesms.model.Archives;
@@ -35,6 +36,16 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 	@Resource(name="archivesServiceImpl")
 	private ArchivesService archivesService;
 	
+	
+	
+	
+	@RequestMapping("archiveView")
+	@Privilege(modelCode = "M_ARCHIVE_APPLY", prvgCode = "QUERY")
+	public ModelAndView archiveView() throws Exception {
+		String view = "ARCHIVES.LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
 	
 	/**
 	 * 进行查询数据

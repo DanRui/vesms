@@ -30,6 +30,7 @@ String basePath = request.getContextPath();
 			rownumbers : true,
 			sortName : "id",
 			sortOrder : "desc",
+			pageSize:100,
 			columns : [ [ {
 				field : "id",
 				checkbox : true,
@@ -189,9 +190,9 @@ String basePath = request.getContextPath();
 			columns:[
 					 {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
 					 {field:"applyNo",title:"受理单号:",type:"text"},
-					 {field:"toFinanceStatus",title:"业务报财务状态:",type:"combobox",url:basePath+"/data/toFinanceStatus.json",text:"name",value:"value"},
-					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/data/vehiclePlateType.json", text:"name", value:"value"},
-					 {field:"vehicleType",title:"车辆类型:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE",text:"name", value:"value"},
+					 {field:"toFinanceStatus",title:"业务报财务状态:",type:"combobox",panelHeight:true,url:basePath+"/data/toFinanceStatus.json",text:"name",value:"value"},
+					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox",panelHeight:true, url:basePath+"/data/vehiclePlateType.json", text:"name", value:"value"},
+					 {field:"vehicleType",title:"车辆类型:",type:"combobox",panelHeight:true,url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE",text:"name", value:"value"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"}
 					 
@@ -232,9 +233,8 @@ String basePath = request.getContextPath();
 			       {type:"QUERY"},
 			       {type:"CLEAR"}
 				   ],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true   
+			module:"M_REP_ADD_BATCH",
+			shownum:3
 		})
 
 		

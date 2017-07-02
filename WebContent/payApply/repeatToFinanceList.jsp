@@ -111,7 +111,7 @@ String basePath = request.getContextPath();
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"batchNo",title:"重报内部批次号：",type:"text"},
-					{field:"toFinanceStatus",title:"重报批次报财委状态:",type:"combobox", url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"},
+					{field:"toFinanceStatus",title:"重报批次报财委状态:",type:"combobox",panelHeight:true, url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"},
 					{startField:"createStartDate",endField:"createEndDate",title:"重报批次生成时间:",type:"date",section:true}
 			        ],
 			tools:[			       
@@ -177,11 +177,11 @@ String basePath = request.getContextPath();
 								}
 						   }
 					   },
-					   {type:"QUERY"}
+					   {type:"QUERY"},
+					   {type:"CLEAR"}
 				  ],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true   
+			module:"M_REP_TO_FIN_CONFIRM",
+			shownum:3
 		})
 
 		

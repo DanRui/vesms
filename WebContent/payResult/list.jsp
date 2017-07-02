@@ -189,7 +189,7 @@ String basePath = request.getContextPath();
 							});
 						} else {
 							Dialog.create("pay_res_mark", {
-								type : "single_mark",
+								type : "RESULT_MARK",
 								title : "拨付结果标记",
 								width : 700,
 								height : 300,
@@ -245,10 +245,12 @@ String basePath = request.getContextPath();
 							}*/
 						} 
 				   }},
-				   {type:"QUERY"}],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true
+				   {type:"QUERY"},
+				   {type:"CLEAR"}
+				   ],
+				   
+			module:"M_MARK_NOR_APPLY",
+			shownum:3
 		})
 
 	})

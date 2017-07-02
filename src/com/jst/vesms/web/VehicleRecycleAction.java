@@ -56,6 +56,19 @@ public class VehicleRecycleAction extends BaseAction {
 	@Resource(name = "cacheService")
 	private CacheService cacheService;
 	
+	/**
+	 * 
+	 * <p>Description: 进入报废车辆查询页面</p>
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("listView")
+	@Privilege(modelCode="M_VEHICLE_RECYCLE_LIST", prvgCode="QUERY")
+	public ModelAndView listView() throws Exception {
+		String view = "VEHICLE_RECYCLE.LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
 	
 	/**
 	 * 进行查询数据

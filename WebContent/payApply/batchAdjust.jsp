@@ -212,8 +212,7 @@ String basePath = request.getContextPath();
 				    
 				  ],
 			module:"M_NOR_BATCH_ADJUST",
-			shownum:3,
-			debug:true   
+			shownum:3
 		})
 
 		

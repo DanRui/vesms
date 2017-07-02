@@ -167,7 +167,7 @@ String basePath = request.getContextPath();
 					{startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"报财务时间:",type:"date",section:true}
 			        ],
 			tools:[
-					{type:"FILE_QUERY",icon:"icon-add",title:"EXCEL文件查看",text_width:150,
+					{type:"FILE_QUERY",icon:"icon-add",title:"报财务文件查看",text_width:150,
 						  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							//var ids=[];
@@ -199,7 +199,7 @@ String basePath = request.getContextPath();
 								});*/
 						  	}
 							}},
-							{type:"PDF_QUERY",icon:"icon-add",title:"PDF文件查看",text_width:150,
+							{type:"PDF_QUERY",icon:"icon-add",title:"图片文件查看",text_width:150,
 								  fn:function() {
 									var selectedRows = this.datagrid("getSelections");
 									//var ids=[];
@@ -219,7 +219,7 @@ String basePath = request.getContextPath();
 										});
 								  	}
 							}},
-							{type:"PREVIEW_QUERY",icon:"icon-add",title:"预览文件查看",text_width:150,
+							{type:"PREVIEW_QUERY",icon:"icon-add",title:"详情文件查看",text_width:150,
 								  fn:function() {
 									var selectedRows = this.datagrid("getSelections");
 									//var ids=[];
@@ -243,9 +243,8 @@ String basePath = request.getContextPath();
 							{type:"CLEAR"}
 				  ],
 				 
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true   
+			module:"M_TO_FIN_LIST",
+			shownum:3
 		})
 
 		

@@ -248,7 +248,7 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:1050,height:800,url:basePath+"/eliminatedApply/view.do?id="+rowData.applyId+"&type=applyLog",
+				$(this).datagrid("view",{width:1050,height:800,url:basePath+"/workLogging/workLogView.do?id="+rowData.applyId+"&type=applyLog",
 					content:"受理单详细信息查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
@@ -301,9 +301,9 @@ String basePath = request.getContextPath();
 					   }
 				   } */
 			      ],
-			module:"M_TEST_MANAGER",
+			module:"M_COMMON_QUERY_WORK",
 			shownum:3,
-			debug:true
+			debug:false
 		})
 	})
 	

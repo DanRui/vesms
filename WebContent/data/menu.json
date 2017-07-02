@@ -87,9 +87,9 @@
   		"menuName":"正常内部批次管理",
   		"menuPic":"icon-bofushenbao",
 		"children" : [
-			{"menuCode":"1081","menuName":"正常内部批次生成","menuUrl":"payApply/createBatch.jsp","openMode":"tab"},
-			{"menuCode":"1082","menuName":"正常内部批次调整","menuUrl":"payApply/batchAdjust.jsp","openMode":"tab"},
-			{"menuCode":"1083","menuName":"正常内部批次查询","menuUrl":"payApply/batchList.jsp","openMode":"tab"}
+			{"menuCode":"1081","menuName":"正常内部批次生成","menuUrl":"payApply/addBatchView.do","openMode":"tab"},
+			{"menuCode":"1082","menuName":"正常内部批次调整","menuUrl":"payApply/adjustView.do","openMode":"tab"},
+			{"menuCode":"1083","menuName":"正常内部批次查询","menuUrl":"payApply/batchListView.do","openMode":"tab"}
 
 		]
 	},
@@ -98,8 +98,8 @@
   		"menuName":"正常报财务批次管理",
   		"menuPic":"icon-bofushenbao",
 		"children" : [
-			{"menuCode":"1091","menuName":"正常批次报财务","menuUrl":"payApply/toFinanceList.jsp","openMode":"tab"},
-			{"menuCode":"1092","menuName":"正常报财务批次查询","menuUrl":"payApply/toFinBatchList.jsp","openMode":"tab"}
+			{"menuCode":"1091","menuName":"正常批次报财务","menuUrl":"payApply/toFinView.do","openMode":"tab"},
+			{"menuCode":"1092","menuName":"正常报财务批次查询","menuUrl":"payApply/toFinBatchView.do","openMode":"tab"}
 		]
 	},
 	{
@@ -107,9 +107,9 @@
   		"menuName":"重报内部批次管理",
   		"menuPic":"icon-bofushenbao",
 		"children" : [
-			{"menuCode":"2011","menuName":"重报内部批次生成","menuUrl":"payApply/repeatCreateBatch.jsp","openMode":"tab"},
-			{"menuCode":"2012","menuName":"重报内部批次调整","menuUrl":"payApply/repeatBatchAdjust.jsp","openMode":"tab"},
-			{"menuCode":"2013","menuName":"重报内部批次查询","menuUrl":"payApply/repeatBatchList.jsp","openMode":"tab"}
+			{"menuCode":"2011","menuName":"重报内部批次生成","menuUrl":"payApply/repAddBatchView.do","openMode":"tab"},
+			{"menuCode":"2012","menuName":"重报内部批次调整","menuUrl":"payApply/repAjustView.do","openMode":"tab"},
+			{"menuCode":"2013","menuName":"重报内部批次查询","menuUrl":"payApply/repBatchListView.do","openMode":"tab"}
 		]
 	},
 	{
@@ -117,8 +117,8 @@
   		"menuName":"重报报财务批次管理",
   		"menuPic":"icon-bofushenbao",
 		"children" : [
-			{"menuCode":"2021","menuName":"重报批次报财务","menuUrl":"payApply/repeatToFinanceList.jsp","openMode":"tab"},
-			{"menuCode":"2022","menuName":"重报报财务批次查询","menuUrl":"payApply/repeatToFinBatchList.jsp","openMode":"tab"}
+			{"menuCode":"2021","menuName":"重报批次报财务","menuUrl":"payApply/repToFinView.do","openMode":"tab"},
+			{"menuCode":"2022","menuName":"重报报财务批次查询","menuUrl":"payApply/repToFinBatchView.do","openMode":"tab"}
 		]
 	},
 	{
@@ -126,7 +126,7 @@
   		"menuName":"申报批次总查询",
   		"menuPic":"icon-bofushenbao",
 		"children" : [
-			{"menuCode":"2031","menuName":"申报批次总查询","menuUrl":"payApply/allBatchList.jsp","openMode":"tab"}
+			{"menuCode":"2031","menuName":"申报批次总查询","menuUrl":"payApply/allBatchView.do","openMode":"tab"}
 		]
 	},
 	{
@@ -134,8 +134,8 @@
   		"menuName":"拨付结果管理",
   		"menuPic":"icon-bofushenbao-result",
 		"children" : [
-			{"menuCode":"2041","menuName":"拨付结果标记","menuUrl":"payResult/list.jsp","openMode":"tab"},
-			{"menuCode":"2042","menuName":"重报拨付结果标记","menuUrl":"payResult/repeatList.jsp","openMode":"tab"}
+			{"menuCode":"2041","menuName":"拨付结果标记","menuUrl":"payResult/payView.do","openMode":"tab"},
+			{"menuCode":"2042","menuName":"重报拨付结果标记","menuUrl":"payResult/repeatPayView.do","openMode":"tab"}
 		]
 	},
 		{
@@ -143,8 +143,8 @@
   		"menuName":"办结管理",
   		"menuPic":"icon-guidang",
 		"children" : [
-			{"menuCode":"2051","menuName":"正常办结","menuUrl":"concludeApply/list.jsp","openMode":"tab"},
-			{"menuCode":"2052","menuName":"异常办结","menuUrl":"concludeApply/faultList.jsp","openMode":"tab"}
+			{"menuCode":"2051","menuName":"正常办结","menuUrl":"concludeApply/concludeView.do","openMode":"tab"},
+			{"menuCode":"2052","menuName":"异常办结","menuUrl":"concludeApply/conculdeFaultView.do","openMode":"tab"}
 		]
 	},
 	{
@@ -152,7 +152,7 @@
   		"menuName":"归档管理",
   		"menuPic":"icon-guidang",
 		"children" : [
-			{"menuCode":"2061","menuName":"档案管理","menuUrl":"archive/list.jsp","openMode":"tab"}
+			{"menuCode":"2061","menuName":"档案管理","menuUrl":"archive/archiveView.do","openMode":"tab"}
 		]
 	},
 	{

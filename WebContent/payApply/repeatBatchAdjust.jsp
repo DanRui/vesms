@@ -196,9 +196,8 @@ String basePath = request.getContextPath();
 					   {type:"QUERY"},
 					   {type:"CLEAR"},
 				  ],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true   
+			module:"M_REP_BATCH_ADJUST",
+			shownum:3
 		})
 
 		

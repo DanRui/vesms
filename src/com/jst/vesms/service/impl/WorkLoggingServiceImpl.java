@@ -14,6 +14,7 @@ import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.jst.common.hibernate.BaseDAO;
+import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
 import com.jst.vesms.common.CacheRead;
@@ -21,8 +22,12 @@ import com.jst.vesms.constant.SysConstant;
 import com.jst.vesms.dao.IActionLogDao;
 import com.jst.vesms.dao.IPostBaseInfoDao;
 import com.jst.vesms.dao.IWorkLoggingDao;
+import com.jst.vesms.model.ActionLog;
+import com.jst.vesms.model.Attachment;
+import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.model.PostBaseInfo;
 import com.jst.vesms.model.WorkLogging;
+import com.jst.vesms.service.EliminatedApplyService;
 import com.jst.vesms.service.WorkLoggingService;
 
 @Service("workLoggingServiceImpl")
@@ -36,6 +41,9 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 	
 	@Resource(name="actionLogDao")
 	private IActionLogDao actionLogDao;
+	
+	@Resource(name="eliminatedApplyServiceImpl")
+	private EliminatedApplyService eliminatedApplyService;
 	
 	@Override
 	public String getActionPost() throws Exception {
@@ -86,7 +94,7 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 				// 操作结果
 				workLogging.setActionResult(objs[4].toString());
 				// 操作时间
-				java.sql.Timestamp sqlActionTime = (java.sql.Timestamp) objs[5];
+				java.sql.Date sqlActionTime = (java.sql.Date) objs[5];
 				Date actionTime = new Date(sqlActionTime.getTime());
 				workLogging.setActionTime(actionTime);
 				// 业务受理单号
@@ -148,6 +156,34 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 	public String getActionResultList() throws Exception {
 		
 		return null;
+	}
+
+	@Override
+	public Page<EliminatedApply> getApplyPage(List<PropertyFilter> list,
+			Page page) throws Exception {
+		
+		page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
+		page = eliminatedApplyService.getPageExtra(page);
+		return page;
+	}
+
+	@Override
+	public EliminatedApply getApplyById(Integer id) throws Exception {
+		
+		return eliminatedApplyService.getById(id);
+	}
+
+	@Override
+	public List<ActionLog> getActionLogList(Integer id) throws Exception {
+		
+		return eliminatedApplyService.getActionLogList(id);
+	}
+
+	@Override
+	public List<Attachment> getAttachments(String type, String applyNo)
+			throws Exception {
+		
+		return eliminatedApplyService.getAttachments(type, applyNo);
 	}
 
 }

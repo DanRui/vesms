@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
+import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
@@ -36,14 +37,31 @@ public class PayResultAction extends BaseAction{
 	@Resource(name = "cacheService")
 	private CacheService cacheService;
 	
+	
+	
+	@RequestMapping("payView")
+	@Privilege(modelCode = "M_MARK_NOR_APPLY", prvgCode = "QUERY")
+	public ModelAndView payView() throws Exception {
+		String view = "PAY_RESULT.LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
+	@RequestMapping("repeatPayView")
+	@Privilege(modelCode = "M_MARK_REP_APPLY", prvgCode = "QUERY")
+	public ModelAndView repeatPayView() throws Exception {
+		String view = "PAY_RESULT.REPEAT_LIST";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
+	
 	/**
 	 * 进行查询数据
 	 */
 	
 	@RequestMapping("list")
-	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_MARK_NOR_APPLY", prvgCode = "QUERY")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -101,7 +119,7 @@ public class PayResultAction extends BaseAction{
 	
 
 	@RequestMapping("view")
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
+	@Privilege(modelCode = "M_MARK_NOR_APPLY", prvgCode = "QUERY")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
 		String view = "ELIMINATED_APPLY.VIEW";
 		EliminatedApply object = payResultService.getById(id);
@@ -115,9 +133,9 @@ public class PayResultAction extends BaseAction{
 	/**
 	 * 拨付结果标记
 	 */
-	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "create")
 	@ResponseBody
 	@RequestMapping(value = "payMark" ) 
+	@Privilege(modelCode = "M_MARK_NOR_APPLY",prvgCode = "RESULT_MARK")
 	public String markBatchApply(@RequestParam("ids")String ids,@RequestParam("payResStatus")String payResStatus,@RequestParam("faultType")String faultType,@RequestParam("faultDesc")String faultDesc) {
 		log.debug("PayResultAction createBatch is start");
 		boolean markOk = false;
@@ -172,7 +190,7 @@ public class PayResultAction extends BaseAction{
 		StringBuffer sb = new StringBuffer("select t.id,m.to_finance_No,t.repeated_batch_No,t.apply_no,t.vehicle_Plate_Num,t.vehicle_Plate_Type,t.vehicle_Type,");
 		sb.append(" t.vehicle_identify_no,t.vehicle_Owner,t.subsidies_Money,t.apply_Time");
 		sb.append(" from t_eliminated_apply t ");
-		sb.append("inner join t_batch_main m on t.batch_no=m.batch_no  where 1 = 1 ");
+		sb.append("inner join t_batch_main m on t.repeated_batch_no=m.batch_no  where 1 = 1 ");
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
 			sb.append("and t.vehicle_plate_num like '%").append(vehiclePlateNum).append("%' ");
 		}

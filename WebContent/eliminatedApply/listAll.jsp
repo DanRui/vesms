@@ -390,9 +390,9 @@ String basePath = request.getContextPath();
 				   },
 				   {type:"CLEAR"}
 			      ],
-			module:"M_TEST_MANAGER",
+			module:"M_COMMON_QUERY_ALL",
 			shownum:3,
-			debug:true
+			debug:false
 		})
 	})
 	

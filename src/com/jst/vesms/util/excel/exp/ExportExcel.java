@@ -1,14 +1,19 @@
 package com.jst.vesms.util.excel.exp;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import jxl.Cell;
 import jxl.CellView;
+import jxl.Sheet;
 import jxl.SheetSettings;
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -895,8 +900,78 @@ public class ExportExcel {
 	
 	
 	
+		      /**
+		      * 读取xls文件内容
+		      * @param file 想要读取的文件对象
+		      * @return 返回文件内容
+		     */
+		     public static List<Map<String, Object>> xls2String(File file,int startRow){
+		        String result = "";
+		        List<Map<String,Object>> allData = new ArrayList<Map<String ,Object>>();
+	        	Map<String, Object> dataMap = null;
+		        try{
+		           FileInputStream fis = new FileInputStream(file);   
+		           //StringBuilder sb = new StringBuilder();   
+		           jxl.Workbook rwb = Workbook.getWorkbook(fis);   
+		           Sheet[] sheet = rwb.getSheets();   
+		           for (int i = 0; i < sheet.length; i++) {
+	               Sheet rs = rwb.getSheet(i);   //获取所有的行
+	               int cols = rs.getColumns();  //列
+	               // 读取每一行对应的列数目
+	               // 循环读取每一行的全部列数目的内容
+	               int rows = rs.getRows();//行
+	               for (int j = startRow; j < rows; j++) {
+	            	   dataMap = new HashMap<String, Object>();
+	            	   // 行循环,Excel的行列式从(0,0)开始
+	            	   for (int k = 0; k < cols; k++) {
+						Cell excCell = rs.getCell(k, j);// 得到第4列的所有数据 (列,行)
+						dataMap.put("bfcl", excCell.getContents());//获取内容
+	            	   }
+	            	   allData.add(dataMap);
+	               }
+	               
+		          /*     for (int j = 0; j < rs.getRows(); j++) {   
+	                     Cell[] cells = rs.getRow(j); 
+	                     
+	                     for(int k=4;k<cells.length;k++)   
+	                     sb.append(cells[k].getContents());   
+			           }*/
+		           }
+		            /*  fis.close();   
+		              result += sb.toString();*/
+		        }catch(Exception e){
+		            e.printStackTrace();
+		        }
+		          return allData;
+		      }
+		     
+		     
+		     
+		     
+	     public static void main(String[] args){
+	          File file = new File("D:/国库导出支付信息模板.xls");
+	          System.out.println(xls2String(file,3));
+	      }
+		  
 	
-	public static void main(String[] args) {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+/*	public static void main(String[] args) {
 		ExcelProperties excelProperties = new ExcelProperties();
 		// excelProperties.setBeginRows(2);
 		excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","批次号" });
@@ -912,5 +987,5 @@ public class ExportExcel {
 		dataList.add(new String[] { "2", "粤B900xxx", "20000.0", "张三", "农业银行", "543513434354", "张绍刚", "工商银行", "1234521312","银行账户有误重新变更","batch_1" });
 	//	repExportExcelPreview(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
 	 
-	}
+	}*/
 }

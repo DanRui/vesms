@@ -202,8 +202,7 @@ String basePath = request.getContextPath();
 			       {type:"CLEAR"}
 				  ],
 			module:"M_ADD_BATCH",
-			shownum:3 ,
-			debug:false   
+			shownum:3 
 		})
 
 		

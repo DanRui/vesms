@@ -200,19 +200,18 @@ String basePath = request.getContextPath();
 			columns:[
 					 {field:"toFinanceNo",title:"报送序号：",type:"text"},
 			         {field:"batchNo",title:"内部批次号：",type:"text"},
-			         {field:"toFinanceStatus",title:"批次报财委状态:",type:"combobox", url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"},
-					 {field:"batchType",title:"批次类型：",type:"combobox", url:basePath+"/data/batchType.json", text:"name", value:"value"},
+			         {field:"toFinanceStatus",title:"批次报财委状态:",type:"combobox",panelHeight:true, url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"},
+					 {field:"batchType",title:"批次类型：",type:"combobox", panelHeight:true, url:basePath+"/data/batchType.json", text:"name", value:"value"},
 					 {startField:"createStartDate",endField:"createEndDate",title:"批次生成时间:",type:"date",section:true},
-					 {field:"batchStatus",title:"批次状态：",type:"combobox", url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
+					 {field:"batchStatus",title:"批次状态：",type:"combobox",panelHeight:true, url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
 					 {startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"批次报财务时间:",type:"date",section:true}
 			        ],
 			tools:[			       
 					   {type:"QUERY"},
 					   {type:"CLEAR"}
 				  ],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true   
+			module:"M_ALL_BATCH_LIST_QUERY",
+			shownum:3
 		})
 
 		

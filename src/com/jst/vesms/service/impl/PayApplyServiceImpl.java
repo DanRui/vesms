@@ -460,8 +460,14 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 					// 获得号牌种类名称(从字典表获取)
 					String vehiclePlateTypeName = SysConstant.VEHICLE_PALTE_TYPE.get(apply.getVehiclePlateType());
 					apply.setVehiclePlateTypeName(vehiclePlateTypeName);
+					String isPersonal = apply.getIsPersonal();
+					if (isPersonal.equals("Y")) {
+						isPersonal="个人";
+					}else if(isPersonal.equals("N")){
+						isPersonal="车主自证非财政供养";
+					}
 					String[] strings = new String[]{count+"", apply.getVehicleOwner(),apply.getVehiclePlateNum(),apply.getVehiclePlateTypeName(),apply.getSubsidiesStandard(),
-							vehicleIdentifyNo,apply.getAdvancedScrapDays().toString(),apply.getRecycleDate().toString(),"",apply.getIsPersonal().toString(),
+							vehicleIdentifyNo,apply.getAdvancedScrapDays().toString(),apply.getRecycleDate().toString(),"",isPersonal,
 							apply.getBankName(),bankAccountNo,apply.getSubsidiesMoney().toString()};
 					dataList.add(strings);
 				}

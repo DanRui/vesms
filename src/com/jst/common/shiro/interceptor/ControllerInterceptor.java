@@ -185,18 +185,32 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 		if (StringUtil.isNotEmpty(pageMdlCode)) {
 			// 检查是否是审核模块的请求
 			log.debug("检查是否有当前审核岗位的权限");
-			/*if (requestUrlPath.contains("eliminatedCheck")) {
+			if (requestUrlPath.contains("eliminatedCheck")) {
 				boolean check = false;
 				if (StringUtil.isNotEmpty(currentPost)) {
 					if (pageMdlCode.substring(19, 24).equals(currentPost)) {
 						Map prvg = (Map) SecurityUtils.getSubject().getSession().getAttribute("userPrvg");
 						Iterator<Map.Entry<String, String>> it = prvg.entrySet().iterator();
+						// 循环判断当前用户具有的权限是否符合分配的权限
 						while (it.hasNext()) {
 							Map.Entry<String, String> entry = it.next();
 							
-							if ("M_ELIMINATED_CHECK_PRVG".equals(entry.getKey()) && currentPost.equals(entry.getValue())) {
-								// 当前岗位的权限与配置的岗位权限一致
-								check = true;
+							if ("M_ELIMINATED_CHECK_PRVG".equals(entry.getKey())) {
+								// 判断当前岗位的权限与配置的岗位权限一致
+								String prvgCodes = entry.getValue();
+								
+								if (prvgCodes.contains("CHECK") || prvgCodes.contains("QUERY") || prvgCodes.contains("VIEW")) {
+									if (StringUtil.isNotEmpty(prvgCodes)) {
+										String [] prvgs = prvgCodes.split("\\$");
+										for (int i = 0 ; i < prvgs.length ; i ++) {
+											// 只要有一个与当前岗位一致，则该用户具有该岗位审核权限
+											if (prvgs[i].equals(currentPost)) {
+												check = true;
+												break;
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -225,7 +239,7 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 					return false;
 					
 				}
-			}*/
+			}
 		}
 		
 		

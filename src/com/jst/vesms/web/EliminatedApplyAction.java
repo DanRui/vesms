@@ -57,6 +57,19 @@ public class EliminatedApplyAction extends BaseAction {
 	@Resource(name = "cacheService")
 	private CacheService cacheService;
 	
+	/**
+	 * 
+	 * <p>Description: 进入申报受理未确认页面</p>
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("listView")
+	@Privilege(modelCode="M_ELIMINATED_APPLY_NO_LIST", prvgCode="QUERY")
+	public ModelAndView listView() throws Exception {
+		String view = "ELIMINATED_APPLY.NO_LIST_VIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		return mv;
+	}
 	
 	/**
 	 * 进行查询数据
@@ -109,76 +122,6 @@ public class EliminatedApplyAction extends BaseAction {
 			log.error("eliminatedApplyAction list is Error:" + e, e);
 		}
 		log.debug("eliminatedApplyAction list is end");
-	    return returnStr;
-	}
-	
-	@RequestMapping("listAll")
-	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
-	public String listAll(@RequestParam(value="page", defaultValue="1")int pageNo, 
-					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
-					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleType, 
-					   String vehicleOwner, String applyNo, String vehicleIdentifyNo, String startTime, String endTime, String batchNo, String archiveBoxNo,
-					   String subsidiesMoney, String concludeStatus, String businessStatus, String currentPost) throws Exception{
-		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
-		Page page = new Page();
-		page.setPageNo(pageNo);
-		page.setPageSize(pageSize);
-		page.setOrder(order);
-		page.setOrderBy(orderBy);
-		String returnStr = "";
-		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
-			list.add(new PropertyFilter("EQS_vehiclePlateNum",vehiclePlateNum));
-		}
-		if(StringUtil.isNotEmpty(vehiclePlateType)) {
-			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
-		}
-		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-			String key = PropertyUtil.getPropertyValue("DES_KEY");
-			vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
-			list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
-		}
-		if(StringUtil.isNotEmpty(vehicleOwner)) {
-			list.add(new PropertyFilter("LIKES_vehicleOwner",vehicleOwner));
-		}
-		if(StringUtil.isNotEmpty(applyNo)) {
-			list.add(new PropertyFilter("EQS_applyNo",applyNo));
-		}
-		if(StringUtil.isNotEmpty(startTime)) {
-			list.add(new PropertyFilter("GTD_applyConfirmTime",startTime));
-		}
-		if(StringUtil.isNotEmpty(endTime)) {
-			list.add(new PropertyFilter("LTD_applyConfirmTime",endTime));
-		}
-		if(StringUtil.isNotEmpty(batchNo)) {
-			list.add(new PropertyFilter("EQS_batchNo",batchNo));
-		}
-		if(StringUtil.isNotEmpty(archiveBoxNo)) {
-			list.add(new PropertyFilter("EQS_archiveBoxNo",archiveBoxNo));
-		}
-		if(StringUtil.isNotEmpty(subsidiesMoney)) {
-			list.add(new PropertyFilter("EQN_subsidiesMoney",subsidiesMoney));
-		}
-		if(StringUtil.isNotEmpty(concludeStatus)) {
-			list.add(new PropertyFilter("EQS_concludeStatus",concludeStatus));
-		}
-		if(StringUtil.isNotEmpty(businessStatus)) {
-			list.add(new PropertyFilter("EQS_bussinessStatus",businessStatus));
-		}
-		if(StringUtil.isNotEmpty(currentPost)) {
-			list.add(new PropertyFilter("EQS_currentPost",currentPost));
-		}
-		
-		try {
-			//page = eliminatedApplyService.getPageBySql(page, "select * from t_eliminated_apply where apply_confirm_time is null");
-			page = eliminatedApplyService.getPage(page, list, true, "vehiclePlateTypeName", "vehicleTypeName", "useOfPropertyName", "iolTypeName", "vehicleStatusName", "isFinancialSupportName");
-			page = eliminatedApplyService.getPageExtra(page);
-			returnStr = writerPage(page);
-		} catch (Exception e) {
-			log.error("eliminatedApplyAction listAll is Error:" + e, e);
-		}
-		log.debug("eliminatedApplyAction listAll is end");
 	    return returnStr;
 	}
 	
@@ -573,6 +516,7 @@ public class EliminatedApplyAction extends BaseAction {
 	 *
 	 */
 	@RequestMapping("add")
+	@Privilege(modelCode="M_ELIMINATED_APPLY_ADD", prvgCode="ADD")
 	public ModelAndView add(HttpServletRequest request) throws Exception {
 		String view = "ELIMINATED_APPLY.ADD";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
@@ -582,6 +526,7 @@ public class EliminatedApplyAction extends BaseAction {
 	}
 	
 	@RequestMapping("applyPreview")
+	@Privilege(modelCode="M_ELIMINATED_APPLY_NO_LIST", prvgCode="PRINT_APPLY")
 	public ModelAndView applyPreview(@RequestParam("id")Integer id) throws Exception {
 		String view = "ELIMINATED_APPLY.PREVIEW";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
@@ -594,6 +539,7 @@ public class EliminatedApplyAction extends BaseAction {
 	}
 	
 	@RequestMapping("confirmPreview")
+	@Privilege(modelCode="M_ELIMINATED_APPLY_NO_LIST", prvgCode="CONFIRM")
 	public ModelAndView confirmPreview(@RequestParam("id")Integer id) throws Exception {
 		String view = "ELIMINATED_APPLY.CONFIRM";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));

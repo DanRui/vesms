@@ -230,11 +230,12 @@ String basePath = request.getContextPath();
 									$("#iframeId").show();
 								});
 						  	}
-					}}
+					}},
+					 {type:"CLEAR"}
 				  ],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true   
+				  
+			module:"M_REP_TO_FIN_LIST",
+			shownum:3
 		})
 
 		

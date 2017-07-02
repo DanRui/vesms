@@ -241,7 +241,7 @@ String basePath = request.getContextPath();
 				   ],
 			module : 'M_ELIMINATED_MODIFY_NOR',
 			shownum : 3 ,
-			debug : true   
+			debug : false   
 		})
 	})
 
