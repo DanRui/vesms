@@ -169,7 +169,7 @@ String createDate = request.getParameter("createDate"); */
 					} 
 				}
 			},{
-				field : "applyTime",
+				field : "applyConfirmTime",
 				title : "受理时间",
 				width : "10%",
 				align : "center",
@@ -177,8 +177,8 @@ String createDate = request.getParameter("createDate"); */
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.expRecentDate) {
-						return getNowFormatDate(new Date(row.expRecentDate.time))
+					if (row.applyConfirmTime) {
+						return getNowFormatDate(new Date(row.applyConfirmTime.time))
 					} else {
 						return "";
 					}
@@ -257,7 +257,8 @@ String createDate = request.getParameter("createDate"); */
 									content : data.message
 								});
 					 			$("#repBatch-adjust-list #repBatch-adjust-grid").datagrid("load");
-					 		});
+					 			$("#repeatBatchAdjust-list #repeatBatchAdjust-grid").datagrid('load');
+						 	});
 							}
 							})
 						}
@@ -287,7 +288,8 @@ String createDate = request.getParameter("createDate"); */
 												});
 										 		$("#repBatch_add_apply").dialog("close");
 											 	$("#repBatch-adjust-list #repBatch-adjust-grid").datagrid("load");
-										 	})
+											 	$("#repeatBatchAdjust-list #repeatBatchAdjust-grid").datagrid('load'); 	
+										})
 									}},
 									{id:"repBatch_add_apply_cancel",text:"取消",iconCls:"icon-cancel",handler:function(){
 										$("#repBatch_add_apply").dialog("close");

@@ -38,6 +38,22 @@ String basePath = request.getContextPath();
 				width : "2%",
 				checkbox : true
 			},{
+				field : "batchNo",
+				title : "所在批次号",
+				width : "10%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
+			},{
+				field : "repeatBatchNo",
+				title : "重报批次号",
+				width : "10%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
+			},{
 				field : "applyNo",
 				title : "受理单号",
 				width : "12%",
@@ -94,7 +110,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true
 			},{
-				field : "applyTime",
+				field : "applyConfirmTime",
 				title : "受理时间",
 				width : "10%",
 				align : "center",
@@ -102,28 +118,12 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.expRecentDate) {
-						return getNowFormatDate(new Date(row.expRecentDate.time))
+					if (row.applyConfirmTime) {
+						return getNowFormatDate(new Date(row.applyConfirmTime.time))
 					} else {
 						return "";
 					}
 				}
-			},{
-				field : "applyPerson",
-				title : "受理人",
-				width : "7%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
-			},{
-				field : "applyPersonDept",
-				title : "部门",
-				width : "7%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
 			}
 			] ],
 		}).datagrid("initSearch",{
@@ -134,9 +134,7 @@ String basePath = request.getContextPath();
 			tools:[
 				  {type:"QUERY"}
 			     ],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true
+			shownum:3
 		})
  
 	})

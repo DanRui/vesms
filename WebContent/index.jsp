@@ -156,8 +156,8 @@
 						</tr>
 						<tr>
 							<td>业务办结岗：</td>
-							<td>待正常办结：<a href="javascript:void(0)" src="concludeApply/concludeView.do" parent="办结管理"><%=list.get(8).get("COL2") %></a>&nbsp条</td>
-							<td>待终止办结：<a href="javascript:void(0)" src="concludeApply/conculdeFaultView.do" parent="办结管理"><%=list.get(8).get("COL3") %></a>&nbsp条</td>
+							<td>待正常办结：<a href="javascript:void(0)" src="conclude/concludeView.do" parent="办结管理"><%=list.get(8).get("COL2") %></a>&nbsp条</td>
+							<td>待终止办结：<a href="javascript:void(0)" src="conclude/conculdeFaultView.do" parent="办结管理"><%=list.get(8).get("COL3") %></a>&nbsp条</td>
 						</tr>
 					</table>
 					<!-- 

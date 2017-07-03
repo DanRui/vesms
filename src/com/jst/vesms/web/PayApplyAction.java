@@ -242,25 +242,14 @@ public class PayApplyAction extends BaseAction{
 		String result = null;
 		String strids = "" ;
 		try {
-		//	strids = ids.replaceAll("," , "|");
-				String idString[] = ids.split(",");
-		  for (int i = 0; i < idString.length; i++) {
-				strids=strids+idString[i].concat("|");
-			}
-			strids=strids.substring(0, strids.length()-1);
+			strids = ids.replaceAll("," , "|");
 			result = payApplyService.createBatch(strids);
-			/*if(null != result) {
-				createOk = true;
-			}*/
 		} catch (Exception e) {
 			log.error("VehicleRecycleAction syncVehicleInfo is Error:"+e, e);
 			result = "VehicleRecycleAction syncVehicleInfo is Error:"+e;
 		}		
 		log.debug("PayApplyAction createBatch is End");
-		//if(createOk) {
-			return JsonUtil.toSuccessMsg(result);
-		//} else
-		//return JsonUtil.toErrorMsg("批次生成失败");
+		return JsonUtil.toSuccessMsg(result);
 	}
 	
 	
@@ -271,7 +260,6 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("batchAdjustList")
 	@Privilege(modelCode = "M_NOR_BATCH_ADJUST" ,prvgCode = "QUERY")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
 	public String batchAdjustList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -569,16 +557,23 @@ public class PayApplyAction extends BaseAction{
 	@ResponseBody
 	@RequestMapping("applyDelete")
 	//@Privilege(modelCode = "M_TEST_MANAGER" ,prvgCode = "DELETE")
-	public String deleteBatchDetail(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId) throws Exception {
+	public String deleteBatchDetail(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId){
 		log.debug("payApplyAction applyDelete is start");
 		boolean deleteOk = false;
 		String strids="";
-		String idString[] = ids.split(",");
+		strids=ids.replaceAll(",", "|");
+	/*	String idString[] = ids.split(",");
 		for (int i = 0; i < idString.length; i++) {
 			strids=strids+idString[i].concat("|");
 		}
-		strids=strids.substring(0, strids.length()-1);
-		String returnObject = payApplyService.deleteApply(batchId,strids);
+		strids=strids.substring(0, strids.length()-1);*/
+		String returnObject="";
+		try {
+			returnObject = payApplyService.deleteApply(batchId,strids);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if(null != returnObject) {
 			deleteOk=true;
 		}
@@ -598,11 +593,12 @@ public class PayApplyAction extends BaseAction{
 		String result=null;
 		String strids="";
 		try {
-			String idString[] = ids.split(",");
+			strids=ids.replaceAll(",", "|");
+		/*	String idString[] = ids.split(",");
 			for (int i = 0; i < idString.length; i++) {
 				strids=strids+idString[i].concat("|");
 			}
-			strids=strids.substring(0, strids.length()-1);
+			strids=strids.substring(0, strids.length()-1);*/
 			result= payApplyService.batchCancel(strids);
 		} catch (Exception e) {
 			log.error("PayApplyAction batchCancel is Error:"+e,e);
@@ -682,11 +678,7 @@ public class PayApplyAction extends BaseAction{
 		String batchIdStr=batchId+"";
 		String strids="";
 		try {
-			String idString[] = ids.split(",");
-			for (int i = 0; i < idString.length; i++) {
-				strids=strids+idString[i].concat("|");
-			}
-			strids=strids.substring(0, strids.length()-1);
+			strids = ids.replaceAll("," , "|");
 			result= payApplyService.addApply(batchIdStr,strids);
 			if(null != result) {
 				addToBatch = true;
@@ -1101,11 +1093,7 @@ public class PayApplyAction extends BaseAction{
 		String result = null;
 		String strids = "" ;
 		try {
-			String idString[] = ids.split(",");
-			for (int i = 0; i < idString.length; i++) {
-				strids=strids+idString[i].concat("|");
-			}
-			strids=strids.substring(0, strids.length()-1);
+			strids = ids.replaceAll(",", "|") ;
 			result = payApplyService.createRepBatch(strids);
 			if(null != result) {
 				createOk = true;
@@ -1441,16 +1429,18 @@ public class PayApplyAction extends BaseAction{
 		//批次业务删除
 		@ResponseBody
 		@RequestMapping("repApplyDelete")
-		public String delRepBatchDetail(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId) throws Exception {
+		public String delRepBatchDetail(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId) {
 			log.debug("payApplyAction applyDelete is start");
 			boolean deleteOk = false;
 			String strids="";
-			String idString[] = ids.split(",");
-			for (int i = 0; i < idString.length; i++) {
-				strids=strids+idString[i].concat("|");
-			}
-			strids=strids.substring(0, strids.length()-1);
-			String returnObject = payApplyService.deleteRepApply(batchId,strids);	
+			String returnObject = "";
+			try {
+				strids = ids.replaceAll(",", "|");
+				returnObject = payApplyService.deleteRepApply(batchId,strids);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
 			if(null != returnObject) {
 				deleteOk=true;
 			}
@@ -1471,11 +1461,7 @@ public class PayApplyAction extends BaseAction{
 			String result=null;
 			String strids = "" ; 
 			try {
-				String idString[] = ids.split(",");
-				for (int i = 0; i < idString.length; i++) {
-					strids=strids+idString[i].concat("|");
-				}
-				strids=strids.substring(0, strids.length()-1);
+				strids = ids.replaceAll(",", "|");
 				result= payApplyService.repBatchCancel(strids);
 				if(null != result) {
 					cancelBatch = true;
@@ -1564,11 +1550,7 @@ public class PayApplyAction extends BaseAction{
 			String result=null;
 			String strids = "" ;
 			try {
-				String idString[] = ids.split(",");
-				for (int i = 0; i < idString.length; i++) {
-					strids=strids+idString[i].concat("|");
-				}
-				strids=strids.substring(0, strids.length()-1);
+				strids = ids.replaceAll(",", "|");
 				result= payApplyService.addRepApply(batchId,strids);
 				if(null != result) {
 					addToBatch = true;

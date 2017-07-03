@@ -23,11 +23,11 @@ public interface WorkLoggingService extends BaseService {
 	 */
 	public String getActionPost() throws Exception;
 	
-	public String getActionUserList() throws Exception;
+	public String getActionUserList(String postCode) throws Exception;
 	
-	public String getActionNameList() throws Exception;
+	public String getActionNameList(String postCode) throws Exception;
 	
-	public String getActionResultList() throws Exception;
+	public String getActionResultList(String postCode) throws Exception;
 
 	/**
 	 * 

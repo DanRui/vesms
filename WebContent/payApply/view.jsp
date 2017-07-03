@@ -82,40 +82,7 @@ String createDate = request.getParameter("createDate"); */
 			},{
 				field : "applyNo",
 				title : "受理单号",
-				width : "10%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
-			},{
-				field : "vehiclePlateNum",
-				title : "号牌号码",
-				width : "8%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
-			},{
-				field : "vehiclePlateTypeName",
-				title : "号牌种类",
-				width : "8%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true,
-			},{
-				field : "vehicleTypeName",
-				title : "车辆类型",
-				width : "8%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
-			},
-			{
-				field : "vehicleIdentifyNo",
-				title : "车架号",
-				width : "12%",
+				width : "18%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -136,6 +103,22 @@ String createDate = request.getParameter("createDate"); */
 				halign : "center",
 				resizable : true,
 				sortable : true 
+			},{
+				field : "vehiclePlateNum",
+				title : "号牌号码",
+				width : "8%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
+			},{
+				field : "vehiclePlateTypeName",
+				title : "号牌种类",
+				width : "10%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true,
 			},{
 				field : "toFinanceStatus",
 				title : "批次报财委状态",
@@ -160,6 +143,23 @@ String createDate = request.getParameter("createDate"); */
 						return "color:green";
 					} 
 				}
+			},{
+				field : "vehicleTypeName",
+				title : "车辆类型",
+				width : "15%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
+			},
+			{
+				field : "vehicleIdentifyNo",
+				title : "车架号",
+				width : "20%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
 			}/*,{
 				field : "applyTime",
 				title : "受理时间",

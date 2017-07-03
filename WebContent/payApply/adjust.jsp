@@ -171,7 +171,7 @@ String createDate = request.getParameter("createDate"); */
 					} 
 				}
 			},{
-				field : "applyTime",
+				field : "applyConfirmTime",
 				title : "受理时间",
 				width : "10%",
 				align : "center",
@@ -179,29 +179,13 @@ String createDate = request.getParameter("createDate"); */
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.expRecentDate) {
-						return getNowFormatDate(new Date(row.expRecentDate.time))
+					if (row.applyConfirmTime) {
+						return getNowFormatDate(new Date(row.applyConfirmTime.time))
 					} else {
 						return "";
 					}
 				}
-			}/*,{
-				field : "applyPerson",
-				title : "受理人",
-				width : "7%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
-			},{
-				field : "applyPersonDept",
-				title : "部门",
-				width : "7%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
-			} */
+			}
 			] ],
 		/*	onDblClickRow : function(rowIndex, rowData) {
 				/* $(this).datagrid("view",{width:900,height:450,url:basePath+"/payResult/viewApply.jsp?id="+rowData.id,content:"申报受理清单查看"});
@@ -238,6 +222,7 @@ String createDate = request.getParameter("createDate"); */
 									content : data.message
 								});
 					 			$("#batch-adjust-list #batch-adjust-grid").datagrid("load");
+					 			 $("#batchAdjust-list #batchAdjust-grid").datagrid('load');
 					 		});
 						}
 			      }},
@@ -266,6 +251,7 @@ String createDate = request.getParameter("createDate"); */
 												});
 											$("#batch_add_apply").dialog("close");
 											$("#batch-adjust-list #batch-adjust-grid").datagrid("load");
+											$("#batchAdjust-list #batchAdjust-grid").datagrid('load');
 										})
 										
 									}},

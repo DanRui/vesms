@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	this is error404.jsp
+	您访问的页面不存在！
 </body>
 </html>

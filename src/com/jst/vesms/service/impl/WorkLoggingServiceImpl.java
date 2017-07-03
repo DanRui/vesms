@@ -11,12 +11,15 @@ import javax.annotation.Resource;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
+import com.jst.common.utils.string.StringUtil;
 import com.jst.vesms.common.CacheRead;
 import com.jst.vesms.constant.SysConstant;
 import com.jst.vesms.dao.IActionLogDao;
@@ -32,7 +35,9 @@ import com.jst.vesms.service.WorkLoggingService;
 
 @Service("workLoggingServiceImpl")
 public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggingService {
-
+	
+	private static final Log log = LogFactory.getLog(WorkLoggingServiceImpl.class);
+	
 	@Resource(name="postBaseInfoDao")
 	private IPostBaseInfoDao postBaseInfoDao;
 	
@@ -94,7 +99,7 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 				// 操作结果
 				workLogging.setActionResult(objs[4].toString());
 				// 操作时间
-				java.sql.Date sqlActionTime = (java.sql.Date) objs[5];
+				java.sql.Timestamp sqlActionTime = (java.sql.Timestamp) objs[5];
 				Date actionTime = new Date(sqlActionTime.getTime());
 				workLogging.setActionTime(actionTime);
 				// 业务受理单号
@@ -135,27 +140,86 @@ public class WorkLoggingServiceImpl extends BaseServiceImpl implements WorkLoggi
 	}
 
 	@Override
-	public String getActionUserList() throws Exception {
-		List list = actionLogDao.getListBySql("select distinct action_user_code from t_action_log)");
+	public String getActionUserList(String postCode) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select distinct action_user_code,action_user from t_action_log where 1=1 ");
+		if (StringUtil.isNotEmpty(postCode)) {
+			sb.append("and current_post = '").append(postCode).append("' ");
+		}
+		
+		JSONArray jsonArray = new JSONArray();
+		JSONObject json = new JSONObject();
+		json.put("value", "请选择");
+		json.put("code", "请选择");
+		jsonArray.add(json);
+		
+		List<Object[]> list =  workLoggingDao.executeBySql(sb.toString());
 		if (null != list && list.size() > 0) {
-			for (Object obj : list) {
-				System.out.println(obj);
+			for (int i = 0 ; i < list.size() ; i ++) {
+				Object[] objs = list.get(i);
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("value", objs[1].toString());
+				jsonObj.put("code", objs[0].toString());
+				jsonArray.add(jsonObj);
 			}
 		}
 		
-		return null;
+		return jsonArray.toString();
 	}
 
 	@Override
-	public String getActionNameList() throws Exception {
+	public String getActionNameList(String postCode) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select distinct action_name from t_action_log where 1=1 ");
+		if (StringUtil.isNotEmpty(postCode)) {
+			sb.append("and current_post = '").append(postCode).append("' ");
+		}
 		
-		return null;
+		JSONArray jsonArray = new JSONArray();
+		JSONObject json = new JSONObject();
+		json.put("value", "请选择");
+		json.put("code", "请选择");
+		jsonArray.add(json);
+		
+		List<Object[]> list =  workLoggingDao.executeBySql(sb.toString());
+		if (null != list && list.size() > 0) {
+			for (int i = 0 ; i < list.size() ; i ++) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("value", list.get(i));
+				jsonObj.put("code", list.get(i));
+				jsonArray.add(jsonObj);
+			}
+		}
+		
+		return jsonArray.toString();
 	}
 
 	@Override
-	public String getActionResultList() throws Exception {
+	public String getActionResultList(String postCode) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select distinct action_result from t_action_log where 1=1 ");
+		if (StringUtil.isNotEmpty(postCode)) {
+			sb.append("and current_post = '").append(postCode).append("' ");
+		}
 		
-		return null;
+		JSONArray jsonArray = new JSONArray();
+		JSONObject json = new JSONObject();
+		json.put("value", "请选择");
+		json.put("code", "请选择");
+		jsonArray.add(json);
+		
+		List<Object[]> list =  workLoggingDao.executeBySql(sb.toString());
+		if (null != list && list.size() > 0) {
+			for (int i = 0 ; i < list.size() ; i ++) {
+				//Object[] objs = list.get(i);
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("value", list.get(i));
+				jsonObj.put("code", list.get(i));
+				jsonArray.add(jsonObj);
+			}
+		}
+		
+		return jsonArray.toString();
 	}
 
 	@Override

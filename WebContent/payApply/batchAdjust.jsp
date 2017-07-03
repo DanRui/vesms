@@ -118,7 +118,7 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:900,height:600,
+				$(this).datagrid("view",{width:970,height:800,
 					url:basePath+"/payApply/batchView.do?id="+rowData.id+"&type=view",
 							content:"批次受理单明细",param:{close:false}});
 			}

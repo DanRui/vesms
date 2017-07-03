@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	this is error500.jsp
+	服务器异常，请联系管理员。
 </body>
 </html>

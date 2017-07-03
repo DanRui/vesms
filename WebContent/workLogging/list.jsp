@@ -157,7 +157,7 @@ String basePath = request.getContextPath();
 			}, {
 				field : "iolTypeName",
 				title : "燃油种类",
-				width : "5%",
+				width : "7%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -165,7 +165,7 @@ String basePath = request.getContextPath();
 			}, {
 				field : "subsidiesMoney",
 				title : "补贴金额(元)",
-				width : "7%",
+				width : "9%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -173,7 +173,7 @@ String basePath = request.getContextPath();
 			}, {
 				field : "currentPost",
 				title : "业务当前岗位",
-				width : "10%",
+				width : "12%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -252,10 +252,10 @@ String basePath = request.getContextPath();
 					content:"受理单详细信息查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
-			columns:[{field:"post",title:"操作岗位:",type:"combobox",panelHeight:false, url:basePath+"/workLogging/getPostList.do", text:"value", value:"code"},
-					{field:"actionUser",title:"操作人:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
-					{field:"action",title:"操作动作:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
-					{field:"actionResult",title:"操作结果:",type:"combobox",panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
+			columns:[{field:"post",title:"操作岗位:",type:"combobox",panelHeight:true, url:basePath+"/workLogging/getPostList.do", text:"value", value:"code"},
+					{field:"actionUser",title:"操作人:",type:"combobox",panelHeight:true, url:basePath+"/workLogging/getActionUserList.do", text:"value", value:"code"},
+					{field:"action",title:"操作动作:",type:"combobox",panelHeight:true, url:basePath+"/workLogging/getActionNameList.do", text:"value", value:"code"},
+					{field:"actionResult",title:"操作结果:",type:"combobox",panelHeight:true, url:basePath+"/workLogging/getActionResultList.do", text:"value", value:"code"},
 					/* {field:"applyNo",title:"受理单号:",type:"text"},
 					{field:"vehicleOwner",title:"车主:",type:"text"},
 					{field:"vehicleIdentifyNo",title:"车架号:",type:"text"},
@@ -304,8 +304,26 @@ String basePath = request.getContextPath();
 			module:"M_COMMON_QUERY_WORK",
 			shownum:3,
 			debug:false
-		})
-	})
+		});
+		
+		// 设置岗位信息联动
+		$("#post").combobox({
+			onSelect : function() {
+				var postCode = $(this).combobox("getValue");
+				// 根据岗位查询操作过的人员
+				var actionUserUrl = basePath + "/workLogging/getActionUserList.do?postCode="+postCode;
+				$("#actionUser").combobox("reload", actionUserUrl);
+				
+				// 根据岗位查询操作过的动作
+				var actionNameUrl = basePath + "/workLogging/getActionNameList.do?postCode="+postCode;
+				$("#action").combobox("reload", actionNameUrl);
+				
+				// 根据岗位查询操作过的结果
+				var actionResultUrl = basePath + "/workLogging/getActionResultList.do?postCode="+postCode;
+				$("#actionResult").combobox("reload", actionResultUrl);
+			}
+		});
+	});
 	
 	</script>
 </body>

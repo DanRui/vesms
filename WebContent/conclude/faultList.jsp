@@ -25,7 +25,7 @@ String basePath = request.getContextPath();
 		var basePath = $("#basePath").val();
 		$("#conclude-exce-list #conclude-exce-grid").datagrid({
 			toolbar : "#concludeExce-grid-toolbar",
-			url : basePath+"/conclude/exceList.do",
+			url : basePath+"/conclude/faultList.do",
 			method : "post",
 			sortName : "id",
 			sortOrder : "desc",
@@ -66,6 +66,28 @@ String basePath = request.getContextPath();
 				halign : "center",
 				resizable : true,
 				sortable : true
+			},{
+				field : "payResStatus",
+				title : "拨付结果状态",
+				width : "8%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true,
+				formatter : function(value, row, index) {
+					if (value == "1") {
+						return "拨付成功";
+					} else if (value == "2") {
+						return "拨付不成功";
+					}
+				},
+				styler : function(value, row, index) {
+					if (value == "1") {
+						return "color:green";
+					} else if (value == "2") {
+						return "color:red";
+					}
+				}
 			},
 			{
 				field : "vehicleIdentifyNo",
@@ -92,7 +114,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true 
 			},{
-				field : "applyTime",
+				field : "applyConfirmTime",
 				title : "受理时间",
 				width : "10%",
 				align : "center",
@@ -109,7 +131,7 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:900,height:800,url:basePath+"/conclude/view.do?id="+rowData.id+"&type=view",content:"受理单查看",param:{close:close}});
+				$(this).datagrid("view",{width:900,height:800,url:basePath+"/eliminatedApply/view.do?id="+rowData.id+"&type=applyLog",content:"受理单查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[
@@ -122,7 +144,7 @@ String basePath = request.getContextPath();
 					 //{field:"batchCreateStatus",title:"批次生成状态:",type:"combobox",url:basePath+"/data/batchCreateStatus.json",text:"name", value:"value"}
 			        ],
 			tools:[
-					{type:"conclude_mark",icon:"icon-add",title:"办结",text_width:100,
+					{type:"CONCLUDE_MARK",icon:"icon-add",title:"办结",text_width:100,
 						  fn:function() {
 							var ids=[];
 							var selectedRows = this.datagrid("getSelections");
@@ -152,10 +174,10 @@ String basePath = request.getContextPath();
 							}
 							
 						  },
-				   {type:"QUERY"}],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true
+				   {type:"QUERY"},
+				   {type:"CLEAR"}],
+			module:"M_FAULT_APPLY_CONCLUDE",
+			shownum:3
 		})
 
 	})

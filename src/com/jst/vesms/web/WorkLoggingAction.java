@@ -111,13 +111,13 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 			sb.append("and a.current_post = '").append(post).append("' ");
 		}
 		if (StringUtil.isNotEmpty(actionUser)) {
-			sb.append("and a.actionUser = '").append(actionUser).append("' ");
+			sb.append("and a.action_user_code = '").append(actionUser).append("' ");
 		}
 		if (StringUtil.isNotEmpty(action)) {
 			sb.append("and a.action_name = '").append(action).append("' ");
 		}
 		if (StringUtil.isNotEmpty(actionResult)) {
-			sb.append("and a.actionResult = '").append(actionResult).append("' ");
+			sb.append("and a.action_result = '").append(actionResult).append("' ");
 		}
 		if (StringUtil.isNotEmpty(startTime)) {
 			sb.append("and a.action_time >= to_date('").append(startTime).append("', 'yyyy-MM-dd') ");
@@ -171,12 +171,12 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 	 */
 	@ResponseBody
 	@RequestMapping("getActionUserList")
-	public String getActionUserList() throws Exception {
+	public String getActionUserList(String postCode) throws Exception {
 		log.debug("WorkLoggingAction getPostList is start");
 		String list = null;
 		try {
 			// 岗位列表
-			list = workLoggingService.getActionUserList();
+			list = workLoggingService.getActionUserList(postCode);
 		} catch (Exception e) {
 			log.error("WorkLoggingAction getPostList is Error:" + e, e);
 			list = null;
@@ -194,12 +194,12 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 	 */
 	@ResponseBody
 	@RequestMapping("getActionNameList")
-	public String getActionNameList() throws Exception {
+	public String getActionNameList(String postCode) throws Exception {
 		log.debug("WorkLoggingAction getPostList is start");
 		String list = null;
 		try {
 			// 岗位列表
-			list = workLoggingService.getActionNameList();
+			list = workLoggingService.getActionNameList(postCode);
 		} catch (Exception e) {
 			log.error("WorkLoggingAction getPostList is Error:" + e, e);
 			list = null;
@@ -217,12 +217,12 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 	 */
 	@ResponseBody
 	@RequestMapping("getActionResultList")
-	public String getActionResultList() throws Exception {
+	public String getActionResultList(String postCode) throws Exception {
 		log.debug("WorkLoggingAction getActionResultList is start");
 		String list = null;
 		try {
 			// 岗位列表
-			list = workLoggingService.getActionResultList();
+			list = workLoggingService.getActionResultList(postCode);
 		} catch (Exception e) {
 			log.error("WorkLoggingAction getActionResultList is Error:" + e, e);
 			list = null;

@@ -143,8 +143,8 @@
   		"menuName":"办结管理",
   		"menuPic":"icon-guidang",
 		"children" : [
-			{"menuCode":"2051","menuName":"正常办结","menuUrl":"concludeApply/concludeView.do","openMode":"tab"},
-			{"menuCode":"2052","menuName":"异常办结","menuUrl":"concludeApply/conculdeFaultView.do","openMode":"tab"}
+			{"menuCode":"2051","menuName":"正常办结","menuUrl":"conclude/concludeView.do","openMode":"tab"},
+			{"menuCode":"2052","menuName":"异常办结","menuUrl":"conclude/conculdeFaultView.do","openMode":"tab"}
 		]
 	},
 	{

@@ -60,7 +60,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	@RequestMapping("listView")
 	@Privilege(modelCode="M_ELIMINATED_MODIFY_NOR", prvgCode="QUERY")
 	public ModelAndView listView() throws Exception {
-		String view = "ELIMINATED_APPLY.NOR_VIEW";
+		String view = "ELIMINATED_MODIFY.NOR_VIEW";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		return mv;
 	}
@@ -74,7 +74,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	@RequestMapping("updateAccListView")
 	@Privilege(modelCode="M_ELIMINATED_MODIFY_UPA", prvgCode="QUERY")
 	public ModelAndView updateAccListView() throws Exception {
-		String view = "ELIMINATED_APPLY.UPA_VIEW";
+		String view = "ELIMINATED_MODIFY.UPA_VIEW";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		return mv;
 	}
@@ -82,7 +82,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	
 	@RequestMapping("list")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_ELIMINATED_MODIFY_NOR", prvgCode = "QUERY")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
@@ -135,7 +135,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	
 	@RequestMapping("updateAccList")
 	@ResponseBody
-	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
+	@Privilege(modelCode = "M_ELIMINATED_MODIFY_UPA", prvgCode = "QUERY")
 	public String updateAccList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 

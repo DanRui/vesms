@@ -108,7 +108,7 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true 
 			},{
-				field : "applyTime",
+				field : "applyConfirmTime",
 				title : "受理时间",
 				width : "10%",
 				align : "center",

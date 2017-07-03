@@ -65,8 +65,10 @@ public class VehicleRecycleAction extends BaseAction {
 	@RequestMapping("listView")
 	@Privilege(modelCode="M_VEHICLE_RECYCLE_LIST", prvgCode="QUERY")
 	public ModelAndView listView() throws Exception {
+		log.debug("VehicleRecycleAction listView is start");
 		String view = "VEHICLE_RECYCLE.LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("VehicleRecycleAction listView is end");
 		return mv;
 	}
 	
@@ -289,27 +291,32 @@ public class VehicleRecycleAction extends BaseAction {
 	@RequestMapping("view")
 	@Privilege(modelCode = "M_VEHICLE_RECYCLE_LIST",prvgCode = "VIEW")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
+		log.debug("VehicleRecycleAction View is start");
 		String view = "VEHICLE_RECYCLE.VIEW";
 		if(StringUtil.isNotEmpty(type)&&"update".equals(type)) {
 			view = "VEHICLE_RECYCLE.EDIT";
 		}
-		VehicleRecycle object = vehicleRecycleService.getById(id);
-		
-		// 获得附件表数据
-		// 报废回收证明
-		List callbackFiles = vehicleRecycleService.getAttachments("JDCHSZM", object.getId());
-		// 机动车注销证明
-		List vehicleRegisterFiles = vehicleRecycleService.getAttachments("JDCZCDJZS", object.getId());
-		// 行驶证
-		List vehicleLicenses = vehicleRecycleService.getAttachments("SSZ", object.getId());
-		
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
-		mv.addObject("callbackFiles", callbackFiles);
-		mv.addObject("vehicleRegisterFiles", vehicleRegisterFiles);
-		mv.addObject("vehicleLicenses", vehicleLicenses);
-		
-		mv.addObject("v", object);
+		try {
+			VehicleRecycle object = vehicleRecycleService.getById(id);
 			
+			// 获得附件表数据
+			// 报废回收证明
+			List callbackFiles = vehicleRecycleService.getAttachments("JDCHSZM", object.getId());
+			// 机动车注销证明
+			List vehicleRegisterFiles = vehicleRecycleService.getAttachments("JDCZCDJZS", object.getId());
+			// 行驶证
+			List vehicleLicenses = vehicleRecycleService.getAttachments("SSZ", object.getId());
+			
+			mv.addObject("callbackFiles", callbackFiles);
+			mv.addObject("vehicleRegisterFiles", vehicleRegisterFiles);
+			mv.addObject("vehicleLicenses", vehicleLicenses);
+			
+			mv.addObject("v", object);
+		} catch (Exception e) {
+			log.error("VehicleRecycleAction is error:"+e, e);
+		}
+		log.debug("VehicleRecycleAction View is end");
 		return mv;
 	}
 	
