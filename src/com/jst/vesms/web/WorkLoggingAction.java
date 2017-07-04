@@ -111,13 +111,19 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 			sb.append("and a.current_post = '").append(post).append("' ");
 		}
 		if (StringUtil.isNotEmpty(actionUser)) {
-			sb.append("and a.action_user_code = '").append(actionUser).append("' ");
+			if (!"请选择".equals(actionUser)) {
+				sb.append("and a.action_user_code = '").append(actionUser).append("' ");
+			}
 		}
 		if (StringUtil.isNotEmpty(action)) {
-			sb.append("and a.action_name = '").append(action).append("' ");
+			if (!"请选择".equals(action)) {
+				sb.append("and a.action_name = '").append(action).append("' ");
+			}
 		}
 		if (StringUtil.isNotEmpty(actionResult)) {
-			sb.append("and a.action_result = '").append(actionResult).append("' ");
+			if (!"请选择".equals(actionResult)) {
+				sb.append("and a.action_result = '").append(actionResult).append("' ");
+			}
 		}
 		if (StringUtil.isNotEmpty(startTime)) {
 			sb.append("and a.action_time >= to_date('").append(startTime).append("', 'yyyy-MM-dd') ");

@@ -300,6 +300,7 @@ String basePath = request.getContextPath();
 							}
 					   }
 				   } */
+				   ,{type:"CLEAR"}
 			      ],
 			module:"M_COMMON_QUERY_WORK",
 			shownum:3,

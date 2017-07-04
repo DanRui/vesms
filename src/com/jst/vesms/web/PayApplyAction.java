@@ -457,7 +457,7 @@ public class PayApplyAction extends BaseAction{
 	public String batchApplyList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String applyNo,String batchNo,String repeatedBatchNo) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String applyNo,String batchNo,String toFinanceStatus) throws Exception{
 			String returnStr="";
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
@@ -465,6 +465,9 @@ public class PayApplyAction extends BaseAction{
 			page.setPageSize(pageSize);
 			page.setOrder(order);
 			page.setOrderBy(orderBy);
+			if(StringUtil.isNotEmpty(batchNo)) {
+				list.add(new PropertyFilter("EQS_batchNo",batchNo));
+			}
 			if(StringUtil.isNotEmpty(vehiclePlateNum)) {
 				list.add(new PropertyFilter("LIKES_vehiclePlateNum",vehiclePlateNum));
 			}
@@ -474,11 +477,8 @@ public class PayApplyAction extends BaseAction{
 			if(StringUtil.isNotEmpty(applyNo)) {
 				list.add(new PropertyFilter("EQS_applyNo",applyNo));
 			}
-			if(StringUtil.isNotEmpty(batchNo)) {
-				list.add(new PropertyFilter("EQS_batchNo",batchNo));
-			}
-			if(StringUtil.isNotEmpty(repeatedBatchNo)) {
-				list.add(new PropertyFilter("EQS_repeatedBatchNo",repeatedBatchNo));
+			if(StringUtil.isNotEmpty(toFinanceStatus)) {
+				list.add(new PropertyFilter("EQS_toFinanceStatus",toFinanceStatus));
 			}
 			try {
 				page = payApplyService.getApplyPage(page, list);
@@ -893,11 +893,12 @@ public class PayApplyAction extends BaseAction{
 						resString = "预览文件生成失败！";
 					}else {
 						path=batchPath+","+pdfPath+","+viewPath;
-						path =path.replace(File.separator,"_exc");
+						path =path.replace(File.separator,"/");
 						// 后台调用导出存储过程
 						payApplyService.batchExport(id,path,password);
 						isOk = true;
-						resString =path.replace("_exc", "/");
+						resString=path;
+				//		resString =path.replace("_exc", "/");
 					}
 				}
 				
@@ -937,7 +938,6 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[0];
 				}
-				excelPath =excelPath.replace("_exc", "/");
 			// 	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchLook is Error:"+e, e);
@@ -966,7 +966,6 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[1];
 				}
-				excelPath =excelPath.replace("_exc", "/");
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
@@ -995,7 +994,6 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[2];
 				}
-				excelPath =excelPath.replace("_exc", "/");
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
@@ -1684,7 +1682,6 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[0];
 				}
-				excelPath =excelPath.replace("_exc", "/");
 			// 	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchLook is Error:"+e, e);
@@ -1711,7 +1708,6 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[1];
 				}
-				excelPath =excelPath.replace("_exc", "/");
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
@@ -1739,7 +1735,6 @@ public class PayApplyAction extends BaseAction{
 				for (int i = 0; i < pathString.length; i++) {
 					excelPath = pathString[2];
 				}
-				excelPath =excelPath.replace("_exc", "/");
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
 				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
@@ -1873,10 +1868,9 @@ public class PayApplyAction extends BaseAction{
 					}else {
 						// 后台调用导出存储过程
 						path = repBatchPath+","+repPdfPath+","+repViewPath;
-						path =path.replace(File.separator,"_exc");
+						path =path.replace(File.separator,"/");
 						payApplyService.batchRepExport(id, path,password);
 						isOk = true;
-						path =path.replace("_exc", "/");
 						resString = path;
 					}
 				}

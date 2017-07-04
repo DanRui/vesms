@@ -77,7 +77,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "opeTime",
 				title : "操作时间",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,

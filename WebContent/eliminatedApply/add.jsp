@@ -943,9 +943,9 @@
 					
 					if (isValid) {
 						// 校验注销日期，必选大于交售日期
-						/* if (!checkDestroyDate()) {
+						if (!checkDestroyDate()) {
 							return false;	
-						}  */
+						}
 						
 						// 校验经办人信息是否必填
 						if (!checkAgentInfo(isPersonal)) {
@@ -1143,12 +1143,13 @@
 				
 			});
 			
+			// 校验车辆是否符合补贴资格
 			function verifyApply() {
 				var basePath = "<%=basePath%>";
 				//校验输入的号牌号码和号牌种类，判断是否在系统中录入的车辆，过滤不符合资格或者补贴金额为0的车辆。
 				var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
 				if(vehiclePlateNum!=null && vehiclePlateNum.indexOf("粤") != -1) {
-					vehiclePlateNum = vehiclePlateNum.substring(1);
+					vehiclePlateNum = vehiclePlateNum.substring(1);s
 				}
 				if (vehiclePlateNum == "" || vehiclePlateNum.length < 6) {
 					alert("请输入号牌号码！");
@@ -1352,6 +1353,7 @@
 				$("input[name='agentIdentity']").val(agentIdentity);
 			}
 			
+			// 检查注销日期是否填写且合法
 			function checkDestroyDate() {
 				var isOK = true;
 				var recycleDate = $("input[name='recycleDate']").val();
@@ -1370,6 +1372,7 @@
 				return isOK;
 			}
 			
+			// 代理则经办人信息必填
 			function checkAgentInfo(isPersonal) {
 				var isOk = true;
 				if (isPersonal == "N") {
@@ -1393,6 +1396,7 @@
 				return isOk;
 			}
 			
+			// 清空表单数据
 			function clearForm(id, filters) {
 				// 获取form表单
 				var objId = $(id);

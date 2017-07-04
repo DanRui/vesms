@@ -986,9 +986,9 @@
 					
 					if (isValid) {
 						// 校验注销日期，必选大于交售日期
-						/* if (!checkDestroyDate()) {
+						if (!checkDestroyDate()) {
 							return false;	
-						}  */
+						}  
 						
 						// 校验经办人信息是否必填
 						if (!checkAgentInfo(isPersonal)) {

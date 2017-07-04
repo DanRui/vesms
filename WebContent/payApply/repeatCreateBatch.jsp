@@ -190,9 +190,8 @@ String basePath = request.getContextPath();
 			columns:[
 					 {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
 					 {field:"applyNo",title:"受理单号:",type:"text"},
-					 {field:"toFinanceStatus",title:"业务报财务状态:",type:"combobox",panelHeight:true,url:basePath+"/data/toFinanceStatus.json",text:"name",value:"value"},
-					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox",panelHeight:true, url:basePath+"/data/vehiclePlateType.json", text:"name", value:"value"},
-					 {field:"vehicleType",title:"车辆类型:",type:"combobox",panelHeight:true,url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE",text:"name", value:"value"},
+					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					 {field:"vehicleType",title:"车辆类型:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"}
 					 

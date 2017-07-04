@@ -56,7 +56,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "applyNo",
 				title : "受理单号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -80,7 +80,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "vehicleIdentifyNo",
 				title : "车架号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -128,7 +128,7 @@ String basePath = request.getContextPath();
 			] ],
 		}).datagrid("initSearch",{
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/data/vehiclePlateType.json", text:"name", value:"value"},
+					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					{field:"vehicleOwner",title:"受理单号:",type:"text"}					
 					],
 			tools:[

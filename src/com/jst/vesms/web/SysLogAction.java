@@ -45,6 +45,7 @@ public class SysLogAction extends BaseAction {
 	}
 	
 	@ResponseBody
+	@Privilege(modelCode="M_SYS_LOG_QUERY", prvgCode="QUERY")
 	@RequestMapping("list")
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 			   @RequestParam(value="rows", defaultValue="10")Integer pageSize,

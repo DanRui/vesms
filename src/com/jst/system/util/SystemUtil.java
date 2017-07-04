@@ -184,7 +184,7 @@ public class SystemUtil {
 		* @return  Mac Address 
 		* 
 		*/
-		public static String getMacInWindows(final String ip){ 
+		public static String getMacInWindows(final String ip) { 
 		  String result = ""; 
 		  String[] cmd = { 
 		        "cmd", 
@@ -196,11 +196,15 @@ public class SystemUtil {
 		        "/c", 
 		        "arp -a"
 		        }; 
-		
-		  String cmdResult = callCmd(cmd,another); 
-		  result = filterMacAddress(ip,cmdResult,"-"); 
-		
-		  return result; 
+		  
+		  try {
+			  String cmdResult = callCmd(cmd,another); 
+			  result = filterMacAddress(ip,cmdResult,"-"); 
+			  return result;
+		  } catch (Exception e) {
+			  log.error("getMacInWindows is error:"+e, e);
+		  }
+		  return null;
 		} 
 
 		/** 
@@ -213,12 +217,16 @@ public class SystemUtil {
 		  String[] cmd = { 
 		        "/bin/sh", 
 		        "-c", 
-		        "ping " + ip + " -c 2 && arp -a"
+		        "arp -a"
 		        }; 
-		  String cmdResult = callCmd(cmd); 
-		  result = filterMacAddress(ip,cmdResult,":"); 
-		
-		  return result; 
+		  try {
+			  String cmdResult = callCmd(cmd); 
+			  result = filterMacAddress(ip,cmdResult,":"); 
+			  return result;
+		  } catch (Exception e) {
+			  log.error("getMacInLinux is error :" + e, e);
+		  }
+		  return null;
 		} 
 		/**
 		* 获取MAC地址 
@@ -228,9 +236,9 @@ public class SystemUtil {
 		  String macAddress = "";
 		  macAddress = getMacInWindows(ip).trim();
 		  
-		  /*if(macAddress==null||"".equals(macAddress)) {
+		  if(macAddress==null||"".equals(macAddress)) {
 		    macAddress = getMacInLinux(ip).trim();
-		  }*/
+		  } 
 		  
 		  return macAddress;
 		}

@@ -79,6 +79,8 @@
 				var modifyTypes = $("#modifyType").combotree("getValues");
 				var id = '${v.id}';
 				var modifyResult = $('input[name="modifyResult"]:checked').val();
+				var bankName = $("#bankCodeNew").combobox("getText");
+				$("input[name='bankName']").val(bankName);
 				//alert(modifyResult);
 				
 				if(isValid) {

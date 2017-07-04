@@ -48,7 +48,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "applyNo",
 				title : "受理单号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -72,7 +72,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "vehicleIdentifyNo",
 				title : "车架号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,

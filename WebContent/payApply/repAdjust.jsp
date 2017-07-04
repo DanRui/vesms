@@ -115,7 +115,7 @@ String createDate = request.getParameter("createDate"); */
 			},{
 				field : "vehicleIdentifyNo",
 				title : "车架号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -145,7 +145,7 @@ String createDate = request.getParameter("createDate"); */
 				resizable : true,
 				sortable : true
 			},{
-				field : "batchToFinanceStatus",
+				field : "toFinanceStatus",
 				title : "业务报财委状态",
 				width : "10%",
 				align : "center",
@@ -154,17 +154,17 @@ String createDate = request.getParameter("createDate"); */
 				sortable : true,
 				formatter : function(value, row, index) {
 					var num = parseInt (value);
-					if (num < 0) {
+					if (num < -1) {
 						return "待报财务";
-					} else if (num > "0") {
+					} else if (num > 1) {
 						return "已报财务";
 					}
 				},
 				styler : function(value, row, index) {
 					var num = parseInt (value);
-					if (num < 0) {
+					if (num < -1) {
 						return "color:gray";
-					} else if (num > 0) {
+					} else if (num > 1) {
 						return "color:red";
 					} 
 				}
@@ -225,9 +225,9 @@ String createDate = request.getParameter("createDate"); */
 			}  */
 		}).datagrid("initSearch",{
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/data/vehiclePlateType.json", text:"name", value:"value"},
-					{field:"vehicleOwner",title:"受理单号:",type:"text"},
-					{field:"batchToFinanceStatus",title:"报财委状态:",type:"combobox", url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"}
+					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					{field:"vehicleOwner",title:"受理单号:",type:"text"}
+				//	{field:"batchToFinanceStatus",title:"报财委状态:",type:"combobox", panelHeight:true,url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"}
 					/* {field:"payBatchResStatus",title:"拨付导出状态:",type:"combobox", url:basePath+"/data/batchExpStatus.json", text:"name", value:"value"} */
 					],
 			tools:[
@@ -301,7 +301,8 @@ String createDate = request.getParameter("createDate"); */
 						});
 					}
 			      },
-				  {type:"QUERY"}
+				  {type:"QUERY"},
+				  {type:"CLEAR"}
 			     ],
 			module:"M_TEST_MANAGER",
 			shownum:3,

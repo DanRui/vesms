@@ -204,9 +204,12 @@
 					<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 				</td>
 				<td class="view_table_left" style="width:110px">修改后开户银行：</td>
-				<td class="view_table_right"><input type="text"
-					name="bankName" class="easyui-validatebox"
-					data-options="required:true" />
+				<td class="view_table_right">
+					<input id="bankCodeNew" class="easyui-combobox" name="bankCode" 
+					data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=BANK_CODE',panelHeight:150"/>
+					<input type="hidden" name="bankName" />
+					<!-- <input type="text" name="bankName" class="easyui-validatebox"
+					data-options="required:true" /> -->
 					<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 				</td>
 				<td class="view_table_left" style="width:120px">修改后开户银行账号：</td>
@@ -347,6 +350,8 @@
 			$("#common-dialog-update_account").click(function() {
 				/* var isValid = $("#form-update-account form").form("enableValidation").form("validate"); */
 				var id = '${v.id}';
+				var bankName = $("#bankCodeNew").combobox("getText");
+				$("input[name='bankName']").val(bankName);
 				$("#form-update-account").form("submit", {
 						url : $(this).attr("action"),
 						onSubmit : function(param) {
