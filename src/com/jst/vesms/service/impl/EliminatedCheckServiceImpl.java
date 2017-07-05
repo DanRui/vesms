@@ -83,11 +83,15 @@ public class EliminatedCheckServiceImpl extends BaseServiceImpl implements Elimi
 				EliminatedApply eliminatedApply = (EliminatedApply)obj;
 				// 获得号牌种类名称
 				SysDict sysDictVehiclePlateType = CacheRead.getSysDictByCode("VEHICLE_PLATE_TYPE", eliminatedApply.getVehiclePlateType());
-				eliminatedApply.setVehiclePlateTypeName(sysDictVehiclePlateType.getDictValue());
+				if (null != sysDictVehiclePlateType) {
+					eliminatedApply.setVehiclePlateTypeName(sysDictVehiclePlateType.getDictValue());
+				}
 				
 				// 获得车辆类型名称
 				SysDict sysDictVehicleType = CacheRead.getSysDictByCode("VEHICLE_TYPE", eliminatedApply.getVehicleType());
-				eliminatedApply.setVehicleTypeName(sysDictVehicleType.getDictValue());
+				if (null != sysDictVehicleType) {
+					eliminatedApply.setVehicleTypeName(sysDictVehicleType.getDictValue());
+				}
 				
 				// 获得使用性质
 				SysDict sysDictUseOfProperty = CacheRead.getSysDictByCode("USE_OF_PROPERTY", eliminatedApply.getUseOfProperty());

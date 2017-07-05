@@ -169,7 +169,7 @@ String basePath = request.getContextPath();
 		}).datagrid("initSearch",{
 			columns:[
 			         {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-			         {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+			         {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", panelHeight:false, url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"applyNo",title:"受理单号:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"},	

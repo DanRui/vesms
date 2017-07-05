@@ -28,7 +28,7 @@ String basePath = request.getContextPath();
 			url : basePath+"/payApply/batchList.do",
 			method : "post",
 			rownumbers : true,
-			sortName : "id",
+			sortName : "createDate",
 			sortOrder : "desc",
 			columns : [ [ {
 				field : "id",

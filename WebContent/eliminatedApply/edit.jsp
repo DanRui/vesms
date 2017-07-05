@@ -63,7 +63,7 @@
 					</td>
 					<td class="view_table_left">号牌种类：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehiclePlateNum" value="${v.vehiclePlateNum}" class="easyui-validatebox" readonly="readonly"/>
+						<input type="text" name="vehiclePlateTypeName" value="${v.vehiclePlateTypeName}" class="easyui-validatebox" readonly="readonly"/>
 						<%-- <input id="vehiclePlateType" class="easyui-combobox" value="${v.vehiclePlateType}" name="vehiclePlateType" 
 						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE',panelHeight:300"/> 
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
@@ -176,7 +176,7 @@
 				<tr class="datagrid-header-row classify-tr">
 					<td colspan="6">报废信息</td>
 				<tr class="datagrid-row">
-					<td class="view_table_left" style="width:110px">报废回收证明编号：</td>
+					<td class="view_table_left" style="width:120px">报废回收证明编号：</td>
 					<td class="view_table_right">
 						<input type="text" name="callbackProofNo" value="${v.callbackProofNo}" readonly="readonly"  />
 					</td>
@@ -225,12 +225,14 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">开户户名：</td>
 					<td class="view_table_right">
-						<input type="text" name="bankAccountName" value="${v.bankAccountName}" class="easyui-validatebox" readonly="readonly"/>
+						<textarea rows="3" name="bankAccountName" class="easyui-validatebox" readonly="readonly">${v.bankAccountName}</textarea>
+						<%-- <input type="text" name="bankAccountName" value="${v.bankAccountName}" class="easyui-validatebox" readonly="readonly"/> --%>
 						<!-- <span style="color:red;text-align:center">&nbsp;*&nbsp;</span> -->
 					</td>
 					<td class="view_table_left">开户银行：</td>
 					<td class="view_table_right">
 						<input id="bankCodeUpdate" name="bankCode" />
+						<input type="hidden" name="bankName" value="${v.bankName}" />
 						<!-- <input id="bankCodeUpdate" class="easyui-combobox" name="bankCode" 
 						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=BANK_CODE',panelHeight:150"/> -->
 						<%-- <input type="text" name="bankName" value="${v.bankName}" class="easyui-validatebox" data-options="required:true" /> --%>
@@ -348,8 +350,13 @@
 			<tr class="datagrid-row">
 				<td class="view_table_left">原车主身份证明：</td>
 				<td class="view_table_right">
-					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile">
-						<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile" varStatus="status">
+						<c:if test="${status.index % 2 eq 1}">
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a></br>
+						</c:if>
+						<c:if test="${status.index % 2 eq 0}">
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+						</c:if>
 					</c:forEach>
 				</td>
 			</tr>
@@ -436,8 +443,13 @@
 			<tr class="datagrid-row">
 				<td class="view_table_left">原开户许可证：</td>
 				<td class="view_table_right">
-					<c:forEach items="${openAccPromitFiles}" var="openAccPromitFile">
-						<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a>
+					<c:forEach items="${openAccPromitFiles}" var="openAccPromitFile" varStatus="status">
+						<c:if test="${status.index % 2 eq 1}">
+							<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a></br>
+						</c:if>
+						<c:if test="${status.index % 2 eq 0}">
+							<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a>
+						</c:if>
 					</c:forEach>
 				</td>
 			</tr>
@@ -463,8 +475,6 @@
 		</table>
 	</div>
 	</form>
-	<br>
-	<br>
 	<br>
 	<br>
 	<div id="applyEdit" align="center">
@@ -502,10 +512,15 @@
 			
 			$("#bankCodeUpdate").combobox("reload", basePath + '/sysDict/getDictListFromMap.do?dictType=BANK_CODE');
 			
+			$("#bankCodeUpdate").combobox({
+				onSelect : function() {
+					var bankName = $(this).combobox("getText");
+					$("input[name='bankName']").val(bankName);
+				}
+			});
 			
 			var bankCode = '${v.bankCode}';
 			$("#bankCodeUpdate").combobox("setValue", bankCode);
-			
 			
 			// 选中车主类型和办理类型
 			/*
@@ -565,7 +580,7 @@
 			   }
 			   
 			   //文件框页面校验，必填
-			   var ifValid = $("#form-apply-upload form").form("enableValidation").form("validate");
+			   var ifValid = $("#form-apply-upload").form("enableValidation").form("validate");
 			   
 			   if (ifValid) {
 				
@@ -1026,7 +1041,7 @@
 			
 			// 下一步按钮点击事件处理函数
 			$("#btnEditNextStepUpdate").click(function() {
-				var isValid = $("#common-apply-edit form").form("enableValidation").form("validate");
+				var isValid = $("#common-apply-edit").form("enableValidation").form("validate");
 				if (isValid) {
 					$.ajax({
 		                //cache: true,
@@ -1050,13 +1065,20 @@
 								});
 								// 设置受理单号、受理表Id、档案盒编号
 								$("input[name='id']").val(data.message.id);
-								/* $("input[name='applyNo']").val(data.message.applyNo);
-								$("input[name='archiveNoxNo']").val(data.message.archiveNoxNo);
-								$("input[name='archivedInnerNo']").val(data.message.archivedInnerNo); */
 								
 								// 资格校验成功，受理表信息保存，页面跳转到受理表打印预览页面
 								var url = basePath+"/eliminatedApply/applyPreview.do?id="+data.message.id;
-								$("#common-dialog").dialog("refresh", url);
+								$("#common-dialog").dialog("close");
+								
+								openDialog({
+								   	type : "PRINT_APPLY_TABLE",
+									title : "补贴受理表打印预览",
+									width : 1040,
+									height : 400,
+									param: {reset:false,save:false},	
+									maximizable : true,
+									href : url
+							   });
 								
 		                	} else {
 		                		Messager.alert({

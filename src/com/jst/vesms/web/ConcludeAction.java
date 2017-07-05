@@ -86,10 +86,10 @@ public class ConcludeAction extends BaseAction{
 			list.add(new PropertyFilter("EQS_applyNo",applyNo));
 		}
 		if(StringUtil.isNotEmpty(payResStartDate)) {
-			list.add(new PropertyFilter("GTD_inputTime",payResStartDate));
+			list.add(new PropertyFilter("GED_inputTime",payResStartDate));
 		}
 		if(StringUtil.isNotEmpty(payResEndDate)) {
-			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
+			list.add(new PropertyFilter("LED_endTime",payResEndDate));
 		}
 		list.add(new PropertyFilter("EQS_currentPost", "YWBJG"));
 		list.add(new PropertyFilter("EQS_bussinessStatus", "1"));
@@ -143,6 +143,30 @@ public class ConcludeAction extends BaseAction{
 	
 	
 	
+	
+	@ResponseBody
+	@RequestMapping(value = "faultConclude" ) 
+	@Privilege(modelCode = "M_FAULT_APPLY_CONCLUDE",prvgCode = "CONCLUDE_MARK")
+	public String faultConcludeApply(@RequestParam("ids")String ids,@RequestParam("concludeStatus")String concludeStatus) {
+		log.debug("ConcludeAction concludeApply is start");
+		String result = null;
+		String strids = "";
+		try {
+			String idString[] = ids.split(",");
+			for (int i = 0; i < idString.length; i++) {
+				strids=strids+idString[i].concat("|");
+			}
+			strids=strids.substring(0, strids.length()-1);
+			result = concludeService.concludeApply(strids,concludeStatus);			
+		} catch (Exception e) {
+			log.error(" concludeApply  is Error:"+e, e);
+		}		
+		log.debug("TransactFinAction concludeApply  is End");
+			return 	JsonUtil.toSuccessMsg(result);
+	}
+	
+	
+	
 
 	@RequestMapping("faultList")
 	@ResponseBody
@@ -174,10 +198,10 @@ public class ConcludeAction extends BaseAction{
 			list.add(new PropertyFilter("EQS_applyNo",applyNo));
 		}
 		if(StringUtil.isNotEmpty(payResStartDate)) {
-			list.add(new PropertyFilter("GTD_inputTime",payResStartDate));
+			list.add(new PropertyFilter("GED_inputTime",payResStartDate));
 		}
 		if(StringUtil.isNotEmpty(payResEndDate)) {
-			list.add(new PropertyFilter("LTD_endTime",payResEndDate));
+			list.add(new PropertyFilter("LED_endTime",payResEndDate));
 		}
 		list.add(new PropertyFilter("EQS_currentPost", "YWBJG"));
 		list.add(new PropertyFilter("EQS_bussinessStatus", "-1"));

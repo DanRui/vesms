@@ -81,7 +81,7 @@ String createDate = request.getParameter("createDate"); */
 			toolbar : "#repBatchAdjustList-grid-toolbar",
 			url : basePath+"/payApply/repAdjustList.do?repeatedBatchNo="+'${v.batchNo}',
 			method : "post",
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {

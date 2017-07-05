@@ -31,7 +31,7 @@
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/date/WdatePicker.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/editor/lang/zh_CN.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/editor/plugins/code/prettify.js"></script>
-		<script type="text/javascript" src="<%=basePath%>/js/main.js"></script>
+		<%-- <script type="text/javascript" src="<%=basePath%>/js/main.js"></script> --%>
         <script language="javascript" type="text/javascript">
         		// 定义全局号牌号码变量
         		var vehiclePlateNum = "<%=vehiclePlateNum%>";

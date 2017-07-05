@@ -83,7 +83,7 @@ String createDate = request.getParameter("createDate"); */
 			toolbar : "#batchAdjustList-grid-toolbar",
 			url : basePath+"/payApply/batchApplyList.do?batchNo="+'${v.batchNo}'+'&batchId='+'${v.id}',
 			method : "post",
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {

@@ -885,7 +885,7 @@
 				   }
 				   
 				   //文件框页面校验，必填
-				   var ifValid = $("#form-apply-upload form").form("enableValidation").form("validate");
+				   var ifValid = $("#form-apply-upload").form("enableValidation").form("validate");
 				   
 				   if (ifValid) {
 					
@@ -982,7 +982,7 @@
 					   return false;
 				   	}
 					   
-					var isValid = $("#common-dialog form").form("enableValidation").form("validate");
+					var isValid = $("#form-apply-save").form("enableValidation").form("validate");
 					
 					if (isValid) {
 						// 校验注销日期，必选大于交售日期

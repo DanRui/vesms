@@ -60,7 +60,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "applyNo",
 				title : "受理单号",
-				width : "12%",
+				width : "14%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -84,7 +84,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "vehicleOwner",
 				title : "车主",
-				width : "10%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -100,7 +100,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "vehicleIdentifyNo",
 				title : "车架号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -152,7 +152,7 @@ String basePath = request.getContextPath();
 			}
 		}).datagrid("initSearch",{ columns: [
 			         {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", panelHeight:false, url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", panelHeight:false, url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"applyNo",title:"受理单号:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"},
@@ -223,7 +223,7 @@ String basePath = request.getContextPath();
 								});
 							}else {
 								openDialog({
-								   	type : "confirm_apply",
+								   	type : "CONFIRM_APPLY",
 									title : "受理表确认",
 									width : 1032,
 									height : 400,

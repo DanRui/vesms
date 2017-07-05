@@ -75,15 +75,22 @@
 			
 			// 点击提交按钮，更新数据
 			$("#common-dialog-choose_modify_type").click(function() {
-				var isValid = $("#form-apply-modify form").form("enableValidation").form("validate");
 				var modifyTypes = $("#modifyType").combotree("getValues");
 				var id = '${v.id}';
 				var modifyResult = $('input[name="modifyResult"]:checked').val();
-				var bankName = $("#bankCodeNew").combobox("getText");
-				$("input[name='bankName']").val(bankName);
-				//alert(modifyResult);
+				if ($("#bankCodeNew").length > 0) {
+					var bankName = $("#bankCodeNew").combobox("getText");
+					$("input[name='bankName']").val(bankName);
+				}
 				
-				if(isValid) {
+				if(checkRequiredField(modifyTypes)) {
+					//检查附件材料是否上传
+					var hasUploaded = checkAttachments(modifyTypes);
+					if (!hasUploaded) {
+						alert("还有附件未上传，请抓拍上传！");
+						return;
+					}
+					
 					$("#form-apply-modify").form("submit", {
 						url : $(this).attr("action"),
 						onSubmit : function(param) {
@@ -149,11 +156,131 @@
 						}
 						
 					});
+				} else {
+					alert("经办人信息或补贴账户信息未填写完整，请先填写！");
+					return;
 				}
 				
 			});
 			
 		});
+		
+		// 检查附件材料是否上传
+		function checkAttachments(modifyTypeArray) {
+			var isOk = true;
+			var isPersonal = '${v.isPersonal}';
+			var isProxy = '${v.isProxy}';
+			
+			for (var i = 0 ; i < modifyTypeArray.length; i ++) {
+				if (modifyTypeArray[i] == "31") {
+					// 机动车注销证明
+					if ($("input[name='callbackProofFile']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				if (modifyTypeArray[i] == "32") {
+					// 机动车注销证明
+					if ($("input[name='vehicleCancelProofFiles']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				if (modifyTypeArray[i] == "33") {
+					// 车主身份证明
+					if ($("input[name='vehicleOwnerProofFiles']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				if (modifyTypeArray[i] == "34") {
+					// 银行卡
+					if ($("input[name='bankCardFiles']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				if (modifyTypeArray[i] == "35") {
+					// 车主类型为企业
+					if (isPersonal == 'N') {
+						if ($("input[name='noFinanceProvideFiles']").val() == "") {
+							isOk = false;
+						}
+					}
+				}
+				
+				if (modifyTypeArray[i] == "36") {
+					// 办理类型为代理
+					if (isProxy == "N") {
+						if ($("input[name='agentProxyFiles']").val() == "") {
+							isOk = false;
+						}
+					}
+				}
+				
+				if (modifyTypeArray[i] == "37") {
+					// 办理类型为代理
+					if (isProxy == "N") {
+						if ($("input[name='agentProofFiles']").val() == "") {
+							isOk = false;
+						}
+					}
+				}
+				
+				if (modifyTypeArray[i] == "38") {
+					// 车主类型为企业
+					if (isPersonal == 'N') {
+						if ($("input[name='openAccPromitFiles']").val() == "") {
+							isOk = false;
+						}
+					}
+				}
+			}
+			return isOk;
+		}
+		
+		// 检查页面必填项
+		function checkRequiredField(modifyTypeArray) {
+			var isOk = true;
+			for (var i = 0 ; i < modifyTypeArray.length; i ++) {
+				if (modifyTypeArray[i] == "11") {
+					// 经办人
+					if ($("input[name='agent']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				if (modifyTypeArray[i] == "12") {
+					// 经办人手机号码
+					if ($("input[name='agentMobileNo']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				if (modifyTypeArray[i] == "13") {
+					// 经办人身份证
+					if ($("input[name='agentIdentity']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				if (modifyTypeArray[i] == "21") {
+					// 补贴账户开户行
+					if ($("input[name='bankCode']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				if (modifyTypeArray[i] == "22") {
+					// 补贴账户卡号
+					if ($("input[name='bankAccountNo']").val() == "") {
+						isOk = false;
+					}
+				}
+			}
+			return isOk;
+		}
+		
 	</script>
 		
 </body>

@@ -356,6 +356,7 @@
 						<input type="radio" name="modifyResult" value="2"/>继续修正
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
+					<td colspan="4"></td>
 				</tr>
 			</table>
 		</div>

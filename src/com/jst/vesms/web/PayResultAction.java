@@ -106,7 +106,8 @@ public class PayResultAction extends BaseAction{
 		if(StringUtil.isNotEmpty(toFinanceNo)) {
 			sb.append("and m.toFinanceNo = '").append(toFinanceNo).append("' ");
 		}
-		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and t.batch_no is not null and repeated_batch_no is null");
+		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and t.batch_no is not null and repeated_batch_no is null ");
+		sb.append(" order by "+orderBy+" "+order+" ");
 		try {
 			page = payResultService.getPageSql(page, sb.toString());
 			returnStr = writerPage(page);
@@ -138,10 +139,14 @@ public class PayResultAction extends BaseAction{
 	@Privilege(modelCode = "M_MARK_NOR_APPLY",prvgCode = "RESULT_MARK")
 	public String markBatchApply(@RequestParam("ids")String ids,@RequestParam("payResStatus")String payResStatus,@RequestParam("faultType")String faultType,@RequestParam("faultDesc")String faultDesc) {
 		log.debug("PayResultAction createBatch is start");
+		
 		boolean markOk = false;
 		String result = null;
 		String strids = "";
 		try {
+			if (StringUtil.isNotEmpty(faultDesc)) {
+				faultDesc = new String(faultDesc.getBytes("ISO8859-1"), "UTF-8"); 
+			}
 			// ids.replaceAll(",","|");
 			String idString[] = ids.split(",");
 			for (int i = 0; i < idString.length; i++) {
@@ -162,7 +167,10 @@ public class PayResultAction extends BaseAction{
 		return JsonUtil.toErrorMsg("标记失败");
 	}
 	
-
+	
+	
+	
+	
 	
 	
 	/*  ---------------------------------------------------------------------------------    */
@@ -220,7 +228,8 @@ public class PayResultAction extends BaseAction{
 		if(StringUtil.isNotEmpty(toFinanceNo)) {
 			sb.append("and m.toFinanceNo = '").append(toFinanceNo).append("' ");
 		}
-		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and repeated_batch_no is not null");
+		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and repeated_batch_no is not null ");
+		sb.append(" order by "+orderBy+" "+order+" ");
 		try {
 			page = payResultService.getRepPageSql(page, sb.toString());
 			returnStr = writerPage(page);
@@ -231,7 +240,40 @@ public class PayResultAction extends BaseAction{
 	    return returnStr;
 	}
 	
-	
+	/**
+	 * 拨付结果标记
+	 */
+	@ResponseBody
+	@RequestMapping(value = "payRepMark" ) 
+	@Privilege(modelCode = "M_MARK_REP_APPLY",prvgCode = "RESULT_MARK")
+	public String markRepBatchApply(@RequestParam("ids")String ids,@RequestParam("payResStatus")String payResStatus,@RequestParam("faultType")String faultType,@RequestParam("faultDesc")String faultDesc) {
+		log.debug("PayResultAction createBatch is start");
+		boolean markOk = false;
+		String result = null;
+		String strids = "";
+		try {
+			if (StringUtil.isNotEmpty(faultDesc)) {
+				faultDesc = new String(faultDesc.getBytes("ISO8859-1"), "UTF-8"); 
+			}
+			// ids.replaceAll(",","|");
+			String idString[] = ids.split(",");
+			for (int i = 0; i < idString.length; i++) {
+				strids=strids+idString[i].concat("|");
+			}
+			strids=strids.substring(0, strids.length()-1);
+			result = payResultService.markBatchApply(strids,payResStatus,faultType,faultDesc);
+			if(null != result) {
+				markOk = true;
+			}
+		} catch (Exception e) {
+			log.error("VehicleRecycleAction syncVehicleInfo is Error:"+e, e);
+		}
+		log.debug("PayResultAction createBatch is End");
+		if(markOk) {
+			return JsonUtil.toSuccessMsg(result);
+		} else
+		return JsonUtil.toErrorMsg("标记失败");
+	}
 	
 					
 	

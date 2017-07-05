@@ -13,7 +13,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>深圳市老旧车提前淘汰奖励补贴回执单</title>
+<title>深圳市老旧车提前淘汰奖励补贴受理回执单</title>
 </head>
 <body>
 	<!-- <div class="NOPRINT" style="text-align: center;font-size: 10pt">
@@ -21,7 +21,7 @@
 	</div> -->
 	</br>
 	<div id="printArea">
-		<table class="tabp" cellpadding="1" width= "90%" border= "1" align= "center" cellspacing= "0" style="border-collapse:collapse;">
+		<table cellpadding="1" width= "90%" border= "1" align= "center" cellspacing= "0" style="border-collapse:collapse;">
 			<tr>
 				<td colspan="5" align="center">老旧车提前淘汰业务受理回执单</td>
 			</tr>

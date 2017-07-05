@@ -1,6 +1,8 @@
 package com.jst.vesms.web;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +22,15 @@ import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
+import com.jst.common.utils.DateUtil;
 import com.jst.common.utils.page.Page;
 import com.jst.util.JsonUtil;
+import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.EliminatedCheckService;
+import com.jst.vesms.util.EncryptUtils;
 
 @RequestMapping("/eliminatedCheck")
 @Controller
@@ -107,7 +112,9 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 				list.add(new PropertyFilter("EQS_vehicleType",vehicleType));
 			}
 			if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-				list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
+				// 加密车架号
+				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+				list.add(new PropertyFilter("EQS_vehicleIdentifyNo", EncryptUtils.encryptDes(des_key, vehicleIdentifyNo)));
 			}
 			if(StringUtil.isNotEmpty(vehicleOwner)) {
 				list.add(new PropertyFilter("LIKES_vehicleOwner",vehicleOwner));
@@ -116,9 +123,15 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 				list.add(new PropertyFilter("EQS_applyNo",applyNo));
 			}
 			if(StringUtil.isNotEmpty(applyStartDate)) {
-				list.add(new PropertyFilter("GTD_applyConfirmTime",applyStartDate));
+				list.add(new PropertyFilter("GED_applyConfirmTime",applyStartDate));
 			}
 			if(StringUtil.isNotEmpty(applyEndDate)) {
+				Date date = DateUtil.parse(applyEndDate, DateUtil.DATE_PATTERN);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				date = calendar.getTime();
+				applyEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 				list.add(new PropertyFilter("LTD_applyConfirmTime",applyEndDate));
 			}
 			list.add(new PropertyFilter("EQS_bussinessStatus", "1"));
@@ -165,7 +178,9 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 				list.add(new PropertyFilter("EQS_vehicleType",vehicleType));
 			}
 			if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-				list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
+				// 加密车架号
+				String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+				list.add(new PropertyFilter("EQS_vehicleIdentifyNo", EncryptUtils.encryptDes(des_key, vehicleIdentifyNo)));
 			}
 			if(StringUtil.isNotEmpty(vehicleOwner)) {
 				list.add(new PropertyFilter("LIKES_vehicleOwner",vehicleOwner));
@@ -174,9 +189,15 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 				list.add(new PropertyFilter("EQS_applyNo",applyNo));
 			}
 			if(StringUtil.isNotEmpty(applyStartDate)) {
-				list.add(new PropertyFilter("GTD_applyConfirmTime",applyStartDate));
+				list.add(new PropertyFilter("GED_applyConfirmTime",applyStartDate));
 			}
 			if(StringUtil.isNotEmpty(applyEndDate)) {
+				Date date = DateUtil.parse(applyStartDate, DateUtil.DATE_PATTERN);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				date = calendar.getTime();
+				applyEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 				list.add(new PropertyFilter("LTD_applyConfirmTime",applyEndDate));
 			}
 			
@@ -261,6 +282,9 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 		JSONObject json = new JSONObject();
 		String errorStr = "";
 		try {
+			if (StringUtil.isNotEmpty(checkOpinion)) {
+				checkOpinion = new String(checkOpinion.getBytes("ISO8859-1"), "UTF-8"); 
+			}
 			Map<String, Object> map = eliminatedCheckService.check(ids, checkType, faultType, checkOpinion, currentPost);
 			if (map.get("isSuccess").equals(true)) {
 				checkOk = true;

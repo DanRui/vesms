@@ -25,10 +25,10 @@ String basePath = request.getContextPath();
 		var basePath = $("#basePath").val();
 		$("#repeatToFinance-list #repeatToFinance-grid").datagrid({
 			toolbar : "#repeatToFinance-grid-toolbar",
-			url : basePath+"/payApply/repBatchAdjust.do",
+			url : basePath+"/payApply/repBatchToFinList.do",
 			method : "post",
 			rownumbers : true,
-			sortName : "id",
+			sortName : "createDate",
 			sortOrder : "desc",
 			columns : [ [ {
 				field : "id",
@@ -103,15 +103,38 @@ String basePath = request.getContextPath();
 				halign : "center",
 				resizable : true,
 				sortable : true
+			},{
+				field : "batchType",
+				title : "批次类型",
+				width : "10%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true,
+				sortable : true,
+				formatter : function(value, row, index) {
+					if (value == "1") {
+						return "正常批次";
+					} else if (value == "2") {
+						return "重报批次";
+					}
+				},
+				styler : function(value, row, index) {
+					if (value == "1") {
+						return "color:green";
+					} else if (value == "2") {
+						return "color:red";
+					}
+				}
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
 				$(this).datagrid("view",{width:900,height:800,
-					url:basePath+"/payApply/repBatchView.do?id="+rowData.id+"&type=view",content:"重报批次受理单明细",param:{close:false}});
+					url:basePath+"/payApply/batchView.do?id="+rowData.id+"&batchType="+rowData.batchType+"&type=view",
+					content:"批次受理单明细",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"batchNo",title:"重报内部批次号：",type:"text"},
-					{field:"toFinanceStatus",title:"重报批次报财委状态:",type:"combobox",panelHeight:true, url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"},
 					{startField:"createStartDate",endField:"createEndDate",title:"重报批次生成时间:",type:"date",section:true}
 			        ],
 			tools:[			       

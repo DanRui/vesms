@@ -237,8 +237,13 @@
 			<tr class="datagrid-row">
 				<td class="view_table_left">车主身份证明：</td>
 				<td class="view_table_right">
-					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile">
-						<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile" varStatus="status">
+						<c:if test="${status.index % 2 eq 1}">
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a></br>
+						</c:if>
+						<c:if test="${status.index % 2 eq 0}">
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+						</c:if>
 					</c:forEach>
 				</td>
 			</tr>

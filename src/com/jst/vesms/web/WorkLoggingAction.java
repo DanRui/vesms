@@ -2,14 +2,11 @@
 package com.jst.vesms.web;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,14 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jst.common.hibernate.PropertyFilter;
-import com.jst.common.model.SysDict;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
+import com.jst.util.DateUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
-import com.jst.vesms.constant.SysConstant;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.SysDictService;
@@ -129,11 +125,13 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 			sb.append("and a.action_time >= to_date('").append(startTime).append("', 'yyyy-MM-dd') ");
 		}
 		if (StringUtil.isNotEmpty(endTime)) {
-			sb.append("and a.action_time <= to_date('").append(endTime).append("', 'yyyy-MM-dd') ");
+			sb.append("and a.action_time < to_date('").append(endTime).append("', 'yyyy-MM-dd')+1 ");
 		}
-		/*if (StringUtil.isNotEmpty(orderBy)) {
-			sb.append("order by ").append(orderBy).append(" ").append(order).append(" ");
-		}*/
+		if (StringUtil.isNotEmpty(orderBy)) {
+			if (StringUtil.isNotEmpty(order)) {
+				sb.append("order by ").append(orderBy).append(" ").append(order).append(" ");
+			}
+		}
 		try {
 			// 查询
 			page = workLoggingService.getWorkLoggingPage(sb.toString(), list, page);
@@ -272,10 +270,16 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 			list.add(new PropertyFilter("EQS_applyNo",applyNo));
 		}
 		if(StringUtil.isNotEmpty(startTime)) {
-			list.add(new PropertyFilter("GTD_applyConfirmTime",startTime));
+			list.add(new PropertyFilter("GED_applyConfirmTime",startTime));
 		}
 		if(StringUtil.isNotEmpty(endTime)) {
-			list.add(new PropertyFilter("LTD_applyConfirmTime",endTime));
+			Date date = DateUtil.parse(endTime, DateUtil.DATE_PATTERN_2);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			date = calendar.getTime();
+			endTime = DateUtil.format(date, DateUtil.DATE_PATTERN_2);
+			list.add(new PropertyFilter("LED_applyConfirmTime",endTime));
 		}
 		if(StringUtil.isNotEmpty(batchNo)) {
 			list.add(new PropertyFilter("EQS_batchNo",batchNo));

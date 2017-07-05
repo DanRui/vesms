@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jst.common.hibernate.PropertyFilter;
+import com.jst.common.model.SystemLog;
 import com.jst.common.service.ISystemLogService;
 import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
 import com.jst.common.utils.page.Page;
 import com.jst.util.StringUtil;
+import com.jst.vesms.service.SysLogService;
 
 @RequestMapping("/sysLog")
 @Controller
@@ -29,6 +31,9 @@ public class SysLogAction extends BaseAction {
 	
 	@Resource(name="systemLogService")
 	private ISystemLogService systemLogService;
+	
+	@Resource(name="sysLogServiceImpl")
+	private SysLogService sysLogService;
 	
 	/**
 	 * 
@@ -72,10 +77,10 @@ public class SysLogAction extends BaseAction {
 			list.add(new PropertyFilter("EQS_opeUserCode",opeUserCode));
 		}
 		if(StringUtil.isNotEmpty(startTime)) {
-			list.add(new PropertyFilter("GTD_opeTime",startTime));
+			list.add(new PropertyFilter("GED_opeTime",startTime));
 		}
 		if(StringUtil.isNotEmpty(endTime)) {
-			list.add(new PropertyFilter("LTD_opeTime",endTime));
+			list.add(new PropertyFilter("LED_opeTime",endTime));
 		}
 		try {
 			page = systemLogService.getPage(page, list);
@@ -85,6 +90,36 @@ public class SysLogAction extends BaseAction {
 		}
 		log.debug("SysLogAction list is end");
 	    return returnStr;
+	}
+	
+	@RequestMapping("getOperateType")
+	@ResponseBody
+	public String getOperateType(String type) throws Exception {
+		log.debug("SysLogAction getOperateType is start");
+		String list = null;
+		try {
+			// 查询模块列表和操作类型列表
+			list = sysLogService.getOperateType(type);
+		} catch (Exception e) {
+			log.error("SysLogAction getOperateType is Error:" + e, e);
+			list = null;
+		}
+		log.debug("SysLogAction getOperateType is end");
+		return list;
+	}
+	
+	@RequestMapping("view")
+	@Privilege(modelCode="M_SYS_LOG_QUERY", prvgCode="VIEW")
+	public ModelAndView view(String id) throws Exception {
+		
+		String view = "SYS_LOG.VIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		
+		SystemLog sysLog = sysLogService.getById(id);
+		mv.addObject("v", sysLog);
+		
+		return mv;
+		
 	}
 
 }

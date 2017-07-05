@@ -69,7 +69,7 @@ String createDate = request.getParameter("createDate"); */
 			url : basePath+"/payApply/batchApplyList.do?batchNo="+'${v.batchNo }',
 			method : "post",
 			rownumbers : true,
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			columns : [ [{
 				field : "batchNo",

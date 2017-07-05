@@ -31,7 +31,7 @@ String basePath = request.getContextPath();
 			url : basePath+"/payApply/toFinanceList.do",
 			method : "post",
 			rownumbers : true,
-			sortName : "id",
+			sortName : "toFinanceTime",
 			sortOrder : "desc",
 			columns : [ [ {
 				field : "id",
@@ -91,29 +91,7 @@ String basePath = request.getContextPath();
 						return "";
 					}
 				}
-			},/*{
-				field : "isExported",
-				title : "文件生成状态",
-				width : "10%",
-				align : "center",
-				halign :"center",
-				resizable : true,
-				sortable : true,
-				formatter : function(value, row, index) {
-					if (value == "0") {
-						return "未生成";
-					} else if (value == "1") {
-						return "已生成";
-					}
-				},
-				styler : function(value, row, index) {
-					if (value == "0") {
-						return "color:red";
-					} else if (value == "1") {
-						return "color:green";
-					}
-				}
-			},*/{
+			},{
 				field : "payBussCount",
 				title : "业务单数",
 				width : "7%",
@@ -152,12 +130,35 @@ String basePath = request.getContextPath();
 				halign : "center",
 				resizable : true,
 				sortable : true
+			},{
+				field : "batchType",
+				title : "批次类型",
+				width : "10%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true,
+				sortable : true,
+				formatter : function(value, row, index) {
+					if (value == "1") {
+						return "正常批次";
+					} else if (value == "2") {
+						return "重报批次";
+					}
+				},
+				styler : function(value, row, index) {
+					if (value == "1") {
+						return "color:green";
+					} else if (value == "2") {
+						return "color:red";
+					}
+				}
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
 				$(this).datagrid("view",{width:900,height:800,
-					url:basePath+"/payApply/batchView.do?id="+rowData.id+"&type=view",
-							content:"申报受理单明细",param:{close:false}});
+					url:basePath+"/payApply/batchView.do?id="+rowData.id+"&batchType="+rowData.batchType+"&type=view",
+					content:"批次受理单明细",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"toFinanceNo",title:"报送序号：",type:"text"},

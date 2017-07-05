@@ -27,7 +27,7 @@ String basePath = request.getContextPath();
 			toolbar : "#repeatPayResultList-grid-toolbar",
 			url : basePath+"/payResult/repList.do",
 			method : "post",
-			sortName : "id",
+			sortName : "last_Update_Time",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {
@@ -164,7 +164,7 @@ String basePath = request.getContextPath();
 			         {field:"toFinanceNo",title:"报送序号:",type:"text"},
 					 {field:"repeatedBatchNo",title:"批次号:",type:"text"},
 					 {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleType",title:"车辆类型:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"},
@@ -179,7 +179,7 @@ String basePath = request.getContextPath();
 							ids.push(selectedRows[i].id);
 						}
 						var ids = ids.join(",")+"";
-						infoMsg = selectedRows.length < 1 ? "至少选择一条记录" :  null;
+						infoMsg = selectedRows.length < 1 ? "请选择一条记录" : (selectedRows.length > 1 ? "最多只能选择一条" : null);
 						if (null != infoMsg) {
 							Messager.alert({
 								type : "info",
@@ -201,7 +201,7 @@ String basePath = request.getContextPath();
 											var faultType =$('#faultType').combobox('getValue');
 											var ifValid = $("form #pay-res-check-form").form("enableValidation").form("validate");
 											if (ifValid) {
-												$.get(basePath+"/payResult/payMark.do",{ids:ids,payResStatus:payResult,faultType:faultType,faultDesc:remark},function(data) {
+												$.get(basePath+"/payResult/payRepMark.do",{ids:ids,payResStatus:payResult,faultType:faultType,faultDesc:remark},function(data) {
 										 			Messager.alert({
 														type : "info",
 														title : "&nbsp;",

@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -25,15 +27,18 @@ import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
+import com.jst.common.utils.DateUtil;
 import com.jst.common.utils.page.Page;
 import com.jst.test.web.PDFUtil;
 import com.jst.util.EncryptUtil;
 import com.jst.util.JsonUtil;
 import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
+import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.BatchExport;
 import com.jst.vesms.model.BatchMain;
 import com.jst.vesms.model.EliminatedApply;
+import com.jst.vesms.service.EliminatedApplyService;
 import com.jst.vesms.service.ExportBatchService;
 import com.jst.vesms.service.PayApplyService;
 import com.jst.vesms.util.EncryptUtils;
@@ -56,6 +61,8 @@ public class PayApplyAction extends BaseAction{
 	@Resource(name = "exportBatchServiceImpl")
 	private ExportBatchService exportBatchService;
 	
+	@Resource(name = "eliminatedApplyServiceImpl")
+	private EliminatedApplyService eliminatedApplyService;
 	
 	@RequestMapping("addBatchView")
 	@Privilege(modelCode = "M_ADD_BATCH",prvgCode = "QUERY")
@@ -200,8 +207,8 @@ public class PayApplyAction extends BaseAction{
 			sb.append("and t.batch_no = '").append(batchNo).append("' ");
 		}
 		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFSBG' and t.batch_no is null ");
+		sb.append("order by "+orderBy+" "+order+" ");
 		try {
-			
 		//	list = payApplyService.getListBySql(sql);
 			page = payApplyService.getPageBySql(page, sb.toString());
 			//page = payApplyService.getApplyPage(page, list);
@@ -210,24 +217,12 @@ public class PayApplyAction extends BaseAction{
 		} catch (Exception e) {
 			log.error("PayApplyAction list is Error:" + e, e);
 		}
-		
 		log.debug("PayApplyAction list is end");
 	    return returnStr;
 	}
 	
 	
-	
-	
-	@RequestMapping("view")
-	@Privilege(modelCode = "M_ADD_BATCH",prvgCode = "VIEW")
-	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
-		String view = "ELIMINATED_APPLY.VIEW";
-		EliminatedApply object = payApplyService.getById(id);
-		ModelAndView mv = new ModelAndView(getReturnPage(view));
-		mv.addObject("v", object);
-		return mv;
-	}
-	
+
 	
 	
 	/**
@@ -284,9 +279,15 @@ public class PayApplyAction extends BaseAction{
 			list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
 		}
 		if(StringUtil.isNotEmpty(createStartDate)) {
-			list.add(new PropertyFilter("GTD_createDate",createStartDate));
+			list.add(new PropertyFilter("GED_createDate",createStartDate));
 		}
 		if(StringUtil.isNotEmpty(createEndDate)) {
+			Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			date = calendar.getTime();
+			createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 			list.add(new PropertyFilter("LTD_createDate",createEndDate));
 		}
 		list.add(new PropertyFilter("EQS_batchStatus", "1"));
@@ -301,7 +302,6 @@ public class PayApplyAction extends BaseAction{
 		log.debug("PayApplyAction list is end");
 	    return returnStr;
 	}
-	
 	
 	
 	
@@ -338,9 +338,15 @@ public class PayApplyAction extends BaseAction{
 			list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
 		}
 		if(StringUtil.isNotEmpty(createStartDate)) {
-			list.add(new PropertyFilter("GTD_createDate",createStartDate));
+			list.add(new PropertyFilter("GED_createDate",createStartDate));
 		}
 		if(StringUtil.isNotEmpty(createEndDate)) {
+			Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			date = calendar.getTime();
+			createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 			list.add(new PropertyFilter("LTD_createDate",createEndDate));
 		}
 		if(StringUtil.isNotEmpty(batchStatus)) {
@@ -358,6 +364,63 @@ public class PayApplyAction extends BaseAction{
 	    return returnStr;
 	}
 	
+	
+	
+	
+	
+	/**
+	 *	正常批次报财务查询
+	 */
+	@RequestMapping("batchToFinList")
+	@Privilege(modelCode = "M_TO_FIN_CONFIRM" ,prvgCode = "QUERY")
+	@ResponseBody
+	public String batchToFinList(@RequestParam(value="page", defaultValue="1")int pageNo, 
+					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
+					   @RequestParam(value="order", defaultValue="DESC")String order, 
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String batchNo,String toFinanceStatus,String payResStatus,String payBatchTotalAmount, String createStartDate , String createEndDate,String batchType) throws Exception{
+		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
+		Page page = new Page();
+		page.setPageNo(pageNo);
+		page.setPageSize(pageSize);
+		page.setOrder(order);
+		page.setOrderBy(orderBy);
+		String returnStr = "";
+		if(StringUtil.isNotEmpty(batchNo)) {
+			list.add(new PropertyFilter("EQS_batchNo",batchNo));
+		}
+		if(StringUtil.isNotEmpty(toFinanceStatus)) {
+			list.add(new PropertyFilter("EQS_toFinanceStatus",toFinanceStatus));
+		}
+		if(StringUtil.isNotEmpty(payResStatus)) {
+			list.add(new PropertyFilter("EQS_payResStatus",payResStatus));
+		}
+		if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
+			list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
+		}
+		if(StringUtil.isNotEmpty(createStartDate)) {
+			list.add(new PropertyFilter("GED_createDate",createStartDate));
+		}
+		if(StringUtil.isNotEmpty(createEndDate)) {
+			Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			date = calendar.getTime();
+			createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
+			list.add(new PropertyFilter("LTD_createDate",createEndDate));
+		}
+		list.add(new PropertyFilter("EQS_batchStatus", "1"));
+		list.add(new PropertyFilter("EQS_batchType","1"));
+		list.add(new PropertyFilter("EQS_toFinanceStatus","0"));
+		try {
+			page = payApplyService.getPage(page, list);
+			returnStr = writerPage(page);
+		} catch (Exception e) {
+			log.error("PayApplyAction list is Error:" + e, e);
+		}
+		log.debug("PayApplyAction list is end");
+	    return returnStr;
+	}
 	
 	
 	
@@ -422,16 +485,30 @@ public class PayApplyAction extends BaseAction{
 	
 	// 去批次查看页面
 	@RequestMapping("batchView")
-	@Privilege(modelCode = "M_NOR_BATCH_LIST",prvgCode = "VIEW")
-	public ModelAndView bastchView(@RequestParam("id")Integer id,@RequestParam(value = "type")String type) throws Exception {
+	@Privilege(modelCode = "M_ALL_BATCH_LIST_QUERY",prvgCode = "VIEW")
+	public ModelAndView bastchView(@RequestParam("id")Integer id,@RequestParam("batchType")String batchType,@RequestParam(value = "type")String type) throws Exception {
 		log.debug("payApplyAction batchView is start");
-		String view = "PAY_APPLY.VIEW";
-		BatchMain object =  payApplyService.batchNoView(id);
-		log.debug("payApplyAction batchView is end");
-		ModelAndView mv = new ModelAndView(getReturnPage(view));
-		mv.addObject("v", object);			
+		String view = "";
+		BatchMain object = payApplyService.batchNoView(id);
+		ModelAndView mv = null;
+		if (object!=null){
+			if(batchType.equals("1")){
+				view = "PAY_APPLY.VIEW";
+			}else if(batchType.equals("2")){
+				view = "PAY_APPLY.REP_VIEW";
+			}
+		}
+		mv = new ModelAndView(getReturnPage(view));
+		log.debug("payApplyAction repBatchView is end");
+		mv.addObject("v", object);
 		return mv;
 	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -457,7 +534,7 @@ public class PayApplyAction extends BaseAction{
 	public String batchApplyList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String applyNo,String batchNo,String toFinanceStatus) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String applyNo,String batchNo,String repeatedBatchNo,String toFinanceStatus) throws Exception{
 			String returnStr="";
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
@@ -480,6 +557,9 @@ public class PayApplyAction extends BaseAction{
 			if(StringUtil.isNotEmpty(toFinanceStatus)) {
 				list.add(new PropertyFilter("EQS_toFinanceStatus",toFinanceStatus));
 			}
+			if(StringUtil.isNotEmpty(repeatedBatchNo)) {
+				list.add(new PropertyFilter("EQS_repeatedBatchNo",repeatedBatchNo));
+			}
 			try {
 				page = payApplyService.getApplyPage(page, list);
 				returnStr = writerPage(page);
@@ -497,7 +577,6 @@ public class PayApplyAction extends BaseAction{
 	//去批次调整页面
 	@RequestMapping(value="batchNoList")
 	@ResponseBody
-	@Privilege(modelCode = "M_NOR_BATCH_ADJUST", prvgCode = "ADJUST")
 	public ModelAndView batchNoList(@RequestParam("id")Integer id){
 		log.debug("PayApplyAction batchNoList is start");
 		String adjust = "PAY_APPLY.ADJUST";
@@ -556,17 +635,12 @@ public class PayApplyAction extends BaseAction{
 	//批次业务删除
 	@ResponseBody
 	@RequestMapping("applyDelete")
-	//@Privilege(modelCode = "M_TEST_MANAGER" ,prvgCode = "DELETE")
+	@Privilege(modelCode = "M_NOR_BATCH_ADJUST", prvgCode = "ADJUST")
 	public String deleteBatchDetail(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId){
 		log.debug("payApplyAction applyDelete is start");
 		boolean deleteOk = false;
 		String strids="";
 		strids=ids.replaceAll(",", "|");
-	/*	String idString[] = ids.split(",");
-		for (int i = 0; i < idString.length; i++) {
-			strids=strids+idString[i].concat("|");
-		}
-		strids=strids.substring(0, strids.length()-1);*/
 		String returnObject="";
 		try {
 			returnObject = payApplyService.deleteApply(batchId,strids);
@@ -671,6 +745,7 @@ public class PayApplyAction extends BaseAction{
 	//批次调整新增业务单
 	@ResponseBody
 	@RequestMapping("addApplyToBatch")
+	@Privilege(modelCode = "M_NOR_BATCH_ADJUST", prvgCode = "ADJUST")
 	public String addApplyToBatch(@RequestParam("ids")String ids,@RequestParam("batchId")Integer batchId) {
 		log.debug("PayApplyAction adjustBatchDetail is start");
 		boolean addToBatch = false;
@@ -723,9 +798,15 @@ public class PayApplyAction extends BaseAction{
 				list.add(new PropertyFilter("EQS_payResStatus",payResStatus));
 			}
 			if(StringUtil.isNotEmpty(createStartDate)) {
-				list.add(new PropertyFilter("GTD_createDate",createStartDate));
+				list.add(new PropertyFilter("GED_createDate",createStartDate));
 			}
 			if(StringUtil.isNotEmpty(createEndDate)) {
+				Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				date = calendar.getTime();
+				createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 				list.add(new PropertyFilter("LTD_createDate",createEndDate));
 			}
 			if(StringUtil.isNotEmpty(toFinanceNo+"")) {
@@ -796,7 +877,6 @@ public class PayApplyAction extends BaseAction{
 	
 	//去报财务导出页面
 		@RequestMapping("toFinanceExcel")
-		@Privilege(modelCode = "M_TO_FIN_CONFIRM", prvgCode = "CONFIRM_APPLY")
 		public ModelAndView toFinanceExcel(@RequestParam("id")Integer id) {
 			String view = "PAY_APPLY.TO_EXPORT_EXCEL";
 			BatchMain object = payApplyService.getObj(id);
@@ -808,6 +888,7 @@ public class PayApplyAction extends BaseAction{
 		//正常报财务批次导出(加密)
 		@RequestMapping(value = "confirmBatchExcel", produces={"text/html;charset=UTF-8;","application/json;"})
 		@ResponseBody
+		@Privilege(modelCode = "M_TO_FIN_CONFIRM", prvgCode = "CONFIRM_APPLY")
 		public String confirmBatchExcel(@RequestParam("id")Integer id,@RequestParam("batchNo")String batchNo,@RequestParam("batchType")String batchType,HttpServletResponse response,HttpServletRequest request) {
 			log.debug("PayApplyAction confirmBatchPreview is start");
 			int count = 0;
@@ -919,7 +1000,7 @@ public class PayApplyAction extends BaseAction{
 	//正常报财务excel文件查看
 		@RequestMapping("confirmBatchLook")
 		@ResponseBody
-		// @Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "FILE_QUERY")
+		@Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "FILE_QUERY")
 		public String confirmBatchLook(@RequestParam("batchNo")String batchNo) {
 			log.debug("PayApplyAction confirmBatchLook is start");
 			String excelPath = "";
@@ -951,7 +1032,7 @@ public class PayApplyAction extends BaseAction{
 		//正常报财务pdf文件查看
 		@RequestMapping("confirmBatchPdf")
 		@ResponseBody
-		// @Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "FILE_QUERY")
+		@Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "FILE_QUERY")
 		public String confirmBatchPdf(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPdf is start");
 			String excelPath = "";
@@ -979,7 +1060,7 @@ public class PayApplyAction extends BaseAction{
 		//正常报财务预览文件查看
 		@RequestMapping("confirmBatchPreview")
 		@ResponseBody
-		//@Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "PREVIEW_QUERY")
+		@Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "PREVIEW_QUERY")
 		public String confirmBatchPreview(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPdf is start");
 			String excelPath = "";
@@ -1049,7 +1130,8 @@ public class PayApplyAction extends BaseAction{
 			if(StringUtil.isNotEmpty(vehicleOwner)) {
 				sb.append("and t.vehicleOwner = '").append(vehicleOwner).append("' ");
 			}
-			sb.append("and t.bussiness_status = '1' and t.current_post = 'BFSBG' and t.batch_no is not null and repeated_batch_no is null and to_number(TO_FINANCE_STATUS)<=-2");
+			sb.append("and t.bussiness_status = '1' and t.current_post = 'BFSBG' and t.batch_no is not null and repeated_batch_no is null and to_number(TO_FINANCE_STATUS)<=-2 ");
+			sb.append("order by "+orderBy+" "+order+" ");
 			try {
 				page = payApplyService.getPageBySql(page, sb.toString());
 				//page = payApplyService.getApplyPage(page, list);
@@ -1111,7 +1193,7 @@ public class PayApplyAction extends BaseAction{
 	/**
 	 *	查询待导出重报批次数据
 	 */
-	@RequestMapping("repExpBatchList")
+/*	@RequestMapping("repExpBatchList")
 	//@Privilege(modelCode = "aaa" ,prvgCode = "bbb")
 	@ResponseBody
 	//@Privilege(modelCode = "M_TEST_MANAGER", prvgCode = "QUERY")
@@ -1145,16 +1227,16 @@ public class PayApplyAction extends BaseAction{
 			if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
 				list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
 			}
-			if(StringUtil.isNotEmpty(expStartDate)) {
-				list.add(new PropertyFilter("GTD_expRecentDate",expStartDate));
-			}
-			if(StringUtil.isNotEmpty(expEndDate)) {
-				list.add(new PropertyFilter("LTD_expRecentDate",expEndDate));
-			}
 			if(StringUtil.isNotEmpty(createStartDate)) {
-				list.add(new PropertyFilter("GTD_createDate",createStartDate));
+				list.add(new PropertyFilter("GED_createDate",createStartDate));
 			}
 			if(StringUtil.isNotEmpty(createEndDate)) {
+				Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				date = calendar.getTime();
+				createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 				list.add(new PropertyFilter("LTD_createDate",createEndDate));
 			}
 			if(StringUtil.isNotEmpty(toFinanceNo)) {
@@ -1173,7 +1255,7 @@ public class PayApplyAction extends BaseAction{
 		//}
 	    return returnStr;
 	}
-	
+	*/
 	
 	
 	
@@ -1264,7 +1346,6 @@ public class PayApplyAction extends BaseAction{
 	
 	/**
 	 *	重报内部批次调整 查询
-	 *	重报批次报财务 查询
 	 */
 	@RequestMapping("repBatchAdjust")
 	@ResponseBody
@@ -1290,9 +1371,15 @@ public class PayApplyAction extends BaseAction{
 			list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
 		}
 		if(StringUtil.isNotEmpty(createStartDate)) {
-			list.add(new PropertyFilter("GTD_createDate",createStartDate));
+			list.add(new PropertyFilter("GED_createDate",createStartDate));
 		}
 		if(StringUtil.isNotEmpty(createEndDate)) {
+			Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			date = calendar.getTime();
+			createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 			list.add(new PropertyFilter("LTD_createDate",createEndDate));
 		}
 		if(StringUtil.isNotEmpty(toFinanceNo+"")) {
@@ -1333,22 +1420,28 @@ public class PayApplyAction extends BaseAction{
 		page.setOrder(order);
 		page.setOrderBy(orderBy);
 		String returnStr = "";
-		StringBuffer sb = new StringBuffer("select * from t_batch_main t where 1 = 1 ");
 		if(StringUtil.isNotEmpty(batchNo)) {
-			sb.append("and t.batch_no = '").append(batchNo).append("' ");
+			list.add(new PropertyFilter("EQS_batchNo",batchNo));
 		}
 		if(StringUtil.isNotEmpty(batchStatus)) {
-			sb.append("and t.batch_status = '").append(batchStatus).append("' ");
+			list.add(new PropertyFilter("EQS_batchStatus",batchStatus));
 		}
 		if(StringUtil.isNotEmpty(createStartDate)) {
-			sb.append("and t.create_date >='").append(createStartDate).append("' ");
+			list.add(new PropertyFilter("EQS_createStartDate",createStartDate));
 		}
 		if(StringUtil.isNotEmpty(createEndDate)) {
-			sb.append("and t.create_date <='").append(createEndDate).append("' ");
+			Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			date = calendar.getTime();
+			createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
+			list.add(new PropertyFilter("LTD_createDate",createEndDate));
 		}
-		sb.append("and t.batch_type = '2' and to_number(t.to_Finance_status)<=-2 ");
+		list.add(new PropertyFilter("EQS_batchType", "2"));
+		list.add(new PropertyFilter("EQS_toFinanceStatus","0"));
 		try {
-			page = payApplyService.getPageBySql(page, sb.toString());
+			page = payApplyService.getPage(page,list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
 			log.error("PayApplyAction list is Error:" + e, e);
@@ -1364,7 +1457,6 @@ public class PayApplyAction extends BaseAction{
 		//重报批次调整页面
 		@RequestMapping(value="repBatchNoList")
 		@ResponseBody
-		@Privilege(modelCode = "M_REP_BATCH_ADJUST", prvgCode = "ADJUST")
 		public ModelAndView repBatchNoList(@RequestParam("id")Integer id){
 			log.debug("PayApplyAction batchNoList is start");
 			String adjust = "PAY_APPLY.REPADJUST";
@@ -1427,6 +1519,7 @@ public class PayApplyAction extends BaseAction{
 		//批次业务删除
 		@ResponseBody
 		@RequestMapping("repApplyDelete")
+		@Privilege(modelCode = "M_REP_BATCH_ADJUST", prvgCode = "ADJUST")
 		public String delRepBatchDetail(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId) {
 			log.debug("payApplyAction applyDelete is start");
 			boolean deleteOk = false;
@@ -1542,6 +1635,7 @@ public class PayApplyAction extends BaseAction{
 		//批次调整新增业务单
 		@ResponseBody
 		@RequestMapping("addApplyToRepBatch")
+		@Privilege(modelCode = "M_REP_BATCH_ADJUST", prvgCode = "ADJUST")
 		public String addApplyToRepBatch(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId) {
 			log.debug("PayApplyAction addApplyToRepBatch is start");
 			boolean addToBatch = false;
@@ -1564,6 +1658,72 @@ public class PayApplyAction extends BaseAction{
 		}
 		
 		
+		
+		
+		
+		
+		/**
+		 *	重报报财务批次 查询
+		 */
+		@RequestMapping("repBatchToFinList")
+		@ResponseBody
+		@Privilege(modelCode = "M_REP_TO_FIN_CONFIRM", prvgCode = "QUERY")
+		public String repBatchToFinList(@RequestParam(value="page", defaultValue="1")int pageNo, 
+						   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
+						   @RequestParam(value="order", defaultValue="DESC")String order, 
+						   @RequestParam(value="sort", defaultValue="id")String orderBy, Integer toFinanceNo,String batchNo,String isExported,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String expStartDate,String expEndDate, String createStartDate , String createEndDate,String batchType ) throws Exception{
+			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
+			Page page = new Page();
+			page.setPageNo(pageNo);
+			page.setPageSize(pageSize);
+			page.setOrder(order);
+			page.setOrderBy(orderBy);
+			String returnStr = "";
+			if(StringUtil.isNotEmpty(batchNo)) {
+				list.add(new PropertyFilter("EQS_batchNo",batchNo));
+			}
+			if(StringUtil.isNotEmpty(payResStatus)) {
+				list.add(new PropertyFilter("EQS_payResStatus",payResStatus));
+			}
+			if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
+				list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
+			}
+			if(StringUtil.isNotEmpty(createStartDate)) {
+				list.add(new PropertyFilter("GED_createDate",createStartDate));
+			}
+			if(StringUtil.isNotEmpty(createEndDate)) {
+				Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				date = calendar.getTime();
+				createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
+				list.add(new PropertyFilter("LTD_createDate",createEndDate));
+			}
+			if(StringUtil.isNotEmpty(toFinanceNo+"")) {
+				list.add(new PropertyFilter("EQS_toFinanceNo",toFinanceNo+""));
+			}
+			list.add(new PropertyFilter("EQS_batchStatus","1"));
+			list.add(new PropertyFilter("EQS_batchType","2"));
+			list.add(new PropertyFilter("EQS_toFinanceStatus","0"));
+			try {
+				page = payApplyService.getPage(page, list);
+				returnStr = writerPage(page);
+			} catch (Exception e) {
+				log.error("PayApplyAction list is Error:" + e, e);
+			}
+			
+			log.debug("PayApplyAction list is end");
+		    return returnStr;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
 		//重报财务批次查询
 			@ResponseBody
 			@RequestMapping("repToFinanceList")
@@ -1584,21 +1744,27 @@ public class PayApplyAction extends BaseAction{
 						list.add(new PropertyFilter("EQS_batchNo",batchNo));
 					}
 					if(StringUtil.isNotEmpty(toFinanceStartTime)) {
-						list.add(new PropertyFilter("GTD_toFinanceStartTime",toFinanceStartTime));
+						list.add(new PropertyFilter("GED_toFinanceStartTime",toFinanceStartTime));
 					}
 					if(StringUtil.isNotEmpty(toFinanceEndTime)) {
-						list.add(new PropertyFilter("GTD_toFinanceEndTime",toFinanceEndTime));
+						list.add(new PropertyFilter("GED_toFinanceEndTime",toFinanceEndTime));
 					}
 					if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
-						list.add(new PropertyFilter("LTD_payBatchTotalAmount",payBatchTotalAmount));
+						list.add(new PropertyFilter("LED_payBatchTotalAmount",payBatchTotalAmount));
 					}
 					if(StringUtil.isNotEmpty(toFinanceEndTime)) {
-						list.add(new PropertyFilter("LTD_toFinacneEndTime",toFinanceEndTime));
+						list.add(new PropertyFilter("LED_toFinacneEndTime",toFinanceEndTime));
 					}
 					if(StringUtil.isNotEmpty(createStartDate)) {
-						list.add(new PropertyFilter("GTD_createDate",createStartDate));
+						list.add(new PropertyFilter("GED_createDate",createStartDate));
 					}
 					if(StringUtil.isNotEmpty(createEndDate)) {
+						Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(date);
+						calendar.add(Calendar.DAY_OF_MONTH, 1);
+						date = calendar.getTime();
+						createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 						list.add(new PropertyFilter("LTD_createDate",createEndDate));
 					}
 					if(StringUtil.isNotEmpty(toFinanceNo+"")) {
@@ -1624,7 +1790,6 @@ public class PayApplyAction extends BaseAction{
 			
 			
 			@RequestMapping("confirmRepExportExcel")
-			@Privilege(modelCode = "M_REP_TO_FIN_CONFIRM", prvgCode = "CONFIRM_APPLY")
 			public ModelAndView confirmRepExportExcel(@RequestParam("id")Integer id) throws Exception {
 				String view = "PAY_APPLY.CONFIRM_REP_EXCEL";
 				BatchMain object = payApplyService.getObj(id);
@@ -1663,7 +1828,7 @@ public class PayApplyAction extends BaseAction{
 		//重报报财务批次excel查看
 		@RequestMapping("confirmRepBatchLook")
 		@ResponseBody
-		//@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "FILE_QUERY")
+		@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "FILE_QUERY")
 		public String confirmRepBatchLook(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchLook is start");
 			String excelPath = "";
@@ -1693,7 +1858,7 @@ public class PayApplyAction extends BaseAction{
 		//重报报财务批次pdf查看
 		@RequestMapping("confirmRepBatchPdf")
 		@ResponseBody
-		//@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "PDF_QUERY")
+		@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "PDF_QUERY")
 		public String confirmRepBatchPdf(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPdf is start");
 			String excelPath = "";
@@ -1720,7 +1885,7 @@ public class PayApplyAction extends BaseAction{
 		//详情文件查看
 		@RequestMapping("confirmRepBatchPreview")
 		@ResponseBody
-		//@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "PREVIEW_QUERY")
+		@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "PREVIEW_QUERY")
 		public String confirmRepBatchPreview(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
 			log.debug("PayApplyAction confirmBatchPdf is start");
 			String excelPath = "";
@@ -1746,6 +1911,7 @@ public class PayApplyAction extends BaseAction{
 		//重报报财务批次导出(加密)
 		@RequestMapping("confirmRepBatchExcel")
 		@ResponseBody
+		@Privilege(modelCode = "M_REP_TO_FIN_CONFIRM", prvgCode = "CONFIRM_APPLY")
 		public String confirmRepBatchExcel(@RequestParam("id")Integer id,@RequestParam("batchNo")String batchNo,@RequestParam("batchType")String batchType,HttpServletResponse response,HttpServletRequest request) {
 			log.debug("PayApplyAction confirmRepBatchExcel is start");
 			int count = 0;
@@ -1933,15 +2099,21 @@ public class PayApplyAction extends BaseAction{
 				list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
 			}
 			if(StringUtil.isNotEmpty(toFinanceStartTime)) {
-				list.add(new PropertyFilter("GTD_toFinanceStartTime",toFinanceStartTime));
+				list.add(new PropertyFilter("GED_toFinanceStartTime",toFinanceStartTime));
 			}
 			if(StringUtil.isNotEmpty(toFinanceEndTime)) {
-				list.add(new PropertyFilter("LTD_toFinanceEndTime",toFinanceEndTime));
+				list.add(new PropertyFilter("LED_toFinanceEndTime",toFinanceEndTime));
 			}
 			if(StringUtil.isNotEmpty(createStartDate)) {
-				list.add(new PropertyFilter("GTD_createDate",createStartDate));
+				list.add(new PropertyFilter("GED_createDate",createStartDate));
 			}
 			if(StringUtil.isNotEmpty(createEndDate)) {
+				Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				date = calendar.getTime();
+				createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 				list.add(new PropertyFilter("LTD_createDate",createEndDate));
 			}
 			if(StringUtil.isNotEmpty(batchType)) {

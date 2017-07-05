@@ -27,7 +27,7 @@ String basePath = request.getContextPath();
 			toolbar : "#concludeExce-grid-toolbar",
 			url : basePath+"/conclude/faultList.do",
 			method : "post",
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {
@@ -136,7 +136,7 @@ String basePath = request.getContextPath();
 		}).datagrid("initSearch",{
 			columns:[
 					 {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleType",title:"车辆类型:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"},
@@ -154,7 +154,7 @@ String basePath = request.getContextPath();
 							var ids = ids.join(",")+"";
 							//console.info(ids);
 							var infoMsg = null;
-							infoMsg = selectedRows.length < 1 ? "至少选择一条记录" : (selectedRows.length > 1 ? "最多只能选择一条" : null);
+							infoMsg = selectedRows.length < 1 ? "请选择一条记录" : (selectedRows.length > 1 ? "最多只能选择一条" : null);
 							if (null != infoMsg) {
 								Messager.alert({
 									type : "info",
@@ -163,7 +163,7 @@ String basePath = request.getContextPath();
 								});
 							}else{
 							//ajax请求，返回成功后再处理
-						 		$.post(basePath+"/conclude/conclude.do",{ids:ids,concludeStatus:"2"},function(data) {
+						 		$.post(basePath+"/conclude/faultConclude.do",{ids:ids,concludeStatus:"2"},function(data) {
 						 			 Messager.alert({
 										type : "info",
 										title : "&nbsp;",

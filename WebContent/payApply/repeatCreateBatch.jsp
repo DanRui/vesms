@@ -28,7 +28,7 @@ String basePath = request.getContextPath();
 			url : basePath+"/payApply/repList.do",
 			method : "post",
 			rownumbers : true,
-			sortName : "id",
+			sortName : "last_Update_Time",
 			sortOrder : "desc",
 			pageSize:100,
 			columns : [ [ {
@@ -183,14 +183,13 @@ String basePath = request.getContextPath();
 			} */
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:900,height:800,url:basePath+"/eliminatedApply/view.do?id="+rowData.id+"&type=applyLog",
-					content:"受理单查看",param:{close:false}});
+				$(this).datagrid("view",{width:900,height:800,url:basePath+"/eliminatedApply/view.do?id="+rowData.id+"&type=applyLog",content:"受理单查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{
 			columns:[
 					 {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
 					 {field:"applyNo",title:"受理单号:",type:"text"},
-					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleType",title:"车辆类型:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"}

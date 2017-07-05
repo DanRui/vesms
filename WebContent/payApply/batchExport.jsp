@@ -29,7 +29,7 @@ String basePath = request.getContextPath();
 			url : basePath+"/payApply/expBatchList.do?batchType=1",
 			method : "post",
 			rownumbers : true,
-			sortName : "id",
+			sortName : "createDate",
 			sortOrder : "desc",
 			columns : [ [ {
 				field : "id",

@@ -81,7 +81,7 @@ String createDate = request.getParameter("createDate"); */
 			url : basePath+"/payApply/batchApplyList.do?repeatedBatchNo="+'${v.batchNo }',
 			method : "post",
 			rownumbers : true,
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			columns : [ [{
 				field : "repeatedBatchNo",
@@ -173,7 +173,7 @@ String createDate = request.getParameter("createDate"); */
 					} 
 				}
 			},{
-				field : "applyTime",
+				field : "applyConfirmTime",
 				title : "受理时间",
 				width : "10%",
 				align : "center",
@@ -181,8 +181,8 @@ String createDate = request.getParameter("createDate"); */
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.expRecentDate) {
-						return getNowFormatDate(new Date(row.expRecentDate.time))
+					if (row.applyConfirmTime) {
+						return getNowFormatDate(new Date(row.applyConfirmTime.time))
 					} else {
 						return "";
 					}

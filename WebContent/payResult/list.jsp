@@ -27,7 +27,7 @@ String basePath = request.getContextPath();
 			toolbar : "#payResultList-grid-toolbar",
 			url : basePath+"/payResult/list.do",
 			method : "post",
-			sortName : "id",
+			sortName : "last_Update_Time",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {
@@ -164,7 +164,7 @@ String basePath = request.getContextPath();
 			         {field:"toFinanceNo",title:"报送序号:",type:"text"},
 					 {field:"batchNo",title:"批次号:",type:"text"},
 					 {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					 {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleType",title:"车辆类型:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_TYPE", text:"value", value:"code"},
 					 {field:"vehicleOwner",title:"车主:",type:"text"},
 					 {field:"vehicleIdentifyNo",title:"车架号:",type:"text"},

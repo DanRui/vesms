@@ -27,7 +27,7 @@ String basePath = request.getContextPath();
 			toolbar : "#sysLogList-grid-toolbar",
 			url : basePath+"/sysLog/list.do",
 			method : "post",
-			sortName : "id",
+			sortName : "opeTime",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {
@@ -93,17 +93,19 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				 $(this).datagrid("view",{width:900,height:800,url:basePath+"/vehicleRecycle/view.jsp?id="+rowData.id,content:"报废车辆信息查看",param:{close:false}}); 
+				 $(this).datagrid("view",{width:900,height:800,url:basePath+"/sysLog/view.do?id="+rowData.id,content:"系统操作日志查看",param:{close:false}}); 
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"opeIp",title:"操作IP:",type:"text"},
-					{field:"objType",title:"操作模块:",type:"combobox", url:basePath+"/data/moduleType.json", text:"name", value:"value"},
-					{field:"opeType",title:"操作名称:",type:"combobox", url:basePath+"/data/operateType.json", text:"name", value:"value"},
-					{field:"opeUserCode",title:"操作人账号:",type:"combobox", url:basePath+"/data/operatePersonCode.json", text:"name", value:"value"},
+					{field:"objType",title:"操作模块:",type:"combobox", url:basePath+"/sysLog/getOperateType.do?type=MODULE_TYPE", text:"value", value:"code"},
+					{field:"opeType",title:"操作名称:",type:"combobox", url:basePath+"/sysLog/getOperateType.do?type=OPE_TYPE", text:"value", value:"code"},
+					//{field:"opeUserCode",title:"操作人账号:",type:"combobox", url:basePath+"/data/operatePersonCode.json", text:"name", value:"value"},
+					{field:"opeUserCode",title:"操作人账号:", type:"text"},
 					{startField:"startTime",endField:"EndTime",title:"操作时间:",type:"datetime",section:true},
 					],
 			tools:[
 				   {type:"QUERY"},
+				   {type:"CLEAR"}/*,
 				   {type:"DELETE",fn:function() {
 					   	var selectedRows = this.datagrid("getSelections");
 						var infoMsg = null;
@@ -139,12 +141,12 @@ String basePath = request.getContextPath();
 									});
 									}
 								}); */
-						}
-				   }}
+						/*}
+				   }}*/
 				  ],
-			module:"M_TEST_MANAGER",
+			module:"M_SYS_LOG_QUERY",
 			shownum:3,
-			debug:true
+			debug:false
 		})
 
 	})

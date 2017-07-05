@@ -27,7 +27,7 @@ String basePath = request.getContextPath();
 			toolbar : "#workLoggingList-grid-toolbar",
 			url : basePath+"/workLogging/list.do",
 			method : "post",
-			sortName : "actionTime",
+			sortName : "action_time",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {

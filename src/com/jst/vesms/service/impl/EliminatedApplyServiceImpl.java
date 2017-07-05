@@ -924,7 +924,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			apply.setLastUpdateTimeDate(new Date()); // 业务最近更新时间
 			apply.setUpdateTime(new Date());  // 数据更新时间
 			apply.setLastUpdateUser("管理员"); // 处理人
-			apply.setLastUpdatUserCode("admin"); // 处理人代码
+			apply.setLastUpdateUserCode("admin"); // 处理人代码
 			
 			// 新增业务流水记录
 			ActionLog actionLog = new ActionLog();
@@ -1063,6 +1063,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		Double subsidiesMoney = eliminatedApply.getSubsidiesMoney();
 		// 银行名称
 		String bankName = eliminatedApply.getBankName();
+		// 银行代码
+		String bankCode = eliminatedApply.getBankCode();
 		// 银行户名
 		String bankAccountName = eliminatedApply.getBankAccountName();
 		// 银行卡号
@@ -1087,6 +1089,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		jsonArray.add(SystemUtil.createJson("SUBSIDIES_MONEY", "Double", subsidiesMoney.toString()));
 		jsonArray.add(SystemUtil.createJson("VEHICLE_IDENTIFY_NO", "String", vehicleIdentifyNo));
 		jsonArray.add(SystemUtil.createJson("BANK_NAME", "String", bankName));
+		jsonArray.add(SystemUtil.createJson("BANK_CODE", "String", bankCode));
 		jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NAME", "String", bankAccountName));
 		jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NO", "String", bankAccountNo));
 		
@@ -1128,15 +1131,26 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		// 加密经办人身份证号
 		eliminatedApply.setAgentIdentity(EncryptUtils.encryptDes(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 		
-		EliminatedApply updatedApply = (EliminatedApply) this.update(id, eliminatedApply);
+		// 获取业务更新时间
+		eliminatedApply.setUpdateTime(new Date());
 		
+		// 最近处理人
+		String userName = (String) loginInfo.get("USER_NAME");
+		eliminatedApply.setLastUpdateUser(userName);
+		eliminatedApply.setLastUpdateUserCode(userCode);
+		
+		// 定义更新的字段值
+		String updateStr = "vehicleOwnerIdentity,mobile,agentMobileNo,agentIdentity,bankCode,bankName,bankAccountNo,lastUpdateTimeDate,updateTime,lastUpdateUser,lastUpdateUserCode,verifyCode";
+		eliminatedApplyDao.update(eliminatedApply, updateStr);
+		
+		EliminatedApply apply = (EliminatedApply) this.get(eliminatedApply.getId());
 		Map<String, Object> map = new HashMap<String, Object>();
-		if (null != updatedApply) {
+		if (null != eliminatedApply) {
 			// 更新附件表数据
-			Map<String, Object> saveFilesRes = this.updateAttachments(updatedApply.getApplyNo(), callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
+			Map<String, Object> saveFilesRes = this.updateAttachments(apply.getApplyNo(), callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
 			if (saveFilesRes.get("isSave").equals(true)) {
 				map.put("isSuccess", true);
-				map.put("id", updatedApply.getId());
+				map.put("id", apply.getId());
 				map.put("msg", "受理单更新成功！");
 				log.debug("证明材料表新增成功");
 			} else {
@@ -1145,12 +1159,6 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				log.debug("受理单证明材料保存失败");
 			}
 			
-			/*map.put("isSuccess", true);
-			map.put("id", updatedApply.getId());
-			map.put("applyNo", updatedApply.getApplyNo());
-			map.put("archiveBoxNo", updatedApply.getArchiveBoxNo());
-			map.put("archivedInnerNo", updatedApply.getArchivedInnerNo());
-			map.put("msg", "受理单更新成功！");*/
 			log.debug("EliminatedApplyServiceImpl update is success");
 		} else {
 			map.put("isSuccess", false);

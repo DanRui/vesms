@@ -68,10 +68,10 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 			list.add(new PropertyFilter("EQS_vehiclePlateNum",archiveBoxNo));
 		}
 		if(StringUtil.isNotEmpty(archivedStartDate)) {
-			list.add(new PropertyFilter("GTD_archivedDate",archivedStartDate));
+			list.add(new PropertyFilter("GED_archivedDate",archivedStartDate));
 		}
 		if(StringUtil.isNotEmpty(archivedEndDate)) {
-			list.add(new PropertyFilter("LTD_archivedDate",archivedEndDate));
+			list.add(new PropertyFilter("LED_archivedDate",archivedEndDate));
 		}
 		try {
 		//	page = eliminatedApplyService.getPageBySql(page, "select * from t_eliminated_apply where batch_no is null");

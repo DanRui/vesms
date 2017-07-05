@@ -109,7 +109,7 @@ public class EliminatedApplyAction extends BaseAction {
 			sb.append("and t.apply_time >= to_date('").append(startTime).append("', 'yyyy-MM-dd') ");
 		}
 		if(StringUtil.isNotEmpty(endTime)) {
-			sb.append("and t.apply_time <= to_date('").append(endTime).append("', 'yyyy-MM-dd') ");
+			sb.append("and t.apply_time < to_date('").append(endTime).append("', 'yyyy-MM-dd')+1 ");
 		}
 		sb.append("and t.apply_confirm_time is null order by t.last_update_time desc ");
 		try {

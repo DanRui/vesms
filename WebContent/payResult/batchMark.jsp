@@ -215,7 +215,7 @@ String basePath = request.getContextPath();
 													{id:"pay_res_mark_save",text:"保存",iconCls:"icon-save",handler:function(){
 														var payResult = $("#checkType").combobox('getValue');
 														var remark = $("#checkOpinion").val();
-														alert(payResult);
+														//alert(payResult);
 														var faultType =$('#faultType').combobox('getValue');
 														var ifValid = $("form #pay-res-check-form").form("enableValidation").form("validate");
 														if (ifValid) {

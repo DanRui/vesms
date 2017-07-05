@@ -102,10 +102,10 @@ public class VehicleRecycleAction extends BaseAction {
 			list.add(new PropertyFilter("EQS_vehicleIdentifyNo", EncryptUtils.encryptDes(des_key, vehicleIdentifyNo)));
 		}
 		if(StringUtil.isNotEmpty(recycleStartDate)) {
-			list.add(new PropertyFilter("GTD_recycleDate", recycleStartDate));
+			list.add(new PropertyFilter("GED_recycleDate", recycleStartDate));
 		}
 		if(StringUtil.isNotEmpty(recycleEndDate)) {
-			list.add(new PropertyFilter("LTD_recycleDate", recycleEndDate));
+			list.add(new PropertyFilter("LED_recycleDate", recycleEndDate));
 		}
 		if(StringUtil.isNotEmpty(inputStartTime)) {
 			list.add(new PropertyFilter("GTD_inputTime", inputStartTime));

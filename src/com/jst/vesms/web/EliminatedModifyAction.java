@@ -3,6 +3,7 @@ package com.jst.vesms.web;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.ApplyModifyInfo;
 import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.service.EliminatedModifyService;
+import com.jst.vesms.util.EncryptUtils;
 
 @RequestMapping("/eliminatedModify")
 @Controller
@@ -102,7 +104,9 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-			list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
+			// 加密车架号
+			String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+			list.add(new PropertyFilter("EQS_vehicleIdentifyNo", EncryptUtils.encryptDes(des_key, vehicleIdentifyNo)));
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
 			list.add(new PropertyFilter("LIKES_vehicleOwner",vehicleOwner));
@@ -111,9 +115,15 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 			list.add(new PropertyFilter("EQS_applyNo",applyNo));
 		}
 		if(StringUtil.isNotEmpty(startTime)) {
-			list.add(new PropertyFilter("GTD_applyTime",startTime));
+			list.add(new PropertyFilter("GED_applyTime",startTime));
 		}
 		if(StringUtil.isNotEmpty(endTime)) {
+			Date date = DateUtil.parse(endTime, DateUtil.DATE_PATTERN_2);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			date = calendar.getTime();
+			endTime = DateUtil.format(date, DateUtil.DATE_PATTERN_2);
 			list.add(new PropertyFilter("LTD_applyTime",endTime));
 		}
 		list.add(new PropertyFilter("EQS_bussinessStatus", "-1"));
@@ -155,7 +165,9 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
 		}
 		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-			list.add(new PropertyFilter("EQS_vehicleIdentifyNo",vehicleIdentifyNo));
+			// 加密车架号
+			String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+			list.add(new PropertyFilter("EQS_vehicleIdentifyNo", EncryptUtils.encryptDes(des_key, vehicleIdentifyNo)));
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
 			list.add(new PropertyFilter("LIKES_vehicleOwner",vehicleOwner));
@@ -164,9 +176,15 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 			list.add(new PropertyFilter("EQS_applyNo",applyNo));
 		}
 		if(StringUtil.isNotEmpty(startTime)) {
-			list.add(new PropertyFilter("GTD_applyTime",startTime));
+			list.add(new PropertyFilter("GED_applyTime",startTime));
 		}
 		if(StringUtil.isNotEmpty(endTime)) {
+			Date date = DateUtil.parse(endTime, DateUtil.DATE_PATTERN_2);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			date = calendar.getTime();
+			endTime = DateUtil.format(date, DateUtil.DATE_PATTERN_2);
 			list.add(new PropertyFilter("LTD_applyTime",endTime));
 		}
 		list.add(new PropertyFilter("EQS_bussinessStatus", "-1"));
@@ -213,7 +231,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	 *
 	 */
 	@RequestMapping("updateAccountView")
-	@Privilege(modelCode="M_ELIMINATED_MODIFY_UPA", prvgCode="UPDATE_ACCOUNT")
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_UPA", prvgCode="VIEW")
 	public ModelAndView updateAccountView(@RequestParam("id")Integer id) throws Exception {
 		String view = "ELIMINATED_MODIFY.UPDATE_ACCOUNT";
 		EliminatedApply object = eliminatedModifyService.getById(id);
@@ -233,7 +251,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 	 *
 	 */
 	@RequestMapping("modifyApply")
-	@Privilege(modelCode="M_ELIMINATED_MODIFY_NOR", prvgCode="MODIFY")
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_NOR", prvgCode="VIEW")
 	public ModelAndView modifyApply(@RequestParam("id")Integer id, String modifyTypes) throws Exception {
 		String view = "ELIMINATED_MODIFY.MODIFY_APPLY";
 		/*if(StringUtil.isNotEmpty(faultType)&&"2".equals(faultType)) {

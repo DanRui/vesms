@@ -30,7 +30,7 @@ String basePath = request.getContextPath();
 			toolbar : "#repBatchAddList-grid-toolbar",
 			url : basePath+"/payApply/repList.do",
 			method : "post",
-			sortName : "id",
+			sortName : "lastUpdateTimeDate",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import jxl.format.Colour;
 import jxl.format.Font;
 import jxl.format.UnderlineStyle;
 import jxl.format.VerticalAlignment;
+import jxl.read.biff.BiffException;
 import jxl.write.Label;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
@@ -924,8 +926,8 @@ public class ExportExcel {
 	            	   dataMap = new HashMap<String, Object>();
 	            	   // 行循环,Excel的行列式从(0,0)开始
 	            	   for (int k = 0; k < cols; k++) {
-						Cell excCell = rs.getCell(k, j);// 得到第4列的所有数据 (列,行)
-						dataMap.put("bfcl", excCell.getContents());//获取内容
+						 Cell excCell = rs.getCell(k, j);// 得到第4列的所有数据 (列,行)
+						 dataMap.put("bfcl", excCell.getContents());//获取内容
 	            	   }
 	            	   allData.add(dataMap);
 	               }
@@ -948,9 +950,105 @@ public class ExportExcel {
 		     
 		     
 		     
+		     
+		     
+		     
+		     public static void readExcel(String filePath) throws IOException, BiffException{  
+		         List list = new ArrayList();
+		    	 //创建输入流  
+		         InputStream stream = new FileInputStream(filePath);  
+		         //获取Excel文件对象  
+		         Workbook  rwb = Workbook.getWorkbook(stream);  
+		         //获取文件的指定工作表 默认的第一个  
+		         Sheet sheet = rwb.getSheet(0);    
+		         //行数(表头的目录不需要，从1开始)  
+		         for(int i=3; i<sheet.getRows(); i++){  
+		              //创建一个数组 用来存储每一列的值  
+		             String[] str = new String[sheet.getColumns()];  
+		             Cell cell = null;  
+		             //列数  
+		             for(int j=0; j<sheet.getColumns(); j++){  
+		               //获取第i行，第j列的值  
+		               cell = sheet.getCell(1,i);    
+		               if(str[j]!=null){
+		            	   str[j] = cell.getContents();  
+		               }
+		               System.out.println(str[i]);
+		             }  
+		           //把刚获取的列存入list  
+		           list.add(str);  
+		         }
+		         int count=0;
+		         for(int i=0;i<list.size();i++){
+		              String[] str = (String[])list.get(i);
+		              for(int j=0;j<str.length;j++){
+		            	  count++;
+		                  System.out.println(count+"------"+str[j]);
+		              }
+		          }
+		     } 
+		     
+		     
+		     
+		     
+		     
+		     public static void readSpecify(File file)throws Exception{  
+		    	    ArrayList<String> columnList = new ArrayList<String>();  
+		    	    Workbook readwb = null;  
+		    	    InputStream io = new FileInputStream(file.getAbsoluteFile());  
+		    	    readwb = Workbook.getWorkbook(io);  
+		    	    Sheet readsheet = readwb.getSheet(0); 
+		    	    // 获取行数
+		    	    int rsRows = readsheet.getRows();  
+		    	    // 获取列数
+		    	    int rsColumns = readsheet.getColumns();  
+		    	    // 从第三行读取
+		    	    for (int i = 4; i < rsRows; i++) {  
+		    	    	Cell cell = readsheet.getCell(0, i);  
+		    	        columnList.add(cell.getContents());  
+		    	      //  System.out.println(columnList);  
+		    	    }  
+		    	    String[] ageString = new String[columnList.size()];  
+		    	    for (int i = 0; i < columnList.size(); i++) {  
+		    	    	if(columnList.get(i)!="" && null!=columnList.get(i)){
+		    	    		ageString[i] = columnList.get(i);  
+		    	    	}
+		    	        System.out.println(ageString[i]);  
+		    	        System.out.println();
+		    	    }
+		    	}  
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
+		     
 	     public static void main(String[] args){
-	          File file = new File("D:/国库导出支付信息模板.xls");
-	          System.out.println(xls2String(file,3));
+	     /*     File file = new File("D:/国库导出支付信息模板.xls");
+	          
+	          System.out.println(xls2String(file,3));*/
+	  /*  	try {
+				readExcel("D:/国库导出支付信息模板.xls");
+			} catch (BiffException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+	    	 File file = new File("D:/国库导出支付信息模板.xls");
+	    	 try {
+				readSpecify(file);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	 
 	      }
 		  
 	

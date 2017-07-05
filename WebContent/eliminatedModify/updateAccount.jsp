@@ -206,7 +206,7 @@
 				<td class="view_table_left" style="width:110px">修改后开户银行：</td>
 				<td class="view_table_right">
 					<input id="bankCodeNew" class="easyui-combobox" name="bankCode" 
-					data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=BANK_CODE',panelHeight:150"/>
+					data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListByType.do?dictType=BANK_CODE',panelHeight:150"/>
 					<input type="hidden" name="bankName" />
 					<!-- <input type="text" name="bankName" class="easyui-validatebox"
 					data-options="required:true" /> -->

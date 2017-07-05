@@ -213,7 +213,7 @@ public class EliminatedApply extends BaseModel implements Serializable {
 	private String lastUpdateUser;
 	
 	// 最近处理人代码
-	private String lastUpdatUserCode;
+	private String lastUpdateUserCode;
 	
 	// 受理录入时间
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -770,12 +770,12 @@ public class EliminatedApply extends BaseModel implements Serializable {
 	}
 
 	@Column(name = "LAST_UPDATE_USER_CODE", unique = false, nullable = true, length =20)
-	public String getLastUpdatUserCode() {
-		return lastUpdatUserCode;
+	public String getLastUpdateUserCode() {
+		return lastUpdateUserCode;
 	}
 
-	public void setLastUpdatUserCode(String lastUpdatUserCode) {
-		this.lastUpdatUserCode = lastUpdatUserCode;
+	public void setLastUpdateUserCode(String lastUpdateUserCode) {
+		this.lastUpdateUserCode = lastUpdateUserCode;
 	}
 
 	@Column(name = "APPLY_TIME", unique = false, nullable = false)
@@ -898,7 +898,7 @@ public class EliminatedApply extends BaseModel implements Serializable {
 			String repeatedBatchNo, String toFinanceStatus,
 			String payResStatus, String archivedStatus, String archiveBoxNo,
 			String archivedInnerNo, Date lastUpdateTimeDate,
-			String lastUpdateUser, String lastUpdatUserCode, Date applyTime,
+			String lastUpdateUser, String lastUpdateUserCode, Date applyTime,
 			Date applyConfirmTime, Date recycleDate, String callbackProofNo,
 			Date endTime, String verifyCode, Date updateTime,
 			String concludeStatus, String bankCode, String allBatchNos, String allToFinBankInfos) {
@@ -959,7 +959,7 @@ public class EliminatedApply extends BaseModel implements Serializable {
 		this.archivedInnerNo = archivedInnerNo;
 		this.lastUpdateTimeDate = lastUpdateTimeDate;
 		this.lastUpdateUser = lastUpdateUser;
-		this.lastUpdatUserCode = lastUpdatUserCode;
+		this.lastUpdateUserCode = lastUpdateUserCode;
 		this.applyTime = applyTime;
 		this.applyConfirmTime = applyConfirmTime;
 		this.recycleDate = recycleDate;

@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test-add</title>
+<title>Eliminated-Apply-Add</title>
 </head>
 <body>
 	<form id="form-apply-save" action="eliminatedApply/save.do" method="post">
@@ -382,7 +382,6 @@
 				
 				var basePath = "<%=basePath%>";
 				
-				//$("#isProxy").combobox("setValue", "-1");
 				// 注销日期校验
 				/* $("#destroyDate").datebox({
 					validator: function(date) {
@@ -842,7 +841,7 @@
 				   }
 				   
 				   //文件框页面校验，必填
-				   var ifValid = $("#form-apply-upload form").form("enableValidation").form("validate");
+				   var ifValid = $("#form-apply-upload").form("enableValidation").form("validate");
 				   
 				   if (ifValid) {
 					
@@ -939,7 +938,7 @@
 					   return false;
 				   	}
 					   
-					var isValid = $("#common-dialog form").form("enableValidation").form("validate");
+					var isValid = $("#form-apply-save").form("enableValidation").form("validate");
 					
 					if (isValid) {
 						// 校验注销日期，必选大于交售日期
@@ -981,21 +980,21 @@
 									// 设置受理单号、受理表Id、档案盒编号
 									$("input[name='id']").val(data.message.id);
 									$("input[name='applyNo']").val(data.message.applyNo);
-									//$("input[name='archiveBoxNo']").val(data.message.archiveBoxNo);
-									//$("input[name='archivedInnerNo']").val(data.message.archivedInnerNo);
-									
-									// 页面刷新前，先移除下一步按钮点击事件
-									/* if(window.addEventListener) { // Mozilla, Netscape, Firefox   
-										obj.removeEventListener('click', handler, false);    
-									} else if(window.attachEvent) { // IE   
-										obj.detachEvent('onclick', handler);   
-								    } else {  
-								    	obj.onclick= "";
-								    } */
 									
 									// 资格校验成功，受理表信息保存，页面跳转到受理表打印预览页面
 									var url = basePath+"/eliminatedApply/applyPreview.do?id="+data.message.id;
-									$("#common-dialog").dialog("refresh", url);
+									//$("#common-dialog").dialog("refresh", url);
+									
+									openDialog({
+									   	type : "PRINT_APPLY_TABLE",
+										title : "补贴受理表打印预览",
+										width : 1040,
+										height : 400,
+										param: {reset:false,save:false},	
+										maximizable : true,
+										href : url
+								   });
+									
 									
 			                	} else {
 			                		Messager.alert({
