@@ -408,6 +408,7 @@
 				   var isProxy = '${v.isProxy}';
 				   
 				   var modifyTypes = '${modifyTypes}';
+				   var modifyTypesArray = modifyTypes.split(",");
 				   
 				   //文件框页面校验，必填
 				   var ifValid = $("#form-modify-apply-upload form").form("enableValidation").form("validate");
@@ -415,7 +416,7 @@
 				   if (ifValid) {
 					
 					   // 校验文件是否上传
-					   if (!checkAttachments(modifyTypes)) {
+					   if (!checkAttachmentsForUpload(modifyTypesArray)) {
 						   alert("还有证明材料没有上传，请先上传！");
 						   return false;
 					   }
@@ -466,10 +467,10 @@
 		        					}
 		        					
 		        		 		} else {
-		        		 			alert("文件上传失败！");
+		        		 			alert(result.message.msg);
 		        		 			//$('#form-apply-upload')[0].reset();
 		        		 			
-		        		 			$("#callbackProofFile").filebox("clear");
+		        		 			$("#callbackProofFiles").filebox("clear");
 		        		 			$("#vehicleCancelProof").filebox("clear");
 		        		 			$("#bankCard").filebox("clear");
 		        		 			
@@ -719,68 +720,73 @@
 				
 			});
 				
-			function checkAttachments(modifyTypes) {
+			function checkAttachmentsForUpload(modifyTypeArray) {
 				var isOk = true;
 				var isPersonal = '${v.isPersonal}';
-			    var isProxy = '${v.isProxy}';
+				var isProxy = '${v.isProxy}';
 				
-			    //alert(modifyTypes);
-			    
-		    	if (modifyTypes.includes("31")) {
-			    	// 报废回收证明
-					if ($("#callbackProofFiles").filebox("getValue") == "") {
-						isOk = false;
-					}
-		    	}
-				
-		    	if (modifyTypes.includes("32")) {
-					// 机动车注销证明
-					if ($("#vehicleCancelProof").filebox("getValue").val() == "") {
-						isOk = false;
-					}
-		    	}
-		    	
-		    	if (modifyTypes.includes("33")) {
-					// 车主身份证明
-					if ($("input[name='vehicleOwnerProof']").val() == "") {
-						isOk = false;
-					}
-		    	}
-		    	
-		    	if (modifyTypes.includes("34")) {
-					// 银行卡
-					if ($("#bankCard").filebox("getValue").val() == "") {
-						isOk = false;
-					}
-		    	}
-				// 银行卡
-				/* if ($("input[name='bankCardFiles']").val() == "") {
-					isOk = false;
-				} */
-				
-				// 企业需要非财政供养单位证明、开户许可证
-				if (isPersonal == 'N') {
-					if (modifyTypes.includes("35")) {
-						if ($("#noFinanceProvide").filebox("getValue").val() == "") {
+				for (var i = 0 ; i < modifyTypeArray.length; i ++) {
+					if (modifyTypeArray[i] == "31") {
+						// 报废回收证明
+						if ($("#callbackProofFiles").filebox("getValue") == "") {
 							isOk = false;
 						}
 					}
-					if (modifyTypes.includes("38")) {
-						if ($("input[name='openAccPromitFiles']").val() == "") {
+					
+					if (modifyTypeArray[i] == "32") {
+						// 机动车注销证明
+						if ($("#vehicleCancelProof").filebox("getValue") == "") {
 							isOk = false;
 						}
 					}
-				}
-				// 代理需要代理委托书、代理人身份证
-				if (isProxy == "N") {
-					if (modifyTypes.includes("36")) {
-						if ($("#agentProxy").filebox("getValue").val() == "") {
+					
+					if (modifyTypeArray[i] == "33") {
+						// 车主身份证明
+						if ($("input[name='vehicleOwnerProof']").val() == "") {
 							isOk = false;
 						}
 					}
-					if (modifyTypes.includes("37")) {
-						if ($("#agentProof").filebox("getValue").val() == "") {
+					
+					if (modifyTypeArray[i] == "34") {
+						// 银行卡
+						if ($("#bankCard").filebox("getValue") == "") {
 							isOk = false;
+						}
+					}
+					
+					if (modifyTypeArray[i] == "35") {
+						// 车主类型为企业
+						if (isPersonal == 'N') {
+							if ($("#noFinanceProvide").filebox("getValue") == "") {
+								isOk = false;
+							}
+						}
+					}
+					
+					if (modifyTypeArray[i] == "36") {
+						// 办理类型为代理
+						if (isProxy == "N") {
+							if ($("#agentProxy").filebox("getValue") == "") {
+								isOk = false;
+							}
+						}
+					}
+					
+					if (modifyTypeArray[i] == "37") {
+						// 办理类型为代理
+						if (isProxy == "N") {
+							if ($("#agentProof").filebox("getValue") == "") {
+								isOk = false;
+							}
+						}
+					}
+					
+					if (modifyTypeArray[i] == "38") {
+						// 车主类型为企业
+						if (isPersonal == 'N') {
+							if ($("input[name='openAccPromit']").val() == "") {
+								isOk = false;
+							}
 						}
 					}
 				}

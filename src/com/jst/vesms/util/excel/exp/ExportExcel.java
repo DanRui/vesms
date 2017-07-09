@@ -7,13 +7,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.engine.internal.StatisticalLoggingSessionEventListener;
+import org.springframework.context.support.StaticApplicationContext;
+
 import jxl.Cell;
+import jxl.CellType;
 import jxl.CellView;
+import jxl.DateCell;
 import jxl.Sheet;
 import jxl.SheetSettings;
 import jxl.Workbook;
@@ -33,6 +40,7 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
+import com.jst.vesms.model.PayResultImport;
 import com.jst.vesms.util.excel.Constant;
 import com.jst.vesms.util.excel.ExcelProperties;
 
@@ -991,9 +999,34 @@ public class ExportExcel {
 		     
 		     
 		     
+		     public static void readPayResultImport(File file) throws BiffException, IOException{
+		    	 InputStream io = new FileInputStream(file.getAbsoluteFile());  
+		    	  Workbook readwb = Workbook.getWorkbook(io); 
+		    	  Sheet sheet = readwb.getSheet(0);
+		    	  // 第二行第一列的值
+		    	  Date date = null ;
+		    	  PayResultImport payResultImport = new PayResultImport();
+		    	  Cell cell = sheet.getCell(2, 1);
+		    	  System.out.println(cell.getContents());
+		    	  DateCell dc = (DateCell)cell;
+		    	  date = dc.getDate();	//获取单元格的date类型
+		    	  // 获取制表时间  
+		    	  payResultImport.setMarkTime(date);
+		    	  
+		    	  Date date2 = new Date();
+		    	  // 获取导入时间
+		    	  payResultImport.setImportTime(date2);// new Date()为获取当前系统时间
+		    	  // 导入文件路径
+		    	  payResultImport.setFilePath(file+"");
+		     }
+		     
+		     
+		     
 		     
 		     public static void readSpecify(File file)throws Exception{  
-		    	    ArrayList<String> columnList = new ArrayList<String>();  
+		    //	 List<PayResultImport>  list = new ArrayList<PayResultImport>();
+		   // 	 PayResultImport resultImport = new PayResultImport();  
+		    	 ArrayList<String> columnList = new ArrayList<String>();  
 		    	    Workbook readwb = null;  
 		    	    InputStream io = new FileInputStream(file.getAbsoluteFile());  
 		    	    readwb = Workbook.getWorkbook(io);  
@@ -1001,7 +1034,7 @@ public class ExportExcel {
 		    	    // 获取行数
 		    	    int rsRows = readsheet.getRows();  
 		    	    // 获取列数
-		    	    int rsColumns = readsheet.getColumns();  
+		    //	    int rsColumns = readsheet.getColumns();  
 		    	    // 从第三行读取
 		    	    for (int i = 4; i < rsRows; i++) {  
 		    	    	Cell cell = readsheet.getCell(0, i);  
@@ -1041,14 +1074,23 @@ public class ExportExcel {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}*/
-	    	 File file = new File("D:/国库导出支付信息模板.xls");
-	    	 try {
+	  /*  	 File file = new File("D:/国库导出支付信息模板.xls");
+	    	try {
 				readSpecify(file);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}*/
+	    	 File file = new File("D:/国库导出支付信息模板.xls");
+	    	 try {
+				readPayResultImport(file);
+			} catch (BiffException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-	    	 
 	      }
 		  
 	

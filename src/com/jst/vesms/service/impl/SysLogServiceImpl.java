@@ -82,7 +82,11 @@ public class SysLogServiceImpl extends BaseServiceImpl implements SysLogService 
 	
 	@Override
 	public SystemLog getById(String id) throws Exception {
-		return (SystemLog) systemLogDao.getById(id);
+		List list = systemLogDao.getByPorperty("logId", Long.valueOf(id), null);
+		if (null != list && list.size() > 0) {
+			return (SystemLog) list.get(0);
+		}
+		return null;
 	}
 
 }

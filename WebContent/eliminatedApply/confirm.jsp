@@ -198,7 +198,17 @@
 				// 点击上一步按钮，跳转到受理表更新页面
 				 $("#btnConfirmPrevStep").click(function() {
 					var url = basePath+"/eliminatedApply/view.do?type=update&id="+id;
-					$("#common-dialog").dialog("refresh", url); 
+					//$("#common-dialog").dialog("refresh", url); 
+					$("#common-dialog").dialog("close"); 
+					openDialog({
+					   	type : "UPDATE",
+						title : "补贴受理信息修改",
+						width : 1132,
+						height : 800,
+						param: {reset:false},	
+						maximizable : true,
+						href : url
+					});
 				 });
 				 
 				 // 点击下一步，更新受理单状态并跳转到打印受理回执单页面
@@ -293,7 +303,17 @@
 			// 重新打印受理表
 			$("#btnPrintAgain").click(function() {
 				var url = basePath+"/eliminatedApply/applyPreview.do?&id="+id;
-				$("#common-dialog").dialog("refresh", url);
+				//$("#common-dialog").dialog("refresh", url);
+				$("#common-dialog").dialog("close");
+			 	openDialog({
+				   	type : "PRINT_APPLY_TABLE",
+					title : "补贴受理表打印预览",
+					width : 1040,
+					height : 500,
+					param: {reset:false,save:false},	
+					maximizable : true,
+					href : url
+				});
 			});
 			
 			// 点击拍照进行抓拍确认受理表

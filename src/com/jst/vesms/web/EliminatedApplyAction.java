@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +30,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jst.common.hibernate.PropertyFilter;
 import com.jst.common.service.CacheService;
 import com.jst.common.springmvc.BaseAction;
 import com.jst.common.system.annotation.Privilege;
@@ -159,7 +157,7 @@ public class EliminatedApplyAction extends BaseAction {
 		} catch (Exception e) {
 			log.error("eliminatedApplyAction save is Error:"+e, e);
 			saveOk = false;
-			json.put("msg", e.toString());
+			json.put("msg", "系统异常！");
 		}
 		
 		log.debug("eliminatedApplyAction save is End");

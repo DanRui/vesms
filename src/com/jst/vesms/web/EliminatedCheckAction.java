@@ -282,9 +282,9 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 		JSONObject json = new JSONObject();
 		String errorStr = "";
 		try {
-			if (StringUtil.isNotEmpty(checkOpinion)) {
+			/*if (StringUtil.isNotEmpty(checkOpinion)) {
 				checkOpinion = new String(checkOpinion.getBytes("ISO8859-1"), "UTF-8"); 
-			}
+			}*/
 			Map<String, Object> map = eliminatedCheckService.check(ids, checkType, faultType, checkOpinion, currentPost);
 			if (map.get("isSuccess").equals(true)) {
 				checkOk = true;

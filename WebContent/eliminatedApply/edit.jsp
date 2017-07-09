@@ -254,7 +254,8 @@
 					</td>
 					<td class="view_table_left">补贴标准说明：</td>
 					<td class="view_table_right">
-						<input type="text" name="subsidiesStandard" value="${v.subsidiesStandard}" readonly="readonly"/>
+						<textarea rows="3" name="subsidiesStandard" readonly="readonly">${v.subsidiesStandard}</textarea>
+						<%-- <input type="text" name="subsidiesStandard" value="${v.subsidiesStandard}" readonly="readonly"/> --%>
 					</td>
 				</tr>
 				<!-- 报废汽车回收证明 -->
@@ -284,15 +285,12 @@
 			</tr>
 			<c:if test="${!empty callbackFiles}">
 			<tr class="datagrid-row">
-				<td class="view_table_left">原报废汽车回收证明：</td>
+				<td class="view_table_left" style="width:135px;">原报废汽车回收证明：</td>
 				<td class="view_table_right">
 					<c:forEach items="${callbackFiles}" var="callbackFile">
 						<a href="${callbackFile.filePath}" target="_blank">${callbackFile.name}</a>
 					</c:forEach>
 				</td>
-			</tr>
-			</c:if>
-			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">报废汽车回收证明：</td>
 				<td class="view_table_right" colspan="2">
 					<input id="callbackProofFiles" name="callbackProofFiles" data-options="editable:false,required:false,buttonText:'请选择'"
@@ -304,6 +302,7 @@
 					<a id="callbackProofFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			</c:if>
 			<c:if test="${!empty vehicleCancelProofFiles}">
 			<tr class="datagrid-row">
 				<td class="view_table_left">原机动车注销证明：</td>
@@ -312,9 +311,6 @@
 						<a href="${vehicleCancelProofFile.filePath}" target="_blank">${vehicleCancelProofFile.name}</a>
 					</c:forEach>
 				</td>
-			</tr>
-			</c:if>
-			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">机动车注销证明：</td>
 				<td class="view_table_right" colspan="2">
 					<input id="vehicleCancelProof" class="easyui-filebox" name="vehicleCancelProof" data-options="editable:false,required:false,buttonText:'请选择'"/>
@@ -325,6 +321,7 @@
 					<a id="vehicleCancelProofFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			</c:if>
 			<c:if test="${!empty bankCardFiles}">
 			<tr class="datagrid-row">
 				<td class="view_table_left">原银行卡：</td>
@@ -333,9 +330,6 @@
 						<a href="${bankCardFile.filePath}" target="_blank">${bankCardFile.name}</a>
 					</c:forEach>
 				</td>
-			</tr>
-			</c:if>
-			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:120px">银行卡：</td>
 				<td class="view_table_right" colspan="2">
 					<input id="bankCard" class="easyui-filebox" name="bankCard" data-options="editable:false,required:false,buttonText:'请选择'"/>
@@ -346,6 +340,7 @@
 					<a id="bankCardFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			</c:if>
 			<c:if test="${!empty vehicleOwnerProofFiles}">
 			<tr class="datagrid-row">
 				<td class="view_table_left">原车主身份证明：</td>
@@ -359,9 +354,6 @@
 						</c:if>
 					</c:forEach>
 				</td>
-			</tr>
-			</c:if>
-			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">车主身份证明：</td>
 				<td class="view_table_right" colspan="2">
 					<input type="file" name="vehicleOwnerProof" multiple="multiple" />
@@ -373,6 +365,7 @@
 					<a id="vehicleOwnerProofFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			</c:if>
 			<c:if test="${v.isProxy eq 'N'}">
 			<c:if test="${!empty agentProxyFiles}">
 			<tr class="datagrid-row">
@@ -382,9 +375,6 @@
 						<a href="${agentProxyFile.filePath}" target="_blank">${agentProxyFile.name}</a>
 					</c:forEach>
 				</td>
-			</tr>
-			</c:if>
-			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:120px">代理委托书：</td>
 				<td class="view_table_right" colspan="2">
 					<input id="agentProxy" class="easyui-filebox" name="agentProxy" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
@@ -395,6 +385,7 @@
 					<a id="agentProxyFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			</c:if>
 			<c:if test="${!empty agentProofFiles}">
 			<tr class="datagrid-row">
 				<td class="view_table_left">原代理人身份证：</td>
@@ -403,9 +394,6 @@
 						<a href="${agentProofFile.filePath}" target="_blank">${agentProofFile.name}</a>
 					</c:forEach>
 				</td>
-			</tr>
-			</c:if>
-			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">代理人身份证：</td>
 				<td class="view_table_right" colspan="2">
 					<input id="agentProof" class="easyui-filebox" name="agentProof" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
@@ -417,6 +405,7 @@
 				</td>
 			</tr>
 			</c:if>
+			</c:if>
 			<c:if test="${v.isPersonal eq 'N'}">
 			<c:if test="${!empty noFinanceProvideFiles}">
 			<tr class="datagrid-row">
@@ -426,9 +415,6 @@
 						<a href="${noFinanceProvideFile.filePath}" target="_blank">${noFinanceProvideFile.name}</a>
 					</c:forEach>
 				</td>
-			</tr>
-			</c:if>
-			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:120px">非财政供养单位证明：</td>
 				<td class="view_table_right" colspan="2">
 					<input id="noFinanceProvide" class="easyui-filebox" name="noFinanceProvide" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
@@ -439,6 +425,7 @@
 					<a id="noFinanceProvideFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			</c:if>
 			<c:if test="${!empty openAccPromitFiles}">
 			<tr class="datagrid-row">
 				<td class="view_table_left">原开户许可证：</td>
@@ -452,9 +439,6 @@
 						</c:if>
 					</c:forEach>
 				</td>
-			</tr>
-			</c:if>
-			<tr class="datagrid-row">
 				<td class="view_table_left" style="width:110px">开户许可证：</td>
 				<td class="view_table_right" colspan="2">
 					<input type="file" name="openAccPromit" multiple="multiple" />
@@ -466,6 +450,7 @@
 					<a id="openAccPromitFileImg" href="#" target="_blank"></a>
 				</td>
 			</tr>
+			</c:if>
 			</c:if>
 			<tr class="datagrid-row">
 				<td align="center" colspan="6">

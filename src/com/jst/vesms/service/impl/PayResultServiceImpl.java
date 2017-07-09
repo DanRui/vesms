@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 
 import oracle.jdbc.OracleTypes;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.jst.common.hibernate.BaseDAO;
@@ -67,9 +68,12 @@ implements PayResultService{
 		String callName = "{call PKG_APPLY.pro_create_batch(?,?,?,?,?)}";
 		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
 		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
+		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+		String userCode = (String) loginInfo.get("USER_CODE");
+		String userName = (String) loginInfo.get("USER_NAME");
 		inParams.put(1, ids);
-		inParams.put(2, "admin");
-		inParams.put(3, "admin");
+		inParams.put(2, userCode);
+		inParams.put(3, userName);
 		outParams.put(4, OracleTypes.INTEGER);
 		outParams.put(5, OracleTypes.VARCHAR);
 		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
@@ -124,11 +128,18 @@ implements PayResultService{
 			String callName = "{call PKG_APPLY.p_apply_update_payresult(?,?,?,?,?,?,?)}";
 			Map<Integer, Object> inParams = new HashMap<Integer, Object>();
 			Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
-			inParams.put(1, "admin");
-			inParams.put(2, "admin");
+			Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+			String userCode = (String) loginInfo.get("USER_CODE");
+			String userName = (String) loginInfo.get("USER_NAME");
+			inParams.put(1, userCode);
+			inParams.put(2, userName);
 			inParams.put(3, ids);
 			inParams.put(4, payResStatus);
-			inParams.put(5, faultType);
+			if(payResStatus.equals("1")){
+				inParams.put(5, null);
+			}else if(payResStatus.equals("2")){
+				inParams.put(5, faultType);
+			}
 			inParams.put(6, faultDesc);
 			outParams.put(7, OracleTypes.VARCHAR);
 			List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");

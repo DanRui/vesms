@@ -35,9 +35,31 @@ String basePath = request.getContextPath();
 				width : "2%",
 				checkbox : true
 			},{
+				field : "opearterType",
+				title : "是否异常",
+				width : "5%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true,
+				formatter : function(value, row, index) {
+					if (value == 0) {
+						return "正常";
+					} else if (value == 1) {
+						return "异常";
+					}
+				},
+				styler : function(value, row, index) {
+					if (value == "0") {
+						return "color:green";
+					} else if (value == "1") {
+						return "color:red";
+					}
+				}
+			},{
 				field : "objType",
 				title : "模块名称",
-				width : "10%",
+				width : "18%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -93,7 +115,7 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				 $(this).datagrid("view",{width:900,height:800,url:basePath+"/sysLog/view.do?id="+rowData.id,content:"系统操作日志查看",param:{close:false}}); 
+				 $(this).datagrid("view",{width:900,height:300,url:basePath+"/sysLog/view.do?id="+rowData.logId,content:"系统操作日志查看",param:{close:false}}); 
 			}
 		}).datagrid("initSearch",{
 			columns:[{field:"opeIp",title:"操作IP:",type:"text"},

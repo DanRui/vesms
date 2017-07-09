@@ -157,8 +157,10 @@
 			</tr>
 			<tr class="datagrid-row">
 				<td class="view_table_left">车主：</td>
-				<td class="view_table_right"><textarea name="vehicleOwner"
-						class="easyui-validatebox" readonly="readonly">${v.vehicleOwner}</textarea>
+				<td class="view_table_right">
+					${v.vehicleOwner}
+				<%-- <textarea name="vehicleOwner"
+						class="easyui-validatebox" readonly="readonly">${v.vehicleOwner}</textarea> --%>
 				</td>
 				<td class="view_table_left">车主身份证明号码：</td>
 				<td class="view_table_right">

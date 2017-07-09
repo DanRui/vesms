@@ -598,7 +598,6 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
             while(iter.hasNext())
             {
                 // 依次遍历所有文件
-            	count ++;
             	String filenameAttr = iter.next();
                 MultipartFile file = multipartRequest.getFile(filenameAttr.toString());
                 
@@ -606,6 +605,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
                 if (filenameAttr.equals("callbackProofFiles") || filenameAttr.equals("vehicleCancelProof") || filenameAttr.equals("bankCard") || filenameAttr.equals("vehicleOwnerProof")) {
                 	if (file.getSize() <= 0) {
                 		isSuccess = false;
+                		json.put("msg", "文件不能为空，请重新上传！");
                 		break;
                 	}
                 }
@@ -613,12 +613,14 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
                 // 办理类型是代办，则代理委托书和代理人身份证必需上传
                 if (isProxy.equals("N") && (filenameAttr.equals("agentProxy") || filenameAttr.equals("agentProof")) && file.getSize() <= 0) {
                 	isSuccess = false;
+                	json.put("msg", "文件不能为空，请重新上传！");
                 	break;
                 }
                 
                 // 车主类型是企业，则非财政供养单位证明和开户许可证必需上传
                 if (isPersonal.equals("N") && (filenameAttr.equals("noFinanceProvide") || filenameAttr.equals("openAccPromit")) && file.getSize() <= 0) {
                 	isSuccess = false;
+                	json.put("msg", "文件不能为空，请重新上传！");
                 	break;
                 }
                 // 其它资料种类
@@ -629,9 +631,11 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
                 Map<String, Object> saveResult = saveFile(file, tmpDir, contextPath);
                 if (saveResult.get("isSuccess").equals(false)) {
                 	isSuccess = false;
+                	json.put("msg", "文件上传失败！");
                 	break;
                 } else {
                 	// 保存文件记录到附件表，并置状态为有效
+                	count ++;
                 	json.put(filenameAttr, saveResult.get("imgSrc").toString());
                 }
             }
@@ -645,7 +649,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
         	System.out.println("上传文件的花费时间："+String.valueOf(endTime-startTime)+"ms");
         	return JsonUtil.toSuccessMsg(JsonUtil.parse(json).toString());
         } else {
-        	return JsonUtil.toErrorMsg("文件上传失败！");
+        	return JsonUtil.toErrorMsg(JsonUtil.parse(json).toString());
         } 
 	}
 	
@@ -712,6 +716,15 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
         } else {
         	return JsonUtil.toErrorMsg("文件上传失败！");
         } 
+	}
+	
+	// 进入查询业务授权申请列表页面
+	@RequestMapping("listAuthView")
+	public ModelAndView listAuthView() throws Exception {
+		String view = "ELIMINATED_MODIFY.AUTH_VIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		
+		return mv;
 	}
 	
 }

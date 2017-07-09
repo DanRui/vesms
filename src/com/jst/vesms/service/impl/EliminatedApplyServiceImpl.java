@@ -348,6 +348,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 						jsonArray.add(SystemUtil.createJson("SUBSIDIES_MONEY", "Double", subsidiesMoney.toString()));
 						jsonArray.add(SystemUtil.createJson("VEHICLE_IDENTIFY_NO", "String", vehicleIdentifyNo));
 						jsonArray.add(SystemUtil.createJson("BANK_NAME", "String", bankName));
+						jsonArray.add(SystemUtil.createJson("BANK_CODE", "String", bankCode));
 						jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NAME", "String", bankAccountName));
 						jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NO", "String", bankAccountNo));
 						
@@ -364,19 +365,24 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 										+ "{\"column\":\"SUBSIDIES_MONEY\",\"type\":\"varchar2\",\"value\":"+ vehiclePlateType + "},"
 										+ "]";*/
 						// 测试正确后打开
-						String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), null, "ADD"}, DataType.JSON);
-						
-						MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
-						String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
-						//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
-						if(Message.RET_CODE_SUCCESS.equals(retCode)) {
-							String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
-							JSONObject json = JSONObject.fromObject(str);
-							log.debug("更新后校验码为：" + json.getString("checkCode"));
-							eliminatedApply.setVerifyCode(json.getString("checkCode"));
-						} else {
-							// 校验码生成失败，记录日志。
-							log.debug("生成校验码失败");
+						try {
+							String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), null, "ADD"}, DataType.JSON);
+							
+							MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
+							String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
+							//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
+							if(Message.RET_CODE_SUCCESS.equals(retCode)) {
+								String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
+								JSONObject json = JSONObject.fromObject(str);
+								log.debug("更新后校验码为：" + json.getString("checkCode"));
+								eliminatedApply.setVerifyCode(json.getString("checkCode"));
+							} else {
+								// 校验码生成失败，记录日志。
+								log.debug("生成校验码失败");
+								eliminatedApply.setVerifyCode("1");
+							}
+						} catch (Exception e) {
+							log.error("SuperviseWebServiceClient call is error:"+e, e);
 							eliminatedApply.setVerifyCode("1");
 						}
 						
@@ -890,6 +896,11 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	@Override
 	public boolean saveConfirm(Integer id, String signedApplyFiles) throws Exception {
 		// 更新受理确认时间、业务流水记录
+		// 用户Code
+		@SuppressWarnings("unchecked")
+		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+		String userCode = (String) loginInfo.get("USER_CODE");
+		String userName = (String) loginInfo.get("USER_NAME");
 		// 从数据库获取数据，无需解密，方便更新校验码（不调用this.getById(id)）
 		EliminatedApply apply = (EliminatedApply) this.get(id);
 		if (null != apply) {
@@ -906,8 +917,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 					file.setFilePath(callbackProofs[i]);
 					file.setType("QRSLB");
 					file.setStatus("1");
-					file.setUploadUser("admin");
-					file.setUploadUserCode("admin");
+					file.setUploadUser(userName);
+					file.setUploadUserCode(userCode);
 					file.setUploadTime(new Date());
 					file.setUpdateTime(new Date());
 					file.setVerifyCode("1");
@@ -923,16 +934,14 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			apply.setApplyConfirmTime(new Date()); // 受理确认时间
 			apply.setLastUpdateTimeDate(new Date()); // 业务最近更新时间
 			apply.setUpdateTime(new Date());  // 数据更新时间
-			apply.setLastUpdateUser("管理员"); // 处理人
-			apply.setLastUpdateUserCode("admin"); // 处理人代码
 			
 			// 新增业务流水记录
 			ActionLog actionLog = new ActionLog();
 			actionLog.setActionName("受理确认");
 			actionLog.setActionResult("受理成功");
 			actionLog.setActionTime(new Date());
-			actionLog.setActionUser("admin");
-			actionLog.setActionUserCode("admin");
+			actionLog.setActionUser(userName);
+			actionLog.setActionUserCode(userCode);
 			actionLog.setApplyNo(apply.getApplyNo());
 			actionLog.setVerifyCode("1");
 			actionLog.setUpdateTime(new Date());
@@ -962,14 +971,12 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				Double subsidiesMoney = apply.getSubsidiesMoney();
 				// 银行名称
 				String bankName = apply.getBankName();
+				// 银行代码
+				String bankCode = apply.getBankCode();
 				// 银行户名
 				String bankAccountName = apply.getBankAccountName();
 				// 银行卡号
 				String bankAccountNo = apply.getBankAccountNo();
-				// 用户Code
-				@SuppressWarnings("unchecked")
-				Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
-				String userCode = (String) loginInfo.get("USER_CODE");
 				// 当前操作时间
 				String now = DateUtil.format(new Date(), DateUtil.TIMESTAMPS_PATTERN_2);
 				// 原校验码
@@ -985,27 +992,36 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				jsonArray.add(SystemUtil.createJson("SUBSIDIES_MONEY", "Double", subsidiesMoney.toString()));
 				jsonArray.add(SystemUtil.createJson("VEHICLE_IDENTIFY_NO", "String", vehicleIdentifyNo));
 				jsonArray.add(SystemUtil.createJson("BANK_NAME", "String", bankName));
+				jsonArray.add(SystemUtil.createJson("BANK_CODE", "String", bankCode));
 				jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NAME", "String", bankAccountName));
 				jsonArray.add(SystemUtil.createJson("BANK_ACCOUNT_NO", "String", bankAccountNo));
 				
 				log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
 				
-				// 服务未启动，测试通过后再开启
-				String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
-				
-				MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
-				String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
-				//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
-				if(Message.RET_CODE_SUCCESS.equals(retCode)) {
-					String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
-					JSONObject json = JSONObject.fromObject(str);
-					log.debug("更新后校验码为：" + json.getString("checkCode"));
-					apply.setVerifyCode(json.getString("checkCode"));
-				} else {
-					// 校验码生成失败，记录日志。
-					log.debug("更新校验码失败");
+				// 服务未启动，捕获异常不抛出，避免影响业务
+				try {
+					String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
+					
+					MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
+					String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
+					//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
+					if(Message.RET_CODE_SUCCESS.equals(retCode)) {
+						String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
+						JSONObject json = JSONObject.fromObject(str);
+						log.debug("更新后校验码为：" + json.getString("checkCode"));
+						apply.setVerifyCode(json.getString("checkCode"));
+					} else {
+						// 校验码生成失败，记录日志。
+						log.debug("更新校验码失败");
+						apply.setVerifyCode("1");
+					}
+				} catch(Exception e) {
+					log.error("SuperviseWebServiceClient call is error:"+e, e);
 					apply.setVerifyCode("1");
 				}
+				
+				apply.setLastUpdateUser(userName); // 处理人
+				apply.setLastUpdateUserCode(userCode); // 处理人代码
 				
 				eliminatedApplyDao.update(apply);
 				// 更新成功，报废车辆信息表受理状态更改为已受理
@@ -1095,19 +1111,24 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		log.debug("调用生成校验码接口，业务关键字段为：" + jsonArray.toString());
 		
-		String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
-		
-		MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
-		String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
-		//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
-		if(Message.RET_CODE_SUCCESS.equals(retCode)) {
-			String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
-			JSONObject json = JSONObject.fromObject(str);
-			log.debug("更新后校验码为：" + json.getString("checkCode"));
-			eliminatedApply.setVerifyCode(json.getString("checkCode"));
-		} else {
-			// 校验码生成失败，记录日志。
-			log.debug("更新校验码失败");
+		try {
+			String result = SuperviseWebServiceClient.invokeInterface("checkService", "checkData", new Object[] {Constants.CURRENT_APPCODE, userCode, now, null, "T_ELIMINATED_APPLY", null, jsonArray.toString(), oldCode, "UPDATE"}, DataType.JSON);
+			
+			MessageHandler handler = MessageHandlerUtil.getMessageHandler(DataType.JSON, result);
+			String retCode = handler.getParamValue(MessageHandlerUtil.getElementPath(Message.RET_CODE, DataType.JSON));
+			//String retMsg = (String)JSONObject.fromObject(result).getJSONObject("msg").getJSONObject("head").get("retCode");
+			if(Message.RET_CODE_SUCCESS.equals(retCode)) {
+				String  str = JSONObject.fromObject(result).getJSONObject("msg").getJSONArray("body").getString(0);
+				JSONObject json = JSONObject.fromObject(str);
+				log.debug("更新后校验码为：" + json.getString("checkCode"));
+				eliminatedApply.setVerifyCode(json.getString("checkCode"));
+			} else {
+				// 校验码生成失败，记录日志。
+				log.debug("更新校验码失败");
+				eliminatedApply.setVerifyCode("1");
+			}
+		} catch (Exception e) {
+			log.error("SuperviseWebServiceClient call is error:"+e, e);
 			eliminatedApply.setVerifyCode("1");
 		}
 		
@@ -1222,6 +1243,11 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	 */
 	@Override
 	public Map<String, Object> saveArchive(Integer id) throws Exception {
+		// 用户Code
+		@SuppressWarnings("unchecked")
+		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+		String userCode = (String) loginInfo.get("USER_CODE");
+		String userName = (String) loginInfo.get("USER_NAME");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		EliminatedApply apply = (EliminatedApply) this.get(id);
@@ -1230,8 +1256,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			// 档案盒编号,调用存储过程创建档案盒号
 			Map<Integer, Object> inParamsBox = new HashMap<Integer, Object>();
 			Map<Integer, Integer> outParamsBox = new HashMap<Integer, Integer>();
-			inParamsBox.put(1, "admin");
-			inParamsBox.put(2, "admin");
+			inParamsBox.put(1, userCode);
+			inParamsBox.put(2, userName);
 			inParamsBox.put(3, apply.getApplyNo());
 			
 			outParamsBox.put(4, OracleTypes.VARCHAR); // 档案盒编号
@@ -1279,6 +1305,12 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			String agentProxyFiles, String agentProofFiles,
 			String noFinanceProvideFiles, String openAccPromitFiles)
 			throws Exception {
+		// 用户Code
+		@SuppressWarnings("unchecked")
+		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+		String userCode = (String) loginInfo.get("USER_CODE");
+		String userName = (String) loginInfo.get("USER_NAME");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		boolean isSuccess = true;
 		
@@ -1295,8 +1327,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(callbackProofs[i]);
 				file.setType("JDCHSZM");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1323,8 +1355,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleRegisterProofs[i]);
 				file.setType("JDCZXZM");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1351,8 +1383,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("YHK");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1379,8 +1411,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("CZSFZM");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1407,8 +1439,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("FCZGYZM");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1435,8 +1467,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("KHXKZ");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1463,8 +1495,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("DLWTS");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1491,8 +1523,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("DLRSFZ");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1884,6 +1916,11 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			String agentProxyFiles, String agentProofFiles,
 			String noFinanceProvideFiles, String openAccPromitFiles)
 			throws Exception {
+		// 用户Code
+		@SuppressWarnings("unchecked")
+		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+		String userCode = (String) loginInfo.get("USER_CODE");
+		String userName = (String) loginInfo.get("USER_NAME");
 		
 		// 根据受理单号获得附件表数据，更新原附件表数据为无效，新增附件表记录
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1905,8 +1942,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(callbackProofs[i]);
 				file.setType("JDCHSZM");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUser(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1935,8 +1972,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleRegisterProofs[i]);
 				file.setType("JDCZXZM");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUser(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1965,8 +2002,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("YHK");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUser(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -1995,8 +2032,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("ZCSFZM");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUser(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -2025,8 +2062,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("FCZGYZM");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUser(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -2055,8 +2092,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("KHXKZ");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUser(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -2085,8 +2122,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("DLWTS");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUser(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
@@ -2115,8 +2152,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setFilePath(vehicleLicenses[i]);
 				file.setType("DLRSFZ");
 				file.setStatus("1");
-				file.setUploadUser("admin");
-				file.setUploadUserCode("admin");
+				file.setUploadUser(userName);
+				file.setUploadUser(userCode);
 				file.setUploadTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());

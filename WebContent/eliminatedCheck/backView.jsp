@@ -136,7 +136,7 @@ String basePath = request.getContextPath();
 						个人
 					</c:if>
 					<c:if test="${v.isFinancialSupport eq '2'}">
-						非财政供养单位
+						车主自证非财政供养
 					</c:if>
 				</td>
 			</tr>
@@ -239,8 +239,13 @@ String basePath = request.getContextPath();
 				<td class="view_table_left">车主身份证明：</td>
 				<c:if test="${!empty vehicleOwnerProofFiles}">
 				<td class="view_table_right">
-					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile">
-						<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile" varStatus="status">
+						<c:if test="${status.index % 2 eq 1}">
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a></br>
+						</c:if>
+						<c:if test="${status.index % 2 eq 0}">
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+						</c:if>
 					</c:forEach>
 				</td>
 				</c:if>
@@ -267,8 +272,13 @@ String basePath = request.getContextPath();
 				<td class="view_table_left">开户许可证：</td>
 				<c:if test="${!empty callbackFiles}">
 					<td class="view_table_right">
-						<c:forEach items="${openAccPromitFiles}" var="openAccPromitFile">
-							<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a>
+						<c:forEach items="${openAccPromitFiles}" var="openAccPromitFile" varStatus="status">
+							<c:if test="${status.index % 2 eq 1}">
+								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a></br>
+							</c:if>
+							<c:if test="${status.index % 2 eq 0}">
+								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a>
+							</c:if>
 						</c:forEach>
 					</td>
 				</c:if>
@@ -299,13 +309,12 @@ String basePath = request.getContextPath();
 				<td class="view_table_left">签字确认的受理表：</td>
 				<td class="view_table_right">
 					<c:forEach items="${signedApplyFiles}" var="signedApplyFile" varStatus="status">
-						<c:if test="status.index % 2 eq 1">
+						<c:if test="${status.index % 2 eq 1}">
 							<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a></br>
 						</c:if>
-						<c:if test="status.index % 2 eq 0">
+						<c:if test="${status.index % 2 eq 0}">
 							<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a>
 						</c:if>
-						
 					</c:forEach>
 				</td>
 			</tr>
@@ -314,12 +323,19 @@ String basePath = request.getContextPath();
 			<tr class="datagrid-row">
 				<td class="view_table_left">补贴对象变更证明材料：</td>
 				<td class="view_table_right">
-					<c:forEach items="${accountChangeProofFiles}" var="accountChangeProofFile">
-						<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}</a>
+					<c:forEach items="${accountChangeProofFiles}" var="accountChangeProofFile" varStatus="status">
+						<c:if test="${status.index % 2 eq 1}">
+							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}</a></br>
+						</c:if>
+						<c:if test="${status.index % 2 eq 0}">
+							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}</a>
+						</c:if>
 					</c:forEach>
 				</td>
 			</tr>
-			</c:if>	
+			</c:if>
+			<tr>
+			<table id="table-action-log">	
 			<tr class="datagrid-header-row classify-tr">
 				<td colspan="6">业务流水记录</td>
 			</tr>	
@@ -329,7 +345,7 @@ String basePath = request.getContextPath();
 				<th>发生时间</th>
 				<th>处理人</th>
 				<th>操作结果</th>
-				<th width="15%">详情说明</th>
+				<th width="25%">详情说明</th>
 			</tr>
 			<c:forEach items="${actionLogs}" var="log">
 				<tr align="center">
@@ -380,6 +396,8 @@ String basePath = request.getContextPath();
 					<td>${log.actionDetail}</td>
 				</tr>
 			</c:forEach>
+			</table>
+			</tr>
 		</table>	
 	</div>
 	

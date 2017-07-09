@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import oracle.jdbc.OracleTypes;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import com.jst.common.hibernate.BaseDAO;
@@ -75,6 +76,12 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 	@Override
 	public Map<String, Object> saveApplyInfo(ApplyModifyInfo applyModifyInfo)
 			throws Exception {
+		// 用户Code
+		@SuppressWarnings("unchecked")
+		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+		String userCode = (String) loginInfo.get("USER_CODE");
+		String userName = (String) loginInfo.get("USER_NAME");
+		
 		Integer applyId = applyModifyInfo.getId();
 		boolean hasModifyFiles = false;
 		// 修正类型
@@ -128,10 +135,10 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 		// 如果有修改补贴对象户名的，则必须更新补贴账户变更的附件表数据
 		if ("2".equals(updateType)) {
 			// 更新补贴账户变更证明材料
-			if (null != applyModifyInfo.getAccountChangeFiles() && applyModifyInfo.getAccountChangeFiles().size() > 0) {
+			if (null != applyModifyInfo.getAccountChangeProofFiles() && applyModifyInfo.getAccountChangeProofFiles().size() > 0) {
 				String btzhmFiles = "";
-				for (int i = 0 ; i < applyModifyInfo.getAccountChangeFiles().size() ; i ++) {
-					btzhmFiles += applyModifyInfo.getAccountChangeFiles().get(i) + "|";
+				for (int i = 0 ; i < applyModifyInfo.getAccountChangeProofFiles().size() ; i ++) {
+					btzhmFiles += applyModifyInfo.getAccountChangeProofFiles().get(i) + "|";
 				}
 				attachments += "BTZHMBGZM:[" + btzhmFiles.substring(0, btzhmFiles.length() - 1) + "];";
 			}
@@ -228,8 +235,8 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
 		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
 		
-		inParams.put(1, "admin");
-		inParams.put(2, "管理员");
+		inParams.put(1, userCode);
+		inParams.put(2, userName);
 		inParams.put(3, applyId+"");
 		inParams.put(4, updateType);
 		inParams.put(5, modifyResult);

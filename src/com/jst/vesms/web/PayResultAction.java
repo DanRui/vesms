@@ -144,15 +144,7 @@ public class PayResultAction extends BaseAction{
 		String result = null;
 		String strids = "";
 		try {
-			if (StringUtil.isNotEmpty(faultDesc)) {
-				faultDesc = new String(faultDesc.getBytes("ISO8859-1"), "UTF-8"); 
-			}
-			// ids.replaceAll(",","|");
-			String idString[] = ids.split(",");
-			for (int i = 0; i < idString.length; i++) {
-				strids=strids+idString[i].concat("|");
-			}
-			strids=strids.substring(0, strids.length()-1);
+			strids = ids.replaceAll("," , "|");
 			result = payResultService.markBatchApply(strids,payResStatus,faultType,faultDesc);
 			if(null != result) {
 				markOk = true;
@@ -252,15 +244,7 @@ public class PayResultAction extends BaseAction{
 		String result = null;
 		String strids = "";
 		try {
-			if (StringUtil.isNotEmpty(faultDesc)) {
-				faultDesc = new String(faultDesc.getBytes("ISO8859-1"), "UTF-8"); 
-			}
-			// ids.replaceAll(",","|");
-			String idString[] = ids.split(",");
-			for (int i = 0; i < idString.length; i++) {
-				strids=strids+idString[i].concat("|");
-			}
-			strids=strids.substring(0, strids.length()-1);
+			strids = ids.replaceAll("," , "|");
 			result = payResultService.markBatchApply(strids,payResStatus,faultType,faultDesc);
 			if(null != result) {
 				markOk = true;

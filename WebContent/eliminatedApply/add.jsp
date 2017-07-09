@@ -13,13 +13,28 @@
 <title>Eliminated-Apply-Add</title>
 </head>
 <body>
+	<table class="datagrid-table-s datagrid-htable">
+		<tr class="datagrid-header-row">
+			<td class="view_table_left" style="width:135px;">请输入预约单号：</td>
+			<td class="view_table_right" colspan="5" style="text-align:left;">
+				<input type="text" name="appointmentNo"/>
+				<a id="btnAppointment" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-baofei-message'">获取预约数据</a>
+			</td>
+		</tr>
+		<tr class="datagrid-row">
+			<td colspan="6">
+				<div id="appoint-list">
+				</div>
+			</td>
+		</tr>
+	</table>
 	<form id="form-apply-save" action="eliminatedApply/save.do" method="post">
 		<input name="stage" type="hidden" value="${stage}"/>
 		<input name="applyNo" type="hidden"/>
 		<input name="id" type="hidden"/>
 		<div id="eliminated-apply-add" class="datagrid-header">
 			<table class="datagrid-table-s datagrid-htable">
-				<tr class="datagrid-header-row">
+				<!-- <tr class="datagrid-header-row">
 					<td class="view_table_left">请输入预约单号：</td>
 					<td class="view_table_right" colspan="2">
 						<input type="text" name="appointmentNo"/>
@@ -31,14 +46,14 @@
 						<div id="appoint-list">
 						</div>
 					</td>
-				</tr>
+				</tr> -->
 				<tr class="datagrid-header-row classify-tr">
 					<td colspan="6">车辆基本信息</td>
 				</tr>
 				<tr class="datagrid-row">
 					<td class="view_table_left">号牌号码：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehiclePlateNum" class="easyui-validatebox" data-options="required:true"  />
+						<input type="text" name="vehiclePlateNum" class="easyui-validatebox" data-options="required:true"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					<td class="view_table_left">号牌种类：</td>
@@ -50,8 +65,8 @@
 					</td>
 					<td class="view_table_left">厂牌型号：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehicleModelNo" readonly="readonly"/></td>
-
+						<input type="text" name="vehicleModelNo" readonly="readonly"/>
+					</td>
 				</tr>
 				<tr class="datagrid-row">
 					<td class="view_table_left">车辆类型：</td>
@@ -246,7 +261,7 @@
 					</td>
 					<td class="view_table_left">补贴标准说明：</td>
 					<td class="view_table_right">
-						<textarea name="subsidiesStandard" readonly="readonly"></textarea>
+						<textarea name="subsidiesStandard" cols="50" readonly="readonly"></textarea>
 						<!-- <input type="text" name="subsidiesStandard" readonly="readonly"/> -->
 					</td>
 				</tr>
@@ -487,8 +502,8 @@
 						return false;
 					}
 					
-					if (appointmentNo.length != 15) {
-						alert("预约号输入位数错误！");
+					if (appointmentNo.length != 16) {
+						alert("预约号输入位数错误！(16位预约号)");
 						return false;
 					}
 					
@@ -1018,12 +1033,16 @@
 			                					name : "appointAgentIdentity"
 			                				}
 			                			]
-			                		clearForm("form-apply-save", filters);
+			                		//clearForm("form-apply-save", filters);
 			                		
-			                		//$("#form-apply-save").form("clear");
+			                		$("#form-apply-save").form("clear");
 									
 									// 证明材料区域清空文件框值和回显路径
 									$("#form-apply-upload").form("clear");
+									
+									
+									$("#callbackProofFileImg").remove();
+									
 			                		//$("#common-dialog").dialog("close");
 			                	}
 			            	},
@@ -1124,7 +1143,7 @@
 			        			alert(data.message);
 			        			// 清空前一次输入留下的数据，主要是指表单控件、隐藏域、文件上传框等。
 								// 车辆信息、补贴对象信息、报废信息等表单控件
-								$("#form-apply-save :input").not("DIV#appoint-list :input").val("");
+								$("#form-apply-save").form("clear");
 								
 								// 证明材料区域清空文件框值和回显路径
 								$("#form-apply-upload").form("clear");
@@ -1230,7 +1249,7 @@
 		        			alert(data.message);
 		        			// 清空前一次输入留下的数据，主要是指表单控件、隐藏域、文件上传框等。
 							// 车辆信息、补贴对象信息、报废信息等表单控件
-							$("#form-apply-save :input").not("DIV#appoint-list :input").val("");
+							$("#form-apply-save").form("clear");
 							
 							// 证明材料区域清空文件框值和回显路径
 							$("#form-apply-upload").form("clear");
@@ -1304,11 +1323,11 @@
                 					name : "appointAgentIdentity"
                 				}
 			    ]
-				clearForm("form-apply-save", filters);
-				/* $("#form-apply-save").form("clear");
+				//clearForm("form-apply-save", filters);
+				$("#form-apply-save").form("clear");
 				
 				// 证明材料区域清空文件框值和回显路径
-				$("#form-apply-upload").form("clear"); */
+				$("#form-apply-upload").form("clear");
 				
 				// 双击每一行时触发
 				var trId = "#appoint-"+i;
@@ -1399,7 +1418,7 @@
 			function clearForm(id, filters) {
 				// 获取form表单
 				var objId = $(id);
-				if (objId == undefined) {
+				if (objId.length == 0) {
 					return;
 				}
 				

@@ -1,9 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ page import="java.util.*"%>
+<%@ page import="com.jst.util.PropertyUtil"%>
 <%
 	String basePath = request.getContextPath();
 	String vehiclePlateNum = request.getParameter("vehiclePlateNum");
+	String uploadServer = PropertyUtil.getPropertyValue("uploadServer");
+	String photoTmpDir = PropertyUtil.getPropertyValue("photoTmpDir");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -35,6 +38,9 @@
         <script language="javascript" type="text/javascript">
         		// 定义全局变量，号牌号码
         		var vehiclePlateNum = "<%=vehiclePlateNum%>";
+        		
+        		// 定义照片上传服务器地址
+        		var uploadServer = "<%=uploadServer%>";
         
 		        var DeviceMain;//主头
 		        var DeviceAssist;//副头
@@ -979,7 +985,7 @@
 					//http://localhost:8080/vesmsDemo/servlet/FileSteamUpload?
 							
 					//fileCaptureUpload
-					var http = thumb1().Thumbnail_HttpUploadCheckImage("http://localhost:8080/vesmsDemo/eliminatedModify/fileCaptureUpload.do?", 1);
+					var http = thumb1().Thumbnail_HttpUploadCheckImage(uploadServer + "/vesms/eliminatedModify/fileCaptureUpload.do?", 1);
 					if(http)
 					{
 						var htInfo = thumb1().Thumbnail_GetHttpServerInfo();

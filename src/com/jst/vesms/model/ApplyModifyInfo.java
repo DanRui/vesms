@@ -77,7 +77,7 @@ public class ApplyModifyInfo {
 	private List<String> signedApplyFiles = new ArrayList<String>();
 	
 	// 补贴账户变更材料证明
-	private List<String> accountChangeFiles = new ArrayList<String>();
+	private List<String> accountChangeProofFiles = new ArrayList<String>();
 	
 	// 机动车注册登记证书
 	private List<String> vehicleRegisterProofFiles = new ArrayList<String>();
@@ -245,12 +245,12 @@ public class ApplyModifyInfo {
 		this.signedApplyFiles = signedApplyFiles;
 	}
 
-	public List<String> getAccountChangeFiles() {
-		return accountChangeFiles;
+	public List<String> getAccountChangeProofFiles() {
+		return accountChangeProofFiles;
 	}
 
-	public void setAccountChangeFiles(List<String> accountChangeFiles) {
-		this.accountChangeFiles = accountChangeFiles;
+	public void setAccountChangeProofFiles(List<String> accountChangeProofFiles) {
+		this.accountChangeProofFiles = accountChangeProofFiles;
 	}
 
 	public List<String> getVehicleRegisterProofFiles() {

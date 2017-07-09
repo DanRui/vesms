@@ -28,8 +28,14 @@ String basePath = request.getContextPath();
 					</td>
 					<td class="view_table_left retreat">异常类型：</td>
 					<td class="view_table_right retreat">
-						<input id="faultType" name="faultType" class="easyui-combobox" data-options="editable:false,required:true,valueField:'id',textField:'text',url:'data/faultType.json',panelHeight:'auto'"/>
-						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>  
+							<select id="faultType" name="faultType" style="width:100px">   
+    							<option>请选择</option>
+    							<option value="1">一般资料错误</option>   
+    							<option value="2">补贴账户错误</option>
+    							<option value="3">非法业务需终止</option>
+							</select>
+					<!-- 	<input id="faultType" name="faultType" class="easyui-combobox" data-options="editable:false,required:true,valueField:'id',textField:'text',url:'data/faultType.json',panelHeight:'auto'"/>
+						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>   -->
 					</td>
 				</tr>
 				<tr class="datagrid-row">

@@ -15,80 +15,76 @@ String basePath = request.getContextPath();
 <body>
 		<div id="system-log-info" class="datagrid-header">
 			<table class="datagrid-table-s datagrid-htable">
-					<tr class="datagrid-header-row classify-tr">
-						<td colspan="6">系统操作日志</td>
-					</tr>
-					<tr class="datagrid-row">
-						<td class="view_table_left">号牌号码：</td>
-						<td class="view_table_right">${v.vehiclePlateNum }</td>
-						<td class="view_table_left">号牌种类：</td>
-						<td class="view_table_right">${v.vehiclePlateType }-${v.vehiclePlateTypeName }</td>
-						<td class="view_table_left">厂牌型号：</td>
-						<td class="view_table_right">${v.vehicleModelNo }</td>
-					</tr>
-					<tr class="datagrid-row">
-						<td class="view_table_left">车辆类型：</td>
-						<td class="view_table_right">${v.vehicleTypeName }</td>
-						<td class="view_table_left">车架号：</td>
-						<td class="view_table_right">${v.vehicleIdentifyNo }</td>
-						<td class="view_table_left">发动机号：</td>
-						<td class="view_table_right">${v.engineNo }</td>
-					</tr>
-					<tr class="datagrid-row">
-						<td class="view_table_left">使用性质：</td>
-						<td class="view_table_right">${v.useOfPropertyName }</td>
-						<td class="view_table_left">燃油类型：</td>
-						<td class="view_table_right">${v.iolTypeName }</td>
-						<td class="view_table_left">总质量（千克）</td>
-						<td class="view_table_right">${v.totalWeight }</td>
-					</tr>
-					<tr class="datagrid-row">
-						<td class="view_table_left">核定载客数（人）：</td>
-						<td class="view_table_right">${v.vehicleNumPeople }</td>
-						<td class="view_table_left">初次登记日期：</td>
-						<td class="view_table_right">
-							<fmt:formatDate value="${v.registerDate }" type="date" pattern="yyyy-MM-dd"/>
-						</td>
-						<td class="view_table_left">强制报废期：</td>
-						<td class="view_table_right">
-							<fmt:formatDate value="${v.deadline }" type="date" pattern="yyyy-MM-dd"/>
-						</td>
-					</tr>
-					<tr class="datagrid-row">
-						<td class="view_table_left">车辆状态：</td>
-						<td class="view_table_right">${v.vehicleStatusName }</td>
-					</tr>
-					<tr class="datagrid-header-row classify-tr">
-						<td colspan="6">车主信息</td>
-					</tr>
-					<tr class="datagrid-row">
-						<td class="view_table_left">车主：</td>
-						<td class="view_table_right">${v.vehicleOwner }</td>
-					 	<%-- <td class="view_table_left">车主联系电话：</td>
-						<td class="view_table_right">${v.mobile }</td>  --%>
-					</tr>
-					<tr class="datagrid-header-row classify-tr">
-						<td colspan="6">报废信息</td>
-					</tr>
-					<tr class="datagrid-row">
-						<td class="view_table_left">报废回收证明编号：</td>
-						<td class="view_table_right">${v.callbackProofNo }</td>
-						<td class="view_table_left">交售日期：</td>
-						<td class="view_table_right">
-							<fmt:formatDate value="${v.recycleDate }" type="date" pattern="yyyy-MM-dd"/>
-						</td>
-					</tr>
-					<tr class="datagri-row">
-						<td class="view_table_left">录入人：</td>
-						<td class="view_table_right">${v.inputUserName }</td>
-						<td class="view_table_left">录入时间：</td>
-						<td class="view_table_right">
-							<fmt:formatDate value="${v.inputTime }" pattern="yyyy-MM-dd hh:mm:ss" type="date" dateStyle="long" />
-						</td>
-					</tr>
-				</table>
-			</div>
-
+				<tr class="datagrid-header-row classify-tr">
+					<td colspan="6">基本信息</td>
+				</tr>
+				<tr class="datagrid-row">
+					<td class="view_table_left">系统代码：</td>
+					<td class="view_table_right">${v.appCode }</td>
+					<td class="view_table_left">模块代码：</td>
+					<td class="view_table_right">${v.objType }</td>
+					<td class="view_table_left">操作代码：</td>
+					<td class="view_table_right">${v.opeType }</td>
+				</tr>
+				<tr class="datagrid-row">
+					<td class="view_table_left">操作人：</td>
+					<td class="view_table_right">${v.opeUserName }</td>
+					<td class="view_table_left">操作人代码：</td>
+					<td class="view_table_right">${v.opeUserCode }</td>
+					<td class="view_table_left">操作总用时：</td>
+					<td class="view_table_right">${v.busUserTime } ms</td>
+				</tr>
+				<tr class="datagrid-row">
+					<td class="view_table_left">操作IP：</td>
+					<td class="view_table_right">${v.opeIp }</td>
+					<td class="view_table_left">操作Mac地址：</td>
+					<td class="view_table_right">${v.mac }</td>
+					<td class="view_table_left">操作时间</td>
+					<td class="view_table_right"><fmt:formatDate value="${v.opeTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+				</tr>
+				<tr class="datagrid-row">
+					<td class="view_table_left">操作开始时间：</td>
+					<td class="view_table_right">
+						<fmt:formatDate value="${v.startTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd hh:mm:ss"/>
+					</td>
+					<td class="view_table_left">操作结束时间：</td>
+					<td class="view_table_right">
+						<fmt:formatDate value="${v.endTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd hh:mm:ss"/>
+					</td>
+					<td class="view_table_left">业务操作用时：</td>
+					<td class="view_table_right">${v.useTime} ms
+					</td>
+				</tr>
+				<tr class="datagrid-row">
+					<td class="view_table_left">调用服务名称：</td>
+					<td class="view_table_right" style="word-wrap:break-word">${v.serviceName }</td>
+					<td class="view_table_left">调用方法名称：</td>
+					<td class="view_table_right">${v.methodName }</td>
+					<td class="view_table_left">方法参数</td>
+					<td class="view_table_right" style="word-wrap:break-word">${v.serviceArgs}</td>
+				</tr>
+				<tr class="datagrid-header-row classify-tr">
+					<td colspan="6">异常信息</td>
+				</tr>
+				<tr class="datagrid-row">
+					<td class="view_table_left">session信息：</td>
+					<td class="view_table_right">${v.webSession }</td>
+					<td class="view_table_left">是否异常：</td>
+					<td class="view_table_right">
+						<c:if test="${v.opearterType eq 0}">
+							正常
+						</c:if>
+						<c:if test="${v.opearterType eq 1}">
+							异常
+						</c:if>
+					</td>
+					<td class="view_table_left">异常信息</td>
+					<td class="view_table_right" style="word-wrap:break-word">
+						${v.errorMsg}
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 	<script type="text/javascript">
 			$(function() {

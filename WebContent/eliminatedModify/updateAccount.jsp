@@ -134,7 +134,7 @@
 						个人
 					</c:if>
 					<c:if test="${v.isFinancialSupport eq '2'}">
-						非财政供养单位
+						车主自证非财政供养
 					</c:if>
 				</td>
 			</tr>
@@ -300,12 +300,29 @@
 						var data = eval('(' + data + ')');
 						if (data.success) {
 							// 文件上传成功，将文件路径传到前台页面
+							Messager.alert({
+								type : "info",
+								title : "&nbsp;",
+								content : "证明材料上传成功！"
+							});
+							var files = data.message.accountChangeProof.split(",");
+			        		// 多张图片预览
+			        		$("#accountChangeFileImg").text("补贴对象变更证明(1)");
+		        			$("#accountChangeFileImg").attr("href", basePath+'/'+files[0]);
+			        		if (files.length > 1) {
+			        			for (var i = 2 ; i <= files.length ; i ++) {
+			        				var filepath = basePath + '/' + files[i-1];
+			        				var _a = "&nbsp<a id='#accountChangeFileImg"+i+"' href='"+filepath+"' target='_blank'>补贴对象变更证明("+i+")</a>";
+			        				$("#accountChangeFileImg").append(_a);
+			        			}
+			        		}
 							$("input[name='accountChangeProofFiles']").val(data.message.accountChangeProof);
 							// $("#btnFilePreview").show();
 							//alert(data.message.accountChangeProof);
 							// 解析文件路径数组，显示图片预览
 						} else {
 							alert("文件上传失败！");
+							return;
 						}
 					}
 				});

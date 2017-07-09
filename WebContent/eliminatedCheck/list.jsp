@@ -43,7 +43,7 @@ String mdlCode = request.getParameter("mdlCode");
 			},{
 				field : "applyNo",
 				title : "受理单号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -224,7 +224,7 @@ String mdlCode = request.getParameter("mdlCode");
 			}*/
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:1132,height:800,url:basePath+"/eliminatedCheck/view.do?id="+rowData.id
+				$(this).datagrid("view",{width:1132,height:632,url:basePath+"/eliminatedCheck/view.do?id="+rowData.id
 						+"&type=normal",
 						content:"受理单详细信息查看",param:{close:false}});
 			}

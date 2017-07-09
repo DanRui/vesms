@@ -721,6 +721,11 @@ function openDialog(config){
 	var c_height = config.height;
 	var m_width = document.body.clientWidth;
 	var m_height = document.body.clientHeight;
+	if (!!window.ActiveXObject || "ActiveXObject" in window) { // IE浏览器判断
+		m_width = document.documentElement.clientWidth;
+		m_height = document.documentElement.clientHeight;
+	}
+	//alert(document.body.clientHeight);
 	var u_width = c_width;
 	var u_height = c_height;
 	if(c_width>m_width){

@@ -135,7 +135,8 @@
   		"menuPic":"icon-bofushenbao-result",
 		"children" : [
 			{"menuCode":"2041","menuName":"拨付结果标记","menuUrl":"payResult/payView.do","openMode":"tab"},
-			{"menuCode":"2042","menuName":"重报拨付结果标记","menuUrl":"payResult/repeatPayView.do","openMode":"tab"}
+			{"menuCode":"2042","menuName":"重报拨付结果标记","menuUrl":"payResult/repeatPayView.do","openMode":"tab"},
+			{"menuCode":"2043","menuName":"国库文件导入标记","menuUrl":"payImport/payImportView.do","openMode":"tab"}
 		]
 	},
 		{

@@ -53,7 +53,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "applyNo",
 				title : "受理单号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -197,12 +197,30 @@ String basePath = request.getContextPath();
 										reset:false,
 										buttons:[
 												{id:"pay_res_mark_save",text:"保存",iconCls:"icon-save",handler:function(){
-													var payResult = $("#checkType").combobox('getValue');
+													var checkType = $("#checkType").combobox('getValue');
 													var remark = $("#checkOpinion").val();
-													var faultType =$('#faultType').combobox('getValue');
+													var faultType =$('#faultType').val();
+													
+													if (checkType == "" || (checkType != "1" && checkType != "2")) {
+														alert("请选择审批操作！");
+														return false;
+													}
+													
+													if (checkType == "2") {
+														if (faultType == "" || (faultType != "1" && faultType != "2" && faultType != "3")) {
+															alert("请选择退回类型！");
+															return false;
+														}
+														
+														if (remark == "") {
+															alert("请填写具体原因！");
+															return false;
+														}
+													}
+													
 													var ifValid = $("form #pay-res-check-form").form("enableValidation").form("validate");
 													if (ifValid) {
-														$.get(basePath+"/payResult/payMark.do",{ids:ids,payResStatus:payResult,faultType:faultType,faultDesc:remark},function(data) {
+														$.post(basePath+"/payResult/payMark.do",{ids:ids,payResStatus:checkType,faultType:faultType,faultDesc:remark},function(data) {
 												 			Messager.alert({
 																type : "info",
 																title : "&nbsp;",
@@ -213,9 +231,6 @@ String basePath = request.getContextPath();
 														$("#pay-result-list #pay-result-grid").datagrid('load');
 													}
 												}},
-												{id:"pay_res_mark_cancel",text:"取消",iconCls:"icon-cancel",handler:function(){
-													$("#pay_res_mark").dialog("close");
-												}}
 											]
 									},
 								maximizable : true,

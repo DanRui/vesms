@@ -160,8 +160,8 @@ String createDate = request.getParameter("createDate"); */
 				halign : "center",
 				resizable : true,
 				sortable : true
-			}/*,{
-				field : "applyTime",
+			},{
+				field : "applyConfirmTime",
 				title : "受理时间",
 				width : "10%",
 				align : "center",
@@ -169,29 +169,13 @@ String createDate = request.getParameter("createDate"); */
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.expRecentDate) {
-						return getNowFormatDate(new Date(row.expRecentDate.time))
+					if (row.applyConfirmTime) {
+						return getNowFormatDate(new Date(row.applyConfirmTime.time))
 					} else {
 						return "";
 					}
 				}
-			} ,{
-				field : "applyPerson",
-				title : "受理人",
-				width : "7%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
-			},{
-				field : "applyPersonDept",
-				title : "部门",
-				width : "7%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true
-			} */
+			}
 			] ],
 		});
 	});

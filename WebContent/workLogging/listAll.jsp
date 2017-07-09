@@ -37,7 +37,7 @@ String basePath = request.getContextPath();
 			}, {
 				field : "applyNo",
 				title : "受理单号",
-				width : "12%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -327,7 +327,7 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:1050,height:800,url:basePath+"/workLogging/view.do?id="+rowData.id+"&type=applyLog",
+				$(this).datagrid("view",{width:1050,height:632,url:basePath+"/workLogging/view.do?id="+rowData.id+"&type=applyLog",
 					content:"受理单详细信息查看",param:{close:false}});
 			}
 		}).datagrid("initSearch",{

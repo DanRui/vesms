@@ -141,8 +141,8 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.expRecentDate) {
-						return getNowFormatDate(new Date(row.expRecentDate.time))
+					if (row.applyConfirmTime) {
+						return getNowFormatDate(new Date(row.applyConfirmTime.time))
 					} else {
 						return "";
 					}
