@@ -29,8 +29,9 @@
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/css/table.css">
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/css/take_photo.css">
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/css/printPreview.css">
- 
-<script type="text/javascript" src="<%=basePath%>/js/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript" src="<%=basePath%>/js/jquery-1.9.0.min.js"></script> 
+<%-- <script type="text/javascript" src="<%=basePath%>/js/jquery-1.11.1.min.js"></script> --%>
 <script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/datagrid-detailview.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.extension.js"></script>

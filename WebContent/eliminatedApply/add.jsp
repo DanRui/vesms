@@ -1038,10 +1038,11 @@
 			                		$("#form-apply-save").form("clear");
 									
 									// 证明材料区域清空文件框值和回显路径
-									$("#form-apply-upload").form("clear");
+									clearUploadFiles(isPersonal, isProxy);
+									//$("#form-apply-upload").form("clear");
 									
 									
-									$("#callbackProofFileImg").remove();
+									//$("#callbackProofFileImg").remove();
 									
 			                		//$("#common-dialog").dialog("close");
 			                	}
@@ -1146,7 +1147,10 @@
 								$("#form-apply-save").form("clear");
 								
 								// 证明材料区域清空文件框值和回显路径
-								$("#form-apply-upload").form("clear");
+								var isPersonal = $("#isPersonal").combobox("getValue"); 
+								var isProxy = $("#isProxy").combobox("getValue"); 
+								clearUploadFiles(isPersonal, isProxy);
+								//$("#form-apply-upload").form("clear");
 			        		}
 			        	},
 			        	error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -1252,7 +1256,10 @@
 							$("#form-apply-save").form("clear");
 							
 							// 证明材料区域清空文件框值和回显路径
-							$("#form-apply-upload").form("clear");
+							var isPersonal = $("#isPersonal").combobox("getValue"); 
+							var isProxy = $("#isProxy").combobox("getValue"); 
+							clearUploadFiles(isPersonal, isProxy);
+							//$("#form-apply-upload").form("clear");
 		        		}
 		        	},
 		        	error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -1327,7 +1334,10 @@
 				$("#form-apply-save").form("clear");
 				
 				// 证明材料区域清空文件框值和回显路径
-				$("#form-apply-upload").form("clear");
+				var isPersonal = $("#isPersonal").combobox("getValue"); 
+				var isProxy = $("#isProxy").combobox("getValue"); 
+				clearUploadFiles(isPersonal, isProxy);
+				//$("#form-apply-upload").form("clear");
 				
 				// 双击每一行时触发
 				var trId = "#appoint-"+i;
@@ -1412,6 +1422,24 @@
 					}
 				}
 				return isOk;
+			}
+			
+			// 清空文件上传框的值，使得可以重新选择文件进行上传
+			function clearUploadFiles(isPersonal, isProxy) {
+				if (isPersonal == 'N') {
+					// 如果是企业，则清空开户许可证和非财政供养单位证明
+					$("#openAccPromit").filebox("setValue", "");
+					$("#noFinanceProvide").filebox("setValue", "");
+				}
+				if (isProxy == 'N') {
+					// 如果是代办，则清空代理人身份证明和代理委托书
+					$("#agentProof").filebox("setValue", "");
+					$("#agentProxy").filebox("setValue", "");
+				}
+				$("#callbackProofFiles").filebox("setValue", "");
+				$("#vehicleCancelProof").filebox("setValue", "");
+				$("#bankCard").filebox("setValue", "");
+				$("#vehicleOwnerProof").filebox("setValue", "");
 			}
 			
 			// 清空表单数据

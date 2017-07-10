@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -807,17 +808,21 @@ public class EliminatedApplyAction extends BaseAction {
 		if(file != null && file.getSize() > 0)
         {
 			String imgSrc = "";
+			// 获取图片原始文件名
         	String originFileName = file.getOriginalFilename();
         	if (StringUtil.isNotEmpty(originFileName)) {
         		String suffix = ".jpg";
             	String filename = "";
+            	UUID uuid = UUID.randomUUID();
+        		String tmp = uuid.toString().replace("-", "");
             	int index = originFileName.indexOf(".");
             	if (index >= 0) {
             		suffix = originFileName.substring(index);
-            		filename = DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + suffix;
+            		//filename = DateUtil.format(new Date(), "yyyyMMddHHmmssSSS") + suffix;
             		//filename = originFileName.substring(0, index);
             		//filename = filename + "_" + DateUtil.format(new Date(), DateUtil.TIMESTAMPS_PATTERN_1) + suffix;
             	}
+            	filename = tmp + suffix;
             	System.out.println(filename);
             	
             	String relativePath = tmpDir + File.separator + DateUtil.format(new Date(), DateUtil.DATE_PATTERN_1);

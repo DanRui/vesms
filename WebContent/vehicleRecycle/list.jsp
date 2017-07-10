@@ -29,7 +29,7 @@ String basePath = request.getContextPath();
 			toolbar : "#vehicleRecyList-grid-toolbar",
 			url : basePath+"/vehicleRecycle/list.do",
 			method : "post",
-			sortName : "id",
+			sortName : "recycleDate",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {

@@ -747,7 +747,7 @@ function openDialog(config){
 				$("#common-dialog-" + config.param.buttons[i].id).linkbutton(
 						{
 							iconCls : config.param.buttons[i].iconCls,
-							text : config.param.buttons[i].text,
+							text : config.param.buttons[i].text
 						}
 				);
 				
