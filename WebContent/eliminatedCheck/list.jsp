@@ -63,7 +63,7 @@ String mdlCode = request.getParameter("mdlCode");
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true,
+				sortable : true
 			},{
 				field : "vehicleTypeName",
 				title : "车辆类型",

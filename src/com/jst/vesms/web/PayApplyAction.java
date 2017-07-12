@@ -67,8 +67,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("addBatchView")
 	@Privilege(modelCode = "M_ADD_BATCH",prvgCode = "QUERY")
 	public ModelAndView addBatchView() throws Exception {
+		log.debug("PayApplyAction addBatchView is start");
 		String view = "PAY_APPLY.CREATE_BATCH";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction addBatchView is end");
 		return mv;
 	}
 	
@@ -76,8 +78,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("adjustView")
 	@Privilege(modelCode = "M_NOR_BATCH_ADJUST",prvgCode = "QUERY")
 	public ModelAndView adjustView() throws Exception {
+		log.debug("PayApplyAction adjustView is start");
 		String view = "PAY_APPLY.BATCH_ADJUST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction adjustView is end");
 		return mv;
 	}
 	
@@ -85,8 +89,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("batchListView")
 	@Privilege(modelCode = "M_NOR_BATCH_LIST",prvgCode = "QUERY")
 	public ModelAndView batchListView() throws Exception {
+		log.debug("PayApplyAction batchListView is start");
 		String view = "PAY_APPLY.BATCH_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction batchListView is end");
 		return mv;
 	}
 	
@@ -94,8 +100,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("toFinView")
 	@Privilege(modelCode = "M_TO_FIN_CONFIRM",prvgCode = "QUERY")
 	public ModelAndView toFinView() throws Exception {
+		log.debug("PayApplyAction toFinView is start");
 		String view = "PAY_APPLY.TO_FINANCE_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction toFinView is end");
 		return mv;
 	}
 	
@@ -103,8 +111,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("toFinBatchView")
 	@Privilege(modelCode = "M_TO_FIN_LIST",prvgCode = "QUERY")
 	public ModelAndView toFinBatchView() throws Exception {
+		log.debug("PayApplyAction toFinBatchView is start");
 		String view = "PAY_APPLY.TO_FIN_BATCH_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction toFinBatchView is end");
 		return mv;
 	}
 	
@@ -112,8 +122,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("repAddBatchView")
 	@Privilege(modelCode = "M_REP_ADD_BATCH",prvgCode = "QUERY")
 	public ModelAndView repAddBatchView() throws Exception {
+		log.debug("PayApplyAction repAddBatchView is start");
 		String view = "PAY_APPLY.REPEAT_CREATE_BATCH";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction repAddBatchView is end");
 		return mv;
 	}
 	
@@ -121,8 +133,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("repAjustView")
 	@Privilege(modelCode = "M_REP_BATCH_ADJUST",prvgCode = "QUERY")
 	public ModelAndView repAjustView() throws Exception {
+		log.debug("PayApplyAction repAjustView is start");
 		String view = "PAY_APPLY.REPEAT_BATCH_ADJUST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction repAjustView is end");
 		return mv;
 	}
 	
@@ -130,8 +144,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("repBatchListView")
 	@Privilege(modelCode = "M_REP_BATCH_LIST",prvgCode = "QUERY")
 	public ModelAndView repBatchListView() throws Exception {
+		log.debug("PayApplyAction repBatchListView is start");
 		String view = "PAY_APPLY.REPEAT_BATCH_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction repBatchListView is end");
 		return mv;
 	}
 	
@@ -139,8 +155,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("repToFinView")
 	@Privilege(modelCode = "M_REP_TO_FIN_CONFIRM",prvgCode = "QUERY")
 	public ModelAndView repToFinView() throws Exception {
+		log.debug("PayApplyAction repToFinView is start");
 		String view = "PAY_APPLY.REPEAT_TO_FINANCE_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction repToFinView is end");
 		return mv;
 	}
 		
@@ -148,8 +166,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("repToFinBatchView")
 	@Privilege(modelCode = "M_REP_TO_FIN_LIST",prvgCode = "QUERY")
 	public ModelAndView repToFinBatchView() throws Exception {
+		log.debug("PayApplyAction repToFinBatchView is start");
 		String view = "PAY_APPLY.REPEAT_TO_FIN_BATCH_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction repToFinBatchView is end");
 		return mv;
 	}
 	
@@ -157,8 +177,10 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("allBatchView")
 	@Privilege(modelCode = "M_ALL_BATCH_LIST_QUERY",prvgCode = "QUERY")
 	public ModelAndView allBatchView() throws Exception {
+		log.debug("PayApplyAction allBatchView is start");
 		String view = "PAY_APPLY.ALL_BATCH_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayApplyAction allBatchView is end");
 		return mv;
 	}
 	
@@ -175,6 +197,7 @@ public class PayApplyAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String vehicleType,String vehicleOwner, String applyNo,String vehicleIdentifyNo,String batchNo) throws Exception{
+		log.debug("PayApplyAction list is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -259,6 +282,7 @@ public class PayApplyAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String batchNo,String toFinanceStatus,String payResStatus,String payBatchTotalAmount, String createStartDate , String createEndDate,String batchType) throws Exception{
+		log.debug("PayApplyAction batchAdjustList is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -297,9 +321,9 @@ public class PayApplyAction extends BaseAction{
 			page = payApplyService.getPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("PayApplyAction list is Error:" + e, e);
+			log.error("PayApplyAction batchAdjustList is Error:" + e, e);
 		}
-		log.debug("PayApplyAction list is end");
+		log.debug("PayApplyAction batchAdjustList is End");
 	    return returnStr;
 	}
 	
@@ -378,6 +402,7 @@ public class PayApplyAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String batchNo,String toFinanceStatus,String payResStatus,String payBatchTotalAmount, String createStartDate , String createEndDate,String batchType) throws Exception{
+		log.debug("PayApplyAction batchToFinList is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -416,9 +441,9 @@ public class PayApplyAction extends BaseAction{
 			page = payApplyService.getPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("PayApplyAction list is Error:" + e, e);
+			log.error("PayApplyAction batchToFinList is Error:" + e, e);
 		}
-		log.debug("PayApplyAction list is end");
+		log.debug("PayApplyAction batchToFinList is end");
 	    return returnStr;
 	}
 	
@@ -428,10 +453,12 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("toExcelPreview")
 	@Privilege(modelCode = "M_REP_BATCH_LIST", prvgCode = "BATCH_PREVIEW")
 	public ModelAndView toExcelPreview(@RequestParam("id")Integer id) throws Exception {
+		log.debug("PayApplyAction toExcelPreview is start");
 		String view = "PAY_APPLY.EXPORT_PREVIEW";
 		BatchMain object = payApplyService.getObj(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
+		log.debug("PayApplyAction toExcelPreview is end");
 		return mv;
 	}
 	
@@ -441,7 +468,7 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("exportPreview")
 	@Privilege(modelCode = "M_NOR_BATCH_LIST",prvgCode = "BATCH_PREVIEW")
 	public String exportPreview (Integer id,String batchNo,String batchType,HttpServletResponse response) {
-		log.debug("PayApplyAction excelList is start");
+		log.debug("PayApplyAction exportPreview is start");
 		try {
 			response.setHeader("Content-disposition", "attachment;  filename="
 					+ new String(("view_batch_"+batchNo+".xls").getBytes(), "iso-8859-1"));
@@ -455,9 +482,9 @@ public class PayApplyAction extends BaseAction{
 			excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴车辆信息审批表(预览)");
 			ExportExcel.exportExcelInWeb(excelProperties, "ss", new int[] { 5,20,10,10,15,15,10,15,8,15,15,20,10 }, dataList, outputStream);
 		} catch (Exception e) {
-			log.error("PayApplyAction excelList is Error:"+e, e);
+			log.error("PayApplyAction exportPreview is Error:"+e, e);
 		}		
-		log.debug("PayApplyAction excelList is End");
+		log.debug("PayApplyAction exportPreview is end");
 		return null;
 	}
 	
@@ -466,10 +493,12 @@ public class PayApplyAction extends BaseAction{
 	// 内部批次报财务导出
 	@RequestMapping("toExportExcel")
 	public ModelAndView toExportExcel(@RequestParam("id")Integer id) throws Exception {
+		log.debug("PayApplyAction toExportExcel is start");
 		String view = "PAY_APPLY.EXPORT_EXCEL";
 		BatchMain object = payApplyService.getObj(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
+		log.debug("PayApplyAction toExportExcel is end");
 		return mv;
 	}
 	
@@ -499,8 +528,8 @@ public class PayApplyAction extends BaseAction{
 			}
 		}
 		mv = new ModelAndView(getReturnPage(view));
-		log.debug("payApplyAction repBatchView is end");
 		mv.addObject("v", object);
+		log.debug("payApplyAction batchView is end");
 		return mv;
 	}
 	
@@ -519,9 +548,9 @@ public class PayApplyAction extends BaseAction{
 		log.debug("payApplyAction repBatchView is start");
 		String view = "PAY_APPLY.REP_VIEW";
 		BatchMain object =  payApplyService.batchNoView(id);
-		log.debug("payApplyAction repBatchView is end");
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
-		mv.addObject("v", object);			
+		mv.addObject("v", object);		
+		log.debug("payApplyAction repBatchView is end");
 		return mv;
 	}
 	
@@ -535,7 +564,8 @@ public class PayApplyAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String applyNo,String batchNo,String repeatedBatchNo,String toFinanceStatus) throws Exception{
-			String returnStr="";
+		log.debug("payApplyAction batchApplyList is start");	
+		String returnStr="";
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
 			page.setPageNo(pageNo);
@@ -564,10 +594,10 @@ public class PayApplyAction extends BaseAction{
 				page = payApplyService.getApplyPage(page, list);
 				returnStr = writerPage(page);
 			} catch (Exception e) {
-				log.error("PayApplyAction applylist is Error:" + e, e);
+				log.error("PayApplyAction batchApplyList is Error:" + e, e);
 			}
 			
-				log.debug("PayApplyAction applylist is end");
+				log.debug("payApplyAction batchApplyList is end");	
 	    return returnStr;
 	}
 	
@@ -581,9 +611,9 @@ public class PayApplyAction extends BaseAction{
 		log.debug("PayApplyAction batchNoList is start");
 		String adjust = "PAY_APPLY.ADJUST";
 		BatchMain object = payApplyService.batchNoView(id);
-		log.debug("PayApplyAction batchNoList is End");
 		ModelAndView mv = new ModelAndView(getReturnPage(adjust));
 		mv.addObject("v", object);
+		log.debug("PayApplyAction batchNoList is End");
 		return mv;
 	}
 	
@@ -637,7 +667,7 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("applyDelete")
 	@Privilege(modelCode = "M_NOR_BATCH_ADJUST", prvgCode = "ADJUST")
 	public String deleteBatchDetail(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId){
-		log.debug("payApplyAction applyDelete is start");
+		log.debug("payApplyAction deleteBatchDetail is start");
 		boolean deleteOk = false;
 		String strids="";
 		strids=ids.replaceAll(",", "|");
@@ -651,7 +681,7 @@ public class PayApplyAction extends BaseAction{
 		if(null != returnObject) {
 			deleteOk=true;
 		}
-		log.debug("payApplyAction applyDelete is End");
+		log.debug("payApplyAction deleteBatchDetail is End");
 		if(deleteOk) {
 			return JsonUtil.toSuccessMsg(returnObject);
 		} else
@@ -689,6 +719,7 @@ public class PayApplyAction extends BaseAction{
 			   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 			   @RequestParam(value="order", defaultValue="DESC")String order, 
 			   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String vehicleType,String vehicleOwner, String applyNo,String vehicleIdentifyNo,String batchNo,String batchType) throws Exception{
+		log.debug("PayApplyAction getNoBatchApplyList is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -721,10 +752,10 @@ public class PayApplyAction extends BaseAction{
 			page = payApplyService.getApplyPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("PayApplyAction list is Error:" + e, e);
+			log.error("PayApplyAction getNoBatchApplyList is Error:" + e, e);
 		}
 		
-		log.debug("PayApplyAction list is end");
+		log.debug("PayApplyAction getNoBatchApplyList is end");
 		return returnStr;
 	}
 	
@@ -732,10 +763,12 @@ public class PayApplyAction extends BaseAction{
 		@ResponseBody
 		@RequestMapping("batchAddApplyView")
 		public ModelAndView batchAddApplyView(@RequestParam("batchId")Integer batchId) throws Exception {
+			log.debug("PayApplyAction batchAddApplyView is start");
 			String view = "PAY_APPLY.BATCH_ADD_APPLY";
 			BatchMain object = payApplyService.batchNoView(batchId);
 			ModelAndView mv = new ModelAndView(getReturnPage(view));
 			mv.addObject("v", object);
+			log.debug("PayApplyAction batchAddApplyView is end");
 			return mv;
 		}
 	
@@ -747,7 +780,7 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping("addApplyToBatch")
 	@Privilege(modelCode = "M_NOR_BATCH_ADJUST", prvgCode = "ADJUST")
 	public String addApplyToBatch(@RequestParam("ids")String ids,@RequestParam("batchId")Integer batchId) {
-		log.debug("PayApplyAction adjustBatchDetail is start");
+		log.debug("PayApplyAction addApplyToBatch is start");
 		boolean addToBatch = false;
 		String result=null;
 		String batchIdStr=batchId+"";
@@ -759,9 +792,9 @@ public class PayApplyAction extends BaseAction{
 				addToBatch = true;
 			}
 		} catch (Exception e) {
-			log.error("VehicleRecycleAction syncVehicleInfo is Error:"+e, e);
+			log.error("PayApplyAction addApplyToBatch is Error:"+e, e);
 		}		
-		log.debug("PayApplyAction adjustBatchDetail is End");
+		log.debug("PayApplyAction addApplyToBatch is End");
 		if(addToBatch) {
 			return JsonUtil.toSuccessMsg(result);
 		} else
@@ -776,8 +809,8 @@ public class PayApplyAction extends BaseAction{
 		public String getToFinanceList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 				   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 				   @RequestParam(value="order", defaultValue="DESC")String order, 
-				   @RequestParam(value="sort", defaultValue="id")String orderBy,String batchNo,Integer toFinanceNo,String isExported,String toFinanceStatus,String payResStatus,String payBatchTotalAmount, String createStartDate , String createEndDate,String batchType) throws Exception{
-			log.debug("PayApplyAction toFinanceList is start");
+				   @RequestParam(value="sort", defaultValue="id")String orderBy,String batchNo,String toFinanceNo,String payBatchTotalAmount, String createStartDate , String createEndDate,String toFinanceStartTime,String toFinanceEndTime) throws Exception{
+			log.debug("PayApplyAction getToFinanceList is start");
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
 			page.setPageNo(pageNo);
@@ -785,17 +818,14 @@ public class PayApplyAction extends BaseAction{
 			page.setOrder(order);
 			page.setOrderBy(orderBy);
 			String returnStr = "";
+			if(StringUtil.isNotEmpty(toFinanceNo)) {
+				list.add(new PropertyFilter("EQI_toFinanceNo",toFinanceNo));
+			}
+			if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
+				list.add(new PropertyFilter("EQN_payBatchTotalAmount",payBatchTotalAmount));
+			}
 			if(StringUtil.isNotEmpty(batchNo)) {
 				list.add(new PropertyFilter("EQS_batchNo",batchNo));
-			}
-			if(StringUtil.isNotEmpty(isExported)) {
-				list.add(new PropertyFilter("EQS_isExported",isExported));
-			}
-			if(StringUtil.isNotEmpty(toFinanceStatus)) {
-				list.add(new PropertyFilter("EQS_toFinanceStatus",toFinanceStatus));
-			}
-			if(StringUtil.isNotEmpty(payResStatus)) {
-				list.add(new PropertyFilter("EQS_payResStatus",payResStatus));
 			}
 			if(StringUtil.isNotEmpty(createStartDate)) {
 				list.add(new PropertyFilter("GED_createDate",createStartDate));
@@ -809,8 +839,17 @@ public class PayApplyAction extends BaseAction{
 				createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 				list.add(new PropertyFilter("LTD_createDate",createEndDate));
 			}
-			if(StringUtil.isNotEmpty(toFinanceNo+"")) {
-				list.add(new PropertyFilter("EQS_toFinanceNo",toFinanceNo+""));
+			if(StringUtil.isNotEmpty(toFinanceStartTime)) {
+				list.add(new PropertyFilter("GED_toFinanceTime",toFinanceStartTime));
+			}
+			if(StringUtil.isNotEmpty(toFinanceEndTime)) {
+				Date date = DateUtil.parse(toFinanceEndTime, DateUtil.DATE_PATTERN);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				date = calendar.getTime();
+				toFinanceEndTime = DateUtil.format(date, DateUtil.DATE_PATTERN);
+				list.add(new PropertyFilter("LTD_toFinanceTime",toFinanceEndTime));
 			}
 			list.add(new PropertyFilter("EQS_toFinanceStatus", "1"));//批次报财务状态为已报
 			list.add(new PropertyFilter("EQS_batchType", "1"));
@@ -818,10 +857,10 @@ public class PayApplyAction extends BaseAction{
 				page = payApplyService.getPage(page, list);
 				returnStr = writerPage(page);
 			} catch (Exception e) {
-				log.error("PayApplyAction toFinanceList is Error:" + e, e);
+				log.error("PayApplyAction getToFinanceList is Error:" + e, e);
 			}
 			
-			log.debug("PayApplyAction toFinanceList is end");
+			log.debug("PayApplyAction getToFinanceList is end");
 			return returnStr;
 		}
 	
@@ -829,10 +868,12 @@ public class PayApplyAction extends BaseAction{
 		
 		@RequestMapping("confirmExportExcel")
 		public ModelAndView confirmExportExcel(@RequestParam("id")Integer id) throws Exception {
+			log.debug("PayApplyAction confirmExportExcel is start");
 			String view = "PAY_APPLY.CONFIRM_EXCEL";
 			BatchMain object = payApplyService.getObj(id);
 			ModelAndView mv = new ModelAndView(getReturnPage(view));
 			mv.addObject("v", object);
+			log.debug("PayApplyAction confirmExportExcel is end");
 			return mv;
 		}
 		
@@ -866,10 +907,12 @@ public class PayApplyAction extends BaseAction{
 	//去文件查看页面
 	@RequestMapping("financeExcel")
 	public ModelAndView financeExcel(@RequestParam("id")Integer id) {
+		log.debug("PayApplyAction financeExcel is start");
 		String view = "PAY_APPLY.TO_FINANCE_EXCEL";
 		BatchMain object = payApplyService.getObj(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
+		log.debug("PayApplyAction financeExcel is end");
 		return mv;
 	}	
 	
@@ -878,10 +921,12 @@ public class PayApplyAction extends BaseAction{
 	//去报财务导出页面
 		@RequestMapping("toFinanceExcel")
 		public ModelAndView toFinanceExcel(@RequestParam("id")Integer id) {
+			log.debug("PayApplyAction toFinanceExcel is start");
 			String view = "PAY_APPLY.TO_EXPORT_EXCEL";
 			BatchMain object = payApplyService.getObj(id);
 			ModelAndView mv = new ModelAndView(getReturnPage(view));
 			mv.addObject("v", object);
+			log.debug("PayApplyAction toFinanceExcel is end");
 			return mv;
 		}	
 	
@@ -890,7 +935,7 @@ public class PayApplyAction extends BaseAction{
 		@ResponseBody
 		@Privilege(modelCode = "M_TO_FIN_CONFIRM", prvgCode = "CONFIRM_APPLY")
 		public String confirmBatchExcel(@RequestParam("id")Integer id,@RequestParam("batchNo")String batchNo,@RequestParam("batchType")String batchType,HttpServletResponse response,HttpServletRequest request) {
-			log.debug("PayApplyAction confirmBatchPreview is start");
+			log.debug("PayApplyAction confirmBatchExcel is start");
 			int count = 0;
 			boolean isOk = false;
 			String resString = "";
@@ -984,11 +1029,11 @@ public class PayApplyAction extends BaseAction{
 				}
 				
 			} catch (Exception e) {
-				log.error("PayApplyAction confirmBatchPreview is Error:"+e, e);
+				log.error("PayApplyAction confirmBatchExcel is Error:"+e, e);
 				isOk = false;
 				resString = "系统异常，请联系管理员";
 			}		
-			log.debug("PayApplyAction confirmBatchPreview is End");
+			log.debug("PayApplyAction confirmBatchExcel is start");
 			if (isOk) {
 				return JsonUtil.toSuccessMsg(resString);
 			} else {
@@ -1062,7 +1107,7 @@ public class PayApplyAction extends BaseAction{
 		@ResponseBody
 		@Privilege(modelCode = "M_TO_FIN_LIST", prvgCode = "PREVIEW_QUERY")
 		public String confirmBatchPreview(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
-			log.debug("PayApplyAction confirmBatchPdf is start");
+			log.debug("PayApplyAction confirmBatchPreview is start");
 			String excelPath = "";
 			try {
 				String filePath = "" ;
@@ -1077,9 +1122,9 @@ public class PayApplyAction extends BaseAction{
 				}
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
-				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
+				log.error("PayApplyAction confirmBatchPreview is Error:"+e, e);
 			}		
-			log.debug("PayApplyAction confirmBatchPdf is End");
+			log.debug("PayApplyAction confirmBatchPreview is End");
 			return JsonUtil.toSuccessMsg(excelPath);
 		}
 	/*----------------------------------------------------------------------*/
@@ -1095,7 +1140,8 @@ public class PayApplyAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String vehicleType,String vehicleOwner, String applyNo,String vehicleIdentifyNo,String batchNo,String toFinanceStatus,String repeatedBatchNo,String currentPost,String bussinessStatus) throws Exception{
-			String returnStr = "";
+		log.debug("PayApplyAction repList is start");	
+		String returnStr = "";
 		//判断条件 ：当前岗位在拨付申报岗，且业务状态为“正常”，且首报批次号 TO_FINANCE_STATUS) <= -2,且REPEATED_BATCH_NO is null
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
@@ -1140,8 +1186,7 @@ public class PayApplyAction extends BaseAction{
 			} catch (Exception e) {
 				log.error("PayApplyAction repList is Error:" + e, e);
 			}
-			
-			log.debug("PayApplyAction repLlist is end");
+			log.debug("PayApplyAction repList is end");	
 		    return returnStr;
 	}
 	
@@ -1168,7 +1213,7 @@ public class PayApplyAction extends BaseAction{
 	@RequestMapping(value = "repCreate" ) 
 	@Privilege(modelCode = "M_REP_ADD_BATCH", prvgCode = "ADD_BATCH")
 	public String createRepBatch(@RequestParam("ids")String ids) {
-		log.debug("PayApplyAction createBatch is start");
+		log.debug("PayApplyAction createRepBatch is start");
 		boolean createOk = false;
 		String result = null;
 		String strids = "" ;
@@ -1179,9 +1224,9 @@ public class PayApplyAction extends BaseAction{
 				createOk = true;
 			}
 		} catch (Exception e) {
-			log.error("VehicleRecycleAction syncVehicleInfo is Error:"+e, e);
+			log.error("PayApplyAction createRepBatch is Error:"+e, e);
 		}		
-		log.debug("PayApplyAction createBatch is End");
+		log.debug("PayApplyAction createRepBatch is End");
 		if(createOk) {
 			return JsonUtil.toSuccessMsg(result);
 		} else
@@ -1262,10 +1307,12 @@ public class PayApplyAction extends BaseAction{
 	//去导出重报批次预览
 	@RequestMapping("toExportRepBatch")
 	public ModelAndView toExportRepBatch(@RequestParam("id")Integer id) throws Exception {
+		log.debug("PayApplyAction toExportRepBatch is start");
 		String view = "PAY_APPLY.REP_Batch_PREVIEW";
 		BatchMain object = payApplyService.getObj(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
+		log.debug("PayApplyAction toExportRepBatch is end");
 		return mv;
 	}
 	
@@ -1354,6 +1401,7 @@ public class PayApplyAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, Integer toFinanceNo,String batchNo,String isExported,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String expStartDate,String expEndDate, String createStartDate , String createEndDate,String batchType ) throws Exception{
+		log.debug("PayApplyAction repBatchAdjust is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -1361,14 +1409,14 @@ public class PayApplyAction extends BaseAction{
 		page.setOrder(order);
 		page.setOrderBy(orderBy);
 		String returnStr = "";
+		if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
+			list.add(new PropertyFilter("EQN_payBatchTotalAmount",payBatchTotalAmount));
+		}
 		if(StringUtil.isNotEmpty(batchNo)) {
 			list.add(new PropertyFilter("EQS_batchNo",batchNo));
 		}
 		if(StringUtil.isNotEmpty(payResStatus)) {
 			list.add(new PropertyFilter("EQS_payResStatus",payResStatus));
-		}
-		if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
-			list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
 		}
 		if(StringUtil.isNotEmpty(createStartDate)) {
 			list.add(new PropertyFilter("GED_createDate",createStartDate));
@@ -1392,10 +1440,9 @@ public class PayApplyAction extends BaseAction{
 			page = payApplyService.getPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("PayApplyAction list is Error:" + e, e);
+			log.error("PayApplyAction repBatchAdjust is Error:" + e, e);
 		}
-		
-		log.debug("PayApplyAction list is end");
+		log.debug("PayApplyAction repBatchAdjust is end");
 	    return returnStr;
 	}
 	
@@ -1413,6 +1460,7 @@ public class PayApplyAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String batchNo,String batchStatus, String createStartDate , String createEndDate,String batchType ) throws Exception{
+		log.debug("PayApplyAction getRepBatchList is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -1444,10 +1492,9 @@ public class PayApplyAction extends BaseAction{
 			page = payApplyService.getPage(page,list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("PayApplyAction list is Error:" + e, e);
+			log.error("PayApplyAction getRepBatchList is Error:" + e, e);
 		}
-		
-		log.debug("PayApplyAction list is end");
+		log.debug("PayApplyAction getRepBatchList is end");
 	    return returnStr;
 	}
 	
@@ -1458,12 +1505,12 @@ public class PayApplyAction extends BaseAction{
 		@RequestMapping(value="repBatchNoList")
 		@ResponseBody
 		public ModelAndView repBatchNoList(@RequestParam("id")Integer id){
-			log.debug("PayApplyAction batchNoList is start");
+			log.debug("PayApplyAction repBatchNoList is start");
 			String adjust = "PAY_APPLY.REPADJUST";
 			BatchMain object = payApplyService.batchNoView(id);
-			log.debug("PayApplyAction batchNoList is End");
 			ModelAndView mv = new ModelAndView(getReturnPage(adjust));
 			mv.addObject("v", object);
+			log.debug("PayApplyAction repBatchNoList is End");
 			return mv;
 		}
 		
@@ -1476,6 +1523,7 @@ public class PayApplyAction extends BaseAction{
 						   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 						   @RequestParam(value="order", defaultValue="DESC")String order, 
 						   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum,String vehiclePlateType,String applyNo,String toFinanceStatus,String batchNo,String batchStatus,String batchType,String repeatedBatchNo) throws Exception{
+			log.debug("PayApplyAction repAdjustList is start");
 			String returnStr = "";
 				List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 				Page page = new Page();
@@ -1508,10 +1556,9 @@ public class PayApplyAction extends BaseAction{
 					page = payApplyService.getApplyPage(page, list);
 					returnStr = writerPage(page);
 				} catch (Exception e) {
-					log.error("PayApplyAction list is Error:" + e, e);
+					log.error("PayApplyAction repAdjustList is Error:" + e, e);
 				}
-				
-				log.debug("PayApplyAction list is end");
+				log.debug("PayApplyAction repAdjustList is end");
 		    return returnStr;
 		}
 
@@ -1521,7 +1568,7 @@ public class PayApplyAction extends BaseAction{
 		@RequestMapping("repApplyDelete")
 		@Privilege(modelCode = "M_REP_BATCH_ADJUST", prvgCode = "ADJUST")
 		public String delRepBatchDetail(@RequestParam("ids")String ids,@RequestParam("batchId")String batchId) {
-			log.debug("payApplyAction applyDelete is start");
+			log.debug("payApplyAction delRepBatchDetail is start");
 			boolean deleteOk = false;
 			String strids="";
 			String returnObject = "";
@@ -1535,7 +1582,7 @@ public class PayApplyAction extends BaseAction{
 			if(null != returnObject) {
 				deleteOk=true;
 			}
-			log.debug("payApplyAction delete is End");
+			log.debug("payApplyAction delRepBatchDetail is End");
 			if(deleteOk) {
 				return JsonUtil.toSuccessMsg(returnObject);
 			} else
@@ -1547,7 +1594,7 @@ public class PayApplyAction extends BaseAction{
 		@RequestMapping("repBatchCancel")
 		@Privilege(modelCode = "M_REP_BATCH_ADJUST", prvgCode = "CANCEL")
 		public String repBatchCancel(@RequestParam("ids")String ids) {
-			log.debug("PayApplyAction batchCancel is start");
+			log.debug("PayApplyAction repBatchCancel is start");
 			boolean cancelBatch = false;
 			String result=null;
 			String strids = "" ; 
@@ -1558,9 +1605,9 @@ public class PayApplyAction extends BaseAction{
 					cancelBatch = true;
 				}
 			} catch (Exception e) {
-				log.error("PayApplyAction batchCancel is Error:"+e, e);
+				log.error("PayApplyAction repBatchCancel is Error:"+e, e);
 			}		
-			log.debug("PayApplyAction batchCancel is End");
+			log.debug("PayApplyAction repBatchCancel is End");
 			if(cancelBatch) {
 				return JsonUtil.toSuccessMsg(result);
 			} else
@@ -1573,10 +1620,12 @@ public class PayApplyAction extends BaseAction{
 		@ResponseBody
 		@RequestMapping("repBatchAddApplyView")
 		public ModelAndView repBatchAddApplyView(@RequestParam("batchId")Integer batchId) throws Exception {
+			log.debug("PayApplyAction repBatchAddApplyView is start");
 			String view = "PAY_APPLY.REP_BATCH_ADD_APPLY";
 			BatchMain object = payApplyService.batchNoView(batchId);
 			ModelAndView mv = new ModelAndView(getReturnPage(view));
 			mv.addObject("v", object);
+			log.debug("PayApplyAction repBatchAddApplyView is end");
 			return mv;
 		}
 		
@@ -1648,7 +1697,7 @@ public class PayApplyAction extends BaseAction{
 					addToBatch = true;
 				}
 			} catch (Exception e) {
-				log.error("VehicleRecycleAction syncVehicleInfo is Error:"+e, e);
+				log.error("PayApplyAction addApplyToRepBatch is Error:"+e, e);
 			}		
 			log.debug("PayApplyAction addApplyToRepBatch is End");
 			if(addToBatch) {
@@ -1672,6 +1721,7 @@ public class PayApplyAction extends BaseAction{
 						   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 						   @RequestParam(value="order", defaultValue="DESC")String order, 
 						   @RequestParam(value="sort", defaultValue="id")String orderBy, Integer toFinanceNo,String batchNo,String isExported,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String expStartDate,String expEndDate, String createStartDate , String createEndDate,String batchType ) throws Exception{
+			log.debug("PayApplyAction repBatchToFinList is start");
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
 			page.setPageNo(pageNo);
@@ -1710,10 +1760,9 @@ public class PayApplyAction extends BaseAction{
 				page = payApplyService.getPage(page, list);
 				returnStr = writerPage(page);
 			} catch (Exception e) {
-				log.error("PayApplyAction list is Error:" + e, e);
+				log.error("PayApplyAction repBatchToFinList is Error:" + e, e);
 			}
-			
-			log.debug("PayApplyAction list is end");
+			log.debug("PayApplyAction repBatchToFinList is end");
 		    return returnStr;
 		}
 		
@@ -1731,8 +1780,8 @@ public class PayApplyAction extends BaseAction{
 			public String repToFinanceList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy,Integer toFinanceNo,String batchNo,String toFinanceStatus,String batchStatus,String batchType,String toFinanceStartTime,String toFinanceEndTime, String createStartDate , String createEndDate,String payBatchTotalAmount,String isExported) throws Exception{
-				log.debug("PayApplyAction toFinanceList is start");
+					   @RequestParam(value="sort", defaultValue="id")String orderBy,String toFinanceNo,String batchNo,String toFinanceStatus,String batchStatus,String batchType,String toFinanceStartTime,String toFinanceEndTime, String createStartDate , String createEndDate,String payBatchTotalAmount,String isExported) throws Exception{
+				log.debug("PayApplyAction repToFinanceList is start");
 				String returnStr = "";
 					List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 					Page page = new Page();
@@ -1740,20 +1789,26 @@ public class PayApplyAction extends BaseAction{
 					page.setPageSize(pageSize);
 					page.setOrder(order);
 					page.setOrderBy(orderBy);
+					if(StringUtil.isNotEmpty(toFinanceNo)) {
+						list.add(new PropertyFilter("EQI_toFinanceNo",toFinanceNo));
+					}
 					if(StringUtil.isNotEmpty(batchNo)) {
 						list.add(new PropertyFilter("EQS_batchNo",batchNo));
 					}
 					if(StringUtil.isNotEmpty(toFinanceStartTime)) {
-						list.add(new PropertyFilter("GED_toFinanceStartTime",toFinanceStartTime));
+						list.add(new PropertyFilter("GED_toFinanceTime",toFinanceStartTime));
 					}
 					if(StringUtil.isNotEmpty(toFinanceEndTime)) {
-						list.add(new PropertyFilter("GED_toFinanceEndTime",toFinanceEndTime));
+						Date date = DateUtil.parse(toFinanceEndTime, DateUtil.DATE_PATTERN);
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(date);
+						calendar.add(Calendar.DAY_OF_MONTH, 1);
+						date = calendar.getTime();
+						toFinanceEndTime = DateUtil.format(date, DateUtil.DATE_PATTERN);
+						list.add(new PropertyFilter("LTD_toFinanceTime",toFinanceEndTime));
 					}
 					if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
-						list.add(new PropertyFilter("LED_payBatchTotalAmount",payBatchTotalAmount));
-					}
-					if(StringUtil.isNotEmpty(toFinanceEndTime)) {
-						list.add(new PropertyFilter("LED_toFinacneEndTime",toFinanceEndTime));
+						list.add(new PropertyFilter("EQN_payBatchTotalAmount",payBatchTotalAmount));
 					}
 					if(StringUtil.isNotEmpty(createStartDate)) {
 						list.add(new PropertyFilter("GED_createDate",createStartDate));
@@ -1767,22 +1822,15 @@ public class PayApplyAction extends BaseAction{
 						createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 						list.add(new PropertyFilter("LTD_createDate",createEndDate));
 					}
-					if(StringUtil.isNotEmpty(toFinanceNo+"")) {
-						list.add(new PropertyFilter("EQS_toFinanceNo",toFinanceNo+""));
-					}
-					if(StringUtil.isNotEmpty(isExported)) {
-						list.add(new PropertyFilter("EQS_isExported",isExported));
-					}
 					list.add(new PropertyFilter("EQS_batchType","2"));
 					list.add(new PropertyFilter("EQS_toFinanceStatus","1"));
 					try {
 						page = payApplyService.getPage(page, list);
 						returnStr = writerPage(page);
 					} catch (Exception e) {
-						log.error("PayApplyAction toFinanceList is Error:" + e, e);
+						log.error("PayApplyAction repToFinanceList is Error:" + e, e);
 					}
-					
-					log.debug("PayApplyAction toFinanceList is end");
+					log.debug("PayApplyAction repToFinanceList is end");
 			//	}
 				return returnStr;
 				}
@@ -1791,10 +1839,12 @@ public class PayApplyAction extends BaseAction{
 			
 			@RequestMapping("confirmRepExportExcel")
 			public ModelAndView confirmRepExportExcel(@RequestParam("id")Integer id) throws Exception {
+				log.debug("PayApplyAction confirmRepExportExcel is start");
 				String view = "PAY_APPLY.CONFIRM_REP_EXCEL";
 				BatchMain object = payApplyService.getObj(id);
 				ModelAndView mv = new ModelAndView(getReturnPage(view));
 				mv.addObject("v", object);
+				log.debug("PayApplyAction confirmRepExportExcel is end");
 				return mv;
 			}
 			
@@ -1830,7 +1880,7 @@ public class PayApplyAction extends BaseAction{
 		@ResponseBody
 		@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "FILE_QUERY")
 		public String confirmRepBatchLook(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
-			log.debug("PayApplyAction confirmBatchLook is start");
+			log.debug("PayApplyAction confirmRepBatchLook is start");
 			String excelPath = "";
 			try {
 			/*	response.setHeader("Content-disposition", "attachment;  filename="
@@ -1849,9 +1899,9 @@ public class PayApplyAction extends BaseAction{
 				}
 			// 	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
-				log.error("PayApplyAction confirmBatchLook is Error:"+e, e);
+				log.error("PayApplyAction confirmRepBatchLook is Error:"+e, e);
 			}		
-			log.debug("PayApplyAction confirmBatchLook is End");
+			log.debug("PayApplyAction confirmRepBatchLook is End");
 			return JsonUtil.toSuccessMsg(excelPath);
 		}
 			
@@ -1860,7 +1910,7 @@ public class PayApplyAction extends BaseAction{
 		@ResponseBody
 		@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "PDF_QUERY")
 		public String confirmRepBatchPdf(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
-			log.debug("PayApplyAction confirmBatchPdf is start");
+			log.debug("PayApplyAction confirmRepBatchPdf is start");
 			String excelPath = "";
 			try {
 				String filePath = "" ;
@@ -1875,9 +1925,9 @@ public class PayApplyAction extends BaseAction{
 				}
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
-				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
+				log.error("PayApplyAction confirmRepBatchPdf is Error:"+e, e);
 			}		
-			log.debug("PayApplyAction confirmBatchPdf is End");
+			log.debug("PayApplyAction confirmRepBatchPdf is End");
 			return JsonUtil.toSuccessMsg(excelPath);
 		}	
 		
@@ -1887,7 +1937,7 @@ public class PayApplyAction extends BaseAction{
 		@ResponseBody
 		@Privilege(modelCode = "M_REP_TO_FIN_LIST", prvgCode = "PREVIEW_QUERY")
 		public String confirmRepBatchPreview(@RequestParam("batchNo")String batchNo,HttpServletResponse response) {
-			log.debug("PayApplyAction confirmBatchPdf is start");
+			log.debug("PayApplyAction confirmRepBatchPreview is start");
 			String excelPath = "";
 			try {
 				String filePath = "" ;
@@ -1902,9 +1952,9 @@ public class PayApplyAction extends BaseAction{
 				}
 			//	fileDownload(excelPath, batchNo, response);
 			} catch (Exception e) {
-				log.error("PayApplyAction confirmBatchPdf is Error:"+e, e);
+				log.error("PayApplyAction confirmRepBatchPreview is Error:"+e, e);
 			}		
-			log.debug("PayApplyAction confirmBatchPdf is End");
+			log.debug("PayApplyAction confirmRepBatchPreview is End");
 			return JsonUtil.toSuccessMsg(excelPath);
 		}	
 		
@@ -2041,11 +2091,11 @@ public class PayApplyAction extends BaseAction{
 					}
 				}
 			} catch (Exception e) {
-				log.error("PayApplyAction confirmBatchPreview is Error:"+e, e);
+				log.error("PayApplyAction confirmRepBatchExcel is Error:"+e, e);
 				isOk = false;
 				resString = "系统异常，请联系管理员";
 			}		
-			log.debug("PayApplyAction confirmBatchPreview is End");
+			log.debug("PayApplyAction confirmRepBatchExcel is End");
 			if (isOk) {
 				return JsonUtil.toSuccessMsg(resString);
 			} else {
@@ -2061,10 +2111,12 @@ public class PayApplyAction extends BaseAction{
 		//报财务查询导出查看
 		@RequestMapping("repFinanceExcel")
 		public ModelAndView repFinanceExcel(@RequestParam("id")Integer id) {
+			log.debug("PayApplyAction repFinanceExcel is start");
 			String view = "PAY_APPLY.TO_REP_FINANCE_EXCEL";
 			BatchMain object = payApplyService.getObj(id);
 			ModelAndView mv = new ModelAndView(getReturnPage(view));
 			mv.addObject("v", object);
+			log.debug("PayApplyAction repFinanceExcel is end");
 			return mv;
 		}	
 		
@@ -2078,7 +2130,8 @@ public class PayApplyAction extends BaseAction{
 		public String getBatchAllList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 						   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 						   @RequestParam(value="order", defaultValue="DESC")String order, 
-						   @RequestParam(value="sort", defaultValue="id")String orderBy,Integer toFinanceNo, String batchNo,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String toFinanceStartTime,String toFinanceEndTime, String createStartDate , String createEndDate,String batchType,String batchStatus) throws Exception{
+						   @RequestParam(value="sort", defaultValue="id")String orderBy,String toFinanceNo, String batchNo,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String toFinanceStartTime,String toFinanceEndTime, String createStartDate , String createEndDate,String batchType,String batchStatus) throws Exception{
+			log.debug("PayApplyAction getBatchAllList is start");
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
 			page.setPageNo(pageNo);
@@ -2098,12 +2151,6 @@ public class PayApplyAction extends BaseAction{
 			if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
 				list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
 			}
-			if(StringUtil.isNotEmpty(toFinanceStartTime)) {
-				list.add(new PropertyFilter("GED_toFinanceStartTime",toFinanceStartTime));
-			}
-			if(StringUtil.isNotEmpty(toFinanceEndTime)) {
-				list.add(new PropertyFilter("LED_toFinanceEndTime",toFinanceEndTime));
-			}
 			if(StringUtil.isNotEmpty(createStartDate)) {
 				list.add(new PropertyFilter("GED_createDate",createStartDate));
 			}
@@ -2116,22 +2163,34 @@ public class PayApplyAction extends BaseAction{
 				createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 				list.add(new PropertyFilter("LTD_createDate",createEndDate));
 			}
+			if(StringUtil.isNotEmpty(toFinanceStartTime)) {
+				list.add(new PropertyFilter("GED_toFinanceTime",toFinanceStartTime));
+			}
+			if(StringUtil.isNotEmpty(toFinanceEndTime)) {
+				Date date = DateUtil.parse(toFinanceEndTime, DateUtil.DATE_PATTERN);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				date = calendar.getTime();
+				toFinanceEndTime = DateUtil.format(date, DateUtil.DATE_PATTERN);
+				list.add(new PropertyFilter("LTD_toFinanceTime",toFinanceEndTime));
+			}
 			if(StringUtil.isNotEmpty(batchType)) {
 				list.add(new PropertyFilter("EQS_batchType",batchType));
 			}
 			if(StringUtil.isNotEmpty(batchStatus)) {
 				list.add(new PropertyFilter("EQS_batchStatus",batchStatus));
 			}
-			if(StringUtil.isNotEmpty(toFinanceNo+"")) {
-				list.add(new PropertyFilter("EQS_toFinanceNo",toFinanceNo+""));
+			if(StringUtil.isNotEmpty(toFinanceNo)) {
+				list.add(new PropertyFilter("EQI_toFinanceNo",toFinanceNo));
 			}
 			try {
 				page = payApplyService.getPage(page, list);
 				returnStr = writerPage(page);
 			} catch (Exception e) {
-				log.error("PayApplyAction list is Error:" + e, e);
+				log.error("PayApplyAction getBatchAllList is Error:" + e, e);
 			}
-			log.debug("PayApplyAction list is end");
+			log.debug("PayApplyAction getBatchAllList is end");
 		    return returnStr;
 		}
 		

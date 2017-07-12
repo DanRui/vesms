@@ -30,7 +30,7 @@ String basePath = request.getContextPath();
 			toolbar : "#batchAddList-grid-toolbar",
 			url : basePath+"/payApply/list.do",
 			method : "post",
-			sortName : "lastUpdateTimeDate",
+			sortName : "last_update_time",
 			sortOrder : "desc",
 			rownumbers : true,
 			columns : [ [ {

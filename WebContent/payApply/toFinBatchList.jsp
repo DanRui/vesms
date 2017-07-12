@@ -85,8 +85,8 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.createDate) {
-						return getNowFormatDate(new Date(row.createDate.time))
+					if (row.toFinanceTime) {
+						return getNowFormatDate(new Date(row.toFinanceTime.time))
 					} else {
 						return "";
 					}
@@ -164,7 +164,7 @@ String basePath = request.getContextPath();
 			columns:[{field:"toFinanceNo",title:"报送序号：",type:"text"},
 			         {field:"batchNo",title:"内部批次号：",type:"text"},
 					{field:"payBatchTotalAmount",title:"拨付总金额（元）:",type:"text"},
-					{startField:"batchCreateStartDate",endField:"batchCreateEndDate",title:"批次生成时间:",type:"date",section:true},
+					{startField:"createStartDate",endField:"createEndDate",title:"批次生成时间:",type:"date",section:true},
 					{startField:"toFinanceStartTime",endField:"toFinanceEndTime",title:"报财务时间:",type:"date",section:true}
 			        ],
 			tools:[

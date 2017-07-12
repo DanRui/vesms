@@ -197,9 +197,9 @@ String basePath = request.getContextPath();
 										reset:false,
 										buttons:[
 												{id:"pay_res_mark_save",text:"保存",iconCls:"icon-save",handler:function(){
-													var checkType = $("#checkType").combobox('getValue');
-													var remark = $("#checkOpinion").val();
-													var faultType =$('#faultType').val();
+													var checkType = $("#resultType").combobox('getValue');
+													var remark = $("#resultOpinion").val();
+													var fauType =$('#fauType').val();
 													
 													if (checkType == "" || (checkType != "1" && checkType != "2")) {
 														alert("请选择审批操作！");
@@ -207,7 +207,7 @@ String basePath = request.getContextPath();
 													}
 													
 													if (checkType == "2") {
-														if (faultType == "" || (faultType != "1" && faultType != "2" && faultType != "3")) {
+														if (fauType == "" || (fauType != "1" && fauType != "2" && fauType != "3")) {
 															alert("请选择退回类型！");
 															return false;
 														}
@@ -220,7 +220,7 @@ String basePath = request.getContextPath();
 													
 													var ifValid = $("form #pay-res-check-form").form("enableValidation").form("validate");
 													if (ifValid) {
-														$.post(basePath+"/payResult/payMark.do",{ids:ids,payResStatus:checkType,faultType:faultType,faultDesc:remark},function(data) {
+														$.post(basePath+"/payResult/payMark.do",{ids:ids,payResStatus:checkType,faultType:fauType,faultDesc:remark},function(data) {
 												 			Messager.alert({
 																type : "info",
 																title : "&nbsp;",

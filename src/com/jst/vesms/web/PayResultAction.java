@@ -42,16 +42,20 @@ public class PayResultAction extends BaseAction{
 	@RequestMapping("payView")
 	@Privilege(modelCode = "M_MARK_NOR_APPLY", prvgCode = "QUERY")
 	public ModelAndView payView() throws Exception {
+		log.debug("PayResultAction payView is start");
 		String view = "PAY_RESULT.LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayResultAction payView is end");
 		return mv;
 	}
 	
 	@RequestMapping("repeatPayView")
 	@Privilege(modelCode = "M_MARK_REP_APPLY", prvgCode = "QUERY")
 	public ModelAndView repeatPayView() throws Exception {
+		log.debug("PayResultAction repeatPayView is start");
 		String view = "PAY_RESULT.REPEAT_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayResultAction repeatPayView is end");
 		return mv;
 	}
 	
@@ -66,6 +70,7 @@ public class PayResultAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String vehicleType, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String batchNo,String toFinanceNo) throws Exception{
+		log.debug("PayResultAction list is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -122,10 +127,12 @@ public class PayResultAction extends BaseAction{
 	@RequestMapping("view")
 	@Privilege(modelCode = "M_MARK_NOR_APPLY", prvgCode = "QUERY")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
+		log.debug("PayResultAction View is start");
 		String view = "ELIMINATED_APPLY.VIEW";
 		EliminatedApply object = payResultService.getById(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
+		log.debug("PayResultAction View is end");
 		return mv;
 	}
 
@@ -138,8 +145,7 @@ public class PayResultAction extends BaseAction{
 	@RequestMapping(value = "payMark" ) 
 	@Privilege(modelCode = "M_MARK_NOR_APPLY",prvgCode = "RESULT_MARK")
 	public String markBatchApply(@RequestParam("ids")String ids,@RequestParam("payResStatus")String payResStatus,@RequestParam("faultType")String faultType,@RequestParam("faultDesc")String faultDesc) {
-		log.debug("PayResultAction createBatch is start");
-		
+		log.debug("PayResultAction markBatchApply is start");
 		boolean markOk = false;
 		String result = null;
 		String strids = "";
@@ -150,9 +156,9 @@ public class PayResultAction extends BaseAction{
 				markOk = true;
 			}
 		} catch (Exception e) {
-			log.error("VehicleRecycleAction syncVehicleInfo is Error:"+e, e);
+			log.error("PayResultAction markBatchApply is Error:"+e, e);
 		}
-		log.debug("PayResultAction createBatch is End");
+		log.debug("PayResultAction markBatchApply is End");
 		if(markOk) {
 			return JsonUtil.toSuccessMsg(result);
 		} else
@@ -180,6 +186,7 @@ public class PayResultAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum,String vehicleType, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String repeatedBatchNo,String toFinanceNo) throws Exception{
+		log.debug("PayResultAction getRepBatchList is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -226,9 +233,9 @@ public class PayResultAction extends BaseAction{
 			page = payResultService.getRepPageSql(page, sb.toString());
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("PayResultAction list is Error:" + e, e);
+			log.error("PayResultAction getRepBatchList is Error:" + e, e);
 		}
-		log.debug("PayResultAction list is end");
+		log.debug("PayResultAction getRepBatchList is end");
 	    return returnStr;
 	}
 	
@@ -239,7 +246,7 @@ public class PayResultAction extends BaseAction{
 	@RequestMapping(value = "payRepMark" ) 
 	@Privilege(modelCode = "M_MARK_REP_APPLY",prvgCode = "RESULT_MARK")
 	public String markRepBatchApply(@RequestParam("ids")String ids,@RequestParam("payResStatus")String payResStatus,@RequestParam("faultType")String faultType,@RequestParam("faultDesc")String faultDesc) {
-		log.debug("PayResultAction createBatch is start");
+		log.debug("PayResultAction markRepBatchApply is start");
 		boolean markOk = false;
 		String result = null;
 		String strids = "";
@@ -250,9 +257,9 @@ public class PayResultAction extends BaseAction{
 				markOk = true;
 			}
 		} catch (Exception e) {
-			log.error("VehicleRecycleAction syncVehicleInfo is Error:"+e, e);
+			log.error("PayResultAction markRepBatchApply is Error:"+e, e);
 		}
-		log.debug("PayResultAction createBatch is End");
+		log.debug("PayResultAction markRepBatchApply is end");
 		if(markOk) {
 			return JsonUtil.toSuccessMsg(result);
 		} else

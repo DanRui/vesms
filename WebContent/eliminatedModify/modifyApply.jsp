@@ -158,8 +158,9 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">报废汽车回收证明：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="callbackProofFiles" name="callbackProofFiles" data-options="editable:false,required:false,buttonText:'请选择'"
-						class="easyui-filebox" />
+						<input id="callbackProofFiles" type="file" name="callbackProofFiles" required="required" multiple="multiple" />
+						<!-- <input id="callbackProofFiles" name="callbackProofFiles" data-options="editable:false,required:false,buttonText:'请选择'"
+						class="easyui-filebox" /> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoCallbackProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -182,7 +183,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">机动车注销证明：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="vehicleCancelProof" class="easyui-filebox" name="vehicleCancelProof" data-options="editable:false,required:false,buttonText:'请选择'"/>
+						<input id="vehicleCancelProof" type="file" name="vehicleCancelProof" required="required" multiple="multiple" />
+						<!-- <input id="vehicleCancelProof" class="easyui-filebox" name="vehicleCancelProof" data-options="editable:false,required:false,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoVehicleCancelProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -205,7 +207,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:120px">银行卡：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="bankCard" class="easyui-filebox" name="bankCard" data-options="editable:false,required:false,buttonText:'请选择'"/>
+						<input id="bankCard" type="file" name="bankCard" required="required" multiple="multiple" />
+						<!-- <input id="bankCard" class="easyui-filebox" name="bankCard" data-options="editable:false,required:false,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoBankCardUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -228,7 +231,7 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">车主身份证明：</td>
 					<td class="view_table_right" colspan="2">
-						<input type="file" name="vehicleOwnerProof" multiple="multiple" />
+						<input id="vehicleOwnerProof" type="file" name="vehicleOwnerProof" required="required" multiple="multiple" />
 						<!-- <input id="vehicleOwnerProof" class="easyui-filebox" name="vehicleOwnerProof" data-options="editable:false,required:true,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoVehicleOwnerProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
@@ -253,7 +256,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:120px">代理委托书：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="agentProxy" class="easyui-filebox" name="agentProxy" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
+						<input id="agentProxy" type="file" name="agentProxy" required="required" multiple="multiple" />
+						<!-- <input id="agentProxy" class="easyui-filebox" name="agentProxy" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoAgentProxyProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -276,7 +280,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">代理人身份证：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="agentProof" class="easyui-filebox" name="agentProof" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
+						<input id="agentProof" type="file" name="agentProof" required="required" multiple="multiple" />
+						<!-- <input id="agentProof" class="easyui-filebox" name="agentProof" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoAgentProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -301,7 +306,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:120px">非财政供养单位证明：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="noFinanceProvide" class="easyui-filebox" name="noFinanceProvide" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/>
+						<input id="noFinanceProvide" type="file" name="noFinanceProvide" required="required" multiple="multiple" />
+						<!-- <input id="noFinanceProvide" class="easyui-filebox" name="noFinanceProvide" data-options="editable:false,required:false,width:141,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoNoFinanceProvideUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -324,7 +330,7 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">开户许可证：</td>
 					<td class="view_table_right" colspan="2">
-						<input type="file" name="openAccPromit" multiple="multiple" />
+						<input id="openAccPromit" type="file" name="openAccPromit" required="required" multiple="multiple" />
 						<!-- <input id="openAccPromit" class="easyui-filebox" name="openAccPromit" data-options="editable:false,required:true,width:141,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoOpenAccPromitUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
@@ -470,7 +476,9 @@
 		        		 			alert(result.message.msg);
 		        		 			//$('#form-apply-upload')[0].reset();
 		        		 			
-		        		 			$("#callbackProofFiles").filebox("clear");
+		        		 			clearUploadFiles(isPersonal, isProxy);
+		        		 			
+		        		 			/* $("#callbackProofFiles").filebox("clear");
 		        		 			$("#vehicleCancelProof").filebox("clear");
 		        		 			$("#bankCard").filebox("clear");
 		        		 			
@@ -489,7 +497,7 @@
 			        		 			jOpenAccPromit.after(jOpenAccPromit.clone().val(""));     
 		        		 				jOpenAccPromit.remove();
 		        		 				//$("#openAccPromit").filebox("clear");
-		        		 			} 
+		        		 			} */ 
 		        		 		}
 		        			}
 		        	 	});
@@ -728,16 +736,22 @@
 				for (var i = 0 ; i < modifyTypeArray.length; i ++) {
 					if (modifyTypeArray[i] == "31") {
 						// 报废回收证明
-						if ($("#callbackProofFiles").filebox("getValue") == "") {
+						if ($("input[name='callbackProofFiles']").val() == "") {
 							isOk = false;
 						}
+						/* if ($("#callbackProofFiles").filebox("getValue") == "") {
+							isOk = false;
+						} */
 					}
 					
 					if (modifyTypeArray[i] == "32") {
 						// 机动车注销证明
-						if ($("#vehicleCancelProof").filebox("getValue") == "") {
+						if ($("input[name='vehicleCancelProof']").val() == "") {
 							isOk = false;
 						}
+						/* if ($("#vehicleCancelProof").filebox("getValue") == "") {
+							isOk = false;
+						} */
 					}
 					
 					if (modifyTypeArray[i] == "33") {
@@ -749,35 +763,47 @@
 					
 					if (modifyTypeArray[i] == "34") {
 						// 银行卡
-						if ($("#bankCard").filebox("getValue") == "") {
+						if ($("input[name='bankCard']").val() == "") {
 							isOk = false;
 						}
+						/* if ($("#bankCard").filebox("getValue") == "") {
+							isOk = false;
+						} */
 					}
 					
 					if (modifyTypeArray[i] == "35") {
 						// 车主类型为企业
 						if (isPersonal == 'N') {
-							if ($("#noFinanceProvide").filebox("getValue") == "") {
+							if ($("input[name='noFinanceProvide']").val() == "") {
 								isOk = false;
 							}
+							/* if ($("#noFinanceProvide").filebox("getValue") == "") {
+								isOk = false;
+							} */
 						}
 					}
 					
 					if (modifyTypeArray[i] == "36") {
 						// 办理类型为代理
 						if (isProxy == "N") {
-							if ($("#agentProxy").filebox("getValue") == "") {
+							if ($("input[name='agentProxy']").val() == "") {
 								isOk = false;
 							}
+							/* if ($("#agentProxy").filebox("getValue") == "") {
+								isOk = false;
+							} */
 						}
 					}
 					
 					if (modifyTypeArray[i] == "37") {
 						// 办理类型为代理
 						if (isProxy == "N") {
-							if ($("#agentProof").filebox("getValue") == "") {
+							if ($("input[name='agentProof']").val() == "") {
 								isOk = false;
 							}
+							/* if ($("#agentProof").filebox("getValue") == "") {
+								isOk = false;
+							} */
 						}
 					}
 					
@@ -793,6 +819,51 @@
 				return isOk;
 			}
 		
+			// 清空文件上传框的值，使得可以重新选择文件进行上传
+			function clearUploadFiles(isPersonal, isProxy) {
+				$('#form-modify-apply-upload')[0].reset();
+				
+				if (isPersonal == 'N') {
+					// 如果是企业，则清空开户许可证和非财政供养单位证明
+					//$("#openAccPromit").filebox("setValue", "");
+					//$("#noFinanceProvide").filebox("setValue", "");
+					
+					$("#openAccPromitFileImg").text("");
+	    			$("#openAccPromitFileImg").attr("href", "#");
+	    			
+	    			$("#noFinanceProvideFileImg").text("");
+	    			$("#noFinanceProvideFileImg").attr("href", "#");
+				}
+				if (isProxy == 'N') {
+					// 如果是代办，则清空代理人身份证明和代理委托书
+					//$("#agentProof").filebox("setValue", "");
+					//$("#agentProxy").filebox("setValue", "");
+					
+					$("#agentProofFileImg").text("");
+	    			$("#agentProofFileImg").attr("href", "#");
+	    			
+	    			$("#agentProxyFileImg").text("");
+	    			$("#agentProxyFileImg").attr("href", "#");
+				}
+				//$("#callbackProofFiles").filebox("setValue", "");
+				//$("#vehicleCancelProof").filebox("setValue", "");
+				//$("#bankCard").filebox("setValue", "");
+				//$("#vehicleOwnerProof").filebox("setValue", "");
+				
+				// 清空文件预览后的链接
+				$("#callbackProofFileImg").text("");
+    			$("#callbackProofFileImg").attr("href", "#");
+    			
+    			$("#vehicleCancelProofFileImg").text("");
+    			$("#vehicleCancelProofFileImg").attr("href", "#");
+    			
+    			$("#bankCardFileImg").text("");
+    			$("#bankCardFileImg").attr("href", "#");
+    			
+    			$("#vehicleOwnerProofFileImg").text("");
+    			$("#vehicleOwnerProofFileImg").attr("href", "#");
+			}
+			
 		</script>
 		
 </body>

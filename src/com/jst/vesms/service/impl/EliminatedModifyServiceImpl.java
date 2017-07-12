@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.service.BaseServiceImpl;
 import com.jst.common.utils.page.Page;
+import com.jst.common.utils.string.StringUtil;
 import com.jst.vesms.dao.IActionLogDao;
 import com.jst.vesms.dao.IAttachmentDao;
 import com.jst.vesms.dao.ICallDao;
@@ -103,31 +104,31 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 		String updateType = "1";
 		
 		// 更新一般资料信息，包括经办人信息、补贴账户信息等。
-		if (null != applyModifyInfo.getAgent()) {
+		if (StringUtil.isNotEmpty(applyModifyInfo.getAgent())) {
 			baseInfoDetails += "AGENT:[" + applyModifyInfo.getAgent() + "];";
 		}
 		
-		if (null != applyModifyInfo.getAgentIdentity()) {
+		if (StringUtil.isNotEmpty(applyModifyInfo.getAgentIdentity())) {
 			baseInfoDetails += "AGENT_IDENTITY:[" + applyModifyInfo.getAgentIdentity() + "];";
 		}
 		
-		if (null != applyModifyInfo.getAgentMobileNo()) {
+		if (StringUtil.isNotEmpty(applyModifyInfo.getAgentMobileNo())) {
 			baseInfoDetails += "AGENT_MOBILE_NO:[" + applyModifyInfo.getAgentMobileNo() + "];";
 		}
 		
-		if (null != applyModifyInfo.getBankCode()) {
+		if (StringUtil.isNotEmpty(applyModifyInfo.getBankCode())) {
 			baseInfoDetails += "BANK_CODE:[" + applyModifyInfo.getBankCode() + "];";
 		}
 		
-		if (null != applyModifyInfo.getBankName()) {
+		if (StringUtil.isNotEmpty(applyModifyInfo.getBankName())) {
 			baseInfoDetails += "BANK_NAME:[" + applyModifyInfo.getBankName() + "];";
 		}
 		
-		if (null != applyModifyInfo.getBankAccountNo()) {
+		if (StringUtil.isNotEmpty(applyModifyInfo.getBankAccountNo())) {
 			baseInfoDetails += "BANK_ACCOUNT_NO:[" + applyModifyInfo.getBankAccountNo() + "];";
 		}
 		
-		if (null != applyModifyInfo.getBankAccountName()) {
+		if (StringUtil.isNotEmpty(applyModifyInfo.getBankAccountName())) {
 			updateType = "2";
 			baseInfoDetails += "BANK_ACCOUNT_NAME:[" + applyModifyInfo.getBankAccountName() + "];";
 		}

@@ -170,6 +170,7 @@
 			$("#btnContinueApply").click(function() {
 				// 继续受理下一单，后台查询是否有预约单号
 				var url = basePath+"/eliminatedApply/continueApply.do?&id="+id;
+				$("#common-dialog").dialog("close");
 				
 				openDialog({
 					type : "add",

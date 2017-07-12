@@ -180,7 +180,7 @@ String basePath = request.getContextPath();
 									 Messager.alert({
 											type : "info",
 											title : "警告",
-											content : "选中的批次中含有已报财务  或者 是被作废数据，无法进行作废操作!"
+											content : data.message
 										});
 								 } else {
 									  $.get(basePath+"/payApply/batchCancel.do",{ids:ids},function(data){

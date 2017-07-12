@@ -99,6 +99,21 @@ String basePath = request.getContextPath();
 					} 
 				}
 			},{
+				field : "toFinanceTime",
+				title : "批次报财务时间",
+				width : "10%",
+				align : "center",
+				halign :"center",
+				resizable : true,
+				sortable : true,
+				formatter : function (value, row, index) {
+					if (row.toFinanceTime) {
+						return getNowFormatDate(new Date(row.toFinanceTime.time))
+					} else {
+						return "";
+					}
+				}
+			},{
 				field : "payResStatus",
 				title : "拨付结果状态",
 				width : "10%",

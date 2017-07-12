@@ -123,7 +123,7 @@ String basePath = request.getContextPath();
 					{field:"opeType",title:"操作名称:",type:"combobox", url:basePath+"/sysLog/getOperateType.do?type=OPE_TYPE", text:"value", value:"code"},
 					//{field:"opeUserCode",title:"操作人账号:",type:"combobox", url:basePath+"/data/operatePersonCode.json", text:"name", value:"value"},
 					{field:"opeUserCode",title:"操作人账号:", type:"text"},
-					{startField:"startTime",endField:"EndTime",title:"操作时间:",type:"datetime",section:true},
+					{startField:"startTime",endField:"EndTime",title:"操作时间:",type:"datetime",section:true}
 					],
 			tools:[
 				   {type:"QUERY"},

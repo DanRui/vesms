@@ -22,7 +22,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="T_PAY_RESULT_IMPORT_DETAIL")
-public class PayResultImportDetail {
+public class PayResultImportDetail { 
 	// 主键ID
 	private Integer id;
 
@@ -38,6 +38,9 @@ public class PayResultImportDetail {
 	// 批次文件内备注
 	private String remark;
 	
+	// 资金说明
+	private String payComment;
+	
 	// 收款人银行账号
 	private String accountNo;
 	
@@ -52,9 +55,9 @@ public class PayResultImportDetail {
 	private Date confirmTime;
 	
 	// 支付金额
-	private Integer payAmount;
+	private Double payAmount;
 	
-	// 支付结果
+	// 支付状态
 	private String payResult;
 	
 	// 支付时间
@@ -77,8 +80,14 @@ public class PayResultImportDetail {
 	private String payResStatus;
 	
 	// 国库申请单号
-	private String requertNo;
-
+	private String requestNo;
+	
+	// 修改时间
+	private Date updateTime;
+	
+	// 录入时间
+	private Date importTime;
+	
 	@SequenceGenerator(name = "generator",sequenceName = "SEQ_PAY_IMPORT_DETAIL_ID", allocationSize = 1)
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
@@ -128,11 +137,11 @@ public class PayResultImportDetail {
 	}
 
 	@Column(name = "PAY_AMOUNT", unique = false, nullable = true, length = 6)
-	public Integer getPayAmount() {
+	public Double getPayAmount() {
 		return payAmount;
 	}
 
-	public void setPayAmount(Integer payAmount) {
+	public void setPayAmount(Double payAmount) {
 		this.payAmount = payAmount;
 	}
 	
@@ -235,13 +244,40 @@ public class PayResultImportDetail {
 		this.payResStatus = payResStatus;
 	}
 
-	@Column(name = "REQUEST_NO", unique = false, nullable = true, length = 20)
-	public String getRequertNo() {
-		return requertNo;
+	@Column(name = "REQUEST_NO", unique = false, nullable = false, length = 50)
+	public String getRequestNo() {
+		return requestNo;
 	}
 
-	public void setRequertNo(String requertNo) {
-		this.requertNo = requertNo;
+	public void setRequestNo(String requestNo) {
+		this.requestNo = requestNo;
+	}
+
+	@Column(name = "PAY_COMMENT", unique = false, nullable = true, length = 2000)
+	public String getPayComment() {
+		return payComment;
+	}
+
+	public void setPayComment(String payComment) {
+		this.payComment = payComment;
+	}
+
+	@Column(name = "UPDATE_TIME", unique = false, nullable = true)
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	@Column(name = "IMPORT_TIME", unique = false, nullable = true)
+	public Date getImportTime() {
+		return importTime;
+	}
+
+	public void setImportTime(Date importTime) {
+		this.importTime = importTime;
 	}
 	
 	

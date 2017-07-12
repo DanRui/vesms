@@ -30,7 +30,7 @@ String basePath = request.getContextPath();
 
 	$().ready(function(){
 		$("#ConfirmButton").click(function(){
-			var password=$("#password").val();
+			$(this).attr("disabled","true"); //设置变灰按钮  
 				 $("#confirmId").form("submit",{
 						url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 						success : function(data) {

@@ -54,7 +54,7 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">号牌号码：</td>
 					<td class="view_table_right">
-						<input type="text" name="vehiclePlateNum" class="easyui-validatebox" data-options="required:true"  />
+						粤B <input type="text" name="vehiclePlateNum" class="easyui-validatebox" data-options="required:true"  style="width: 112px;"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					<td class="view_table_left">号牌种类：</td>
@@ -295,8 +295,9 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">报废汽车回收证明：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="callbackProofFiles" name="callbackProofFiles" data-options="editable:false,required:true,buttonText:'请选择'"
-						class="easyui-filebox" />
+						<input id="callbackProofFiles" type="file" name="callbackProofFiles" required="required" multiple="multiple" />
+						<!-- <input id="callbackProofFiles" name="callbackProofFiles" data-options="editable:false,required:true,buttonText:'请选择'"
+						class="easyui-filebox" /> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoCallbackProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -307,7 +308,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">机动车注销证明：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="vehicleCancelProof" class="easyui-filebox" name="vehicleCancelProof" data-options="editable:false,required:true,buttonText:'请选择'"/>
+						<input id="vehicleCancelProof" type="file" name="vehicleCancelProof" required="required" multiple="multiple" />
+						<!-- <input id="vehicleCancelProof" class="easyui-filebox" name="vehicleCancelProof" data-options="editable:false,required:true,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -318,7 +320,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:120px">银行卡：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="bankCard" class="easyui-filebox" name="bankCard" data-options="editable:false,required:true,buttonText:'请选择'"/>
+						<input id="bankCard" type="file" name="bankCard" required="required" multiple="multiple" />
+						<!-- <input id="bankCard" class="easyui-filebox" name="bankCard" data-options="editable:false,required:true,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoBankCard" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -329,7 +332,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">车主身份证明：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="vehicleOwnerProof" class="easyui-filebox" name="vehicleOwnerProof" data-options="editable:false,required:true,buttonText:'请选择'"/>
+						<input id="vehicleOwnerProof" type="file" name="vehicleOwnerProof" required="required" multiple="multiple" />
+						<!-- <input id="vehicleOwnerProof" class="easyui-filebox" name="vehicleOwnerProof" data-options="editable:false,required:true,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoVehicleOwnerProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -340,7 +344,8 @@
 				<tr class="datagrid-row proxyType">
 					<td class="view_table_left" style="width:120px">代理委托书：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="agentProxy" class="easyui-filebox" name="agentProxy" data-options="editable:false,width:141,buttonText:'请选择'"/>
+						<input id="agentProxy" type="file" name="agentProxy" multiple="multiple" />
+						<!-- <input id="agentProxy" class="easyui-filebox" name="agentProxy" data-options="editable:false,width:141,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoAgentProxyProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -351,7 +356,8 @@
 				<tr class="datagrid-row proxyType">
 					<td class="view_table_left" style="width:110px">代理人身份证：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="agentProof" class="easyui-filebox" name="agentProof" data-options="editable:false,width:141,buttonText:'请选择'"/>
+						<input id="agentProof" type="file" name="agentProof" multiple="multiple" />
+						<!-- <input id="agentProof" class="easyui-filebox" name="agentProof" data-options="editable:false,width:141,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoAgentProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -362,7 +368,8 @@
 				<tr class="datagrid-row applyType">
 					<td class="view_table_left" style="width:120px">非财政供养单位证明：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="noFinanceProvide" class="easyui-filebox" name="noFinanceProvide" data-options="editable:false,width:141,buttonText:'请选择'"/>
+						<input id="noFinanceProvide" type="file" name="noFinanceProvide" multiple="multiple" />
+						<!-- <input id="noFinanceProvide" class="easyui-filebox" name="noFinanceProvide" data-options="editable:false,width:141,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoNoFinanceProvide" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -373,7 +380,8 @@
 				<tr class="datagrid-row applyType">
 					<td class="view_table_left" style="width:110px">开户许可证：</td>
 					<td class="view_table_right" colspan="2">
-						<input id="openAccPromit" class="easyui-filebox" name="openAccPromit" data-options="editable:false,width:141,buttonText:'请选择'"/>
+						<input id="openAccPromit" type="file" name="openAccPromit" multiple="multiple" />
+						<!-- <input id="openAccPromit" class="easyui-filebox" name="openAccPromit" data-options="editable:false,width:141,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoOpenAccPromit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 					</td>
@@ -953,7 +961,9 @@
 		        		 		} else {
 		        		 			alert("文件上传失败！");
 		        		 			
-		        		 			$("#callbackProofFile").filebox("clear");
+		        		 			clearUploadFiles(isPersonal, isProxy);
+		        		 			
+		        		 			/* $("#callbackProofFile").filebox("clear");
 		        		 			$("#vehicleCancelProof").filebox("clear");
 		        		 			$("#bankCard").filebox("clear");
 		        		 			$("#vehicleOwnerProof").filebox("clear");
@@ -964,7 +974,7 @@
 		        		 			if (isProxy == "N") {
 		        		 				$("#noFinanceProvide").filebox("clear");
 		        		 				$("#openAccPromit").filebox("clear");
-		        		 			}
+		        		 			} */
 		        		 		}
 		        			}
 		        	 	});
@@ -997,7 +1007,9 @@
 					   alert("请选择办理类型！");
 					   return false;
 				   	}
-					   
+					
+				   	$("input[name='vehiclePlateNum']").val("B" + $("input[name='vehiclePlateNum']").val());
+				   	
 					var isValid = $("#form-apply-save").form("enableValidation").form("validate");
 					
 					if (isValid) {
@@ -1040,17 +1052,6 @@
 									// 设置受理单号、受理表Id、档案盒编号
 									$("input[name='id']").val(data.message.id);
 									$("input[name='applyNo']").val(data.message.applyNo);
-									//$("input[name='archiveBoxNo']").val(data.message.archiveBoxNo);
-									//$("input[name='archivedInnerNo']").val(data.message.archivedInnerNo);
-									
-									// 页面刷新前，先移除下一步按钮点击事件
-									/* if(window.addEventListener) { // Mozilla, Netscape, Firefox   
-										obj.removeEventListener('click', handler, false);    
-									} else if(window.attachEvent) { // IE   
-										obj.detachEvent('onclick', handler);   
-								    } else {  
-								    	obj.onclick= "";
-								    } */
 									
 									// 资格校验成功，受理表信息保存，页面跳转到受理表打印预览页面
 									var url = basePath+"/eliminatedApply/applyPreview.do?id="+data.message.id;
@@ -1063,27 +1064,10 @@
 										content:data.message.msg
 									});
 			                		
-			                		// 清空表单元素
-			                		var filters = [
-			                		        {
-			                					type : "hidden",
-			                					name : "appointVehPlateCode"
-			                				},
-			                				{
-			                					type : "hidden",
-			                					name : "appointBankCode"
-			                				},
-			                				{
-			                					type : "hidden",
-			                					name : "appointAgentIdentity"
-			                				}
-			                			]
-			                		//clearForm("form-apply-save", filters);
-			                		
 			                		$("#form-apply-save").form("clear");
 									
 									// 证明材料区域清空文件框值和回显路径
-									$("#form-apply-upload").form("clear");
+									clearUploadFiles(isPersonal, isProxy);
 			                		//$("#common-dialog").dialog("close");
 			                	}
 			            	},
@@ -1101,12 +1085,12 @@
 				var verify = function() {
 					//校验输入的号牌号码和号牌种类，判断是否在系统中录入的车辆，过滤不符合资格或者补贴金额为0的车辆。
 					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
-					if(vehiclePlateNum!=null && vehiclePlateNum.indexOf("粤") != -1) {
-						vehiclePlateNum = vehiclePlateNum.substring(1);
-					}
-					if (vehiclePlateNum == "" || vehiclePlateNum.length < 6) {
+					if (vehiclePlateNum == "") {
 						alert("请输入号牌号码！");
 						return false;
+					}
+					if(vehiclePlateNum != null) {
+						vehiclePlateNum = "B" + vehiclePlateNum;
 					}
 					var vehiclePlateType = $("#vehiclePlateTypeNew").combobox("getValue");
 					if (vehiclePlateType == "") {
@@ -1184,11 +1168,11 @@
 			        			alert(data.message);
 			        			// 清空前一次输入留下的数据，主要是指表单控件、隐藏域、文件上传框等。
 								// 车辆信息、补贴对象信息、报废信息等表单控件
-								//$("#form-apply-save :input").not("DIV#appoint-list :input").val("");
 			        			$("#form-apply-save").form("clear");
 								
 								// 证明材料区域清空文件框值和回显路径
-								$("#form-apply-upload").form("clear");
+								clearUploadFiles(isPersonal, isProxy);
+								//$("#form-apply-upload").form("clear");
 			        		}
 			        	},
 			        	error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -1207,12 +1191,12 @@
 				var basePath = "<%=basePath%>";
 				//校验输入的号牌号码和号牌种类，判断是否在系统中录入的车辆，过滤不符合资格或者补贴金额为0的车辆。
 				var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
-				if(vehiclePlateNum!=null && vehiclePlateNum.indexOf("粤") != -1) {
-					vehiclePlateNum = vehiclePlateNum.substring(1);
-				}
-				if (vehiclePlateNum == "" || vehiclePlateNum.length < 6) {
+				if (vehiclePlateNum == "") {
 					alert("请输入号牌号码！");
 					return false;
+				}
+				if(vehiclePlateNum != null) {
+					vehiclePlateNum = "B" + vehiclePlateNum;
 				}
 				var vehiclePlateType = $("#vehiclePlateTypeNew").combobox("getValue");
 				if (vehiclePlateType == "") {
@@ -1290,10 +1274,11 @@
 		        			alert(data.message);
 		        			// 清空前一次输入留下的数据，主要是指表单控件、隐藏域、文件上传框等。
 							// 车辆信息、补贴对象信息、报废信息等表单控件
-							$("#form-apply-save :input").not("DIV#appoint-list :input").val("");
+							$("#form-apply-save").form("clear");
 							
 							// 证明材料区域清空文件框值和回显路径
-							$("#form-apply-upload").form("clear");
+							clearUploadFiles(isPersonal, isProxy);
+							//$("#form-apply-upload").form("clear");
 		        		}
 		        	},
 		        	error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -1350,25 +1335,12 @@
 			// 双击预约车辆列表，获得预约车辆列表，并加载车辆数据。
 			function dblClickAppointInfo(i) {
 				// 车辆信息、补贴对象信息、报废信息等表单控件
-				var filters = [
-                		        {
-                					type : "hidden",
-                					name : "appointVehPlateCode"
-                				},
-                				{
-                					type : "hidden",
-                					name : "appointBankCode"
-                				},
-                				{
-                					type : "hidden",
-                					name : "appointAgentIdentity"
-                				}
-			    ]
 				//clearForm("form-apply-save", filters);
 				$("#form-apply-save").form("clear");
 				
 				// 证明材料区域清空文件框值和回显路径
-				$("#form-apply-upload").form("clear");
+				clearUploadFiles(isPersonal, isProxy);
+				//$("#form-apply-upload").form("clear");
 				
 				// 双击每一行时触发
 				var trId = "#appoint-"+i;
@@ -1397,7 +1369,7 @@
 				var agentIdentity = $(trId).find("td:eq(7)").find("input[name='appointAgentIdentity']").val();
 				
 				// 设置受理页面的号牌号码和号牌种类值
-				$("input[name='vehiclePlateNum']").val(vehiclePlateNum);
+				$("input[name='vehiclePlateNum']").val(vehiclePlateNum.substring(1));
 				$("#vehiclePlateTypeNew").combobox("setValue", vehiclePlateType);
 				
 				// 直接调用后台资格校验接口返回机动车数据
@@ -1453,42 +1425,48 @@
 				return isOk;
 			}
 			
-			function clearForm(id, filters) {
-				// 获取form表单
-				var objId = $(id);
-				if (objId == undefined) {
-					return;
+			// 清空文件上传框的值，使得可以重新选择文件进行上传
+			function clearUploadFiles(isPersonal, isProxy) {
+				$('#form-apply-upload')[0].reset();
+				if (isPersonal == 'N') {
+					// 如果是企业，则清空开户许可证和非财政供养单位证明
+					//$("#openAccPromit").filebox("setValue", "");
+					//$("#noFinanceProvide").filebox("setValue", "");
+					
+					$("#openAccPromitFileImg").text("");
+	    			$("#openAccPromitFileImg").attr("href", "#");
+	    			
+	    			$("#noFinanceProvideFileImg").text("");
+	    			$("#noFinanceProvideFileImg").attr("href", "#");
 				}
-				
-				// 获取排除的组件值
-				var originObj = [];
-				if (filters !== null) {
-					for (var i = 0 ; i < filters.length ; i ++) {
-						if (filters[i].type == "hidden" && filters[i].name != "") {
-							var obj = new Object();
-							obj.name = filters[i].name;
-							obj.value = $("input[name='"+filters[i].name+"']").val();
-						}
-					}
-				} else {
-					return;
+				if (isProxy == 'N') {
+					// 如果是代办，则清空代理人身份证明和代理委托书
+					//$("#agentProof").filebox("setValue", "");
+					//$("#agentProxy").filebox("setValue", "");
+					
+					$("#agentProofFileImg").text("");
+	    			$("#agentProofFileImg").attr("href", "#");
+	    			
+	    			$("#agentProxyFileImg").text("");
+	    			$("#agentProxyFileImg").attr("href", "#");
 				}
+				//$("#callbackProofFiles").filebox("setValue", "");
+				//$("#vehicleCancelProof").filebox("setValue", "");
+				//$("#bankCard").filebox("setValue", "");
+				//$("#vehicleOwnerProof").filebox("setValue", "");
 				
-				$(id).form("clear");
-				$("#vehiclePlateTypeNew").combobox("clear");
-				$("#bankCodeAdd").combobox("clear");
-				
-				//还原过滤的控件值
-				if (originObj !== null) {
-					for (var i = 0 ; i < originObj.length ; i ++) {
-						if (originObj[i].name != "") {
-							$("input[name='"+originObj[i].name+"']").val(originObj[i].value);
-						}
-					}
-				} else {
-					return;
-				}
-				
+				// 清空文件预览后的链接
+				$("#callbackProofFileImg").text("");
+    			$("#callbackProofFileImg").attr("href", "#");
+    			
+    			$("#vehicleCancelProofFileImg").text("");
+    			$("#vehicleCancelProofFileImg").attr("href", "#");
+    			
+    			$("#bankCardFileImg").text("");
+    			$("#bankCardFileImg").attr("href", "#");
+    			
+    			$("#vehicleOwnerProofFileImg").text("");
+    			$("#vehicleOwnerProofFileImg").attr("href", "#");
 			}
 			
 		</script>

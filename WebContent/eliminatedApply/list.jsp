@@ -80,7 +80,7 @@ String basePath = request.getContextPath();
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true,
+				sortable : true
 			},{
 				field : "vehicleOwner",
 				title : "车主",
@@ -88,7 +88,7 @@ String basePath = request.getContextPath();
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true,
+				sortable : true
 			},{
 				field : "vehicleTypeName",
 				title : "车辆类型",
@@ -264,7 +264,7 @@ String basePath = request.getContextPath();
 							}
 					   }
 				   },
-				   {type:"QUERY"},
+				   {type:"QUERY"}
 				   ],
 			module : "M_ELIMINATED_APPLY_NO_LIST",
 			shownum:3/* ,

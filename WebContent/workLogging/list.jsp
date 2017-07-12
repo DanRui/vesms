@@ -98,7 +98,7 @@ String basePath = request.getContextPath();
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true,
+				sortable : true
 			}, {
 				field : "actionResult",
 				title : "操作结果",

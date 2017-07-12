@@ -169,6 +169,7 @@ String basePath = request.getContextPath();
 										title : "&nbsp;",
 										content : data.message
 									}); 
+						 			$("#conclude-normal-list #conclude-normal-grid").datagrid('load');
 						 		});
 						 		}
 							}

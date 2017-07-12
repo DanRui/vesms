@@ -239,10 +239,10 @@ String basePath = request.getContextPath();
 				<td class="view_table_right">
 					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile">
 						<c:if test="${status.index % 2 eq 1}">
-							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a></br>
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}(${status.count})</a></br>
 						</c:if>
 						<c:if test="${status.index % 2 eq 0}">
-							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}(${status.count})</a>
 						</c:if>
 					</c:forEach>
 				</td>
@@ -272,10 +272,10 @@ String basePath = request.getContextPath();
 					<td class="view_table_right">
 						<c:forEach items="${openAccPromitFiles}" var="openAccPromitFile">
 							<c:if test="${status.index % 2 eq 1}">
-								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a></br>
+								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}(${status.count})</a></br>
 							</c:if>
 							<c:if test="${status.index % 2 eq 0}">
-								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a>
+								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}(${status.count})</a>
 							</c:if>
 						</c:forEach>
 					</td>
@@ -308,10 +308,10 @@ String basePath = request.getContextPath();
 					<td class="view_table_right">
 						<c:forEach items="${signedApplyFiles}" var="signedApplyFile" varStatus="status">
 							<c:if test="${status.index % 2 eq 1}">
-								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a></br>
+								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}(${status.count})</a></br>
 							</c:if>
 							<c:if test="${status.index % 2 eq 0}">
-								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a>
+								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}(${status.count})</a>
 							</c:if>
 						</c:forEach>
 					</td>
@@ -323,27 +323,28 @@ String basePath = request.getContextPath();
 				<td class="view_table_right">
 					<c:forEach items="${accountChangeProofFiles}" var="accountChangeProofFile" varStatus="status">
 						<c:if test="${status.index % 2 eq 1}">
-							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}</a></br>
+							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}(${status.count})</a></br>
 						</c:if>
 						<c:if test="${status.index % 2 eq 0}">
-							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}</a>
+							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}(${status.count})</a>
 						</c:if>
 					</c:forEach>
 				</td>
 			</tr>
 			</c:if>
 			<tr>
-			<table id="table-action-log">					
+				<td colspan="6" style="vertical-align:text-top;">
+			<table id="table-action-log" width="100%;">					
 			<tr class="datagrid-header-row classify-tr">
 				<td colspan="6">业务流水记录</td>
 			</tr>	
-			<tr class="datagrid-row" bgcolor="#d7ebf9">
+			<tr class="datagrid-row" bgcolor="#d7ebf9" style="text-align:center;">
 				<th>操作岗位</th>
 				<th>操作动作</th>
 				<th>发生时间</th>
 				<th>处理人</th>
 				<th>操作结果</th>
-				<th width="25%">详情说明</th>
+				<th width="20%">详情说明</th>
 			</tr>
 			<c:forEach items="${actionLogs}" var="log">
 				<tr align="center">
@@ -395,6 +396,7 @@ String basePath = request.getContextPath();
 				</tr>
 			</c:forEach>
 			</table>
+			</td>
 			</tr>
 		</table>	
 	</div>

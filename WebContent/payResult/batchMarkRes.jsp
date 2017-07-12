@@ -19,7 +19,7 @@ String basePath = request.getContextPath();
 				<tr class="datagrid-row">
 					<td class="view_table_left">拨付操作：</td>
 					<td class="view_table_right">
-						<select id="checkType" name="checkType" class="easyui-combobox" data-options="required:true,editable:false,width:150,panelHeight:'auto'">   
+						<select id="resultType" name="resultType" class="easyui-combobox" data-options="required:true,editable:false,width:150,panelHeight:'auto'">   
    							<option>请选择</option>   
    							<option value="1">拨付成功</option>   
    							<option value="2">拨付失败</option>   
@@ -28,7 +28,7 @@ String basePath = request.getContextPath();
 					</td>
 					<td class="view_table_left retreat">异常类型：</td>
 					<td class="view_table_right retreat">
-							<select id="faultType" name="faultType" style="width:100px">   
+							<select id="fauType" name="fauType" style="width:100px">   
     							<option>请选择</option>
     							<option value="1">一般资料错误</option>   
     							<option value="2">补贴账户错误</option>
@@ -41,7 +41,7 @@ String basePath = request.getContextPath();
 				<tr class="datagrid-row">
 					<td class="view_table_left">备注：</td>
 					<td class="view_table_right" colspan="3">
-						<textarea id="checkOpinion" name="checkOpinion" rows="3" style="width: 450px" class="easyui-validatebox"/>
+						<textarea id="resultOpinion" name="resultOpinion" rows="3" style="width: 450px" class="easyui-validatebox"/>
 					</td>
 				</tr>
 			</table>
@@ -53,16 +53,16 @@ String basePath = request.getContextPath();
 			$("td[class*='retreat']").each(function() {
 				$(this).hide();
 			});
-			$("#checkType").combobox({
+			$("#resultType").combobox({
 				onChange : function() {
 					var checkedType = $(this).combobox("getValue");
 					$("td[class*='retreat']").each(function() {
 						if (checkedType == "2") {
 							$(this).show();
-							$("#checkOpinion").validatebox({required:true});
+							$("#resultOpinion").validatebox({required:true});
 						}  else {
 							$(this).hide();
-							$("#checkOpinion").validatebox({required:false});
+							$("#resultOpinion").validatebox({required:false});
 						}
 					});
 				}

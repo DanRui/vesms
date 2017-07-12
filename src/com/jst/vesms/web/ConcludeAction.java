@@ -40,16 +40,20 @@ public class ConcludeAction extends BaseAction{
 	@RequestMapping("concludeView")
 	@Privilege(modelCode = "M_NOR_APPLY_CONCLUDE", prvgCode = "QUERY")
 	public ModelAndView concludeView() throws Exception {
+		log.debug("ConcludeAction concludeView is start");
 		String view = "CONCLUDE.LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("ConcludeAction concludeView is end");
 		return mv;
 	}
 	
 	@RequestMapping("conculdeFaultView")
 	@Privilege(modelCode = "M_FAULT_APPLY_CONCLUDE", prvgCode = "QUERY")
 	public ModelAndView conculdeFaultView() throws Exception {
+		log.debug("ConcludeAction conculdeFaultView is start");
 		String view = "CONCLUDE.FAULT_LIST";
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("ConcludeAction conculdeFaultView is end");
 		return mv;
 	}
 	
@@ -63,6 +67,7 @@ public class ConcludeAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate) throws Exception{
+		log.debug("ConcludeAction list is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -110,10 +115,12 @@ public class ConcludeAction extends BaseAction{
 	@RequestMapping("view")
 	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
+		log.debug("ConcludeAction view is start");
 		String view = "ELIMINATED_APPLY.VIEW";
 		EliminatedApply object = concludeService.getById(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
+		log.debug("ConcludeAction view is end");
 		return mv;
 	}
 	
@@ -137,8 +144,8 @@ public class ConcludeAction extends BaseAction{
 		} catch (Exception e) {
 			log.error(" concludeApply  is Error:"+e, e);
 		}		
-		log.debug("TransactFinAction concludeApply  is End");
-			return 	JsonUtil.toSuccessMsg(result);
+		log.debug("ConcludeAction concludeApply  is End");
+		return 	JsonUtil.toSuccessMsg(result);
 	}
 	
 	
@@ -148,7 +155,7 @@ public class ConcludeAction extends BaseAction{
 	@RequestMapping(value = "faultConclude" ) 
 	@Privilege(modelCode = "M_FAULT_APPLY_CONCLUDE",prvgCode = "CONCLUDE_MARK")
 	public String faultConcludeApply(@RequestParam("ids")String ids,@RequestParam("concludeStatus")String concludeStatus) {
-		log.debug("ConcludeAction concludeApply is start");
+		log.debug("ConcludeAction faultConcludeApply is start");
 		String result = null;
 		String strids = "";
 		try {
@@ -159,9 +166,9 @@ public class ConcludeAction extends BaseAction{
 			strids=strids.substring(0, strids.length()-1);
 			result = concludeService.concludeApply(strids,concludeStatus);			
 		} catch (Exception e) {
-			log.error(" concludeApply  is Error:"+e, e);
+			log.error(" ConcludeAction faultConcludeApply  is Error:"+e, e);
 		}		
-		log.debug("TransactFinAction concludeApply  is End");
+		log.debug("ConcludeAction faultConcludeApply  is End");
 			return 	JsonUtil.toSuccessMsg(result);
 	}
 	
@@ -175,6 +182,7 @@ public class ConcludeAction extends BaseAction{
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate) throws Exception{
+		log.debug("ConcludeAction getFaultpList  is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -209,9 +217,9 @@ public class ConcludeAction extends BaseAction{
 			page = concludeService.getApplyPage(page, list);
 			returnStr = writerPage(page);
 		} catch (Exception e) {
-			log.error("ConcludeAction list is Error:" + e, e);
+			log.error("ConcludeAction getFaultpList is Error:" + e, e);
 		}
-		log.debug("ConcludeAction list is end");
+		log.debug("ConcludeAction getFaultpList  is end");
 	    return returnStr;
 	}
 }

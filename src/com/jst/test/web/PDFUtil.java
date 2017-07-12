@@ -45,7 +45,10 @@ public class PDFUtil {
 					new FileOutputStream(filepath));
 			document.open();
 
-			BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/msyh.ttf",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+			String font_cn = getChineseFont();
+			BaseFont baseFont = BaseFont.createFont(font_cn, BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+
+			//BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/msyh.ttf",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
 			Font font = new Font(baseFont);
 			
 			int columns = dataList.get(0).length;
@@ -135,7 +138,9 @@ public class PDFUtil {
 					new FileOutputStream(filepath));
 			document.open();
 
-			BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/msyh.ttf",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+			//BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/msyh.ttf",BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+			String font_cn = getChineseFont();
+			BaseFont baseFont = BaseFont.createFont(font_cn, BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
 			Font font = new Font(baseFont);
 			
 			int columns = dataList.get(0).length;
@@ -373,6 +378,25 @@ public class PDFUtil {
 		}
 		return space;
 	}
+	
+	 private static String getChineseFont() {  
+		  
+        //宋体（对应css中的 属性 font-family: SimSun; /*宋体*/）  
+        String font1 ="C:/Windows/Fonts/msyh.ttf";  
+  
+        //判断系统类型，加载字体文件  
+        java.util.Properties prop = System.getProperties();  
+        String osName = prop.getProperty("os.name").toLowerCase();  
+        System.out.println(osName);  
+        if (osName.indexOf("linux") > -1) {  
+            font1 = "/usr/share/fonts/win/msyh.ttf";  
+        }  
+        if(!new File(font1).exists()) {  
+            throw new RuntimeException("字体文件不存在,影响导出pdf中文显示！"+font1);  
+        }
+        return font1;
+	 }
+        
 
 	public static void main(String[] args) {
 		/*

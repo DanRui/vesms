@@ -43,7 +43,7 @@
 <script type="text/javascript" src="<%=basePath%>/js/main.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/encoder.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/util/dictParse.js"></script>
-<script type="text/javascript" src="<%=basePath%>/js/util/printUtil.js"></script>
+<%-- <script type="text/javascript" src="<%=basePath%>/js/util/printUtil.js"></script> --%>
 
 <style media="print">
 	.Noprint{display:none;}
@@ -58,8 +58,6 @@
 		//System.out.println("未登陆！"+basePath);
 	%>
 		<script type="text/javascript">
-		
-			//console.log("<%=basePath%>/login.jsp");
 			window.location.href = "<%=basePath%>/login.jsp";
 		</script>
 	<%

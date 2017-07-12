@@ -85,35 +85,13 @@ String basePath = request.getContextPath();
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
-					if (row.createDate) {
-						return getNowFormatDate(new Date(row.createDate.time))
+					if (row.toFinanceTime) {
+						return getNowFormatDate(new Date(row.toFinanceTime.time))
 					} else {
 						return "";
 					}
 				}
-			},/*{
-				field : "isExported",
-				title : "导出状态",
-				width : "10%",
-				align : "center",
-				halign :"center",
-				resizable : true,
-				sortable : true,
-				formatter : function(value, row, index) {
-					if (value == "0") {
-						return "未导出";
-					} else if (value == "1") {
-						return "已导出";
-					}
-				},
-				styler : function(value, row, index) {
-					if (value == "0") {
-						return "color:red";
-					} else if (value == "1") {
-						return "color:green";
-					}
-				}
-			},*/{
+			},{
 				field : "payBussCount",
 				title : "业务单数",
 				width : "7%",

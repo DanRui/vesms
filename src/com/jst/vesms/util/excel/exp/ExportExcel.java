@@ -3,32 +3,25 @@ package com.jst.vesms.util.excel.exp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.engine.internal.StatisticalLoggingSessionEventListener;
-import org.springframework.context.support.StaticApplicationContext;
+import javax.annotation.Resource;
 
 import jxl.Cell;
-import jxl.CellType;
-import jxl.CellView;
 import jxl.DateCell;
 import jxl.Sheet;
 import jxl.SheetSettings;
 import jxl.Workbook;
 import jxl.format.Alignment;
-import jxl.format.Border;
-import jxl.format.BorderLineStyle;
 import jxl.format.Colour;
-import jxl.format.Font;
 import jxl.format.UnderlineStyle;
 import jxl.format.VerticalAlignment;
 import jxl.read.biff.BiffException;
@@ -40,7 +33,12 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+import com.jst.common.utils.DateUtil;
+import com.jst.vesms.dao.IImportDetailDao;
+import com.jst.vesms.dao.IPayImportDao;
 import com.jst.vesms.model.PayResultImport;
+import com.jst.vesms.model.PayResultImportDetail;
 import com.jst.vesms.util.excel.Constant;
 import com.jst.vesms.util.excel.ExcelProperties;
 
@@ -64,8 +62,11 @@ public class ExportExcel {
 	 *            文件存放路径
 	 * @return
 	 */
+	@Resource(name="importDetailDao")
+	private static IImportDetailDao importDetailDao ;
 	
-	
+	@Resource(name="payImportDao")
+	private static IPayImportDao payImportDao ;
 	//导出预览(不加密)
 	public static int exportExcelInWeb(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os) {
 		int result = 1;
@@ -998,35 +999,38 @@ public class ExportExcel {
 		     
 		     
 		     
-		     
-		     public static void readPayResultImport(File file) throws BiffException, IOException{
+		     public static PayResultImport readPayResultImport(File file) throws Exception{
 		    	 InputStream io = new FileInputStream(file.getAbsoluteFile());  
+		    	  PayResultImport payResultImport = new PayResultImport();
 		    	  Workbook readwb = Workbook.getWorkbook(io); 
 		    	  Sheet sheet = readwb.getSheet(0);
 		    	  // 第二行第一列的值
-		    	  Date date = null ;
-		    	  PayResultImport payResultImport = new PayResultImport();
-		    	  Cell cell = sheet.getCell(2, 1);
-		    	  System.out.println(cell.getContents());
-		    	  DateCell dc = (DateCell)cell;
-		    	  date = dc.getDate();	//获取单元格的date类型
-		    	  // 获取制表时间  
-		    	  payResultImport.setMarkTime(date);
 		    	  
+		    	  Cell cell = sheet.getCell(2, 1);
+		    	  String dateString = cell.getContents().replace("/", "-");
+		    	  System.out.println(cell.getContents());
+		    	  Date date = DateUtil.parse(dateString, "yyyy-MM-dd");
+		    	  /*DateCell dc = (DateCell)cell;
+		    	  date = dc.getDate();	//获取单元格的date类型
+*/		    	  // 获取制表时间  
+		    	  payResultImport.setMakeTime(date);
 		    	  Date date2 = new Date();
 		    	  // 获取导入时间
 		    	  payResultImport.setImportTime(date2);// new Date()为获取当前系统时间
 		    	  // 导入文件路径
 		    	  payResultImport.setFilePath(file+"");
+		    	  
+		    //	  payImportDao.save(payResultImport);
+		    	  return payResultImport;
 		     }
 		     
 		     
 		     
 		     
 		     public static void readSpecify(File file)throws Exception{  
-		    //	 List<PayResultImport>  list = new ArrayList<PayResultImport>();
-		   // 	 PayResultImport resultImport = new PayResultImport();  
-		    	 ArrayList<String> columnList = new ArrayList<String>();  
+		    	 List<PayResultImportDetail>  list = new ArrayList<PayResultImportDetail>();
+		    //	 PayResultImport resultImport = new PayResultImport();  
+		   // 	 ArrayList<String> columnList = new ArrayList<String>();  
 		    	    Workbook readwb = null;  
 		    	    InputStream io = new FileInputStream(file.getAbsoluteFile());  
 		    	    readwb = Workbook.getWorkbook(io);  
@@ -1036,19 +1040,73 @@ public class ExportExcel {
 		    	    // 获取列数
 		    //	    int rsColumns = readsheet.getColumns();  
 		    	    // 从第三行读取
-		    	    for (int i = 4; i < rsRows; i++) {  
+		    	    for (int i = 4; i < rsRows; i++) { 
+		    	    	PayResultImportDetail payResultImportDetail = new PayResultImportDetail();
+		    	    //	Cell[] cells = readsheet.getRow(i);
+		    	    //	System.out.println("--"+cells[0]);
+		    	    	// 获取国库受理单号
 		    	    	Cell cell = readsheet.getCell(0, i);  
-		    	        columnList.add(cell.getContents());  
-		    	      //  System.out.println(columnList);  
+		    	        payResultImportDetail.setRequestNo(cell.getContents());
+		    	        System.out.println("--"+cell.getContents());
+		    	        // 获取付款日期
+		    	        Cell cell1 = readsheet.getCell(1, i); 
+		    	        if(cell1.getContents()!=null && cell1.getContents()!=""){
+			    	        Date date = DateUtil.parse(cell1.getContents(), "yyyy-MM-dd HH:mm:ss");
+			    	        payResultImportDetail.setPayTime(date);
+			    	        System.out.println("--"+cell1.getContents());
+		    	        }
+		    	        // 获取清算日期
+		    	        Cell cell2 = readsheet.getCell(2, i);
+		    	        if(null!=cell2.getContents() && cell2.getContents()!=""){
+			    	        Date date1 = DateUtil.parse(cell2.getContents(), "yyyy-MM-dd HH:mm:ss");
+			    	        payResultImportDetail.setConfirmTime(date1);
+			    	        System.out.println("--"+cell2.getContents());
+		    	        }
+		    	        //支付单号
+		    	        Cell cell3 = readsheet.getCell(3, i);
+		    	        System.out.println("--"+cell3.getContents());
+		    	        payResultImportDetail.setPayNo(cell3.getContents());
+		    	        //原支付单号
+		    	        Cell cell4 = readsheet.getCell(4, i);
+		    	        System.out.println("--"+cell4.getContents());
+		    	        payResultImportDetail.setOriginalPayNo(cell4.getContents());
+		    	        // 资金说明
+		    	        Cell cell5 = readsheet.getCell(15, i);
+		    	        System.out.println("--"+cell5.getContents());
+		    	        payResultImportDetail.setPayComment(cell5.getContents());
+		    	        // 支付金额
+	    	        	Cell cell6 = readsheet.getCell(16, i);
+	    	        // 	payResultImportDetail.setPayAmount(Double.parseDouble(cell6.getContents()));
+	    	        	String numDouble = cell6.getContents().replace(",", "");
+	    	        	System.out.println(numDouble);
+	    	        	payResultImportDetail.setPayAmount(Double.parseDouble(numDouble));
+		    	        // 支付状态
+	    	        	Cell cell7 = readsheet.getCell(17, i);
+	    	        	System.out.println("--"+cell7.getContents());
+	    	        	payResultImportDetail.setPayResStatus(cell7.getContents());
+		    	        // 收款人名称
+	    	        	Cell cell8 = readsheet.getCell(18, i);
+	    	        	System.out.println("--"+cell8.getContents());
+	    	        	payResultImportDetail.setAccountName(cell8.getContents());
+		    	        // 收款人账户
+	    	        	Cell cell9 = readsheet.getCell(19, i);
+	    	        	System.out.println("--"+cell9.getContents());
+	    	        	payResultImportDetail.setAccountNo(cell9.getContents());
+		    	        // 收款人开户行
+	    	        	Cell cell10 = readsheet.getCell(20, i);
+	    	        	System.out.println("--"+cell10.getContents());
+	    	        	payResultImportDetail.setBankName(cell10.getContents());
+	    	        //	Serializable id = importDetailDao.save(payResultImportDetail);
+	    	        	System.out.println("------------------------------------");
 		    	    }  
-		    	    String[] ageString = new String[columnList.size()];  
+		    	   /* String[] ageString = new String[columnList.size()];  
 		    	    for (int i = 0; i < columnList.size(); i++) {  
 		    	    	if(columnList.get(i)!="" && null!=columnList.get(i)){
 		    	    		ageString[i] = columnList.get(i);  
 		    	    	}
 		    	        System.out.println(ageString[i]);  
 		    	        System.out.println();
-		    	    }
+		    	    }*/
 		    	}  
 		     
 		     
@@ -1062,32 +1120,11 @@ public class ExportExcel {
 		     
 		     
 	     public static void main(String[] args){
-	     /*     File file = new File("D:/国库导出支付信息模板.xls");
-	          
-	          System.out.println(xls2String(file,3));*/
-	  /*  	try {
-				readExcel("D:/国库导出支付信息模板.xls");
-			} catch (BiffException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-	  /*  	 File file = new File("D:/国库导出支付信息模板.xls");
-	    	try {
-				readSpecify(file);
+	    	 
+	         File file = new File("D:/国库导出支付信息模板.xls");
+	         try {
+	        	 readPayResultImport(file);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-	    	 File file = new File("D:/国库导出支付信息模板.xls");
-	    	 try {
-				readPayResultImport(file);
-			} catch (BiffException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1112,7 +1149,7 @@ public class ExportExcel {
 	
 	
 /*	public static void main(String[] args) {
-		ExcelProperties excelProperties = new ExcelProperties();
+/*		ExcelProperties excelProperties = new ExcelProperties();
 		// excelProperties.setBeginRows(2);
 		excelProperties.setColsHeader(new String[] { "序号", "车牌号码", "补贴金额", "车主姓名", "原开户银行", "原开户账户", "变更后补贴对象", "变更后银行","变更后银行账号","变更内容","批次号" });
 		excelProperties.setHeader("深圳市老旧车提前淘汰奖励补贴退款重新支付审核表(第X批)");
@@ -1124,8 +1161,8 @@ public class ExportExcel {
 		}
 		List<String[]> dataList = new ArrayList<String[]>();
 		dataList.add(new String[] { "1", "粤B2000", "10000.0", "警世通企业有限公司", "农业银行", "543513434354", "警世通企业有限公司", "工商银行", "1234521312","银行账户有误重新变更","batch_1" });
-		dataList.add(new String[] { "2", "粤B900xxx", "20000.0", "张三", "农业银行", "543513434354", "张绍刚", "工商银行", "1234521312","银行账户有误重新变更","batch_1" });
+		dataList.add(new String[] { "2", "粤B900xxx", "20000.0", "张三", "农业银行", "543513434354", "张绍刚", "工商银行", "1234521312","银行账户有误重新变更","batch_1" });*/
 	//	repExportExcelPreview(excelProperties, "ss", new int[] {5,13,10,18,15,18,20,15,18,23,8 }, dataList, outputStream);
-	 
-	}*/
+		
+//	}
 }

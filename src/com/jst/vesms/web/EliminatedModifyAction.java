@@ -504,6 +504,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		mv.addObject("openAccPromitFiles", openAccPromitFiles);
 		mv.addObject("agentProxyFiles", agentProxyFiles);
 		mv.addObject("agentProofFiles", agentProofFiles);
+		mv.addObject("signedApplyFiles", signedApplyFiles);
 		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
 		
 		// 获取业务流水记录表数据
@@ -555,6 +556,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		mv.addObject("openAccPromitFiles", openAccPromitFiles);
 		mv.addObject("agentProxyFiles", agentProxyFiles);
 		mv.addObject("agentProofFiles", agentProofFiles);
+		mv.addObject("signedApplyFiles", signedApplyFiles);
 		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
 		
 		// 获取业务流水记录表数据

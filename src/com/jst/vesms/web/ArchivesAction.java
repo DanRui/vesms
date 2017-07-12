@@ -57,6 +57,7 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String archiveBoxNo, String archivedStartDate,String archivedEndDate) throws Exception{
+		log.debug("ArchivesAction list is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
@@ -91,10 +92,12 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 	@RequestMapping("view")
 	//@Privilege(modelCode = "M_TEST_MANAGER",prvgCode = "VIEW")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
+		log.debug("ArchivesAction view is start");
 		String view = "ARCHIVES_APPLY.VIEW";
 		Archives object = archivesService.getById(id);
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.addObject("v", object);
+		log.debug("ArchivesAction view is end");
 		return mv;
 	}
 	
@@ -109,6 +112,7 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType,String applyNo,String batchNo,String archiveBoxNo) throws Exception{
+			log.debug("ArchivesAction archiveApplyList is start");
 			String returnStr="";
 			List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 			Page page = new Page();
@@ -135,9 +139,9 @@ private static final Log log = LogFactory.getLog(ConcludeAction.class);
 				page = archivesService.getApplyPage(page, list);
 				returnStr = writerPage(page);
 			} catch (Exception e) {
-				log.error("PayApplyAction applylist is Error:" + e, e);
+				log.error("PayApplyAction archiveApplyList is Error:" + e, e);
 			}
-				log.debug("PayApplyAction applylist is end");
+				log.debug("PayApplyAction archiveApplyList is end");
 	    return returnStr;
 	}
 	

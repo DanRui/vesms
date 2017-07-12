@@ -263,6 +263,17 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 		// 补贴对象变更证明材料
 		List accountChangeProofFiles = eliminatedCheckService.getAttachments("BTZHMBGZM", object.getApplyNo());
 		
+		mv.addObject("callbackFiles", callbackFiles);
+		mv.addObject("vehicleCancelProofFiles", vehicleCancelProofFiles);
+		mv.addObject("bankCardFiles", bankCardFiles);
+		mv.addObject("vehicleOwnerProofFiles", vehicleOwnerProofFiles);
+		mv.addObject("noFinanceProvideFiles", noFinanceProvideFiles);
+		mv.addObject("openAccPromitFiles", openAccPromitFiles);
+		mv.addObject("agentProxyFiles", agentProxyFiles);
+		mv.addObject("agentProofFiles", agentProofFiles);
+		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
+		mv.addObject("signedApplyFiles", signedApplyFiles);
+		
 		// 获取业务流水记录表数据
 		List<ActionLog> actionLogList = eliminatedCheckService.getActionLogList(id);
 		mv.getModel().put("busStatus", type);
@@ -285,6 +296,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 			/*if (StringUtil.isNotEmpty(checkOpinion)) {
 				checkOpinion = new String(checkOpinion.getBytes("ISO8859-1"), "UTF-8"); 
 			}*/
+			faultType = faultType.equals("请选择") == true ? null : faultType;
 			Map<String, Object> map = eliminatedCheckService.check(ids, checkType, faultType, checkOpinion, currentPost);
 			if (map.get("isSuccess").equals(true)) {
 				checkOk = true;
@@ -301,7 +313,7 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 		if(checkOk) {
 			return JsonUtil.toSuccessMsg(json.toString());
 		} else {
-			return JsonUtil.toErrorMsg(errorStr);
+			return JsonUtil.toErrorMsg(json.toString());
 		}
 	}
 	

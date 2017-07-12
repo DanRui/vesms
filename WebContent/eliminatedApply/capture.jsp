@@ -37,7 +37,7 @@
 		<%-- <script type="text/javascript" src="<%=basePath%>/js/main.js"></script> --%>
         <script language="javascript" type="text/javascript">
         		// 定义全局号牌号码变量
-        		var vehiclePlateNum = "<%=vehiclePlateNum%>";
+        		var vehiclePlateNum = "B" + "<%=vehiclePlateNum%>";
         		
         		// 定义照片上传服务器地址
         		var uploadServer = "<%=uploadServer%>";
@@ -990,18 +990,22 @@
 					if(http)
 					{
 						var htInfo = thumb1().Thumbnail_GetHttpServerInfo();
+						alert("ok1");
 						//alert(htInfo);
 						var msgs = [];
 						msgs = htInfo.split("##");
 						if (msgs != "") {
+							alert("ok2");
 							var str = "";
 							for (var i = 0 ; i < msgs.length - 1 ; i ++) {
 								var msg = msgs[i];
+								alert("ok3");
 								msg = eval('('+ msg + ')');
 								// 判断每张图片是否上传成功
 								if (msg.success) {
 									// 上传图片成功，保存图片路径到页面
 									str = str + msg.message.file + ",";
+									alert("ok4");
 								} else {
 									// 任意一张图片上传失败，返回重新提交
 									alert(msg.message);

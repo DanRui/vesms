@@ -827,9 +827,11 @@ public class EliminatedApplyAction extends BaseAction {
             	
             	String relativePath = tmpDir + File.separator + DateUtil.format(new Date(), DateUtil.DATE_PATTERN_1);
             	String path = contextPath + relativePath;
+            	System.out.println(path);
             	File savePath = new File(path);
             	if (! savePath.exists()) {
             		savePath.mkdirs();
+            		System.out.println("-------mkdirs ok-------");
             	}
             	
                 //保存

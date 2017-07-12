@@ -1666,7 +1666,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		outParams.put(23,  OracleTypes.VARCHAR); // 回收证明编号
 		
 		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
-		for (Map<String, Object> map : result) {
+		/*for (Map<String, Object> map : result) {
 			System.out.println(map.get("5"));   // 补贴类别
 			System.out.println(map.get("6"));   // 淘汰补贴金额
 			System.out.println(map.get("7"));   // 校验标志
@@ -1686,7 +1686,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			System.out.println(map.get("21"));   // 车辆状态
 			System.out.println(map.get("22"));   // 报废交售日期
 			System.out.println(map.get("23"));   // 回收证明编号
-		}
+		}*/
 		
 		if (null != result && result.size() > 0) {
 			return result.get(0);
@@ -1723,7 +1723,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		outParams.put(17,  OracleTypes.VARCHAR); // 返回信息
 		
 		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
-		for (Map<String, Object> map : result) {
+		/*for (Map<String, Object> map : result) {
 			System.out.println(map.get("3"));    // 车架号
 			System.out.println(map.get("4"));    // 燃料种类
 			System.out.println(map.get("5"));    // 使用性质
@@ -1739,7 +1739,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			System.out.println(map.get("15"));   // 车辆状态
 			System.out.println(map.get("16"));   // 返回标识
 			System.out.println(map.get("17"));   // 返回信息
-		}
+		}*/
 		
 		if (null != result && result.size() > 0) {
 			// 存储过程调用成功

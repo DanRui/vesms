@@ -78,8 +78,11 @@
 				var modifyTypes = $("#modifyType").combotree("getValues");
 				var id = '${v.id}';
 				var modifyResult = $('input[name="modifyResult"]:checked').val();
+				var bankCode = null;
+				var bankName = null;
 				if ($("#bankCodeNew").length > 0) {
-					var bankName = $("#bankCodeNew").combobox("getText");
+					bankCode = $("#bankCodeNew").combobox("getValue");
+					bankName = $("#bankCodeNew").combobox("getText");
 					$("input[name='bankName']").val(bankName);
 				}
 				
@@ -97,6 +100,12 @@
 							param.modifyTypes = modifyTypes;
 							param.id = id;
 							param.modifyResult = modifyResult;
+							param.bankName = bankName;
+							param.bankCode = bankCode;
+							param.bankAccountNo = $("input[name='bankAccountNo']").val();
+							param.agent = $("input[name='agent']").val();
+							param.agentMobileNo = $("input[name='agentMobileNo']").val();
+							param.agentIdentity = $("input[name='agentIdentity']").val();
 						},
 						success : function(data) {
 							var result = eval('(' + data + ')');

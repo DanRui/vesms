@@ -164,6 +164,27 @@ public class ApplySpecialAuthority extends BaseModel implements Serializable {
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
 	}
+
+	public ApplySpecialAuthority(Integer id, String applyNo,
+			String authorityType, String askUserCode, String askUserName,
+			Date askTime, String checkStatus, String checkUserCode,
+			String checkUserName, Date checkTime, String remark,
+			String verifyCode) {
+		super();
+		this.id = id;
+		this.applyNo = applyNo;
+		this.authorityType = authorityType;
+		this.askUserCode = askUserCode;
+		this.askUserName = askUserName;
+		this.askTime = askTime;
+		this.checkStatus = checkStatus;
+		this.checkUserCode = checkUserCode;
+		this.checkUserName = checkUserName;
+		this.checkTime = checkTime;
+		this.remark = remark;
+		this.verifyCode = verifyCode;
+	}
 	
+	public ApplySpecialAuthority() {}
 }
 

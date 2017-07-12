@@ -41,14 +41,14 @@ public class MenuAction extends BaseAction {
 
 		List<Menu> menuList = new ArrayList<Menu>();
 
-		JSONArray allMenu = null;
+		JSONArray allMenu = new JSONArray();;
 		JSONArray children = null;
 		JSONObject parentMenu = null;
 		JSONObject subMenu = null;
 		String userCode = "";
 		// 从基础平台加载用户权限列表
 		try {
-			log.debug("获取用户权限列表");
+			log.debug("获取用户信息");
 			if (null != this.getCurrentSession().getAttribute("LOGIN_INFO")) {
 				loginInfo = (Map<String, Object>) this.getCurrentSession().getAttribute("LOGIN_INFO");
 
@@ -56,62 +56,69 @@ public class MenuAction extends BaseAction {
 					userCode = (String) loginInfo.get("USER_CODE");
 				}
 			}
+			log.debug("获取session中的菜单信息");
+			if (null != this.getCurrentSession().getAttribute("MENU_INFO")) {
+				allMenu = (JSONArray)this.getCurrentSession().getAttribute("MENU_INFO");
+			} else {
+				log.debug("从基础平台重新加载菜单信息");
+				List<UserPrvg> userPrvgList = new WebServiceClient().getUserPrvgList(Constants.CURRENT_APPCODE, userCode, null);
+				
+				// 返回菜单列表
+				menuList = cacheService.getMenuListByUserPrvg(userPrvgList);
+		
+				for (Menu menu : menuList) {
+					String menuLevel = menu.getMenuLevel();
+		
+					if ("1".equals(menuLevel)) {
+						parentMenu = new JSONObject();
+						parentMenu.accumulate("menuCode", menu.getMenuCode());
+						parentMenu.accumulate("menuName", menu.getMenuName());
+						parentMenu.accumulate("menuPic", menu.getMenuPic());
+		
+						String menuCode = menu.getMenuCode();
+		
+						children = new JSONArray();
+		
+						for (Menu m : menuList) {
+							if ("1".equals(m.getMenuLevel())) {
+								continue;
+							}
+		
+							String parentMenuCode = m.getParentMenuCode();
+		
+							if (parentMenuCode.equals(menuCode)) {
+								subMenu = new JSONObject();
+								subMenu.accumulate("menuCode", m.getMenuCode());
+								subMenu.accumulate("menuName", m.getMenuName());
+								subMenu.accumulate("menuUrl", m.getMenuUrl());
+								subMenu.accumulate("openMode", m.getOpenMode());
+		
+								if ("dialog".equals(m.getOpenMode())) {
+									subMenu.accumulate("showType", m.getShowType());
+									subMenu.accumulate("width", m.getWidth());
+									subMenu.accumulate("height", m.getHeight());
+									subMenu.accumulate("params", m.getRemark());
+								}
+								
+								// 将模块的代码放到菜单中，传到页面
+								subMenu.accumulate("mdlCode", m.getMdlCode());
+		
+								children.add(subMenu);
+							}
+						}
+		
+						parentMenu.accumulate("children", children);
+		
+						allMenu.add(parentMenu);
+					}
+				}
+				this.getCurrentSession().setAttribute("MENU_INFO", allMenu);
+			}
+			
 			/*Object obj = SecurityUtils.getSubject().getPrincipal();
 			User user = (User)obj;
 			String userCode = user.getUserCode();
 			String userName = user.getUserName();*/
-			List<UserPrvg> userPrvgList = new WebServiceClient().getUserPrvgList(Constants.CURRENT_APPCODE, userCode, null);
-			
-			// 返回菜单列表
-			menuList = cacheService.getMenuListByUserPrvg(userPrvgList);
-			allMenu = new JSONArray();
-	
-			for (Menu menu : menuList) {
-				String menuLevel = menu.getMenuLevel();
-	
-				if ("1".equals(menuLevel)) {
-					parentMenu = new JSONObject();
-					parentMenu.accumulate("menuCode", menu.getMenuCode());
-					parentMenu.accumulate("menuName", menu.getMenuName());
-					parentMenu.accumulate("menuPic", menu.getMenuPic());
-	
-					String menuCode = menu.getMenuCode();
-	
-					children = new JSONArray();
-	
-					for (Menu m : menuList) {
-						if ("1".equals(m.getMenuLevel())) {
-							continue;
-						}
-	
-						String parentMenuCode = m.getParentMenuCode();
-	
-						if (parentMenuCode.equals(menuCode)) {
-							subMenu = new JSONObject();
-							subMenu.accumulate("menuCode", m.getMenuCode());
-							subMenu.accumulate("menuName", m.getMenuName());
-							subMenu.accumulate("menuUrl", m.getMenuUrl());
-							subMenu.accumulate("openMode", m.getOpenMode());
-	
-							if ("dialog".equals(m.getOpenMode())) {
-								subMenu.accumulate("showType", m.getShowType());
-								subMenu.accumulate("width", m.getWidth());
-								subMenu.accumulate("height", m.getHeight());
-								subMenu.accumulate("params", m.getRemark());
-							}
-							
-							// 将模块的代码放到菜单中，传到页面
-							subMenu.accumulate("mdlCode", m.getMdlCode());
-	
-							children.add(subMenu);
-						}
-					}
-	
-					parentMenu.accumulate("children", children);
-	
-					allMenu.add(parentMenu);
-				}
-			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();

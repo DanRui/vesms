@@ -27,7 +27,7 @@ public class PayResultImport {
 	private Integer id;
 	
 	// 制表时间
-	private Date markTime;
+	private Date makeTime;
 	
 	// 导入时间
 	private Date importTime;
@@ -68,13 +68,13 @@ public class PayResultImport {
 		this.id = id;
 	}
 
-	@Column(name = "MARK_TIME", unique = false, nullable = true)
-	public Date getMarkTime() {
-		return markTime;
+	@Column(name = "MAKE_TIME", unique = false, nullable = true)
+	public Date getMakeTime() {
+		return makeTime;
 	}
 
-	public void setMarkTime(Date markTime) {
-		this.markTime = markTime;
+	public void setMakeTime(Date makeTime) {
+		this.makeTime = makeTime;
 	}
 
 	@Column(name = "IMPORT_TIME", unique = false, nullable = true)

@@ -230,8 +230,15 @@ pageEncoding="utf-8"%>
 						</td>
 						<td class="view_table_left isFault">退回类型：</td>
 						<td class="view_table_right isFault">
-							<input id="faultType" class="easyui-combobox" name="faultType" data-options="editable:false,valueField:'id',textField:'text',url:'data/faultType.json',panelHeight:'auto'"/>
-							<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>  
+							<select id="faultType" name="faultType" style="width:100px">   
+    							<option>请选择</option>
+    							<option value="1">一般资料错误</option>   
+    							<option value="2">补贴账户错误</option>
+    							<option value="3">非法业务需终止</option>
+							</select>
+							<!-- <input id="faultType" class="easyui-combobox" name="faultType" data-options="editable:false,valueField:'id',
+							textField:'text',panelHeight:'auto',url:'data/faultType.json'"/> -->
+							<!-- <span style="color:red;text-align:center">&nbsp;*&nbsp;</span> -->
 						</td>
 					</tr>
 					<tr class="datagrid-row">
@@ -279,18 +286,22 @@ pageEncoding="utf-8"%>
 					$(this).hide();
 			});
 			
+			//$("#faultType + .combo").hide();
+			
 			// 如果是退回操作，则必需填写退回类型和退回原因
 			$("#checkType").combobox({
-				onChange : function() {
+				onSelect : function() {
 					var checkType = $(this).combobox("getValue");
 					$("td[class*='isFault']").each(function() {
 						if ("2" == checkType) {
 							$(this).show();
-							$("#faultType").validatebox({required:true});
+							//$('#faultType').next(".combo").show();
+							//$("#faultType").validatebox({required:true});
 							$("#checkOpinion").validatebox({required:true});
 						} else {
 							$(this).hide();
-							$("#faultType").validatebox({required:false});
+							//$('#faultType').next(".combo").hide();
+							//$("#faultType").validatebox({required:false});
 							$("#checkOpinion").validatebox({required:false});
 						}
 					});
@@ -300,7 +311,8 @@ pageEncoding="utf-8"%>
 			// 正常审核保存提交审核操作，后台更新受理表、动作流水日志表
 			$("#common-dialog-check-submit").click(function() {
 				var checkType = $("#checkType").combobox("getValue");
-				var faultType = $("#faultType").combobox("getValue");
+				//var faultType = $("#faultType").combobox("getValue");
+				var faultType = $("#faultType").val();
 				var checkOpinion = $("#checkOpinion").val();
 				
 				if (checkType == "" || (checkType != "1" && checkType != "2")) {
@@ -309,7 +321,7 @@ pageEncoding="utf-8"%>
 				}
 				
 				if (checkType == "2") {
-					if (faultType == "") {
+					if (faultType == "" || (faultType != "1" && faultType != "2" && faultType != "3")) {
 						alert("请选择退回类型！");
 						return false;
 					}
@@ -360,7 +372,8 @@ pageEncoding="utf-8"%>
 			// 修正重审核保存提交审核操作，后台更新受理表、动作流水日志表
 			$("#common-dialog-back-check-submit").click(function() {
 				var checkType = $("#checkType").combobox("getValue");
-				var faultType = $("#faultType").combobox("getValue");
+				//var faultType = $("#faultType").combobox("getValue");
+				var faultType = $("#faultType").val();
 				var checkOpinion = $("#checkOpinion").val();
 				
 				if (checkType == "" || (checkType != "1" && checkType != "2")) {
@@ -369,7 +382,7 @@ pageEncoding="utf-8"%>
 				}
 				
 				if (checkType == "2") {
-					if (faultType == "") {
+					if (faultType == "" || (faultType != "1" && faultType != "2" && faultType != "3")) {
 						alert("请选择退回类型！");
 						return false;
 					}

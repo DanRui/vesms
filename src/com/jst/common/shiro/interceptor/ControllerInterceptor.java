@@ -91,7 +91,22 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 		String methodName = currentMethod.getName();
 		log.debug("user time is :"+ (System.currentTimeMillis() - currentTime));
 		if(handlerMethod.getBean() instanceof LoginAction) {
-			
+			/*String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath();
+			if(!subject.isAuthenticated()) {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("text/html;charset=UTF-8");
+				PrintWriter writer = response.getWriter();
+
+				String script = "";
+				script += "<script type='text/javascript'>";
+				script += "window.alert('当前尚未登陆或会话已失效，请登陆后再进行操作');";
+				script += "window.location.href='" + url+"/login.jsp" + "';";
+				script += "</script>";
+
+				writer.print(script);
+				writer.flush();
+			}*/
+	
 		} else {
 			String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + request.getContextPath();
 			if(!subject.isAuthenticated()) {

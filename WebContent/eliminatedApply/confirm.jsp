@@ -157,7 +157,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">签字的受理表：</td>
 					<td class="view_table_right">
-						<input id="signedApplyFile" class="easyui-filebox" name="signedApplyFile" data-options="prompt:'选择文件',required:true,buttonText:'请选择'"/>
+						<input id="signedApplyFile" type="file" name="signedApplyFile" required="required" />
+						<!-- <input id="signedApplyFile" class="easyui-filebox" name="signedApplyFile" data-options="prompt:'选择文件',required:true,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
 						<a id="btnTakePhotoConfirmFile" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
 						<a id="btnUploadConfirmFile" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">上传</a>
@@ -247,10 +248,22 @@
 									// 更新受理表成功，跳转到打印受理回执单页面
 									
 									var url = basePath+"/eliminatedApply/receiptPreview.do?id="+id;
-									$("#common-dialog").dialog("refresh", url);
+									$("#common-dialog").dialog("close"); 
+									openDialog({
+									   	type : "PRINT_RECEIPT",
+										title : "补贴受理回执单打印预览",
+										width : 1040,
+										height : 500,
+										param: {reset:false,save:false,close:false},	
+										maximizable : true,
+										href : url
+									});
+									
+									//$("#common-dialog").dialog("refresh", url);
 									
 			                	} else {
-			                		Messager.show({
+			                		Messager.alert({
+			                			type:"error",
 										title:"&nbsp;",
 										content:data.message
 									});
@@ -259,6 +272,7 @@
 			            	}
 						});
 						
+						$("#eliminated-apply-list #eliminated-apply-grid").datagrid("load");
 						//$("#common-dialog").dialog("refresh", receipt_url); 
 					}
 				});
