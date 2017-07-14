@@ -340,11 +340,6 @@ public class VehicleRecycleServiceImpl extends BaseServiceImpl implements Vehicl
 			}
 		}
 		
-		// 解密车架号
-		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-		// 解密车架号
-		vehicleRecycle.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, vehicleRecycle.getVehicleIdentifyNo()));
-		
 		return vehicleRecycle;
 	}
 

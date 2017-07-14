@@ -14,8 +14,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=8" >
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" >
+        <meta http-equiv="X-UA-Compatible" content="IE=5">
         <title>抓拍上传</title>
         <link rel="stylesheet" type="text/css" href="<%=basePath%>/js/plugins/easyui/themes/ui-cupertino/easyui.css">
 		<link rel="stylesheet" type="text/css" href="<%=basePath%>/js/plugins/easyui/themes/icon.css">
@@ -990,22 +989,19 @@
 					if(http)
 					{
 						var htInfo = thumb1().Thumbnail_GetHttpServerInfo();
-						alert("ok1");
 						//alert(htInfo);
 						var msgs = [];
 						msgs = htInfo.split("##");
 						if (msgs != "") {
-							alert("ok2");
 							var str = "";
 							for (var i = 0 ; i < msgs.length - 1 ; i ++) {
 								var msg = msgs[i];
-								alert("ok3");
-								msg = eval('('+ msg + ')');
+								msg = $.parseJSON(msg);
+								//msg = eval('('+ msg + ')');
 								// 判断每张图片是否上传成功
 								if (msg.success) {
 									// 上传图片成功，保存图片路径到页面
 									str = str + msg.message.file + ",";
-									alert("ok4");
 								} else {
 									// 任意一张图片上传失败，返回重新提交
 									alert(msg.message);
@@ -1582,10 +1578,10 @@
         </script>
     </head>
 
-<body onload="Load()" onunload="Unload()">
+<body onload="Load()" onunload="Unload()" style="width: 700px;">
 
     <div>
-        <object id="view1" type="application/x-eloamplugin" width="600" height="300" name="view"></object>
+        <object id="view1" type="application/x-eloamplugin" width="700" height="300" name="view"></object>
         <!-- <object id="view2" type="application/x-eloamplugin" width="600" height="300" name="view"></object> -->
     </div>
 

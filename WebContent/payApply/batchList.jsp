@@ -181,7 +181,7 @@ String basePath = request.getContextPath();
 								//文件预览 
 								openDialog({
 									   	type : "batch_List",
-										title : "文件预览",
+										title : "审批表查看",
 										width : 300,
 										height : 200,
 										param: {reset:false,save:false,close:false},

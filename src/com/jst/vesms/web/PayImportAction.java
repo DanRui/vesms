@@ -152,7 +152,7 @@ private static final Log log = LogFactory.getLog(PayImportAction.class);
 		        File file1 = new File(path);
 		        try {
 		        	// 把国库数据导入数据库
-					payImportService.readPayImport(file1);
+					payImportService.savePayImport(file1);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

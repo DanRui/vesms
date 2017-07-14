@@ -32,28 +32,42 @@ String basePath = request.getContextPath();
 			url : basePath+"/payImport/list.do",
 			method : "post",
 			rownumbers : true,
-			sortName : "makeTime",
+			sortName : "importTime",
 			sortOrder : "desc",
 			columns : [ [ {
 				field : "id",
 				checkbox : true,
 				width : "2%"
 			},{
-				field : "importTime",
+				field : "makeTime",
 				title : "制表时间",
 				width : "10%",
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true
+				sortable : true,
+				formatter : function (value, row, index) {
+					if (row.makeTime) {
+						return getNowFormatDate(new Date(row.makeTime.time))
+					} else {
+						return "";
+					}
+				}
 			},{
-				field : "makeTime",
+				field : "importTime",
 				title : "导入时间",
 				width : "10%",
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true
+				sortable : true,
+				formatter : function (value, row, index) {
+					if (row.importTime) {
+						return getNowFormatDate(new Date(row.importTime.time))
+					} else {
+						return "";
+					}
+				}
 			},{
 				field : "recordCountTotal",
 				title : "记录数",

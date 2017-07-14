@@ -225,14 +225,14 @@ String createDate = request.getParameter("createDate"); */
 			}  */
 		}).datagrid("initSearch",{
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/sysDict/getDictListByType.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
-					{field:"vehicleOwner",title:"受理单号:",type:"text"}
+					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					{field:"applyNo",title:"受理单号:",type:"text"}
 				//	{field:"batchToFinanceStatus",title:"报财委状态:",type:"combobox", panelHeight:true,url:basePath+"/data/toFinanceStatus.json", text:"name", value:"value"}
 					/* {field:"payBatchResStatus",title:"拨付导出状态:",type:"combobox", url:basePath+"/data/batchExpStatus.json", text:"name", value:"value"} */
 					],
 			tools:[
 			       
-			      {type:"DELETE",title:"删除",/* url:basePath+"/payResult/delete.do", */ fn:function() {
+			      {type:"DELETE",title:"移出", fn:function() {
 			    	  	var selectedRows = this.datagrid("getSelections");
 						var infoMsg = null;
 						infoMsg = selectedRows.length < 1 ? "请至少选择一条记录" : null;
@@ -248,7 +248,7 @@ String createDate = request.getParameter("createDate"); */
 								content : infoMsg
 							});
 						} else {
-							$.messager.confirm("确认框",'你确定删除吗',function(r){
+							$.messager.confirm("确认框",'你确定移出吗',function(r){
 							if(r){								
 						 	$.get(basePath+"/payApply/repApplyDelete.do",{ids:ids,batchId:'${v.id}'},function(data) {
 					 			Messager.alert({

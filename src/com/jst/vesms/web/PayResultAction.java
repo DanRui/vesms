@@ -106,10 +106,10 @@ public class PayResultAction extends BaseAction{
 			sb.append("and t.batch_no = '").append(batchNo).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
-			sb.append("and t.vehicleOwner = '").append(vehicleOwner).append("' ");
+			sb.append("and t.vehicle_Owner = '").append(vehicleOwner).append("' ");
 		}
 		if(StringUtil.isNotEmpty(toFinanceNo)) {
-			sb.append("and m.toFinanceNo = '").append(toFinanceNo).append("' ");
+			sb.append("and m.to_Finance_No = '").append(toFinanceNo).append("' ");
 		}
 		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and t.batch_no is not null and repeated_batch_no is null ");
 		sb.append(" order by "+orderBy+" "+order+" ");
@@ -124,7 +124,7 @@ public class PayResultAction extends BaseAction{
 	}
 	
 
-	@RequestMapping("view")
+/*	@RequestMapping("view")
 	@Privilege(modelCode = "M_MARK_NOR_APPLY", prvgCode = "QUERY")
 	public ModelAndView View(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
 		log.debug("PayResultAction View is start");
@@ -134,8 +134,17 @@ public class PayResultAction extends BaseAction{
 		mv.addObject("v", object);
 		log.debug("PayResultAction View is end");
 		return mv;
-	}
+	}*/
 
+	//去正常标记页面
+	@RequestMapping("batchMarkView")
+	public ModelAndView batchMarkView() {
+		log.debug("PayResultAction batchMarkView is start");
+		String view = "PAY_RESULT.BATCH_MARK_VIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		log.debug("PayResultAction batchMarkView is end");
+		return mv;
+	}
 	
 	
 	/**
@@ -187,7 +196,7 @@ public class PayResultAction extends BaseAction{
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
 					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum,String vehicleType, String vehiclePlateType, String vehicleOwner, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String repeatedBatchNo,String toFinanceNo) throws Exception{
 		log.debug("PayResultAction getRepBatchList is start");
-		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
+		// List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
 		page.setPageNo(pageNo);
 		page.setPageSize(pageSize);
@@ -222,10 +231,10 @@ public class PayResultAction extends BaseAction{
 			sb.append("and t.repeated_batch_No = '").append(repeatedBatchNo).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
-			sb.append("and t.vehicleOwner = '").append(vehicleOwner).append("' ");
+			sb.append("and t.vehicle_Owner like '%").append(vehicleOwner).append("%' ");
 		}
 		if(StringUtil.isNotEmpty(toFinanceNo)) {
-			sb.append("and m.toFinanceNo = '").append(toFinanceNo).append("' ");
+			sb.append("and m.to_Finance_No = '").append(toFinanceNo).append("' ");
 		}
 		sb.append("and t.bussiness_status = '1' and t.current_post = 'BFJGBJG' and repeated_batch_no is not null ");
 		sb.append(" order by "+orderBy+" "+order+" ");
@@ -238,6 +247,20 @@ public class PayResultAction extends BaseAction{
 		log.debug("PayResultAction getRepBatchList is end");
 	    return returnStr;
 	}
+	
+	
+	
+	//去重报标记页面
+		@RequestMapping("repBatchMarkView")
+		public ModelAndView repBatchMarkView(){
+			log.debug("PayResultAction repBatchMarkView is start");
+			String view = "PAY_RESULT.BATCH_MARK_VIEW";
+			ModelAndView mv = new ModelAndView(getReturnPage(view));
+			log.debug("PayResultAction repBatchMarkView is end");
+			return mv;
+		}
+	
+	
 	
 	/**
 	 * 拨付结果标记

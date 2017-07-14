@@ -83,7 +83,7 @@ String basePath = request.getContextPath();
 						<td class="view_table_right">${v.inputUserName }</td>
 						<td class="view_table_left">录入时间：</td>
 						<td class="view_table_right">
-							<fmt:formatDate value="${v.inputTime }" pattern="yyyy-MM-dd hh:mm:ss" type="date" dateStyle="long" />
+							<fmt:formatDate value="${v.inputTime }" pattern="yyyy-MM-dd HH:mm:ss" type="date" dateStyle="long" />
 						</td>
 					</tr>
 					<%-- <tr class="datagrid-header-row classify-tr">

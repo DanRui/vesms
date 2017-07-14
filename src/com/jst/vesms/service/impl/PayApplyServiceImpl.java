@@ -517,7 +517,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 					String des_key = PropertyUtil.getPropertyValue("DES_KEY");
 					bankAccountNo = EncryptUtils.decryptDes(des_key, apply.getBankAccountNo());
 					String[] strings = new String[]{count+"", apply.getSubsidiesMoney().toString(),"39999",apply.getBankCode(),apply.getVehicleOwner().toString(),
-							bankAccountNo,apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算("+apply.getId().toString()+")"};
+							bankAccountNo,apply.getBankName().toString(),apply.getVehiclePlateNum().toString()+"(第"+batchMain.getToFinanceNo()+"批老旧车淘汰补贴)已核非公务卡结算(ID:"+apply.getId()+")"};
 					dataList.add(strings);
 				}
 			}

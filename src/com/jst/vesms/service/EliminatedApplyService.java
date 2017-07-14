@@ -95,8 +95,6 @@ public interface EliminatedApplyService extends BaseService {
 	
 	public boolean saveAttachment(String type, Integer id, String absFilePath, String businessType) throws Exception;
 
-	public Page filterNoConfirm(Page page, List<PropertyFilter> filter) throws Exception;
-	
 	public List<ActionLog> getActionLogList(Integer id) throws Exception;
 	
 	public Map<String, Object> saveArchive(Integer id) throws Exception;

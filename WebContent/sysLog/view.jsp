@@ -40,16 +40,16 @@ String basePath = request.getContextPath();
 					<td class="view_table_left">操作Mac地址：</td>
 					<td class="view_table_right">${v.mac }</td>
 					<td class="view_table_left">操作时间</td>
-					<td class="view_table_right"><fmt:formatDate value="${v.opeTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+					<td class="view_table_right"><fmt:formatDate value="${v.opeTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				</tr>
 				<tr class="datagrid-row">
 					<td class="view_table_left">操作开始时间：</td>
 					<td class="view_table_right">
-						<fmt:formatDate value="${v.startTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd hh:mm:ss"/>
+						<fmt:formatDate value="${v.startTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd HH:mm:ss"/>
 					</td>
 					<td class="view_table_left">操作结束时间：</td>
 					<td class="view_table_right">
-						<fmt:formatDate value="${v.endTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd hh:mm:ss"/>
+						<fmt:formatDate value="${v.endTime}" type="date" dateStyle="long" pattern="yyyy-MM-dd HH:mm:ss"/>
 					</td>
 					<td class="view_table_left">业务操作用时：</td>
 					<td class="view_table_right">${v.useTime} ms

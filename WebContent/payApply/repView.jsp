@@ -56,7 +56,9 @@ String createDate = request.getParameter("createDate"); */
 				</c:if>
 			</td>
 			<td class="view_table_left">批次生成时间：</td>
-			<td class="view_table_right">${v.createDate }</td>
+			<td class="view_table_right">
+			<fmt:formatDate value="${v.createDate}" type="time" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</td>
 		</tr>
 		<tr class="datagrid-row">
 			<td class="view_table_left">拨付结果详情：</td>
@@ -118,7 +120,7 @@ String createDate = request.getParameter("createDate"); */
 			},{
 				field : "vehicleTypeName",
 				title : "车辆类型",
-				width : "8%",
+				width : "12%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -127,7 +129,7 @@ String createDate = request.getParameter("createDate"); */
 			{
 				field : "vehicleIdentifyNo",
 				title : "车架号",
-				width : "12%",
+				width : "20%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -135,7 +137,7 @@ String createDate = request.getParameter("createDate"); */
 			},{
 				field : "vehicleOwner",
 				title : "车主",
-				width : "10%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,

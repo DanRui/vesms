@@ -5,5 +5,5 @@ import java.io.File;
 import com.jst.common.service.BaseService;
 
 public interface PayImportService extends BaseService{
-	public void readPayImport(File file) throws Exception;
+	public void savePayImport(File file) throws Exception;
 }

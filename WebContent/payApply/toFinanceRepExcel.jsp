@@ -48,11 +48,15 @@ String basePath = request.getContextPath();
 		$("#excel_file").hide();
 		$("#pdf_file").hide();
 		$("#preview_file").hide();
+		$.ajaxSetup({  
+		    async : false  
+		}); 
 		$("#ConfirmButton").click(function(){
 			var password=$("#password").val();
 			$("#confirmId").form("submit", {
 				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 				success : function(data) {
+					$("#ConfirmButton").attr("disabled","true");
 					var data = eval('(' + data + ')');
 					if (data.success) {
 						Messager.alert({
@@ -80,7 +84,7 @@ String basePath = request.getContextPath();
 						
 						var previewPath = '<%=basePath%>/payApply/fileDownload.do?batchNo='+'${v.batchNo}'+'&filepath=' + filepath[2];
 						$("#preview_file").attr("href", previewPath);
-						$("#preview_file").text("预览文件，点击下载");
+						$("#preview_file").text("审批表文件，点击下载");
 						
 					} else {
 						Messager.alert({

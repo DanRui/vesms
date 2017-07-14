@@ -502,25 +502,6 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			}
 		}
 		
-		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
-		// 解密车架号
-		eliminatedApply.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getVehicleIdentifyNo()));
-		
-		// 解密银行账号
-		eliminatedApply.setBankAccountNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getBankAccountNo()));
-		
-		// 解密车主手机号
-		eliminatedApply.setMobile(EncryptUtils.decryptDes(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
-		
-		// 解密经办人手机号 
-		eliminatedApply.setAgentMobileNo(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
-		
-		// 解密车主身份证明号
-		eliminatedApply.setVehicleOwnerIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
-		
-		// 解密经办人身份证号
-		eliminatedApply.setAgentIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
-		
 		return eliminatedApply;
 	}
 
@@ -897,12 +878,14 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	public boolean saveConfirm(Integer id, String signedApplyFiles) throws Exception {
 		// 更新受理确认时间、业务流水记录
 		// 用户Code
+		log.debug("EliminatedApplyServiceImpl saveConfirm is start");
 		@SuppressWarnings("unchecked")
 		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
 		String userCode = (String) loginInfo.get("USER_CODE");
 		String userName = (String) loginInfo.get("USER_NAME");
 		// 从数据库获取数据，无需解密，方便更新校验码（不调用this.getById(id)）
 		EliminatedApply apply = (EliminatedApply) this.get(id);
+		log.debug("EliminatedApplyServiceImpl saveConfirm get apply is not null : " + (apply != null));
 		if (null != apply) {
 			// 增加受理确认表附件记录
 			if (StringUtil.isNotEmpty(signedApplyFiles)) {
@@ -947,6 +930,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 			actionLog.setUpdateTime(new Date());
 			actionLog.setCurrentPost("CKSLG");
 			Serializable logId = actionLogDao.save(actionLog);
+			log.debug("EliminatedApplyServiceImpl saveConfirm save actionLog success : " + (logId != null));
 			if (null != logId) {
 				// 流水记录表插入成功，则更新业务受理表；否则，回滚。
 				apply.setPrePost("CKSLG"); // 更新上一岗位是窗口受理岗
@@ -1019,30 +1003,34 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 					log.error("SuperviseWebServiceClient call is error:"+e, e);
 					apply.setVerifyCode("1");
 				}
-				
+				log.debug("更新后校验码为：" + apply.getVerifyCode());
 				apply.setLastUpdateUser(userName); // 处理人
 				apply.setLastUpdateUserCode(userCode); // 处理人代码
 				
+				log.debug("update apply start");
 				eliminatedApplyDao.update(apply);
 				// 更新成功，报废车辆信息表受理状态更改为已受理
+				log.debug("get VehicleRecycle is start");
 				VehicleRecycle vehicle = vehicleRecycleService.getByNumAndType(vehiclePlateNum, vehiclePlateType);
+				log.debug("get VehicleRecycle is success : " + (vehicle != null));
 				if (null != vehicle) {
 					vehicle.setStatus("1"); // 更新受理状态为已受理
 					vehicleRecycleService.update(vehicle);
+					log.debug("update VehicleRecycle is end");
 				} else {
+					log.debug("update VehicleRecycle is error");
 					return false;
 				}
 				
 			} else {
+				log.debug("EliminatedApplyServiceImpl saveConfirm save actionLog is error");
 				return false;
 			}
 		} else {
+			log.debug("EliminatedApplyServiceImpl get apply is error");
 			return false;
 		}
-		
-		// 更新确认受理表文件位置到正式路径
-		
-		// 
+		log.debug("EliminatedApplyServiceImpl saveConfirm is end");
 		return true;
 	}
 
@@ -1211,15 +1199,6 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		return page;
 	}
 
-	/**
-	 * 
-	 * TODO 查询受理未确认的受理单.
-	 * @see com.jst.vesms.service.EliminatedApplyService#filterNoConfirm(com.jst.common.utils.page.Page)
-	 */
-	public Page filterNoConfirm(Page page, List<PropertyFilter> filter) throws Exception {
-		return page;
-	}
-	
 	/**
 	 * 
 	 * TODO 通过Id获取业务流水表记录.

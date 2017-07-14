@@ -5,9 +5,9 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import jxl.Cell;
-import jxl.DateCell;
 import jxl.Sheet;
 import jxl.Workbook;
 
@@ -42,18 +42,20 @@ public class ImportExcel {
    	  payResultImport.setFilePath(file+"");
    	  
    	  //payImportDao.save(payResultImport);
-   	readwb.close(); 
-   	io.close();
+	   	readwb.close(); 
+	   	io.close();
    	  return payResultImport;
     }
     
     
     
     
-    public static PayResultImportDetail readSpecify(File file,PayResultImportDetail payResultImportDetail)throws Exception{  
+    public static List<PayResultImportDetail> readSpecify(File file,Integer payImportId)throws Exception{  
    //	 List<PayResultImport>  list = new ArrayList<PayResultImport>();
   // 	 PayResultImport resultImport = new PayResultImport();  
    //	 ArrayList<String> columnList = new ArrayList<String>();  
+    	PayResultImportDetail payResultImportDetail;
+    	List<PayResultImportDetail>  list = new ArrayList<PayResultImportDetail>();
    	    Workbook readwb = null;  
    	    InputStream io = new FileInputStream(file.getAbsoluteFile());  
    	    readwb = Workbook.getWorkbook(io);  
@@ -67,6 +69,8 @@ public class ImportExcel {
    	    	Cell[] cells = readsheet.getRow(i);
    	    	System.out.println("--"+cells[0]);
    	    	payResultImportDetail = new PayResultImportDetail();
+   	    	//获取主表id
+   	    	payResultImportDetail.setPayImportId(payImportId);
    	    	// 获取国库受理单号
    	    	Cell cell = readsheet.getCell(0, i);  
    	        payResultImportDetail.setRequestNo(cell.getContents());
@@ -92,6 +96,14 @@ public class ImportExcel {
    	        // 资金说明
    	        Cell cell5 = readsheet.getCell(15, i);
    	        payResultImportDetail.setPayComment(cell5.getContents());
+   	        
+   	        // 业务ID 
+   	        String str[] = cell5.getContents().split("ID:");
+   	        String str1 = str[1];
+   	        String str2[] = str1.split(")");
+   	        Integer applyId= Integer.parseInt(str2[0]);
+   	        payResultImportDetail.setApplyId(applyId);
+   	     
    	        // 支付金额
 	        	Cell cell6 = readsheet.getCell(16, i);
 	        	String numDouble = cell6.getContents().replace(",", "");
@@ -109,6 +121,7 @@ public class ImportExcel {
 	        	Cell cell10 = readsheet.getCell(20, i);
 	        	payResultImportDetail.setBankName(cell10.getContents());
 	        //	importDetailDao.save(payResultImportDetail);
+	        	list.add(payResultImportDetail);
    	    }  
    	   /* String[] ageString = new String[columnList.size()];  
    	    for (int i = 0; i < columnList.size(); i++) {  
@@ -120,7 +133,7 @@ public class ImportExcel {
    	    }*/
    	    readwb.close();
    	    io.close();
-   	    return payResultImportDetail;
+   	    return list;
    	}  
     
 

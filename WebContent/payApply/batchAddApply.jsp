@@ -120,12 +120,14 @@ String basePath = request.getContextPath();
 			] ],
 		}).datagrid("initSearch",{
 			columns:[{field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
-					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/data/vehiclePlateType.json", text:"name", value:"value"},
-					{field:"vehicleOwner",title:"受理单号:",type:"text"}					
+					{field:"vehiclePlateType",title:"号牌种类:",type:"combobox",url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					{field:"applyNo",title:"受理单号:",type:"text"}					
 					],
 			tools:[
-				  {type:"QUERY"}
+				  {type:"QUERY"},
+				  {type:"CLEAR"}
 			     ],
+			module:"M_ADD_BATCH",
 			shownum:3,
 		})
  

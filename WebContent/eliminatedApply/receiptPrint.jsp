@@ -164,7 +164,8 @@
 			var id = ${v.id};
 			
 			$("#btnPrintReceipt").click(function() {
-				printReceipt();
+				onPrint();
+				//printReceipt();
 			});
 			
 			$("#btnContinueApply").click(function() {
@@ -190,6 +191,12 @@
 				//$("#common-dialog").dialog({title:""}).dialog("restore").dialog("center");
 			});
 		});
+		
+		// 打印受理回执单
+		function onPrint() {
+			var url = "<%=basePath%>" + "/eliminatedApply/printReceipt.do?id="+"${v.id}";
+			window.open(url, '_blank');
+		}
 		
 		function printReceipt() {
 			var html = $("#printArea").html();

@@ -996,7 +996,8 @@
 							var str = "";
 							for (var i = 0 ; i < msgs.length - 1 ; i ++) {
 								var msg = msgs[i];
-								msg = eval('('+ msg + ')');
+								msg = $.parseJSON(msg);
+								//msg = eval('('+ msg + ')');
 								// 判断每张图片是否上传成功
 								if (msg.success) {
 									// 上传图片成功，保存图片路径到页面
@@ -1577,10 +1578,10 @@
         </script>
     </head>
 
-<body onload="Load()" onunload="Unload()">
+<body onload="Load()" onunload="Unload()" style="width: 700px;">
 
     <div>
-        <object id="view1" type="application/x-eloamplugin" width="600" height="300" name="view"></object>
+        <object id="view1" type="application/x-eloamplugin" width="700" height="300" name="view"></object>
         <!-- <object id="view2" type="application/x-eloamplugin" width="600" height="300" name="view"></object> -->
     </div>
 
@@ -1620,10 +1621,10 @@
             <input class="submit_01" type="button" value="停止"	onclick="StopMainRecord()" /> -->
             <!-- <input class="submit_01" type="button" value="副头录像"	onclick="StartAssistRecord()" />
             <input class="submit_01" type="button" value="停止"	onclick="StopAssistRecord()" />		 -->
-			<input class="submit_01" type="button" value="缩略图多张上传"	onclick="UploadThumbToServer()" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer()" />
             <!-- <input class="submit_01" type="button" value="上传本地文件"	onclick="UploadToHttpServer()" /> -->
-            <input class="submit_01" type="button" value="扫描直接上传"	onclick="ScanToHttpServer()" />
-			<br/>
+            <!-- <input class="submit_01" type="button" value="扫描直接上传"	onclick="ScanToHttpServer()" />
+			<br/> -->
             <!-- <input class="submit_01" type="button" value="条码/二维码识别"	onclick="Barcode()" />
             <input class="submit_01" type="button" value="MD5" onclick="GetImgMD5()" />
             -->

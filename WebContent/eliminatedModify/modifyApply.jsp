@@ -514,7 +514,7 @@
 				$("#btnTakePhotoCallbackProofUpdate").click(function() {
 					var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -541,7 +541,7 @@
 				$("#btnTakePhotoVehicleCancelProofUpdate").click(function() {
 					var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -568,7 +568,7 @@
 				$("#btnTakePhotoVehicleOwnerProofUpdate").click(function() {
 					var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -595,7 +595,7 @@
 				$("#btnTakePhotoBankCardUpdate").click(function() {
 					var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -622,7 +622,7 @@
 				$("#btnTakePhotoNoFinanceProvideUpdate").click(function() {
 					var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -649,7 +649,7 @@
 				$("#btnTakePhotoOpenAccPromitUpdate").click(function() {
 					var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -676,7 +676,7 @@
 				$("#btnTakePhotoAgentProxyProofUpdate").click(function() {
 					var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	
@@ -703,7 +703,7 @@
 				$("#btnTakePhotoAgentProofUpdate").click(function() {
 					var vehiclePlateNum = '${v.vehiclePlateNum}'; 
 					// 弹出高拍仪抓拍图片界面
-					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "toolbar=yes,width=1300,height=600,status=no,scrollbars=yes,resize=yes,menubar=no");
+					var parentValue = window.showModalDialog("eliminatedModify/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 	        	
 		        	//alert(parentValue.filepath);
 		        	

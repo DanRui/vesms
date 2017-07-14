@@ -76,7 +76,7 @@ public class ConcludeAction extends BaseAction{
 		page.setOrderBy(orderBy);
 		String returnStr = "";
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
-			list.add(new PropertyFilter("EQS_vehiclePlateNum",vehiclePlateNum));
+			list.add(new PropertyFilter("LIKES_vehiclePlateNum",vehiclePlateNum));
 		}
 		if(StringUtil.isNotEmpty(vehiclePlateType)) {
 			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));
@@ -191,7 +191,7 @@ public class ConcludeAction extends BaseAction{
 		page.setOrderBy(orderBy);
 		String returnStr = "";
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
-			list.add(new PropertyFilter("EQS_vehiclePlateNum",vehiclePlateNum));
+			list.add(new PropertyFilter("LIKES_vehiclePlateNum",vehiclePlateNum));
 		}
 		if(StringUtil.isNotEmpty(vehiclePlateType)) {
 			list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));

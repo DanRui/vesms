@@ -238,6 +238,9 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 			view = "ELIMINATED_CHECK.BACK_CHECK";
 		}
 		EliminatedApply object = eliminatedCheckService.getById(id);
+		
+		object = this.getApplyWithoutEncryption(object);
+		
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		
 		// 获得图片附件表数据
@@ -317,4 +320,36 @@ private static final Log log = LogFactory.getLog(EliminatedCheckAction.class);
 		}
 	}
 	
+	/**
+	 * 
+	 * <p>Description: 解密车架号、车主身份信息、银行账号等信息，返回给页面，防止service层提交。</p>
+	 * @param eliminatedApply 受理表对象 EliminatedApply
+	 * @return EliminatedApply
+	 *
+	 */
+	private EliminatedApply getApplyWithoutEncryption(
+			EliminatedApply eliminatedApply) {
+		
+		// 解密车架号等数据，防止在service层更新数据到数据库
+		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+		// 解密车架号
+		eliminatedApply.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getVehicleIdentifyNo()));
+		
+		// 解密银行账号
+		eliminatedApply.setBankAccountNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getBankAccountNo()));
+		
+		// 解密车主手机号
+		eliminatedApply.setMobile(EncryptUtils.decryptDes(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
+		
+		// 解密经办人手机号 
+		eliminatedApply.setAgentMobileNo(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+		
+		// 解密车主身份证明号
+		eliminatedApply.setVehicleOwnerIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+		
+		// 解密经办人身份证号
+		eliminatedApply.setAgentIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+		
+		return eliminatedApply;
+	}
 }

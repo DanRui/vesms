@@ -196,9 +196,9 @@ String basePath = request.getContextPath();
 								reset:false,
 								buttons:[
 										{id:"pay_res_mark_save",text:"保存",iconCls:"icon-save",handler:function(){
-											var checkType = $("#checkType").combobox('getValue');
-											var remark = $("#checkOpinion").val();
-											var faultType =$('#faultType').val();
+											var checkType = $("#resultType").combobox('getValue');
+											var remark = $("#resultOpinion").val();
+											var faultType =$('#fauType').val();
 											
 											if (checkType == "" || (checkType != "1" && checkType != "2")) {
 												alert("请选择审批操作！");
@@ -233,7 +233,7 @@ String basePath = request.getContextPath();
 									]
 								},
 									maximizable : true,
-									href : basePath+"/payResult/batchMarkRes.jsp"
+									href : basePath+"/payResult/repBatchMarkView.do"
 							});
 						} 
 				 	}},

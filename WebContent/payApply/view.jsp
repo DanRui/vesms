@@ -44,7 +44,9 @@ String createDate = request.getParameter("createDate"); */
 				</c:if>
 			</td>
 			<td class="view_table_left">批次生成时间：</td>
-			<td class="view_table_right">${v.createDate }</td>
+			<td class="view_table_right">
+			<fmt:formatDate value="${v.createDate}" type="time" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</td>
 		</tr>
 		<tr class="datagrid-row">
 			<td class="view_table_left">拨付结果详情：</td>

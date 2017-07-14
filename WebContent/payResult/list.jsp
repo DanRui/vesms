@@ -73,7 +73,7 @@ String basePath = request.getContextPath();
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true,
+				sortable : true
 			},{
 				field : "vehicleTypeName",
 				title : "车辆类型",
@@ -98,7 +98,7 @@ String basePath = request.getContextPath();
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true,
+				sortable : true
 			},{
 				field : "subsidiesMoney",
 				title : "补贴金额（元）",
@@ -234,7 +234,7 @@ String basePath = request.getContextPath();
 											]
 									},
 								maximizable : true,
-								href : basePath+"/payResult/batchMarkRes.jsp"
+								href : basePath+"/payResult/batchMarkView.do"
 							});
 							
 							

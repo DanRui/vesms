@@ -462,6 +462,9 @@ public class EliminatedApplyAction extends BaseAction {
 			view = "ELIMINATED_APPLY.LOG_VIEW";
 		}
 		EliminatedApply object = eliminatedApplyService.getById(id);
+		
+		object = this.getApplyWithoutEncryption(object);
+		
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		
 		// 获得图片附件表数据
@@ -524,6 +527,13 @@ public class EliminatedApplyAction extends BaseAction {
 		return mv;
 	}
 	
+	/**
+	 * 
+	 * <p>Description: 进入受理申请表打印预览页面</p>
+	 * @param id 主键ID Integer
+	 * @return ModelAndView
+	 *
+	 */
 	@RequestMapping("applyPreview")
 	@Privilege(modelCode="M_ELIMINATED_APPLY_NO_LIST", prvgCode="PRINT_APPLY")
 	public ModelAndView applyPreview(@RequestParam("id")Integer id) throws Exception {
@@ -531,12 +541,46 @@ public class EliminatedApplyAction extends BaseAction {
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
 		mv.getModel().put("stage", "applyPreview");
 		
-		EliminatedApply model = eliminatedApplyService.getById(id);
+		EliminatedApply eliminatedApply = eliminatedApplyService.getById(id);
 		
-		mv.addObject("v", model);
+		eliminatedApply = this.getApplyWithoutEncryption(eliminatedApply);
+		
+		mv.addObject("v", eliminatedApply);
 		return mv;
 	}
 	
+	/**
+	 * 
+	 * <p>Description: 解密车架号、车主身份信息、银行账号等信息，返回给页面，防止service层提交。</p>
+	 * @param eliminatedApply 受理表对象 EliminatedApply
+	 * @return EliminatedApply
+	 *
+	 */
+	private EliminatedApply getApplyWithoutEncryption(
+			EliminatedApply eliminatedApply) {
+		
+		// 解密车架号等数据，防止在service层更新数据到数据库
+		String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+		// 解密车架号
+		eliminatedApply.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getVehicleIdentifyNo()));
+		
+		// 解密银行账号
+		eliminatedApply.setBankAccountNo(EncryptUtils.decryptDes(des_key, eliminatedApply.getBankAccountNo()));
+		
+		// 解密车主手机号
+		eliminatedApply.setMobile(EncryptUtils.decryptDes(des_key, (eliminatedApply.getMobile() == null) ? "" : eliminatedApply.getMobile()));
+		
+		// 解密经办人手机号 
+		eliminatedApply.setAgentMobileNo(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentMobileNo() == null) ? "" : eliminatedApply.getAgentMobileNo()));
+		
+		// 解密车主身份证明号
+		eliminatedApply.setVehicleOwnerIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getVehicleOwnerIdentity() == null) ? "" : eliminatedApply.getVehicleOwnerIdentity()));
+		
+		// 解密经办人身份证号
+		eliminatedApply.setAgentIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
+		return eliminatedApply;
+	}
+
 	@RequestMapping("confirmPreview")
 	@Privilege(modelCode="M_ELIMINATED_APPLY_NO_LIST", prvgCode="CONFIRM")
 	public ModelAndView confirmPreview(@RequestParam("id")Integer id) throws Exception {
@@ -545,6 +589,8 @@ public class EliminatedApplyAction extends BaseAction {
 		mv.getModel().put("stage", "confirm");
 		
 		EliminatedApply model = eliminatedApplyService.getById(id);
+		
+		model = this.getApplyWithoutEncryption(model);
 		
 		mv.addObject("v", model);
 		return mv;
@@ -584,6 +630,8 @@ public class EliminatedApplyAction extends BaseAction {
 		mv.getModel().put("stage", stage);
 		
 		EliminatedApply model = eliminatedApplyService.getById(id);
+		
+		model = this.getApplyWithoutEncryption(model);
 		
 		mv.addObject("v", model);
 		return mv;
@@ -793,7 +841,6 @@ public class EliminatedApplyAction extends BaseAction {
 				    try {
 				 fis.close();
 				    } catch (IOException e) {
-				 // TODO Auto-generated catch block
 				 e.printStackTrace();
 				    }
 				}
@@ -851,6 +898,41 @@ public class EliminatedApplyAction extends BaseAction {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * <p>Description: 打印受理申请表页面</p>
+	 * @param id 主键ID Integer
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("printApply")
+	@Privilege(modelCode="M_ELIMINATED_APPLY_NO_LIST", prvgCode="PRINT_APPLY")
+	public ModelAndView printApply(@RequestParam("id")Integer id) throws Exception {
+		String view = "ELIMINATED_APPLY.PRINT_APPLY";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		//mv.getModel().put("stage", "applyPreview");
+		
+		EliminatedApply model = eliminatedApplyService.getById(id);
+		
+		model = this.getApplyWithoutEncryption(model);
+		
+		mv.addObject("v", model);
+		return mv;
+	}
+	
+	@RequestMapping("printReceipt")
+	@Privilege(modelCode="M_COMMON_QUERY_ALL", prvgCode="PRINT_RECEIPT")
+	public ModelAndView printReceipt(@RequestParam("id")Integer id) throws Exception {
+		String view = "ELIMINATED_APPLY.PRINT_RECEIPT";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		
+		EliminatedApply model = eliminatedApplyService.getById(id);
+		
+		model = this.getApplyWithoutEncryption(model);
+		
+		mv.addObject("v", model);
+		return mv;
+	}
 	
 	public static void main(String[] args) throws Exception {
 		/*List<TestModel> list = new ArrayList();

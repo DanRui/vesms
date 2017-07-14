@@ -391,7 +391,7 @@ String basePath = request.getContextPath();
 						</c:choose>
 					</td>
 					<td>${log.actionName}</td>
-					<td><fmt:formatDate value="${log.actionTime}" type="time" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+					<td><fmt:formatDate value="${log.actionTime}" type="time" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 					<td>${log.actionUser}</td>
 					<td>${log.actionResult}</td>
 					<td>${log.actionDetail}</td>

@@ -296,10 +296,17 @@ public class VehicleRecycleAction extends BaseAction {
 		if(StringUtil.isNotEmpty(type)&&"update".equals(type)) {
 			view = "VEHICLE_RECYCLE.EDIT";
 		}
+		
 		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		
 		try {
 			VehicleRecycle object = vehicleRecycleService.getById(id);
 			
+			// 解密车架号
+			String des_key = PropertyUtil.getPropertyValue("DES_KEY");
+			// 解密车架号
+			object.setVehicleIdentifyNo(EncryptUtils.decryptDes(des_key, object.getVehicleIdentifyNo()));
+
 			// 获得附件表数据
 			// 报废回收证明
 			List callbackFiles = vehicleRecycleService.getAttachments("JDCHSZM", object.getId());

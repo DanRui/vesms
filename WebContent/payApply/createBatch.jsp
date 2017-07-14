@@ -191,8 +191,8 @@ String basePath = request.getContextPath();
 										title : "&nbsp;",
 										content : data.message
 									}); 
-						 			$("#batchCreate-list #batchCreate-grid").datagrid("load");
 						 		});
+						 		$("#batchCreate-list #batchCreate-grid").datagrid("load");
 						 	}
 						}
 						

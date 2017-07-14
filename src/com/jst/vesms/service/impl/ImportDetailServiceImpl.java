@@ -31,10 +31,13 @@ implements ImportDetailService{
 	}
 
 	@Override
-	public void readSpecify(File file) throws Exception{
+	public void saveSpecify(File file,Integer payImportId) throws Exception{
 		PayResultImportDetail payResultImportDetail = new PayResultImportDetail();
-		ImportExcel.readSpecify(file, payResultImportDetail);
-		importDetailDao.save(payResultImportDetail);
+	//	ImportExcel.readSpecify(file, payResultImportDetail);
+		List<PayResultImportDetail> list = ImportExcel.readSpecify(file,payImportId);
+		for (int i = 0; i < list.size(); i++) {
+			importDetailDao.save((PayResultImportDetail)list.get(i));
+		}
 	}
 	    
 	

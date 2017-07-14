@@ -254,55 +254,36 @@ String basePath = request.getContextPath();
 			 
 			// 点击打印受理表页面
 			 $("#btnPrint").click(function() {
-				times ++;
+			 	times ++; 
+			 	onPrint();
+			 	
+				/* times ++;
 				var html = $("#printArea").html();
 				var oPop = window.open('','打印');  
-		        var str = '<!DOCTYPE html>'  
-		            str +='<html>'  
-		            str +='<head>'  
-		            str +='<meta charset="utf-8">'  
-		            str +='<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">'  
+		        var str = '<!DOCTYPE html>';  
+		            str +='<html>';  
+		            str +='<head>';  
+		            str +='<meta charset="utf-8">';  
+		            str +='<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8,chrome=1">';  
 		            str+='<style>';  
 		            str+='#oDiv2 div{width: 100px;height: 100px;border:1px solid #c50000;}';  
 		            str+='</style>';  
-		            str +='</head>'  
-		            str +='<body>'  
+		            str +='</head>';  
+		            str +='<body>';  
 		            str +="<div id='oDiv2'>"+ html +"</div>";  
-		            str +='</body>'  
-		            str +='</html>'  
+		            str +='</body>';  
+		            str +='</html>';  
 		  
 		        oPop.document.write(str);  
 		        oPop.print();  
-		        oPop.close(); 
+		        oPop.close();  */
 			 });
 		}
 
 		// 打印受理申请表
 		function onPrint() {
-			var html = $("#printArea").html();
-			var oPop = window.open('','打印');  
-	        var str = '<!DOCTYPE html>'  
-	            str +='<html>'  
-	            str +='<head>'  
-	            str +='<meta charset="utf-8">'  
-	            str +='<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">'  
-	            str+='<style>';  
-	            str+='#oDiv2 div{width: 100px;height: 100px;border:1px solid #c50000;}';  
-	            str+='</style>';  
-	            str +='</head>'  
-	            str +='<body>'  
-	            str +="<div id='oDiv2'>"+ html +"</div>";  
-	            str +='</body>'  
-	            str +='</html>'  
-	  
-	        oPop.document.write(str);  
-	        oPop.print();  
-	        oPop.close();  
-			
-			/* var bodyHtml = document.body.innerHTML;
-			document.body.innerHTML = html;
-			window.print();
-			document.body.innerHTML = bodyHtml; */
+			var url = "<%=basePath%>" + "/eliminatedApply/printApply.do?id="+"${v.id}";
+			window.open(url, '_blank');
 		}
 		
 	    var insertStyleSheet = function(styles, styleId) {  

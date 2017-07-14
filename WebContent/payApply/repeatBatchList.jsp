@@ -160,7 +160,7 @@ String basePath = request.getContextPath();
 			         {field:"batchStatus",title:"批次状态：",type:"combobox",panelHeight:true, url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
 					 {startField:"createStartDate",endField:"createEndDate",title:"重报批次生成时间:",type:"date",section:true}
 			        ],
-			tools:[{type:"BATCH_PREVIEW",icon:"icon-add",title:"文件预览",text_width:100,
+			tools:[{type:"BATCH_PREVIEW",icon:"icon-add",title:"审批表查看",text_width:100,
 		     	  fn:function() {
 						var selectedRows = this.datagrid("getSelections");
 						//var ids=[];

@@ -1006,8 +1006,9 @@ public class PayApplyAction extends BaseAction{
 					excelProperties1.setHeader("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)");
 					excelProperties1.setColsHeader(new String[] { "序号", "金额", "经济分类编码", "收款人行别编码", "收款人名称", "收款人账户", "开户银行", "摘要" });
 					//exportPreview(id, batchNo, response);
-					int exportResult = ExportExcel.exportExcelInWebs(excelProperties1, "sss", new int[] { 5,10,15,15,25,15,15,45 }, dataList1, outputStream1, password);
-					// 调用pdf 
+					int exportResult = ExportExcel.exportExcelInWebs(excelProperties1, "sss", new int[] { 5,10,15,15,25,15,15,50 }, dataList1, outputStream1, password);
+					
+					// 调用pdf导出 
 					PDFUtil.generatePDF("深圳市老旧车提前淘汰奖励补贴资金发放表(第"+batchMain.getToFinanceNo()+"批)", pdfPath, dataList1);
 					
 					outputStream.close();
@@ -1172,9 +1173,6 @@ public class PayApplyAction extends BaseAction{
 			}
 			if(StringUtil.isNotEmpty(batchNo)) {
 				sb.append("and t.batch_no = '").append(batchNo).append("' ");
-			}
-			if(StringUtil.isNotEmpty(vehicleOwner)) {
-				sb.append("and t.vehicleOwner = '").append(vehicleOwner).append("' ");
 			}
 			sb.append("and t.bussiness_status = '1' and t.current_post = 'BFSBG' and t.batch_no is not null and repeated_batch_no is null and to_number(TO_FINANCE_STATUS)<=-2 ");
 			sb.append("order by "+orderBy+" "+order+" ");
@@ -1400,7 +1398,7 @@ public class PayApplyAction extends BaseAction{
 	public String repBatchAdjust(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, Integer toFinanceNo,String batchNo,String isExported,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String expStartDate,String expEndDate, String createStartDate , String createEndDate,String batchType ) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String batchNo,String isExported,String toFinanceStatus,String payResStatus,String payBatchTotalAmount,String expStartDate,String expEndDate, String createStartDate , String createEndDate,String batchType ) throws Exception{
 		log.debug("PayApplyAction repBatchAdjust is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
@@ -1429,9 +1427,6 @@ public class PayApplyAction extends BaseAction{
 			date = calendar.getTime();
 			createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 			list.add(new PropertyFilter("LTD_createDate",createEndDate));
-		}
-		if(StringUtil.isNotEmpty(toFinanceNo+"")) {
-			list.add(new PropertyFilter("EQS_toFinanceNo",toFinanceNo+""));
 		}
 		list.add(new PropertyFilter("EQS_batchStatus","1"));
 		list.add(new PropertyFilter("EQS_batchType","2"));
@@ -1475,7 +1470,7 @@ public class PayApplyAction extends BaseAction{
 			list.add(new PropertyFilter("EQS_batchStatus",batchStatus));
 		}
 		if(StringUtil.isNotEmpty(createStartDate)) {
-			list.add(new PropertyFilter("EQS_createStartDate",createStartDate));
+			list.add(new PropertyFilter("GED_createDate",createStartDate));
 		}
 		if(StringUtil.isNotEmpty(createEndDate)) {
 			Date date = DateUtil.parse(createEndDate, DateUtil.DATE_PATTERN);
@@ -1506,7 +1501,7 @@ public class PayApplyAction extends BaseAction{
 		@ResponseBody
 		public ModelAndView repBatchNoList(@RequestParam("id")Integer id){
 			log.debug("PayApplyAction repBatchNoList is start");
-			String adjust = "PAY_APPLY.REPADJUST";
+			String adjust = "PAY_APPLY.REP_ADJUST";
 			BatchMain object = payApplyService.batchNoView(id);
 			ModelAndView mv = new ModelAndView(getReturnPage(adjust));
 			mv.addObject("v", object);
@@ -1535,7 +1530,7 @@ public class PayApplyAction extends BaseAction{
 					list.add(new PropertyFilter("EQS_batchNo",batchNo));
 				}
 				if(StringUtil.isNotEmpty(vehiclePlateNum)) {
-					list.add(new PropertyFilter("EQS_vehiclePlateNum",vehiclePlateNum));
+					list.add(new PropertyFilter("LIKES_vehiclePlateNum",vehiclePlateNum));
 				}
 				if(StringUtil.isNotEmpty(vehiclePlateType)) {
 					list.add(new PropertyFilter("EQS_vehiclePlateType",vehiclePlateType));

@@ -212,7 +212,7 @@ String basePath = request.getContextPath();
 								});
 						  	}
 					}},
-					{type:"PREVIEW_QUERY",icon:"icon-add",title:"详情文件查看",text_width:150,
+					{type:"PREVIEW_QUERY",icon:"icon-add",title:"审批表查看",text_width:150,
 						  fn:function() {
 							var selectedRows = this.datagrid("getSelections");
 							//var ids=[];
