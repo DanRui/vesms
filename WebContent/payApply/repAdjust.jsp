@@ -56,7 +56,9 @@ String createDate = request.getParameter("createDate"); */
 				</c:if>
 			</td>
 			<td class="view_table_left">批次生成时间：</td>
-			<td class="view_table_right">${v.createDate }</td>
+			<td class="view_table_right">
+			<fmt:formatDate value="${v.createDate}" type="time" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</td>
 		</tr>
 			<tr class="datagrid-row">
 			<td class="view_table_left">拨付结果详情：</td>
@@ -248,20 +250,21 @@ String createDate = request.getParameter("createDate"); */
 								content : infoMsg
 							});
 						} else {
-							$.messager.confirm("确认框",'你确定移出吗',function(r){
-							if(r){								
+							/* $.messager.confirm("确认框",'你确定移出吗',function(r){
+							if(r){		 */						
 						 	$.get(basePath+"/payApply/repApplyDelete.do",{ids:ids,batchId:'${v.id}'},function(data) {
 					 			Messager.alert({
 									type : "info",
 									title : "&nbsp;",
 									content : data.message
 								});
-					 			$("#repBatch-adjust-list #repBatch-adjust-grid").datagrid("load");
+					 		//	$("#repBatch-adjust-list #repBatch-adjust-grid").datagrid("load");
+						 		$("#common-dialog").dialog('refresh');
 					 			$("#repeatBatchAdjust-list #repeatBatchAdjust-grid").datagrid('load');
 						 	});
 							}
-							})
-						}
+						//	})
+						//}
 			      }},
 			      {type:"ADD_APPLY",title:"增加业务单",text_width:120,icon:"icon-add",
 			    	fn:function() {
@@ -287,13 +290,13 @@ String createDate = request.getParameter("createDate"); */
 													content : data.message
 												});
 										 		$("#repBatch_add_apply").dialog("close");
-											 	$("#repBatch-adjust-list #repBatch-adjust-grid").datagrid("load");
+										 		$("#common-dialog").dialog('refresh');
 											 	$("#repeatBatchAdjust-list #repeatBatchAdjust-grid").datagrid('load'); 	
 										})
 									}},
-									{id:"repBatch_add_apply_cancel",text:"取消",iconCls:"icon-cancel",handler:function(){
+							/*		{id:"repBatch_add_apply_cancel",text:"取消",iconCls:"icon-cancel",handler:function(){
 										$("#repBatch_add_apply").dialog("close");
-									}}
+									}}*/
 								]
 							},
 							maximizable : true,

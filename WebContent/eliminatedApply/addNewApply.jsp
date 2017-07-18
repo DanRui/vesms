@@ -1037,6 +1037,10 @@
 			                url:$("#form-apply-save").attr("action"),
 			                data:$("#form-apply-save").serialize(),
 			                async: true,
+			                beforeSend : function(XMLHttpRequest) {
+			                	// 点击下一步按钮时，将按钮置为灰色，防止重复点击提交
+			                	$("#btnNextStep").linkbutton("disable");
+			                },
 			                success: function(data) {
 			                	
 			                	if(Object.prototype.toString.call(data) === "[object String]") {
@@ -1068,11 +1072,17 @@
 									
 									// 证明材料区域清空文件框值和回显路径
 									clearUploadFiles(isPersonal, isProxy);
+									
+									// 恢复下一步按钮正常点击触发提交事件
+									$("#btnNextStep").linkbutton("enable");
+									
 			                		//$("#common-dialog").dialog("close");
 			                	}
 			            	},
 			            	error :function(XMLHttpRequest, textStatus, errorThrown) {
 				        		alert("服务器异常，请联系后台管理人员！");
+				        		// 恢复下一步按钮正常点击触发提交事件
+								$("#btnNextStep").linkbutton("enable");
 				        		return;
 			            	}
 						});

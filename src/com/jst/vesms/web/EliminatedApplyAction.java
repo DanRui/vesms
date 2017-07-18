@@ -633,6 +633,12 @@ public class EliminatedApplyAction extends BaseAction {
 		
 		model = this.getApplyWithoutEncryption(model);
 		
+		// 特殊处理银行账号
+		String bankAccountNo = model.getBankAccountNo();
+		String pageViewAccountNo = bankAccountNo.replaceAll("(?<=\\d{5})\\d(?=\\d{4})", "*");
+		//String pageViewAccountNo = bankAccountNo.substring(0, 5) + "****" + bankAccountNo.substring(bankAccountNo.length() - 4);
+		model.setBankAccountNo(pageViewAccountNo);
+		
 		mv.addObject("v", model);
 		return mv;
 	} 
@@ -929,6 +935,11 @@ public class EliminatedApplyAction extends BaseAction {
 		EliminatedApply model = eliminatedApplyService.getById(id);
 		
 		model = this.getApplyWithoutEncryption(model);
+		
+		// 特殊处理银行账号
+		String bankAccountNo = model.getBankAccountNo();
+		String pageViewAccountNo = bankAccountNo.replaceAll("(?<=\\d{5})\\d(?=\\d{4})", "*");
+		model.setBankAccountNo(pageViewAccountNo);
 		
 		mv.addObject("v", model);
 		return mv;

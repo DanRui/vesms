@@ -106,7 +106,7 @@ String basePath = request.getContextPath();
 		        			var verify_result_page = basePath + "/publicService/verifyResult.do?vehiclePlateNum=" + vehiclePlateNum + "&vehiclePlateType=" + vehiclePlateType + "&vehicleIdentifyNo=" + vehicleIdentifyNo;
 		        			openDialog({
 		        				type : "verify_result",
-								title : "车辆补贴资格说明",
+								title : "车辆补贴资格详情查询",
 								width : 1040,
 								height : 400,
 								param: {reset:false,save:false,close:false},
@@ -121,7 +121,11 @@ String basePath = request.getContextPath();
 		        				content : data.message
 		        			});
 		        		}
-		        	}
+		        	},
+		        	error : function(XMLHttpRequest, textStatus, errorThrown) {
+		        		alert("服务器异常，请联系后台管理人员！");
+		        		return;
+	            	}
 				});
 				
 			})

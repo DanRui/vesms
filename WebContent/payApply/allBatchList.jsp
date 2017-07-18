@@ -65,13 +65,13 @@ String basePath = request.getContextPath();
 				formatter : function(value, row, index) {
 					if (value == "1") {
 						return "正常批次";
-					} else if (value == "2") {
+					} else if (value == "2") { 
 						return "重报批次";
 					}
 				},
 				styler : function(value, row, index) {
 					if (value == "1") {
-						return "color:gray";
+						return "color:green";
 					} else if (value == "2") {
 						return "color:red";
 					}
@@ -125,9 +125,9 @@ String basePath = request.getContextPath();
 					if (value == "0") {
 						return "未标记";
 					} else if (value == "1") {
-						return "拨付已完成";
+						return "标记完成";
 					}else if (value == "2") {
-						return "拨付部分完成";
+						return "标记部分完成";
 					}else if (value == "3") {
 						return "财务全部退回";
 					}
@@ -204,33 +204,10 @@ String basePath = request.getContextPath();
 						return "";
 					}
 				}
-			},{
-				field : "batchType",
-				title : "批次类型",
-				width : "10%",
-				align : "center",
-				halign : "center",
-				resizable : true,
-				sortable : true,
-				sortable : true,
-				formatter : function(value, row, index) {
-					if (value == "1") {
-						return "正常批次";
-					} else if (value == "2") {
-						return "重报批次";
-					}
-				},
-				styler : function(value, row, index) {
-					if (value == "1") {
-						return "color:green";
-					} else if (value == "2") {
-						return "color:red";
-					}
-				}
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:900,height:800,
+				$(this).datagrid("view",{width:900,height:500,
 					url:basePath+"/payApply/batchView.do?id="+rowData.id+"&batchType="+rowData.batchType+"&type=view",
 					content:"批次受理单明细",param:{close:false}});
 			}

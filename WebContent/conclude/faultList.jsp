@@ -76,9 +76,9 @@ String basePath = request.getContextPath();
 				sortable : true,
 				formatter : function(value, row, index) {
 					if (value == "1") {
-						return "拨付成功";
+						return "标记成功";
 					} else if (value == "2") {
-						return "拨付不成功";
+						return "标记失败";
 					}
 				},
 				styler : function(value, row, index) {

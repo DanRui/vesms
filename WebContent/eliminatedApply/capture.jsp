@@ -891,6 +891,12 @@
 		                            thumb1().Thumbnail_Add(Name);
 
 		                            PicPath = Name;
+		                            
+		                            // 每次点击拍照，自动复选框勾选文件
+		                            var index = thumb1().Thumbnail_GetCount();
+		                            if (!thumb1().Thumbnail_GetCheck(index)) {
+		                            	thumb1().Thumbnail_SetCheck(index, true);
+		                            }
 		                        }
 
 		                        plugin().Image_Release(img);

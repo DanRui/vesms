@@ -151,7 +151,7 @@ String basePath = request.getContextPath();
 			}
 			] ],
 			onDblClickRow : function(rowIndex, rowData) {
-				$(this).datagrid("view",{width:900,height:800,
+				$(this).datagrid("view",{width:900,height:500,
 					url:basePath+"/payApply/batchView.do?id="+rowData.id+"&batchType="+rowData.batchType+"&type=view",
 					content:"批次受理单明细",param:{close:false}});
 			}
@@ -160,7 +160,7 @@ String basePath = request.getContextPath();
 			         {field:"batchStatus",title:"批次状态：",type:"combobox",panelHeight:true, url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
 					 {startField:"createStartDate",endField:"createEndDate",title:"重报批次生成时间:",type:"date",section:true}
 			        ],
-			tools:[{type:"BATCH_PREVIEW",icon:"icon-add",title:"审批表查看",text_width:100,
+			tools:[{type:"BATCH_PREVIEW",icon:"icon-add",title:"审批表预览",text_width:100,
 		     	  fn:function() {
 						var selectedRows = this.datagrid("getSelections");
 						//var ids=[];
@@ -172,11 +172,17 @@ String basePath = request.getContextPath();
 								title : "&nbsp;",
 								content : infoMsg
 							});
+						}else if(selectedRows[0].batchStatus!="1"){
+							Messager.alert({
+								type : "info",
+								title : "&nbsp;",
+								content : "已作废的批次不能进行预览"
+							})
 						}else {
 							//文件预览 
 							openDialog({
 									   	type : "batch_List",
-										title : "文件预览",
+										title : "审批表预览",
 										width : 300,
 										height : 200,
 										param: {reset:false,save:false},

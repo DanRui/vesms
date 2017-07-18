@@ -18,7 +18,7 @@ String basePath = request.getContextPath();
 		<table class="datagrid-table-s datagrid-htable">	
 			<tr class="datagrid-header-row">
 				<td class="view_table_left">车主类型：</td>
-				<td class="view_table_right" colspan="2">
+				<td class="view_table_right">
 					<c:if test="${v.isPersonal eq 'Y'}">
 						自然人
 					</c:if>
@@ -27,7 +27,7 @@ String basePath = request.getContextPath();
 					</c:if>
 				</td>
 				<td class="view_table_left">办理类型：</td>
-				<td class="view_table_right" colspan="2">
+				<td class="view_table_right">
 					<c:if test="${v.isProxy == 'Y'}">
 						自办
 					</c:if>
@@ -35,6 +35,14 @@ String basePath = request.getContextPath();
 						代理
 					</c:if>
 				</td>
+				<c:if test="${v.isFault eq '1'}">
+					<td class="view_table_left">
+						<font color="red">数据异常：</font>
+					</td>
+					<td class="view_table_right">
+						<font color="red">${v.faultDesc}</font>
+					</td>
+				</c:if>
 			</tr>
 			<tr class="datagrid-header-row classify-tr">
 				<td colspan="6">车辆基本信息</td>

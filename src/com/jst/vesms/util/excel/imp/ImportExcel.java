@@ -49,7 +49,7 @@ public class ImportExcel {
     
     
     
-    
+    //获取国库excel详情数据
     public static List<PayResultImportDetail> readSpecify(File file,Integer payImportId)throws Exception{  
    //	 List<PayResultImport>  list = new ArrayList<PayResultImport>();
   // 	 PayResultImport resultImport = new PayResultImport();  
@@ -100,8 +100,8 @@ public class ImportExcel {
    	        // 业务ID 
    	        String str[] = cell5.getContents().split("ID:");
    	        String str1 = str[1];
-   	        String str2[] = str1.split(")");
-   	        Integer applyId= Integer.parseInt(str2[0]);
+   	        char char1= str1.charAt(0);
+   	        Integer applyId= Integer.parseInt(String.valueOf(char1));
    	        payResultImportDetail.setApplyId(applyId);
    	     
    	        // 支付金额

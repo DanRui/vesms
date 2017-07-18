@@ -208,10 +208,11 @@
 					<td class="view_table_right">
 						<input type="text" name="vehicleOwnerIdentity" class="easyui-validatebox" data-options="required:true"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
+						<a id="btnVerifyVehicleOwnerCard" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">识别</a>
 					</td>
 					<td class="view_table_left">车主联系号码：</td>
 					<td class="view_table_right">
-						<input type="text" name="mobile" class="easyui-numberbox" />
+						<input type="text" name="mobile" class="easyui-validatebox" />
 					</td>
 				</tr>
 				<tr class="datagrid-row">
@@ -222,13 +223,14 @@
 					</td>
 					<td class="view_table_left">经办人手机号：</td>
 					<td class="view_table_right">
-						<input type="text" name="agentMobileNo" class="validatebox"/>
+						<input type="text" name="agentMobileNo" class="easyui-validatebox"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					<td class="view_table_left">经办人身份证号：</td>
 					<td class="view_table_right">
 						<input type="text" name="agentIdentity" class="easyui-validatebox"/>
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
+						<a id="btnVerifyAgentCard" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">识别</a>
 					</td>
 				</tr>
 				<tr class="datagrid-row">
@@ -289,6 +291,13 @@
 			<table class="datagrid-table-s datagrid-htable">
 				<tr class="datagrid-header-row classify-tr">
 					<td colspan="6">证明材料</td>
+				</tr>
+				<tr class="datagrid-row">
+					<td colspan="2" class="view_table_left">
+						<!-- <input type="button" id="btnCapture" value="拍照上传"/> -->
+						<a id="btnCapture" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照上传</a>
+						<font color="red">（当高拍仪拍照不工作时，可点击“浏览”选择本地图片文件，点击“本地文件上传”进行操作。）</font>
+					</td>
 				</tr>
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:110px">报废汽车回收证明：</td>
@@ -389,19 +398,29 @@
 				</tr>
 				<tr class="datagrid-row">
 					<td align="center" colspan="6">
-						<a id="btnUpload" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">上传</a>
+						<a id="btnUpload" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">本地文件上传</a>
 					</td>
 				</tr>
 			</table>
 		</div>
 	</form>
 	
+	<object id="view1" type="application/x-eloamplugin" name="view"></object>
+	
 	<div id="update_buttons" align="center">
 		<a id="btnNextStep" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-nextstep'">下一步</a>
 	</div>
-		
-		<script type="text/javascript">
+	
+	<script type="text/javascript">
+	
 			$(function() {
+				
+				/* $("#common-dialog").dialog("options",{onBeforeClose:function(){
+					alert("asdasd");
+					//$(this).dialog("options",{onBeforeClose:null});
+					return true;
+				}}); */
+				Load();
 				
 				var basePath = "<%=basePath%>";
 				
@@ -589,6 +608,52 @@
 					});
 					
 				});
+				
+				// 测试身份证识别
+				$("#btnCapture").click(function() {
+					var idCard = ReadIDCard();
+					alert(idCard);
+				});
+				
+				// 车主身份证识别
+				$("#btnVerifyVehicleOwnerCard").click(function() {
+					var idCard = ReadIDCard();
+					
+					// 填入到车主身份证
+					$("input[name='vehicleOwnerIdentity']").val(idCard);
+					//alert(idCard);
+				});
+				
+				// 经办人身份证识别
+				$("#btnVerifyAgentCard").click(function() {
+					var idCard = ReadIDCard();
+					
+					var isProxy = $("#isProxy").combobox("getValue");
+					
+					var vehicleOwnerIdentity = $("input[name='vehicleOwnerIdentity']").val();
+					
+					var agentIdentity = $("input[name='agentIdentity']").val();
+					
+					if (vehicleOwnerIdentity != "" && agentIdentity != "") {
+						if (isProxy == "Y" && (idCard != vehicleOwnerIdentity || agentIdentity != idCard)) {
+							alert("个人自办，经办人身份证号必须与车主一致！");
+							$("input[name='vehicleOwnerIdentity']").val("");
+						} else if (isProxy == "N" && (vehicleOwnerIdentity == agentIdentity || idCard == vehicleOwnerIdentity)) {
+							alert("代理必须是经办人和车主身份证不同！");
+							$("input[name='vehicleOwnerIdentity']").val("");
+						}
+					}
+					
+					$("input[name='agentIdentity']").val(idCard);
+					//alert(idCard);
+				});
+				
+				/* // 关闭dialog时，反初始化高拍仪释放资源
+				$("#common-dialog").dialog({
+					onClose : function() {
+						Unload();
+					}
+				}); */
 				
 				// 报废回收证明抓拍上传
 				$("#btnTakePhotoCallbackProof").click(function() {
@@ -1014,8 +1079,12 @@
 			                //cache: true,
 			                type: "POST",
 			                url:$("#form-apply-save").attr("action"),
-			                data:$("#form-apply-save").serialize(),//
+			                data:$("#form-apply-save").serialize(),
 			                async: true,
+			                beforeSend : function(XMLHttpRequest) {
+			                	// 点击下一步按钮时，将按钮置为灰色，防止重复点击提交
+			                	$("#btnNextStep").linkbutton("disable");
+			                },
 			                success: function(data) {
 			                	
 			                	if(Object.prototype.toString.call(data) === "[object String]") {
@@ -1063,14 +1132,15 @@
 									clearUploadFiles(isPersonal, isProxy);
 									//$("#form-apply-upload").form("clear");
 									
-									
-									//$("#callbackProofFileImg").remove();
+									// 恢复下一步按钮正常点击触发提交事件
+									$("#btnNextStep").linkbutton("enable");
 									
 			                		//$("#common-dialog").dialog("close");
 			                	}
 			            	},
-			            	error :function(XMLHttpRequest, textStatus, errorThrown) {
+			            	error : function(XMLHttpRequest, textStatus, errorThrown) {
 				        		alert("服务器异常，请联系后台管理人员！");
+				        		$("#btnNextStep").linkbutton("enable");
 				        		return;
 			            	}
 						});
@@ -1473,6 +1543,17 @@
     			
     			$("#vehicleOwnerProofFileImg").text("");
     			$("#vehicleOwnerProofFileImg").attr("href", "#");
+			}
+			
+			// 关闭窗口前清理高拍仪资源
+			function clearCaptureRes() {
+				Unload();
+				return true;
+			}
+			
+			// 关闭窗口后清空绑定的关闭前处理事件
+			function clearBeforeCloseFunc() {
+				$("#common-dialog").dialog("options", {onBeforeClose:null});
 			}
 			
 		</script>

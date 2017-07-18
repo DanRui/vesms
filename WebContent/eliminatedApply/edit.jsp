@@ -513,47 +513,6 @@
 			var bankCode = '${v.bankCode}';
 			$("#bankCodeUpdate").combobox("setValue", bankCode);
 			
-			// 选中车主类型和办理类型
-			/*
-			$("#isPersonal").combobox({
-				onChange : function() {
-					var isPersonal = $(this).combobox("getValue");
-					$("tr[class*='applyType']").each(function() {
-						if (isPersonal == "N") {
-							$("#isProxy").combobox("setValue", "N");
-							$(this).show();
-							$("#noFinanceProvide").attr("required","true");
-							$("#openAccPromit").attr("required","true");
-						} else if (isPersonal == "Y") {
-							$(this).hide();
-							// 车主类型是个人,隐藏开户许可证和非财政供养单位证明
-							$("#noFinanceProvide").attr("required","false");
-							$("#openAccPromit").attr("required","false");
-						}
-					});
-				}
-			});
-			
-			$("#isProxy").combobox({
-				onChange : function() {
-					var isProxy = $(this).combobox("getValue");
-					$("tr[class*='proxyType']").each(function() {
-						if (isProxy == "N") {
-							$(this).show();
-							$("#agentProxy").attr("required","true");
-							$("#agentProof").attr("required","true");
-						} else if (isProxy == "Y") {
-							$("#isPersonal").combobox("setValue", "Y");
-							$(this).hide();
-							// 自办隐藏代理委托书和代理人身份证明
-							$("#agentProxy").attr("required","false");
-							$("#agentProof").attr("required","false");
-						}
-					});
-				}
-			});
-			*/
-			
 		   //报废回收证明、机动车注销证明、银行卡、车主身份证明、代理委托书、代理人身份证、开户许可证、非财政供养单位证明
 		   $("#btnUploadUpdate").click(function() {
 			   

@@ -728,13 +728,22 @@ function openDialog(config){
 	//alert(document.body.clientHeight);
 	var u_width = c_width;
 	var u_height = c_height;
-	if(c_width>m_width){
+	if(c_width > m_width){
 		u_width = m_width;
-	}if(c_height >m_height){
+	}if(c_height > m_height){
 		u_height = m_height;
 	}
 	config.width = u_width;
 	config.height = u_height;
+	
+	// 根据config.param判断是否在关闭窗口前特殊处理
+	if(config.param != null && config.param != undefined) {
+			var b = config.param.isBeforeClose;
+			if(b) {
+				config.onBeforeClose = eval(config.param.beforeCloseFunc);
+				//config.onClose = eval(config.param.onCloseFunc);
+			}
+	}
 	$("#common-dialog-save").linkbutton({iconCls:"icon-save",text:"保存"});
 	if("view" == config.type){
 		$("#common-dialog-buttons").children(":not(a[id='common-dialog-close'])").hide();

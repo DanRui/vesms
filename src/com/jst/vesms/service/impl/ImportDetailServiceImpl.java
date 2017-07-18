@@ -30,6 +30,7 @@ implements ImportDetailService{
 		return importDetailDao;
 	}
 
+	// 把国库详情数据导入数据库
 	@Override
 	public void saveSpecify(File file,Integer payImportId) throws Exception{
 		PayResultImportDetail payResultImportDetail = new PayResultImportDetail();
@@ -39,6 +40,23 @@ implements ImportDetailService{
 			importDetailDao.save((PayResultImportDetail)list.get(i));
 		}
 	}
-	    
+	
+	
+/*	// 判断传进来的业务id 和国库申请单号 在数据库是否存在   
+	public boolean isExist(){
+		boolean flag = false;
+		//先获取数据库所有的业务id的int数组  和 国库申请单号的String数组
+		Integer count = (int) importDetailDao.getAllListCounter();
+		for (int i = 0; i < count; i++) {
+			PayResultImportDetail importDetail = new PayResultImportDetail();
+		}
+		return flag;
+	}*/
+	
+	
+	
+	
+	
+	
 	
 }

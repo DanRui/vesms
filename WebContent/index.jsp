@@ -40,9 +40,11 @@
 <script type="text/javascript" src="<%=basePath%>/js/plugins/editor/kindeditor.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/plugins/editor/lang/zh_CN.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/plugins/editor/plugins/code/prettify.js"></script>
+<script type="text/javascript" src="<%=basePath%>/js/onBeforeClose.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/main.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/encoder.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/util/dictParse.js"></script>
+<script type="text/javascript" src="<%=basePath%>/js/capture.js"></script>
 <%-- <script type="text/javascript" src="<%=basePath%>/js/util/printUtil.js"></script> --%>
 
 <style media="print">
@@ -83,8 +85,8 @@
 				</div>
 		
 				<div class="title-btn-box">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" style="margin-top: 1px; width: 80px;" id="index-update">修改密码</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-logout'" style="margin-top: 1px; width: 60px;" id="index-logout">注销</a>
+					<!-- <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" style="margin-top: 1px; width: 80px;" id="index-update">修改密码</a> -->
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-logout'" style="margin-top: 4px; width: 60px;" id="index-logout">注销</a>
 				</div>
 			</div>
 		</div>

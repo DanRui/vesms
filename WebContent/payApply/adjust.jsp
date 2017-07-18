@@ -56,7 +56,9 @@ String createDate = request.getParameter("createDate"); */
 				</c:if>
 			</td>
 			<td class="view_table_left">批次生成时间：</td>
-			<td class="view_table_right">${v.createDate }</td>
+			<td class="view_table_right">
+			<fmt:formatDate value="${v.createDate}" type="time" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</td>
 		</tr>
 		<tr class="datagrid-row">
 			<td class="view_table_left">拨付结果详情：</td>
@@ -220,8 +222,9 @@ String createDate = request.getParameter("createDate"); */
 									title : "&nbsp;",
 									content : data.message
 								});
-					 			$("#batch-adjust-list #batch-adjust-grid").datagrid("load");
+					 	//		$("#batch-adjust-list #batch-adjust-grid").datagrid("load");
 					 			 $("#batchAdjust-list #batchAdjust-grid").datagrid('load');
+					 			$("#common-dialog").dialog('refresh');
 					 		});
 						}
 			      }},
@@ -249,10 +252,12 @@ String createDate = request.getParameter("createDate"); */
 													content : data.message
 												});
 											$("#batch_add_apply").dialog("close");
-											$("#batch-adjust-list #batch-adjust-grid").datagrid("load");
+											//$("#batch-adjust-list #batch-adjust-grid").datagrid('load');
 											$("#batchAdjust-list #batchAdjust-grid").datagrid('load');
+											$("#common-dialog").dialog('refresh');
+											
 										})
-										
+									//	href : basePath+"/payApply/batchNoList.do?id="+${ v.id }
 									}},
 							/*		{id:"batch_add_apply_cancel",text:"取消",iconCls:"icon-cancel",handler:function(){
 										$("#batch_add_apply").dialog("close");

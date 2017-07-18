@@ -43,18 +43,30 @@
 			   if (file == "") {
 				   alert("请选择需要上传的文件");
 				   return false;
-			   } 
+			   }
+			   $("#importId").attr("disabled","true");
         	  	$("#importId").form("submit", {
         			url  : $(this).attr("action"),
-        		 	success : function(result) {
-        		 		var result = eval('(' + result + ')');
-        		 		if (result.success) {
-        		 			alert("文件上传成功！");
-        		 		} else {
-        		 			alert("文件上传失败！");
-        		 			$("#excelFile").filebox("clear");
-        		 		}
-        			}
+        		 	success : function(data) {
+        		 //		eval('(' + result + ')');
+        		//	result=$.parseJSON(result);
+	        	 /* 	if(Object.prototype.toString.call(data) === "[object String]") {
+						data = eval("(" + data + ")");
+					} */
+        			if(data.success) {
+       		 			Messager.alert({
+							type : "info",
+							title : "&nbsp;",
+							content : data
+						})
+        			}else {
+                		Messager.alert({
+                			type:"error",
+							title:"&nbsp;",
+							content:data.message
+						});
+                	}
+        		 }
         	 	}); 
 		/*	   $("#importId").form(function(data){
 				   $("#fileUpload").attr("disabled","true"); 

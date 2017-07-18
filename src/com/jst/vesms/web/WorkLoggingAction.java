@@ -443,6 +443,11 @@ private static final Log log = LogFactory.getLog(WorkLoggingAction.class);
 		
 		model = this.getApplyWithoutEncryption(model);
 		
+		// 特殊处理银行账号
+		String bankAccountNo = model.getBankAccountNo();
+		String pageViewAccountNo = bankAccountNo.replaceAll("(?<=\\d{5})\\d(?=\\d{4})", "*");
+		model.setBankAccountNo(pageViewAccountNo);
+		
 		mv.addObject("v", model);
 		return mv;
 	} 
