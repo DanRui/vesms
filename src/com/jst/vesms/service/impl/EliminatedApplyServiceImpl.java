@@ -1786,10 +1786,10 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				} else {
 					// 获取不到数据，或者车辆已经受理录入过，无法再次受理。
 					// 报废交售日期
-					vehicleRecycleDate = DateUtil.parse("2017-07-10", DateUtil.DATE_PATTERN_2);
+					/*vehicleRecycleDate = DateUtil.parse("2017-07-10", DateUtil.DATE_PATTERN_2);
 					
 					// 报废回收证明编号
-					callbackProofNo = "HS-730000-1323-20140710-20";
+					callbackProofNo = "HS-730000-1323-20140710-20";*/
 				}
 				
 				

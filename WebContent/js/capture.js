@@ -261,10 +261,6 @@ function Load() {
 								CloseVideoMain();
 								plugin().Device_Release(DeviceMain);
 								DeviceMain = null;
-
-								document.getElementById('lab1').innerHTML = "";
-								document.getElementById('subType1').options.length = 0;
-								document.getElementById('selRes1').options.length = 0;
 							}
 						}
 					}
@@ -323,27 +319,9 @@ function Unload() {
 		plugin().Device_Release(DeviceMain);
 		DeviceMain = null;
 	}
-	// if (VideoAssist)
-	// {
-	//  AssistView().View_SetText("", 0);
-	//  plugin().Video_Release(VideoAssist);
-	//  VideoAssist = null;
-	// }
-	// if(DeviceAssist)
-	// {
-	//  plugin().Device_Release(DeviceAssist);
-	//  DeviceAssist = null;		
-	// }			
-
-	//StopICCard();
-	// StopMagCard();
-	// StopShenZhenTongCard();
 	StopIDCard();
 
 	plugin().Global_DeinitDevs();
-
-	//进行人脸识别反初始化时，视频应处于关闭状态
-	// plugin().DeinitFaceDetect();
 }
 
 function EnableDate(obj) {
@@ -913,6 +891,7 @@ function ReadIDCard() {
 	if (plugin().Global_InitIdCard()) {
 		var ret = plugin().Global_ReadIdCard();
 		if (ret) {
+			// 返回身份证号码
 			var data = plugin().Global_GetIdCardData(8);
 			plugin().Global_DeinitIdCard();
 			return data;

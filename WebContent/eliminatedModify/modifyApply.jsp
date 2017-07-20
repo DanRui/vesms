@@ -123,7 +123,7 @@
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
 					</c:if>
-					<c:if test="${fn:contains(modifyTypes, '21')}">
+					<c:if test="${fn:contains(modifyTypes, '22')}">
 					<td class="view_table_left">新的开户银行账号：</td>
 					<td class="view_table_right"><input type="text"
 						name="bankAccountNo" class="easyui-validatebox"

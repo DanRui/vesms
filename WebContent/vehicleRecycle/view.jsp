@@ -58,15 +58,15 @@ String basePath = request.getContextPath();
 						<td class="view_table_left">车辆状态：</td>
 						<td class="view_table_right">${v.vehicleStatusName }</td>
 					</tr>
-					<tr class="datagrid-header-row classify-tr">
+					<%-- <tr class="datagrid-header-row classify-tr">
 						<td colspan="6">车主信息</td>
 					</tr>
 					<tr class="datagrid-row">
 						<td class="view_table_left">车主：</td>
 						<td class="view_table_right">${v.vehicleOwner }</td>
-					 	<%-- <td class="view_table_left">车主联系电话：</td>
-						<td class="view_table_right">${v.mobile }</td>  --%>
-					</tr>
+					 	<td class="view_table_left">车主联系电话：</td>
+						<td class="view_table_right">${v.mobile }</td> 
+					</tr> --%>
 					<tr class="datagrid-header-row classify-tr">
 						<td colspan="6">报废信息</td>
 					</tr>
@@ -119,9 +119,7 @@ String basePath = request.getContextPath();
 							</td>
 						</tr>
 					</c:if> --%>
-				</table>
-			</div>
-
+		</table>
 	</div>
 	<script type="text/javascript">
 			/* $(function() {

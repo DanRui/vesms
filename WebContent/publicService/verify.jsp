@@ -70,7 +70,7 @@ String basePath = request.getContextPath();
 				// ajax调用后台接口返回信息
 				var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
 				
-				console.log(vehiclePlateNum);
+				//console.log(vehiclePlateNum);
 				if (null == vehiclePlateNum) {
 					alert("请输入号牌号码！");
 					return false;
@@ -80,7 +80,7 @@ String basePath = request.getContextPath();
 				
 				var vehiclePlateType = $("#vehiclePlateTypeQuery").combobox("getValue");
 				
-				console.log(vehiclePlateType);
+				//console.log(vehiclePlateType);
 				if (null == vehiclePlateType || vehiclePlateType == "") {
 					alert("请输入号牌种类！");
 					return false;

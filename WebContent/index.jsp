@@ -44,8 +44,8 @@
 <script type="text/javascript" src="<%=basePath%>/js/main.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/encoder.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/util/dictParse.js"></script>
+<script type="text/javascript" src="<%=basePath%>/js/util/json2.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/capture.js"></script>
-<%-- <script type="text/javascript" src="<%=basePath%>/js/util/printUtil.js"></script> --%>
 
 <style media="print">
 	.Noprint{display:none;}

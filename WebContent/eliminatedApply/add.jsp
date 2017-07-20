@@ -609,10 +609,79 @@
 					
 				});
 				
-				// 测试身份证识别
+				// 点击拍照上传按钮，跳转到拍照上传页面，统一上传所有的证明材料
 				$("#btnCapture").click(function() {
-					var idCard = ReadIDCard();
-					alert(idCard);
+					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
+					if (vehiclePlateNum == null || vehiclePlateNum == "" || typeof(vehiclePlateNum) == "undefined") {
+						Messager.alert({
+							type : "error",
+							title : "&nbsp;",
+							content : "请先输入号牌号码！"
+						});
+						return false;
+					}
+					
+					// 先获取页面已经上传的文件路径
+					var proof_files = new Object();
+					
+					// 报废回收证明
+					proof_files.callbackProofFile = $("input[name='callbackProofFile']").val();
+					// 机动车注销证明
+					proof_files.vehicleCancelProofFiles = $("input[name='vehicleCancelProofFiles']").val();
+					// 银行卡
+					proof_files.bankCardFiles = $("input[name='bankCardFiles']").val();
+					// 车主身份证明
+					proof_files.vehicleOwnerProofFiles = $("input[name='vehicleOwnerProofFiles']").val();
+					// 开户许可证
+					proof_files.openAccPromitFiles = $("input[name='openAccPromitFiles']").val();
+					// 非财政供养单位证明
+					proof_files.noFinanceProvideFiles = $("input[name='noFinanceProvideFiles']").val();
+					// 代理人身份证
+					proof_files.agentProofFiles = $("input[name='agentProofFiles']").val();
+					// 代理委托书
+					proof_files.agentProxyFiles = $("input[name='agentProxyFiles']").val();
+					
+					// 车主类型
+					var isPersonal = $("#isPersonal").combobox("getValue");
+					
+					// 办理类型
+					var isProxy = $("#isProxy").combobox("getValue");
+					
+					if (isPersonal != "Y" && isPersonal != "N") {
+						alert("请选择车主类型！");
+						return;
+					}
+					
+					if (isProxy != "Y" && isProxy != "N") {
+						alert("请选择办理类型！");
+						return;
+					}
+					
+					// 释放高拍仪资源
+					Unload();
+					
+					// alert(JSON.stringify(proof_files));
+					
+					// 弹出高拍仪抓拍图片界面
+					var parentValue = window.showModalDialog('eliminatedApply/captureNew.jsp?vehiclePlateNum='+vehiclePlateNum + '&isPersonal=' + isPersonal + '&isProxy=' + isProxy, proof_files, 
+							"dialogWidth=800px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
+					
+					
+					
+					/* Dialog.create("capture_files", {
+						type : "capture_files",
+						title : "证明材料拍照上传",
+						width : 900,
+						height : 600,
+						param: {
+								reset:false,
+								buttons:[
+										{id:"confirm_back",text:"确认返回",iconCls:"icon-save"}
+									]
+							},
+						maximizable : true,
+						href : basePath+"/eliminatedApply/captureNew.jsp?isPersonal=" + isPersonal + "&isProxy=" + isProxy + "&proof_files=" + JSON.stringify(proof_files)
+					}); */
 				});
 				
 				// 车主身份证识别
@@ -647,13 +716,6 @@
 					$("input[name='agentIdentity']").val(idCard);
 					//alert(idCard);
 				});
-				
-				/* // 关闭dialog时，反初始化高拍仪释放资源
-				$("#common-dialog").dialog({
-					onClose : function() {
-						Unload();
-					}
-				}); */
 				
 				// 报废回收证明抓拍上传
 				$("#btnTakePhotoCallbackProof").click(function() {
