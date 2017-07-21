@@ -310,18 +310,20 @@ function Load() {
 }
 
 function Unload() {
-	if (VideoMain) {
-		MainView().View_SetText("", 0);
-		plugin().Video_Release(VideoMain);
-		VideoMain = null;
+	if(null != plugin()) {
+		if (VideoMain) {
+			MainView().View_SetText("", 0);
+			plugin().Video_Release(VideoMain);
+			VideoMain = null;
+		}
+		if (DeviceMain) {
+			plugin().Device_Release(DeviceMain);
+			DeviceMain = null;
+		}
+		StopIDCard();
+	
+		plugin().Global_DeinitDevs();
 	}
-	if (DeviceMain) {
-		plugin().Device_Release(DeviceMain);
-		DeviceMain = null;
-	}
-	StopIDCard();
-
-	plugin().Global_DeinitDevs();
 }
 
 function EnableDate(obj) {

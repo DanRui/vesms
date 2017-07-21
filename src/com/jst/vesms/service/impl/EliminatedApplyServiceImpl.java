@@ -179,7 +179,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		// 号牌号码
-		String vehiclePlateNum = eliminatedApply.getVehiclePlateNum();
+		String vehiclePlateNum = "B" + eliminatedApply.getVehiclePlateNum();
+		eliminatedApply.setVehiclePlateNum(vehiclePlateNum);
 		// 号牌种类
 		String vehiclePlateType = eliminatedApply.getVehiclePlateType();
 		

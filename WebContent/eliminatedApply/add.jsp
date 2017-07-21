@@ -1114,7 +1114,8 @@
 					   return false;
 				   	}
 					
-				   	$("input[name='vehiclePlateNum']").val("B" + $("input[name='vehiclePlateNum']").val());
+				   	//alert($("input[name='vehiclePlateNum']").val());
+				   	//$("input[name='vehiclePlateNum']").val(vehiclePlateNum);
 				   	
 					var isValid = $("#form-apply-save").form("enableValidation").form("validate");
 					
@@ -1165,14 +1166,17 @@
 									
 									// 资格校验成功，受理表信息保存，页面跳转到受理表打印预览页面
 									var url = basePath+"/eliminatedApply/applyPreview.do?id="+data.message.id;
-									//$("#common-dialog").dialog("refresh", url);
+									
+									$("#common-dialog").dialog("close");
 									
 									openDialog({
 									   	type : "PRINT_APPLY_TABLE",
 										title : "补贴受理表打印预览",
 										width : 1040,
 										height : 400,
-										param: {reset:false,save:false},	
+										param: {reset:false,save:false,
+											beforeCloseFunc:"clearCaptureRes",
+											isBeforeClose:true},	
 										maximizable : true,
 										href : url
 								   });
