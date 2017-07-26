@@ -179,8 +179,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		// 号牌号码
-		String vehiclePlateNum = "B" + eliminatedApply.getVehiclePlateNum();
-		eliminatedApply.setVehiclePlateNum(vehiclePlateNum);
+		String vehiclePlateNum = eliminatedApply.getVehiclePlateNum();
+		// eliminatedApply.setVehiclePlateNum(vehiclePlateNum);
 		// 号牌种类
 		String vehiclePlateType = eliminatedApply.getVehiclePlateType();
 		
@@ -392,6 +392,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 						
 						//List list1 = eliminatedApplyDao.getByPropertys(new String[] {"applyNo", "vehiclePlateNum"}, new Object[] {"12", "1"}, null);
 						
+						log.debug("新增受理表，号牌号码：" + eliminatedApply.getVehiclePlateNum());
 						Serializable id = eliminatedApplyDao.save(eliminatedApply);
 						
 						log.debug("受理表插入成功：id=" + id);
@@ -1020,7 +1021,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 					log.debug("update VehicleRecycle is end");
 				} else {
 					log.debug("update VehicleRecycle is error");
-					return false;
+					//return false;
 				}
 				
 			} else {

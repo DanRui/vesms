@@ -740,6 +740,7 @@ function openDialog(config){
 	if(config.param != null && config.param != undefined) {
 			var b = config.param.isBeforeClose;
 			if(b) {
+				//alert(config.param.beforeCloseFunc);
 				config.onBeforeClose = eval(config.param.beforeCloseFunc);
 				//config.onClose = eval(config.param.onCloseFunc);
 			}

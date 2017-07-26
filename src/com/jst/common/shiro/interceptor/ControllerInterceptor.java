@@ -82,8 +82,8 @@ public class ControllerInterceptor extends HandlerInterceptorAdapter implements 
 		sessionInfo.setAccessible(true);
 		terminalInfo.setAccessible(true);
 		String ip = SystemUtil.getIpAddr(request);
-		String mac = SystemUtil.getMacAddress(ip);
-		String sessionStr = "ip:"+ip+",mac:"+mac;
+		//String mac = SystemUtil.getMacAddress(ip);
+		String sessionStr = "ip:"+ip/*+",mac:"+mac*/;
 		sessionInfo.set(handlerMethod.getBean(), sessionStr);
 		String terminalStr =  "x-requested-with:" + request.getHeader("x-requested-with") +", accept :" +request.getHeader("accept")+",content-type:"+request.getHeader("content-type");
 		terminalInfo.set(handlerMethod.getBean(),terminalStr);

@@ -1,7 +1,7 @@
 //关闭窗口前清理高拍仪资源
 function clearCaptureRes() {
-	Unload();
-	$("#common-dialog").dialog("options").onBeforeClose = null;
+	Destroy();
+	$("#common-dialog").dialog("options").onBeforeClose = function(){};
 	return true;
 }
 

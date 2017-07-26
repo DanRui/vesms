@@ -247,10 +247,10 @@ String basePath = request.getContextPath();
 				<td class="view_table_right">
 					<c:forEach items="${vehicleOwnerProofFiles}" var="vehicleOwnerProofFile">
 						<c:if test="${status.index % 2 eq 1}">
-							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}(${status.count})</a></br>
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a></br>
 						</c:if>
 						<c:if test="${status.index % 2 eq 0}">
-							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}(${status.count})</a>
+							<a href="${vehicleOwnerProofFile.filePath}" target="_blank">${vehicleOwnerProofFile.name}</a>
 						</c:if>
 					</c:forEach>
 				</td>
@@ -280,10 +280,10 @@ String basePath = request.getContextPath();
 					<td class="view_table_right">
 						<c:forEach items="${openAccPromitFiles}" var="openAccPromitFile">
 							<c:if test="${status.index % 2 eq 1}">
-								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}(${status.count})</a></br>
+								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a></br>
 							</c:if>
 							<c:if test="${status.index % 2 eq 0}">
-								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}(${status.count})</a>
+								<a href="${openAccPromitFile.filePath}" target="_blank">${openAccPromitFile.name}</a>
 							</c:if>
 						</c:forEach>
 					</td>
@@ -316,10 +316,10 @@ String basePath = request.getContextPath();
 					<td class="view_table_right">
 						<c:forEach items="${signedApplyFiles}" var="signedApplyFile" varStatus="status">
 							<c:if test="${status.index % 2 eq 1}">
-								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}(${status.count})</a></br>
+								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a></br>
 							</c:if>
 							<c:if test="${status.index % 2 eq 0}">
-								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}(${status.count})</a>
+								<a href="${signedApplyFile.filePath}" target="_blank">${signedApplyFile.name}</a>
 							</c:if>
 						</c:forEach>
 					</td>
@@ -331,10 +331,10 @@ String basePath = request.getContextPath();
 				<td class="view_table_right">
 					<c:forEach items="${accountChangeProofFiles}" var="accountChangeProofFile" varStatus="status">
 						<c:if test="${status.index % 2 eq 1}">
-							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}(${status.count})</a></br>
+							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}</a></br>
 						</c:if>
 						<c:if test="${status.index % 2 eq 0}">
-							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}(${status.count})</a>
+							<a href="${accountChangeProofFile.filePath}" target="_blank">${accountChangeProofFile.name}</a>
 						</c:if>
 					</c:forEach>
 				</td>

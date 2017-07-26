@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.net.*"%>
 <%@ page import="com.jst.util.PropertyUtil"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page isELIgnored="false"%>	
@@ -13,6 +14,29 @@
 	String uploadServer = PropertyUtil.getPropertyValue("uploadServer");
 	String photoTmpDir = PropertyUtil.getPropertyValue("photoTmpDir");
 %>
+
+<%
+	response.setHeader("Pragma", "No-cache");  
+	response.setHeader("Cache-Control", "no-cache");
+	response.setDateHeader("Expires", 0);
+	response.setContentType("text/html;charset=UTF-8"); 
+%>
+<%-- <%
+//一个有中文内容的Cookie
+String str = "我们都有一个家，名字叫中国！";
+Cookie cookie = new Cookie("name", URLEncoder.encode(str, "UTF-8"));
+response.addCookie(cookie);
+ 
+//取出Cookie中的中文内容
+Cookie [] cookies = request.getCookies();
+String str = "";
+for(int i = 0 ; i < cookies.length ; i++) {
+    if(cookies[i].getName().equals("name")) {
+        str = cookies[i].getValue();
+    }
+}
+out.println(URLDecoder.decode(str, "UTF-8"));
+%> --%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -292,6 +316,8 @@
 										DeviceMain = plugin().Global_CreateDevice(1, idx);										
 										if(DeviceMain)
 										{
+											//alert(plugin().Device_GetState(DeviceMain));
+											
 											//document.getElementById('lab1').innerHTML = plugin().Device_GetFriendlyName(DeviceMain);
 											
 											/* var sSubType = document.getElementById('subType1');
@@ -382,17 +408,19 @@
 		
 		        function Unload()
 		        {
-			        if (VideoMain)
-			        {
-				        MainView().View_SetText("", 0);
-				        plugin().Video_Release(VideoMain);
-				        VideoMain = null;
-			        }
-			        if(DeviceMain)
-			        {
-				        plugin().Device_Release(DeviceMain);
-				        DeviceMain = null;		
-			        }
+		        	if (null != plugin()) {
+				        if (VideoMain)
+				        {
+					        MainView().View_SetText("", 0);
+					        plugin().Video_Release(VideoMain);
+					        VideoMain = null;
+				        }
+				        if(DeviceMain)
+				        {
+					        plugin().Device_Release(DeviceMain);
+					        DeviceMain = null;		
+				        }
+		        	}
 			
 			        // 关闭页面，不释放高拍仪资源，避免多次来回使用高拍仪
 			        //plugin().Global_DeinitDevs();
@@ -628,6 +656,7 @@
                     {
 		            	// 清空对应图片路径
 		            	// 每次点击拍照时，清空对应证明材料图片路径
+		            	//clearFiles(fileType);
 		            	
 		                var imgList = plugin().Video_CreateImageList(VideoMain, 0, 0);
 		                if (imgList) {
@@ -644,6 +673,8 @@
 		                            
 		                            // 每次点击拍照，自动复选框勾选文件
 		                            var index = thumb1().Thumbnail_GetCount();
+		                            //alert(index);
+		                            //alert(thumb1().Thumbnail_GetCheck(index));
 		                            if (!thumb1().Thumbnail_GetCheck(index)) {
 		                            	thumb1().Thumbnail_SetCheck(index, true);
 		                            }
@@ -715,13 +746,16 @@
 		        } */
 		        
 		        // 上传图片到服务器后台处理
-				function UploadThumbToServer()
+				function UploadThumbToServer(fileType, name)
 				{	
+		        	//alert(fileType);
 					//http://localhost:8080/vesmsDemo/vehicleRecycle/fileCaptureUpload.do
 					//http://localhost:8080/vesmsDemo/servlet/FileSteamUpload?
 							
 					//fileCaptureUpload
-					var http = thumb1().Thumbnail_HttpUploadCheckImage(uploadServer + "/eliminatedApply/fileCaptureUpload.do?", 1);
+					//alert(thumb1());
+					//alert(thumb1().Thumbnail_GetObject());
+					var http = thumb1().Thumbnail_HttpUploadCheckImage(uploadServer + "/eliminatedApply/fileCaptureUpload.do?t="+GetTimeString(), 1);
 					if(http)
 					{
 						var htInfo = thumb1().Thumbnail_GetHttpServerInfo();
@@ -738,13 +772,18 @@
 								if (msg.success) {
 									// 上传图片成功，保存图片路径到页面
 									str = str + msg.message.file + ",";
+									
+									// 文件上传成功，清空该类文件缩略图
+									clearFiles(fileType);
 								} else {
 									// 任意一张图片上传失败，返回重新提交
 									alert(msg.message);
 									return false;
 								}
 							}
-							$("input[name='filepath']").val(str.substring(0, str.length - 1));
+							// 设置图片路径回显和页面隐藏字段值
+							setProofFileImgPreview(str.substring(0, str.length - 1).split(","), fileType, name);
+							//$("input[name='"+fileType+"']").val(str.substring(0, str.length - 1));
 							alert("图片上传成功！");
 						} else {
 							alert("图片上传失败！");
@@ -1284,21 +1323,6 @@
 						plugin().Image_Release(idcardImage);
 					}
 				} */
-				
-				// 点击确认返回按钮到受理录入页面
-				function ReturnPage() {
-					// 释放资源,关闭视频拍照
-					Unload();
-					
-					// 将页面的所有图片路径传递到受理录入主页面
-					
-					var obj = new Object();
-					if ($("input[name='filepath']").val() != "") {
-						obj.filepath = $("input[name='filepath']").val();
-						window.returnValue = obj;
-					}
-					window.close();
-				}
         </script>
     </head>
 
@@ -1314,29 +1338,30 @@
         <object id="thumb1" type="application/x-eloamplugin" width="1208" height="150" name="thumb"></object>
     </div>
     
+    <!-- 报废汽车回收证明 -->
+	<input type="hidden" name="JDCHSZM"/>
+	<!-- 机动车注销证明 -->
+	<input type="hidden" name="JDCZXZM"/>
+	<!-- 银行卡 -->
+	<input type="hidden" name="YHK"/>
+	<!-- 车主身份证明 -->
+	<input type="hidden" name="CZSFZM"/>
+	<!-- 代理委托书 -->
+	<input type="hidden" name="DLWTS"/>
+	<!-- 代理人身份证 -->
+	<input type="hidden" name="DLRSFZ"/>
+	<!-- 非财政供养单位证明 -->
+	<input type="hidden" name="FCZGYZM"/>
+	<!-- 开户许可证 -->
+	<input type="hidden" name="KHXKZ"/>
+    
     <div class="datagrid-header">
 	<table class="datagrid-table-s datagrid-htable">
-    <!-- <tr>
-	    <td>
-			<input class="submit_01" type="button" value="拍照"	onclick="Scan()" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer()" />
-            <input class="submit_01" type="button" value="上传本地文件"	onclick="UploadToHttpServer()" />
-            <input class="submit_01" type="button" value="扫描直接上传"	onclick="ScanToHttpServer()" />
-			<br/>
-            <input type="text" id="message" size = "195"/>
-            <input type="text" id="idcard" size = "195"/>
-            <input type="text" id="biokey" size = "195"/>
-            <input type="text" id="reader" size = "195"/>
-            <input type="text" id="mag" size = "195"/>
-			<input type="text" id="shenzhentong" size = "195"/>
-			<input type="hidden" name="filepath"/>
-	    </td>
-    </tr> -->
     <tr class="datagrid-row">
     	<td class="view_table_left">报废回收证明：</td>
 		<td class="view_table_right">
     		<input class="submit_01" type="button" value="拍照"	onclick="Scan('JDCHSZM')" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('JDCHSZM')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('JDCHSZM', '报废回收证明')" />
 			<!-- <a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a> -->
 		</td>
 		<td class="view_table_right" colspan="3">
@@ -1347,7 +1372,7 @@
     	<td style="width:130px;padding-right:5px;text-align:right;">机动车注销证明：</td>
 		<td class="view_table_right">
     		<input class="submit_01" type="button" value="拍照"	onclick="Scan('JDCZXZM')" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('JDCZXZM')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('JDCZXZM', '机动车注销证明')" />
 			<!-- <a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a> -->
 		</td>
 		<td class="view_table_right" colspan="3">
@@ -1355,10 +1380,10 @@
 		</td>
     </tr>
     <tr class="datagrid-row">
-    	<td class="view_table_left" style="width:125px">银行卡：</td>
+    	<td class="view_table_left" style="width:130px">银行卡：</td>
 		<td class="view_table_right">
     		<input class="submit_01" type="button" value="拍照"	onclick="Scan('YHK')" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('YHK')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('YHK', '银行卡')" />
 			<!-- <a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a> -->
 		</td>
 		<td class="view_table_right" colspan="3">
@@ -1366,10 +1391,10 @@
 		</td>
     </tr>
     <tr class="datagrid-row">
-    	<td class="view_table_left" style="width:125px">车主身份证明：</td>
+    	<td class="view_table_left" style="width:130px">车主身份证明：</td>
 		<td class="view_table_right">
     		<input class="submit_01" type="button" value="拍照"	onclick="Scan('CZSFZM')" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('CZSFZM')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('CZSFZM', '车主身份证明')" />
 			<!-- <a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a> -->
 		</td>
 		<td class="view_table_right" colspan="3">
@@ -1378,10 +1403,10 @@
     </tr>
     <c:if test="${param.isProxy eq 'N'}">
     <tr class="datagrid-row">
-    	<td class="view_table_left" style="width:125px">代理人身份证明：</td>
+    	<td class="view_table_left" style="width:130px">代理人身份证明：</td>
 		<td class="view_table_right">
     		<input class="submit_01" type="button" value="拍照"	onclick="Scan('DLRSFZ')" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('DLRSFZ')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('DLRSFZ', '代理人身份证明')" />
 			<!-- <a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a> -->
 		</td>
 		<td class="view_table_right" colspan="3">
@@ -1389,10 +1414,10 @@
 		</td>
     </tr>
     <tr class="datagrid-row">
-    	<td class="view_table_left" style="width:125px">代理委托书：</td>
+    	<td class="view_table_left" style="width:130px">代理委托书：</td>
 		<td class="view_table_right">
     		<input class="submit_01" type="button" value="拍照"	onclick="Scan('DLWTS')" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('DLWTS')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('DLWTS', '代理委托书')" />
 			<!-- <a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a> -->
 		</td>
 		<td class="view_table_right" colspan="3">
@@ -1402,10 +1427,10 @@
     </c:if>
     <c:if test="${param.isPersonal eq 'N'}">
     <tr class="datagrid-row">
-    	<td class="view_table_left" style="width:125px">开户许可证：</td>
+    	<td class="view_table_left" style="width:130px">开户许可证：</td>
 		<td class="view_table_right">
     		<input class="submit_01" type="button" value="拍照"	onclick="Scan('KHXKZ')" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('KHXKZ')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('KHXKZ', '开户许可证')" />
 			<!-- <a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a> -->
 		</td>
 		<td class="view_table_right" colspan="3">
@@ -1413,10 +1438,10 @@
 		</td>
     </tr>
     <tr class="datagrid-row">
-    	<td class="view_table_left" style="width:125px">非财政供养单位证明：</td>
+    	<td class="view_table_left" style="width:135px">非财政供养单位证明：</td>
 		<td class="view_table_right">
     		<input class="submit_01" type="button" value="拍照"	onclick="Scan('FCZGYZM')" />
-			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('FCZGYZM')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('FCZGYZM', '非财政供养单位证明')" />
 			<!-- <a id="btnTakePhotoVehicleCancelProof" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a> -->
 		</td>
 		<td class="view_table_right" colspan="3">
@@ -1444,10 +1469,9 @@
     			setProofFilePath(proof_files);
     		}
     		
-    		
-    		
     	});	
     
+    	// 设置各类证明材料的路径
     	function setProofFilePath(proof_files) {
     		// 设置图片路径
     		if (!proof_files) {
@@ -1512,6 +1536,7 @@
     		
     	}
     	
+    	// 根据文件路径、种类、名称生成图片回显链接
     	function setProofFileImgPreview(files, type, name) {
     		if (!files || !type) {
     			return;
@@ -1527,9 +1552,81 @@
     				var _a = "&nbsp<a id='"+id+i+"' href='"+filepath+"' target='_blank'>"+name+"("+i+")</a>";
     				$(id).append(_a);
     			}
-    		} 
+    		}
+    		
+    		// 设置隐藏字段传递到后台
+			$("input[name='"+type+"']").val(files);
     		
     	}
+    	
+    	// 清空各类证明材料回显路径
+    	function clearFiles(fileType) {
+    		// 获取所有文件链接
+    		if (thumb1()) {
+	    		thumb1().Thumbnail_Clear(false);
+    		}
+    		$("a[id^='" + fileType + "']").each( function(i, data) {
+    			if (data.length > 0) {
+    				if (data.id == (fileType + "_IMG")) {
+    					$(this).text("");
+    					$(this).attr('href', '#');
+    				} else {
+    					$(this).remove();
+    				}
+    			}
+    		});
+    	}
+    	
+    	// 点击确认返回按钮到受理录入页面
+		function ReturnPage() {
+			// 释放资源,关闭视频拍照
+			Unload();
+			
+			// 将页面的所有图片路径传递到受理录入主页面
+			
+			var obj = new Object();
+			// 报废回收证明
+			if ($("input[name='JDCHSZM']").val() != "") {
+				obj.JDCHSZM = $("input[name='JDCHSZM']").val();
+			}
+			
+			// 机动车注销证明
+			if ($("input[name='JDCZXZM']").val() != "") {
+				obj.JDCZXZM = $("input[name='JDCZXZM']").val();
+			}
+			
+			// 银行卡
+			if ($("input[name='YHK']").val() != "") {
+				obj.YHK = $("input[name='YHK']").val();
+			}
+			
+			// 车主身份证明
+			if ($("input[name='CZSFZM']").val() != "") {
+				obj.CZSFZM = $("input[name='CZSFZM']").val();
+			}
+			
+			// 代理人身份证明
+			if ($("input[name='DLRSFZ']").val() != "") {
+				obj.DLRSFZ = $("input[name='DLRSFZ']").val();
+			}
+			
+			// 代理委托书
+			if ($("input[name='DLWTS']").val() != "") {
+				obj.DLWTS = $("input[name='DLWTS']").val();
+			}
+			
+			// 开户许可证
+			if ($("input[name='KHXKZ']").val() != "") {
+				obj.KHXKZ = $("input[name='KHXKZ']").val();
+			}
+			
+			// 非财政供养单位证明
+			if ($("input[name='FCZGYZM']").val() != "") {
+				obj.FCZGYZM = $("input[name='FCZGYZM']").val();
+			}
+			window.returnValue = obj;
+			window.close();
+		}
     
     </script>
     

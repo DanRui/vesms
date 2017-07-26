@@ -83,7 +83,7 @@ String basePath = request.getContextPath();
 				<TD>
 					<fmt:formatDate value="${v.recycleDate}" type="date" pattern="yyyy-MM-dd"/>
 				</TD>
-				<TD style="text-align: center;">提前报废时长</TD>
+				<TD style="text-align: center;">提前报废时长(天)</TD>
 				<TD>
 					${v.advancedScrapDays}
 				</TD>
@@ -152,7 +152,7 @@ String basePath = request.getContextPath();
 				</TD>
 				<TD style="text-align: center;">补贴金额</TD>
 				<TD colspan="2">
-					人民币：${v.subsidiesMoney}
+					人民币：<fmt:formatNumber value="${v.subsidiesMoney}" type="currency"/>
 					   &nbsp;&nbsp;&nbsp;&nbsp;元
 					 &nbsp;&nbsp;
 				</TD>

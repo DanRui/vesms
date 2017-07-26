@@ -178,7 +178,8 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left" style="width:120px">报废回收证明编号：</td>
 					<td class="view_table_right">
-						<input type="text" name="callbackProofNo" value="${v.callbackProofNo}" readonly="readonly"  />
+						${v.callbackProofNo}
+						<%-- <input type="text" name="callbackProofNo" value="${v.callbackProofNo}" readonly="readonly"  /> --%>
 					</td>
 					<td class="view_table_left">交售日期：</td>
 					<td class="view_table_right">
@@ -460,7 +461,7 @@
 			</c:if>
 			<tr class="datagrid-row">
 				<td align="center" colspan="6">
-					<a id="btnUploadUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">上传</a>
+					<a id="btnUploadUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">本地文件上传</a>
 				</td>
 			</tr>
 		</table>
@@ -535,13 +536,27 @@
 			   if (ifValid) {
 				
 				   var url =  $("#form-apply-upload").attr("action")+"?isPersonal="+isPersonal+"&isProxy="+isProxy;
+				   
+				   /* $.ajaxSetup({ 
+					   	async: false 
+					   }); */ 
+				   
 				   $("#form-apply-upload").form({
 	        			url  : url,
 	        		 	success : function(result) {
 	        		 		var result = eval('(' + result + ')');
 	        		 		if (result.success) {
 	        		 			alert("文件上传成功！");
-	        					$("#callbackProofFileImg").text("报废汽车回收证明");
+	        		 			
+	        		 			setFilePreview("callbackProof", result.message.callbackProofFiles, "报废回收证明");
+	        		 			
+	        		 			setFilePreview("vehicleCancelProof", result.message.vehicleCancelProof, "机动车注销证明");
+	        		 			
+	        		 			setFilePreview("bankCard", result.message.bankCard, "银行卡");
+	        		 			
+	        		 			setFilePreview("vehicleOwnerProof", result.message.vehicleOwnerProof, "车主身份证明");
+	        		 			
+	        					/* $("#callbackProofFileImg").text("报废汽车回收证明");
 	        					$("#callbackProofFileImg").attr("href", basePath+'/'+result.message.callbackProofFiles);
 	        					$("input[name='callbackProofFile']").val(result.message.callbackProofFiles);
 	        					
@@ -555,9 +570,9 @@
 	        					
 	        					$("#vehicleOwnerProofFileImg").text("车主身份证明");
 	        					$("#vehicleOwnerProofFileImg").attr("href", basePath+'/'+result.message.vehicleOwnerProof);
-	        					$("input[name='vehicleOwnerProofFiles']").val(result.message.vehicleOwnerProof);
+	        					$("input[name='vehicleOwnerProofFiles']").val(result.message.vehicleOwnerProof); */
 	        					
-	        					// 办理类型为代办
+	        					/* // 办理类型为代办
 	        					if (isProxy == "N") {
 		        					$("#agentProxyFileImg").text("代理委托书");
 		        					$("#agentProxyFileImg").attr("href", basePath+'/'+result.message.agentProxy);
@@ -577,6 +592,20 @@
 		        					$("#openAccPromitFileImg").text("开户许可证");
 		        					$("#openAccPromitFileImg").attr("href", basePath+'/'+result.message.openAccPromit);
 		        					$("input[name='openAccPromitFiles']").val(result.message.openAccPromit);
+	        					} */
+	        					
+	        					// 办理类型为代办
+	        					if (isProxy == "N") {
+	        						setFilePreview("agentProxy", result.message.agentProxy, "代理委托书");
+	        						
+	        						setFilePreview("agentProof", result.message.agentProof, "代理人身份证");
+	        					}
+	        					
+	        					// 车主类型为企业
+	        					if (isPersonal == "N") {
+	        						setFilePreview("noFinanceProvide", result.message.noFinanceProvide, "非财政供养单位证明");
+	        						
+	        						setFilePreview("openAccPromit", result.message.openAccPromit, "开户许可证");
 	        					}
 	        					
 	        		 		} else {
@@ -584,27 +613,6 @@
 	        		 			//$('#form-apply-upload')[0].reset();
 	        		 			
 	        		 			clearUploadFiles(isPersonal, isProxy);
-	        		 			
-	        		 			/* $("#callbackProofFile").filebox("clear");
-	        		 			$("#vehicleCancelProof").filebox("clear");
-	        		 			$("#bankCard").filebox("clear");
-	        		 			
-	        		 			var jVehicleOwnerProof = $("#vehicleOwnerProof")   
-	        		 			jVehicleOwnerProof.after(jVehicleOwnerProof.clone().val(""));     
-	        		 			jVehicleOwnerProof.remove();
-	        		 			
-	        		 			//$("#vehicleOwnerProof").filebox("clear");
-	        		 			if (isPersonal == "N") {
-		        		 			$("#agentProxy").filebox("clear");
-		        		 			$("#agentProof").filebox("clear");
-	        		 			}
-	        		 			if (isProxy == "N") {
-	        		 				$("#noFinanceProvide").filebox("clear");
-	        		 				var jOpenAccPromit = $("#openAccPromit")   
-		        		 			jOpenAccPromit.after(jOpenAccPromit.clone().val(""));     
-	        		 				jOpenAccPromit.remove();
-	        		 				//$("#openAccPromit").filebox("clear");
-	        		 			}  */
 	        		 		}
 	        			}
 	        	 	});
@@ -1098,6 +1106,38 @@
 			
 			$("#vehicleOwnerProofFileImg").text("");
 			$("#vehicleOwnerProofFileImg").attr("href", "#");
+		}
+		
+		// 根据文件路径设置回显和传递到后台的隐藏值
+		function setFilePreview(type, files, name) {
+			var basePath = "<%=basePath%>";
+			
+			if (files == null && files == "") {
+				return;
+			}
+			
+			var filesArray = files.split(",");
+			var id = "#" + type + "FileImg";
+			var filename;
+			
+			if (type == "callbackProof") {
+				filename = type + "File";
+			} else {
+				filename = type + "Files";
+			}
+    		// 多张图片预览
+    		$(id).text(name + "(1)");
+			$(id).attr("href", basePath+'/'+filesArray[0]);
+    		if (filesArray.length > 1) {
+    			for (var i = 2 ; i <= filesArray.length ; i ++) {
+    				var filepath = basePath + '/' + filesArray[i-1];
+    				var _a = "&nbsp<a id='"+id+i+"' href='"+filepath+"' target='_blank'>"+name+"("+i+")</a>";
+    				$(id).append(_a);
+    			}
+    		} 
+    		
+			// 设置隐藏字段传递到后台
+			$("input[name='"+filename+"']").val(files);
 		}
 	
 	</script>

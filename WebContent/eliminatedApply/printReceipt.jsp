@@ -95,7 +95,7 @@
 				</TD>
 				<TD  style="text-align: center;">补贴金额</TD>
 				<TD  colspan="3">
-					人民币：${v.subsidiesMoney}
+					人民币：<fmt:formatNumber value="${v.subsidiesMoney}" type="currency"/>
 						&nbsp;&nbsp;&nbsp;&nbsp;元
 					 &nbsp;&nbsp;
 				</TD>

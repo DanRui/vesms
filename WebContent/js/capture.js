@@ -209,7 +209,7 @@ function changesubTypeMain() {
     }			
 }*/
 
-function Load() {
+function Initial() {
 	//设备接入和丢失
 	//type设备类型， 1 表示视频设备， 2 表示音频设备
 	//idx设备索引
@@ -291,7 +291,7 @@ function Load() {
 	});
 
 	var title = document.title;
-	document.title = title + plugin().version;
+	//document.title = title + plugin().version;
 
 	MainView().Global_SetWindowName("view");
 	//thumb1().Global_SetWindowName("thumb");
@@ -309,7 +309,7 @@ function Load() {
     //thumb1().style.display = "none";
 }
 
-function Unload() {
+function Destroy() {
 	if(null != plugin()) {
 		if (VideoMain) {
 			MainView().View_SetText("", 0);

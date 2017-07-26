@@ -24,7 +24,7 @@
 		<link rel="stylesheet" href="<%=basePath%>/js/plugins/editor/plugins/code/prettify.css" />
 		<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/table.css">
 		
-        <script type="text/javascript" src="<%=basePath%>/js/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="<%=basePath%>/js/jquery-1.9.0.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/datagrid-detailview.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.extension.js"></script>
@@ -120,7 +120,7 @@
 		            if (!DeviceMain)
 		                return;
 			
-			        var sSubType = document.getElementById('subType1'); 								
+			        /* var sSubType = document.getElementById('subType1'); 								
 			        var sResolution = document.getElementById('selRes1'); 	
 				
 			        var SelectType = 0;
@@ -149,6 +149,13 @@
 			        {
 					    MainView().View_SelectVideo(VideoMain);
 					    MainView().View_SetText("打开视频中，请等待...", 0);
+							
+			        } */
+			        VideoMain = plugin().Device_CreateVideo(DeviceMain, 0, 1);
+			        if (VideoMain)
+			        {
+					    MainView().View_SelectVideo(VideoMain);
+					    MainView().View_SetText("高拍仪打开中，请等待...", 0);
 							
 			        }
 		        }
@@ -287,7 +294,7 @@
 										DeviceMain = plugin().Global_CreateDevice(1, idx);										
 										if(DeviceMain)
 										{
-											document.getElementById('lab1').innerHTML = plugin().Device_GetFriendlyName(DeviceMain);
+											/* document.getElementById('lab1').innerHTML = plugin().Device_GetFriendlyName(DeviceMain);
 											
 											var sSubType = document.getElementById('subType1');
 											sSubType.options.length = 0;
@@ -306,7 +313,7 @@
 											}
 											
 											sSubType.selectedIndex = 0;
-											changesubTypeMain();
+											changesubTypeMain(); */
 											
 											OpenVideoMain();
 										}
@@ -363,9 +370,9 @@
                                         plugin().Device_Release(DeviceMain);
                                         DeviceMain = null;
 										
-										document.getElementById('lab1').innerHTML = "";
+										/* document.getElementById('lab1').innerHTML = "";
 										document.getElementById('subType1').options.length = 0; 
-										document.getElementById('selRes1').options.length = 0; 
+										document.getElementById('selRes1').options.length = 0;  */
                                     }
                                 }
 								
@@ -386,14 +393,14 @@
 						}
                     });
 
-			        addEvent(plugin(), 'Ocr', function(flag, ret)
+			        /* addEvent(plugin(), 'Ocr', function(flag, ret)
 			        {
 				        if (1 == flag && 0 == ret)
 				        {
 					        var ret = plugin().Global_GetOcrPlainText(0);
 					        alert(ret);
 				        }
-			        });
+			        }); */
 			
 			        addEvent(plugin(), 'IdCard', function(ret)
 			        {
@@ -417,7 +424,7 @@
 				        }
 			        });
 			
-			        addEvent(plugin(), 'Biokey', function(ret)
+			        /* addEvent(plugin(), 'Biokey', function(ret)
 			        {
 				        if (4 == ret)
 				        {
@@ -596,7 +603,7 @@
 				        }
 				
 				        plugin().RegionList_Release(list);
-			        });
+			        }); */
 				
 			        var title = document.title;
 			        //document.title = title + plugin().version;
@@ -1589,6 +1596,9 @@
     <div>
         <object id="view1" type="application/x-eloamplugin" width="700" height="300" name="view"></object>
         <!-- <object id="view2" type="application/x-eloamplugin" width="600" height="300" name="view"></object> -->
+        <br/>
+		<input class="submit_01" type="button" value="左转"	onclick="Left()" />
+        <input class="submit_01" type="button" value="右转"	onclick="Right()" />
     </div>
 
     <div>
@@ -1598,14 +1608,14 @@
 	<table class="datagrid-table-s datagrid-htable">
     <tr>
 	    <td>
-            <label id="lab1">设备1</label>
+            <!-- <label id="lab1">设备1</label>
             <select id="subType1" style="width: 90px" name="subType1" onchange="changesubTypeMain()"></select> 
             <select id="selRes1" style="width: 90px" name="selRes"></select> 
 			扫描尺寸<select id="scansize" style="width: 90px" name="scansize" onchange="changescansize()">			
 				<option value ="org">原始</option>
 				<option value ="mid">中</option>
 				<option value="small">小</option>
-			</select> 
+			</select>  -->
             <!-- <label id="lab2">设备2</label>
             <select id="subType2" style="width: 90px" name="subType2" onchange="changesubTypeAssist()"></select> 
             <select id="selRes2" style="width: 90px" name="selRes"></select>  -->		
@@ -1618,11 +1628,8 @@
             <input id="Deskew" type="checkbox" value="" onclick="Deskew(this)" />纠偏
             <input id="SetState" type="checkbox" value="" onclick="SetState(this)" />手动框选
 			<input id="OpenVerifyFacRect" type="checkbox" value="" onclick="OpenVerifyFacRect(this)" />脸部裁剪	 -->
-            <br />
-			<input class="submit_01" type="button" value="左转"	onclick="Left()" />
-            <input class="submit_01" type="button" value="右转"	onclick="Right()" />
-            <input class="submit_01" type="button" value="属性"	onclick="ShowProperty()" />
-            <b> | </b>
+            <!-- <input class="submit_01" type="button" value="属性"	onclick="ShowProperty()" />
+            <b> | </b> -->
             <!-- <input class="submit_01" type="button" value="主头录像"	onclick="StartMainRecord()" />
             <input class="submit_01" type="button" value="停止"	onclick="StopMainRecord()" /> -->
             <!-- <input class="submit_01" type="button" value="副头录像"	onclick="StartAssistRecord()" />

@@ -135,6 +135,11 @@ public class EliminatedApplyAction extends BaseAction {
 		JSONObject json = new JSONObject();
 		try {
 			// 保存受理单
+			
+			// 保存受理单前，处理号牌号码字段，增加字母“B”
+			String vehiclePlateNum = "B" + eliminatedApply.getVehiclePlateNum();
+			eliminatedApply.setVehiclePlateNum(vehiclePlateNum);
+			
 			Map<String, Object> result = eliminatedApplyService.save(eliminatedApply, callbackProofFile, vehicleCancelProofFiles,
 					bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
 			if(null != result && result.get("isSuccess").equals(true)) {

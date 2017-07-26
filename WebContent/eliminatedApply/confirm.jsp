@@ -259,6 +259,8 @@
 										href : url
 									});
 									
+									$("#eliminated-apply-list #eliminated-apply-grid").datagrid("load");
+									
 									//$("#common-dialog").dialog("refresh", url);
 									
 			                	} else {
@@ -317,7 +319,7 @@
 			// 重新打印受理表
 			$("#btnPrintAgain").click(function() {
 				var url = basePath+"/eliminatedApply/applyPreview.do?&id="+id;
-				//$("#common-dialog").dialog("refresh", url);
+				$("#common-dialog").dialog("refresh", url);
 				$("#common-dialog").dialog("close");
 			 	openDialog({
 				   	type : "PRINT_APPLY_TABLE",
@@ -334,7 +336,7 @@
 			$("#btnTakePhotoConfirmFile").click(function() {
 				var vehiclePlateNum = '${v.vehiclePlateNum}';
 				// 弹出高拍仪抓拍图片界面
-				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum, "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
+				var parentValue = window.showModalDialog("eliminatedApply/capture.jsp?vehiclePlateNum="+vehiclePlateNum.substring(1), "图片抓拍上传", "dialogWidth=700px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
         	
 	        	//alert(parentValue.filepath);
 	        	
