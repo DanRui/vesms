@@ -198,10 +198,15 @@ String basePath = request.getContextPath();
 									title : "受理单资料修正",
 									width : 900,
 									height : 600,
-									param: {reset:false, save:false,
+									param: {
+										close:false,
+										reset:false,
+										save:false,
+										isBeforeClose:true,
+										beforeCloseFunc:'clearCaptureRes',
 										buttons:[{
 											id : "choose_modify_type",
-											text : "提交",
+											text : "保存修改",
 											iconCls : "icon-ok"/* ,
 											fn : function() {
 												//后台获取选择的修正类型，传到修正页面进行处理。

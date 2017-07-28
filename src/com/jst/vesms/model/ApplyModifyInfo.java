@@ -46,6 +46,9 @@ public class ApplyModifyInfo {
 	// 补贴账户银行
 	private String bankName;
 	
+	// 补贴银行名称(其它银行时)
+	private String otherBankName;
+	
 	// 补贴账户账号
 	private String bankAccountNo;
 	
@@ -268,7 +271,14 @@ public class ApplyModifyInfo {
 	public void setVehicleLicenseFiles(List<String> vehicleLicenseFiles) {
 		this.vehicleLicenseFiles = vehicleLicenseFiles;
 	}
-	
+
+	public String getOtherBankName() {
+		return otherBankName;
+	}
+
+	public void setOtherBankName(String otherBankName) {
+		this.otherBankName = otherBankName;
+	}
 
 }
 

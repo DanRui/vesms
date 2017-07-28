@@ -1593,7 +1593,7 @@
 
 <body onload="Load()" onunload="Unload()" style="width: 700px;">
 
-    <div>
+    <div align="center">
         <object id="view1" type="application/x-eloamplugin" width="700" height="300" name="view"></object>
         <!-- <object id="view2" type="application/x-eloamplugin" width="600" height="300" name="view"></object> -->
         <br/>

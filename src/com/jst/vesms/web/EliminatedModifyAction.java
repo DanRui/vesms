@@ -317,9 +317,11 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		try {
 			// 更新受理单信息,包括一般资料修正和补贴账户变更
 			applyModifyInfo.setFaultType("1");
+			applyModifyInfo.setModifyResult("2");
 			Map<String, Object> map = eliminatedModifyService.saveApplyInfo(applyModifyInfo);
 			if (map.get("isSuccess").equals(true)) {
 				saveOk = true;
+				json.put("id", applyModifyInfo.getId());
 				json.put("msg", map.get("msg"));
 			}
 			
@@ -346,9 +348,11 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		try {
 			// 更新受理单信息,包括一般资料修正和补贴账户变更
 			applyModifyInfo.setFaultType("2");
+			applyModifyInfo.setModifyResult("2");
 			Map<String, Object> map = eliminatedModifyService.saveApplyInfo(applyModifyInfo);
 			if (map.get("isSuccess").equals(true)) {
 				saveOk = true;
+				json.put("id", applyModifyInfo.getId());
 				json.put("msg", map.get("msg"));
 			}
 		} catch (Exception e) {
@@ -778,6 +782,72 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		// 解密经办人身份证号
 		eliminatedApply.setAgentIdentity(EncryptUtils.decryptDes(des_key, (eliminatedApply.getAgentIdentity() == null) ? "" : eliminatedApply.getAgentIdentity()));
 		return eliminatedApply;
+	}
+	
+	/**
+	 * 
+	 * <p>Description: 进入受理申请表打印预览页面</p>
+	 * @param id 主键ID Integer
+	 * @return ModelAndView
+	 *
+	 */
+	@RequestMapping("applyPreview")
+	@Privilege(modelCode="M_ELIMINATED_APPLY_NO_LIST", prvgCode="PRINT_APPLY")
+	public ModelAndView applyPreview(@RequestParam("id")Integer id) throws Exception {
+		String view = "ELIMINATED_MODIFY.PREVIEW";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		mv.getModel().put("stage", "applyPreview");
+		
+		EliminatedApply eliminatedApply = eliminatedModifyService.getById(id);
+		
+		eliminatedApply = this.getApplyWithoutEncryption(eliminatedApply);
+		
+		mv.addObject("v", eliminatedApply);
+		return mv;
+	}
+	
+	@RequestMapping("confirmPreview")
+	@Privilege(modelCode="M_ELIMINATED_APPLY_NO_LIST", prvgCode="CONFIRM")
+	public ModelAndView confirmPreview(@RequestParam("id")Integer id) throws Exception {
+		String view = "ELIMINATED_MODIFY.CONFIRM";
+		ModelAndView mv = new ModelAndView(getReturnPage(view));
+		mv.getModel().put("stage", "confirm");
+		
+		EliminatedApply model = eliminatedModifyService.getById(id);
+		
+		model = this.getApplyWithoutEncryption(model);
+		
+		mv.addObject("v", model);
+		return mv;
+	}
+	
+	@ResponseBody
+	@Privilege(modelCode="M_ELIMINATED_MODIFY_NOR", prvgCode="MODIFY")
+	@RequestMapping(value="confirmApply", produces={"text/html;charset=UTF-8;","application/json;"})
+	public String confirmApply(@RequestParam("id")Integer id, @RequestParam("signedApplyFiles")String signedApplyFiles) throws Exception {
+		log.debug("EliminatedModifyAction confirmApply is start");
+		boolean saveOk = false;
+		JSONObject json = new JSONObject();
+		try {
+			// 更新受理单信息, 保存受理确认表数据
+			Map<String, Object> map = eliminatedModifyService.confirmModify(id, "1", signedApplyFiles);
+			if (map.get("isSuccess").equals(true)) {
+				saveOk = true;
+				json.put("id", id);
+				json.put("msg", map.get("msg"));
+			}
+			
+		} catch (Exception e) {
+			log.error("EliminatedModifyAction confirmApply is Error:"+e, e);
+			saveOk = false;
+			json.put("msg", e.toString());
+		}
+		
+		log.debug("EliminatedModifyAction confirmApply is End");
+		if(saveOk) {
+			return JsonUtil.toSuccessMsg(json.toString());
+		} else
+		return JsonUtil.toErrorMsg(json.toString());
 	}
 	
 }

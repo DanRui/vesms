@@ -349,6 +349,9 @@ public class PayApplyAction extends BaseAction{
 		page.setOrder(order);
 		page.setOrderBy(orderBy);
 		String returnStr = "";
+		if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
+			list.add(new PropertyFilter("EQN_payBatchTotalAmount",payBatchTotalAmount));
+		}
 		if(StringUtil.isNotEmpty(batchNo)) {
 			list.add(new PropertyFilter("EQS_batchNo",batchNo));
 		}
@@ -419,9 +422,6 @@ public class PayApplyAction extends BaseAction{
 		if(StringUtil.isNotEmpty(payResStatus)) {
 			list.add(new PropertyFilter("EQS_payResStatus",payResStatus));
 		}
-		if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
-			list.add(new PropertyFilter("EQS_applyNo",payBatchTotalAmount));
-		}
 		if(StringUtil.isNotEmpty(createStartDate)) {
 			list.add(new PropertyFilter("GED_createDate",createStartDate));
 		}
@@ -433,6 +433,9 @@ public class PayApplyAction extends BaseAction{
 			date = calendar.getTime();
 			createEndDate = DateUtil.format(date, DateUtil.DATE_PATTERN);
 			list.add(new PropertyFilter("LTD_createDate",createEndDate));
+		}
+		if(StringUtil.isNotEmpty(payBatchTotalAmount)) {
+			list.add(new PropertyFilter("EQN_payBatchTotalAmount",payBatchTotalAmount));
 		}
 		list.add(new PropertyFilter("EQS_batchStatus", "1"));
 		list.add(new PropertyFilter("EQS_batchType","1"));

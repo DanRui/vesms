@@ -3,6 +3,7 @@
 <%
 	String basePath = request.getContextPath();
 	String fileType = request.getParameter("filetype");
+	String index = request.getParameter("index");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -43,6 +44,7 @@
 			for (var i = 0 ; i < filesArray.length ; i ++) {
 				// 循环增加li到ul
 				var imgUrl = basePath + "/" + filesArray[i];
+				//alert(imgUrl);
 				var imgId = "img_" + (i+1);
 				var li = '<li style="display:block"><span style="display:inline-block;width:800px;height:500px;" id="'+ imgId +'"><img style="display:block;width:100%;height:100%;" alt="'+ name + '" src="'+imgUrl +'"/></span></li>';
 				ul.append(li);
@@ -52,7 +54,7 @@
 				if (currentType == type) {
 					_a_class = 'class="select"';
 				}
-				var _a_name = '<a href="#"' + _a_class + ' style="display:inline-block;margin-right:10px;padding:5px 15px;text-align:center;text-decoration:none;"><em>'+name+'</em><em>'+(i+1) +'</em></a>';
+				var _a_name = '<a id="'+ type + (i+1) +'" href="#"' + _a_class + '><em>'+name+'</em><em>'+(i+1) +'</em></a>';
 				$("#title_nav").append(_a_name);
 				
 			}
@@ -160,6 +162,20 @@
 		} */
 		setPicturePreview(noFinanceProvideFiles, 'noFinanceProvide', '非财政供养单位证明');
 		
+		// 签字确认的受理表
+		var signedApplyFiles = window.opener.signedApplyFiles;
+		/* if (null != noFinanceProvideFiles && noFinanceProvideFiles != "") {
+			countFiles.noFinanceProvide = noFinanceProvideFiles.split(",").length;
+		} */
+		setPicturePreview(signedApplyFiles, 'signedApply', '签字确认的受理表');
+
+		// 补贴对象变更证明材料
+		var accountChangeProofFiles = window.opener.accountChangeProofFiles;
+		/* if (null != noFinanceProvideFiles && noFinanceProvideFiles != "") {
+			countFiles.noFinanceProvide = noFinanceProvideFiles.split(",").length;
+		} */
+		setPicturePreview(accountChangeProofFiles, 'accountChangeProof', '补贴对象变更证明材料');
+		
 		/* filepath = callbackProofFile + "," + vehicleCancelProofFiles + "," + bankCardFiles + "," + vehicleOwnerProofFiles + "," 
 				 + agentProxyFiles + "," + agentProofFiles + "," + openAccPromitFiles + "," + noFinanceProvideFiles; */
 		
@@ -170,6 +186,11 @@
 		$("span[id^='img_']").each(function() {
 			$(this).zoombie();
 		});
+		
+		// 根据前一个页面的参数，选择相关的证明材料展示
+		var currentType = "<%=fileType%>";
+		var index = "<%=index%>";
+		$("#"+ currentType + index).click();
 	});
 </script>
 </body>

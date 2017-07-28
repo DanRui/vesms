@@ -1,5 +1,5 @@
 // JavaScript Document
-;$(function(){
+$(function(){
 			
 	$.fn.turnPic=function(){
 		var index=0;
@@ -11,6 +11,12 @@
 			index=navList.index(this);
 			showImg(index);
 		}).eq(0).mouseover();
+		
+		navList.click(function() {
+			index = navList.index(this);
+			showImg(index);
+		});
+		
 		$(this).hover(function(){
 			clearInterval(timer);
 		},function(){
@@ -25,8 +31,8 @@
 		
 		function showImg(index){
 			showUl.eq(index).stop(true,true).show().siblings().hide();
-			navList.removeClass("select").css("opacity","0.7").eq(index).addClass("select").css("opacity","1");
+			navList.removeClass("select").css("opacity","0.7").eq(index).addClass("select").css({"opacity":"1"});
 		}
 	}	
 	
-})(jQuery);
+});

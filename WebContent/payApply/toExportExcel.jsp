@@ -54,7 +54,7 @@ String basePath = request.getContextPath();
 			$("#confirmId").form("submit", {
 				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 				success : function(data) {
-					$("#ConfirmButton").attr("disabled","true");
+					$("#ConfirmButton").attr("disabled","true"); //设置变灰按钮  
 					var data = eval('(' + data + ')');
 					if (data.success) {
 						Messager.alert({

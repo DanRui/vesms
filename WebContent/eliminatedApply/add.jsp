@@ -244,6 +244,7 @@
 					<td class="view_table_right">
 						<input id="bankCodeAdd" class="easyui-combobox" name="bankCode" 
 						data-options="editable:false,required:true,valueField:'code',textField:'value',url:'sysDict/getDictListFromMap.do?dictType=BANK_CODE',panelHeight:150"/>
+						<input type="text" name="bankName"/>
 						<!-- <input type="text" name="bankName" class="easyui-validatebox" data-options="required:true" /> -->
 						<span style="color:red;text-align:center">&nbsp;*&nbsp;</span>
 					</td>
@@ -425,22 +426,22 @@
 				
 				var basePath = "<%=basePath%>";
 				
-				// 注销日期校验
-				/* $("#destroyDate").datebox({
-					validator: function(date) {
-						var now = new Date();
-						var d1 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-						return date <= d1;
-					}
-				}); */
+				// 设置其它银行名称隐藏
+				$("input[name='bankName']").hide();
 				
-				// 重新调整页面窗口大小和位置居中
-				/* $("#common-dialog").dialog({
-					title : "申报受理录入"
-				}).dialog("resize", {
-					width : 1132,
-					height : 800 
-				}).dialog("center"); */
+				$("#bankCodeAdd").combobox({
+					onSelect : function(rec) {
+						if (rec.code == "999") {
+							$("input[name='bankName']").attr("required", true);
+							$("input[name='bankName']").show();
+						} else {
+							// 隐藏银行名称并且清空原值
+							$("input[name='bankName']").val("");
+							$("input[name='bankName']").attr("required", false);
+							$("input[name='bankName']").hide();
+						}
+					}
+				});
 				
 				// 初始化号牌号码输出框，显示粤B开头
 				//$("input[name='vehiclePlateNum']").val("粤B");
@@ -610,6 +611,15 @@
 					
 				});
 				
+				// 绑定输入预约号元素的回车事件
+				$("input[name='appointmentNo']").keypress(function(event) {
+					//var appointmentNo = $(this).val();
+					if(event.keyCode == '13')
+					{
+						$("#btnAppointment").click();
+					}
+				});
+				
 				// 点击拍照上传按钮，跳转到拍照上传页面，统一上传所有的证明材料
 				$("#btnCapture").click(function() {
 					var vehiclePlateNum = $("input[name='vehiclePlateNum']").val();
@@ -734,11 +744,6 @@
 					// 填入到车主身份证
 					$("input[name='vehicleOwnerIdentity']").val(idCard);
 					//alert(idCard);
-				});
-				
-				// 经办人身份证识别
-				$("#btnVerifyAgentCard").click(function() {
-					var idCard = ReadIDCard();
 					
 					var isProxy = $("#isProxy").combobox("getValue");
 					
@@ -755,8 +760,30 @@
 							$("input[name='vehicleOwnerIdentity']").val("");
 						}
 					}
+				});
+				
+				// 经办人身份证识别
+				$("#btnVerifyAgentCard").click(function() {
+					var idCard = ReadIDCard();
 					
 					$("input[name='agentIdentity']").val(idCard);
+					
+					var isProxy = $("#isProxy").combobox("getValue");
+					
+					var vehicleOwnerIdentity = $("input[name='vehicleOwnerIdentity']").val();
+					
+					var agentIdentity = $("input[name='agentIdentity']").val();
+					
+					if (vehicleOwnerIdentity != "" && agentIdentity != "") {
+						if (isProxy == "Y" && (idCard != vehicleOwnerIdentity || agentIdentity != idCard)) {
+							alert("办理类型为自办，经办人身份证号必须与车主一致！");
+							$("input[name='agentIdentity']").val("");
+						} else if (isProxy == "N" && (vehicleOwnerIdentity == agentIdentity || idCard == vehicleOwnerIdentity)) {
+							alert("办理类型为代理，经办人身份证号必须与车主身份证明号不同！");
+							$("input[name='agentIdentity']").val("");
+						}
+					}
+					
 					//alert(idCard);
 				});
 				
@@ -1180,6 +1207,12 @@
 							return false;
 						}
 						
+						// 校验其它银行是否必填
+						if (!checkOtherBankName()) {
+							alert("请填写其它银行名称！");
+							return false;
+						}
+						
 						// 点击下一步，校验必传文件是否上传
 						var hasFileUpload = checkAttachments();
 						if (!hasFileUpload) {
@@ -1549,6 +1582,8 @@
 				var vehiclePlateType = $(trId).find("td:eq(3)").find("input[name='appointVehPlateCode']").val();
 				
 				// 补贴账户银行
+				var bankName = $(trId).find("td:eq(5)").text();
+				//alert(bankName);
 				var bankCode = $(trId).find("td:eq(5)").find("input[name='appointBankCode']").val();
 				
 				// 补贴账户卡号
@@ -1567,6 +1602,10 @@
 				// 设置开户银行和银行账号
 				$("#bankAccountNo").numberbox("setValue", bankAccountNo);
 				$("#bankCodeAdd").combobox("setValue", bankCode);
+				if (bankCode == "999") {
+					$("input[name='bankName']").show();
+					$("input[name='bankName']").val(bankName);
+				}
 				//$("#bankCode").combobox("select", bankCode);
 				
 				// 设置经办人身份证
@@ -1616,10 +1655,45 @@
 				return isOk;
 			}
 			
+			// 校验其它银行必填
+			function checkOtherBankName() {
+				var isOk = true;
+				var bankCode = $("#bankCodeAdd").combobox("getValue");
+				if (bankCode == "999" && $("input[name='bankName']").val() == "") {
+					isOk = false;
+				}
+				return isOk;
+			}
+			
 			// 清空文件上传框的值，使得可以重新选择文件进行上传
 			function clearUploadFiles(isPersonal, isProxy) {
 				$('#form-apply-upload')[0].reset();
+				
 				if (isPersonal == 'N') {
+					// 如果是企业，则清空页面开户许可证和非财政供养单位证明的文件路径
+					$("input[name='noFinanceProvideFiles']").val("");
+
+					$("input[name='openAccPromitFiles']").val("");
+				}
+				
+				if (isProxy == 'N') {
+					// 如果是代理，则清空页面代理人身份证明和代理委托书的文件路径
+					$("input[name='agentProofFiles']").val("");
+
+					$("input[name='agentProxyFiles']").val("");
+				}
+				
+				$("input[name='callbackProofFile']").val("");
+
+				$("input[name='vehicleCancelProofFiles']").val("");
+				
+				$("input[name='bankCardFiles']").val("");
+
+				$("input[name='vehicleOwnerProofFiles']").val("");
+				
+				// 清空页面超链接
+				
+				/* if (isPersonal == 'N') {
 					// 如果是企业，则清空开户许可证和非财政供养单位证明
 					//$("#openAccPromit").filebox("setValue", "");
 					//$("#noFinanceProvide").filebox("setValue", "");
@@ -1657,11 +1731,11 @@
     			$("#bankCardFileImg").attr("href", "#");
     			
     			$("#vehicleOwnerProofFileImg").text("");
-    			$("#vehicleOwnerProofFileImg").attr("href", "#");
+    			$("#vehicleOwnerProofFileImg").attr("href", "#"); */
 			}
 			
 			// 图片集中预览
-			function picturePreview(currentType) {
+			function picturePreview(currentType, index) {
 				var basePath = "<%=basePath%>";
 				// 获取页面所有图片路径，传递到新窗口
 				// 先获取页面已经上传的文件路径
@@ -1685,7 +1759,7 @@
 				proof_files.agentProxyFiles = $("input[name='agentProxyFiles']").val();
 				
 				//alert("adadad");
-				window.open(basePath + '/eliminatedApply/picturePreview.jsp?filetype='+currentType,'证明材料预览','height=300,width=400,top=200,left=400,toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no');
+				window.open(basePath + '/eliminatedApply/picturePreview.jsp?filetype='+currentType+'&index='+index,'证明材料预览','height=300,width=400,top=200,left=400,toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no');
 			}
 			
 			// 根据文件路径设置回显和传递到后台的隐藏值
@@ -1712,14 +1786,15 @@
         		$(id).attr('href', 'javascript:void(0)');
         		//$(id).attr('href', "javascript:picturePreview('"+type+"');");
         		
-        		$(id).attr('onclick', "picturePreview('"+type+"');");
+        		$(id).attr('onclick', "picturePreview('"+type+"', '1');");
         		
     			//$(id).attr("href", basePath+'/'+filesArray[0]);
     			
         		if (filesArray.length > 1) {
         			for (var i = 2 ; i <= filesArray.length ; i ++) {
         				//var filepath = basePath + '/' + filesArray[i-1];
-        				var filepath = "picturePreview('"+type+"');";
+        				//var filepath = "picturePreview('"+type+"');";
+        				var filepath = "picturePreview('"+type+"', '"+ i +"');";
         				var _a = "&nbsp<a id='"+id+i+"' href='javascript:void(0)' onclick='"+filepath+"'>"+name+"("+i+")</a>";
         				$(id).append(_a);
         			}

@@ -253,7 +253,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 						
 						// 获得银行名称
 						String bankCode = eliminatedApply.getBankCode();
-						if (StringUtil.isNotEmpty(bankCode)) {
+						if (StringUtil.isNotEmpty(bankCode) && !"999".equals(bankCode)) {
 							List<SysDict> bankListSysDict = sysDictService.getListByPorperty("dictCode", bankCode, "state = '1'");
 							if (null != bankListSysDict && bankListSysDict.size() > 0) {
 								eliminatedApply.setBankName(bankListSysDict.get(0).getDictValue());
@@ -1071,6 +1071,15 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		String bankName = eliminatedApply.getBankName();
 		// 银行代码
 		String bankCode = eliminatedApply.getBankCode();
+		
+		/*if (StringUtil.isNotEmpty(bankCode) && !"999".equals(bankCode)) {
+			List<SysDict> bankListSysDict = sysDictService.getListByPorperty("dictCode", bankCode, "state = '1'");
+			if (null != bankListSysDict && bankListSysDict.size() > 0) {
+				eliminatedApply.setBankName(bankListSysDict.get(0).getDictValue());
+				log.debug("获得银行名称：" + bankListSysDict.get(0).getDictValue());
+			}
+		}*/
+		
 		// 银行户名
 		String bankAccountName = eliminatedApply.getBankAccountName();
 		// 银行卡号
@@ -1088,7 +1097,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		// 关键字段值
 		JSONArray jsonArray = new JSONArray();
 		jsonArray.add(SystemUtil.createJson("VEHICLE_PLATE_NUM", "String", vehiclePlateNum));
-		jsonArray.add(SystemUtil.createJson("VEHICLE_TYPE", "String", vehiclePlateType));
+		jsonArray.add(SystemUtil.createJson("VEHICLE_PLATE_TYPE", "String", vehiclePlateType));
 		jsonArray.add(SystemUtil.createJson("VEHICLE_TYPE", "String", vehicleType));
 		jsonArray.add(SystemUtil.createJson("IOL_TYPE", "String", iolType));
 		jsonArray.add(SystemUtil.createJson("EMISSION_STANDARD", "String", emissionStandard));
@@ -1924,9 +1933,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setType("JDCHSZM");
 				file.setStatus("1");
 				file.setUploadUser(userName);
-				file.setUploadUser(userCode);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
-				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setVerifyCode("1");
 				
@@ -1954,9 +1962,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setType("JDCZXZM");
 				file.setStatus("1");
 				file.setUploadUser(userName);
-				file.setUploadUser(userCode);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
-				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setVerifyCode("1");
 				
@@ -1984,9 +1991,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setType("YHK");
 				file.setStatus("1");
 				file.setUploadUser(userName);
-				file.setUploadUser(userCode);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
-				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setVerifyCode("1");
 				
@@ -2014,9 +2020,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setType("ZCSFZM");
 				file.setStatus("1");
 				file.setUploadUser(userName);
-				file.setUploadUser(userCode);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
-				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setVerifyCode("1");
 				
@@ -2044,9 +2049,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setType("FCZGYZM");
 				file.setStatus("1");
 				file.setUploadUser(userName);
-				file.setUploadUser(userCode);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
-				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setVerifyCode("1");
 				
@@ -2074,9 +2078,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setType("KHXKZ");
 				file.setStatus("1");
 				file.setUploadUser(userName);
-				file.setUploadUser(userCode);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
-				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setVerifyCode("1");
 				
@@ -2104,9 +2107,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setType("DLWTS");
 				file.setStatus("1");
 				file.setUploadUser(userName);
-				file.setUploadUser(userCode);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
-				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setVerifyCode("1");
 				
@@ -2134,9 +2136,8 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				file.setType("DLRSFZ");
 				file.setStatus("1");
 				file.setUploadUser(userName);
-				file.setUploadUser(userCode);
+				file.setUploadUserCode(userCode);
 				file.setUploadTime(new Date());
-				file.setUpdateTime(new Date());
 				file.setUpdateTime(new Date());
 				file.setVerifyCode("1");
 				

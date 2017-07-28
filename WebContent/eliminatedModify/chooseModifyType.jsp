@@ -15,7 +15,7 @@
 			<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
 			<table class="datagrid-table-s datagrid-htable">
 				<tr class="datagrid-header-row classify-tr">
-					<td class="view_table_right">请选择修正类型：</td>
+					<td class="view_table_right">请选择修正内容：</td>
 					<td class="view_table_right">
 						<input id="modifyType" class="easyui-combotree" name="modifyType" style="width:100%"
 						data-options="editable:false,required:true,multiple:true,checkbox:true,url:'data/modifyType.json',panelHeight:'auto'"/>
@@ -44,6 +44,9 @@
 		<!-- 开户许可证 -->
 		<input type="hidden" name="openAccPromitFiles"/>
 	</form>
+	
+	<object id="view1" type="application/x-eloamplugin" name="view"></object>
+	
 	<div id="modify-apply" class="easyui-panel"/>
 		
 	<script type="text/javascript">
@@ -58,6 +61,11 @@
 				}
 				
 			}); */
+			
+			// 初始化高拍仪
+			Initial();
+			
+			$("#common-dialog-close").hide();
 			
 			$("#modifyType").combotree({
 				onChange : function() {
@@ -76,6 +84,10 @@
 			// 点击提交按钮，更新数据
 			$("#common-dialog-choose_modify_type").click(function() {
 				var modifyTypes = $("#modifyType").combotree("getValues");
+				if (modifyTypes == "") {
+					alert("请选择修正类型！");
+					return false;
+				}
 				var id = '${v.id}';
 				var modifyResult = $('input[name="modifyResult"]:checked').val();
 				var bankCode = null;
@@ -101,6 +113,7 @@
 							param.id = id;
 							param.modifyResult = modifyResult;
 							param.bankName = bankName;
+							param.otherBankName = $("input[name='OtherBankName']").val();
 							param.bankCode = bankCode;
 							param.bankAccountNo = $("input[name='bankAccountNo']").val();
 							param.agent = $("input[name='agent']").val();
@@ -110,46 +123,32 @@
 						success : function(data) {
 							var result = eval('(' + data + ')');
 	        		 		if (result.success) {
-	        		 			Messager.alert({
+	        		 			Messager.show({
 	        		 				type : 'info',
 	        		 				title : '&nbsp;',
 	        		 				content : result.message.msg
 	        		 			});
 	        		 			//alert(result.message.msg);
-	        		 			$("#common-dialog").dialog("close");
-	        		 			
-	        		 			$("#editData-apply-list #editData-apply-grid").datagrid("load");
-	        		 			
-	        		 			/* $.messager.defaults = { ok: "结束修正", cancel: "待继续修正" };
-	        		 			Messager.confirm({
-	        		 				title : "提示",
-	        		 				content : "保存修改成功，请选择：",
-	        		 				handler : function(result) {
-	        		 					if (result) {
-	        		 						// 结束修正，则更新流程到窗口会计初审岗
-	        		 						$.ajax({
-	        		 							url : basePath + '/eliminatedModify/modifySave.do',
-	        		 							method : 'POST',
-	        		 							data : {
-	        		 										modifyTypes : modifyTypes,
-	        		 										id : id
-	        		 									},
-	        		 							success : function(result) {
-	        		 								result = eval('(' + result + ')');
-	        		 								
-	        		 								if (result.success) {
-	        		 									$("#common-dialog").dialog("close");
-	        		 								}
-	        		 							}
-	        		 						});
-	        		 					} else {
-	        		 					// 继续修正
-        		 							//
-        		 							$("#common-dialog").dialog("close");
-	        		 					}
-	        		 					
-	        		 				}
-	        		 			}); */
+	        		 			// 资格校验成功，受理表信息保存，页面跳转到受理表打印预览页面
+								var url = basePath+"/eliminatedModify/applyPreview.do?id="+result.message.id;
+								
+								$("#common-dialog").dialog("close");
+								
+								if (modifyResult == "1") {
+									openDialog({
+									   	type : "PRINT_APPLY_TABLE",
+										title : "补贴受理表打印预览",
+										width : 1040,
+										height : 400,
+										param: {reset:false,save:false,
+											beforeCloseFunc:"clearCaptureRes",
+											isBeforeClose:true},	
+										maximizable : true,
+										href : url
+								    });
+								}
+							
+	        		 		    $("#editData-apply-list #editData-apply-grid").datagrid("load");
 	        		 			
 	        		 		} else {
 	        		 			Messager.alert({
@@ -276,6 +275,11 @@
 				if (modifyTypeArray[i] == "21") {
 					// 补贴账户开户行
 					if ($("input[name='bankCode']").val() == "") {
+						isOk = false;
+					}
+					
+					// 如果选择的是“其它银行”，则必填
+					if ($("input[name='bankCode']").val() == "999" && $("input[name='OtherBankName']").val() == "") {
 						isOk = false;
 					}
 				}

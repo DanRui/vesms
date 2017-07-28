@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+*{margin:0;padding:0;list-style-type:none;}
+a,img{border:0;}
+body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";}
+/* .show_box{width:550px;position:relative;height:321px;overflow:hidden;margin:40px auto 0 auto;}
+ul.pic_list{width:550px;height:321px;position:relative;overflow:hidden;}
+ul.pic_list li{float:left;width:100%;height:321px;position:absolute;top:0px;left:0px} */
+.title_nav{float:left;width:100%;height:60px;}
+.title_nav a{
+	font-size:18px;
+	display:inline-block;margin-right:10px;padding:5px 15px;text-align:center;text-decoration:none;
+	}
+.title_nav a.select
+{
+	background:#09C;
+	color: #FFF;
+}

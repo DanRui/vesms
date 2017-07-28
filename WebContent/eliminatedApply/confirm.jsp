@@ -160,11 +160,11 @@
 						<input id="signedApplyFile" type="file" name="signedApplyFile" required="required" />
 						<!-- <input id="signedApplyFile" class="easyui-filebox" name="signedApplyFile" data-options="prompt:'选择文件',required:true,buttonText:'请选择'"/> -->
 						<font color="red">&nbsp;*&nbsp;</font>
-						<a id="btnTakePhotoConfirmFile" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
-						<a id="btnUploadConfirmFile" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">上传</a>
+						<a id="btnTakePhotoConfirmFile" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照上传</a>
+						<a id="btnUploadConfirmFile" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">本地文件上传</a>
 					</td>
 					<td class="view_table_right" colspan="3">
-						<a id="signedApplyFileImg" href="#" target="_blank"></a>
+						<a id="signedApplyFileImg" href="#"></a>
 					</td>
 				</tr>
 			</table>
@@ -206,7 +206,13 @@
 						title : "补贴受理信息修改",
 						width : 1132,
 						height : 800,
-						param: {reset:false},	
+						param : 
+				    	   {
+				    		   reset:false,
+				    		   save:false,
+							   beforeCloseFunc:"clearCaptureRes",
+							   isBeforeClose:true
+						   },	
 						maximizable : true,
 						href : url
 					});
@@ -305,10 +311,13 @@
 									content:"签字确认的受理表上传成功！"
 								});
 								
+								// 设置文件回显、页面隐藏路径、点击事件等
+								setFilePreview("signedApply", data.message.signedApplyFile, "确认签字的受理表");
+								
 								// 将图片路径传到页面，方便查看。
-								$("#signedApplyFileImg").text("确认签字的受理表");
+								/* $("#signedApplyFileImg").text("确认签字的受理表");
 	        					$("#signedApplyFileImg").attr("href", basePath+'/'+data.message.signedApplyFile);
-	        					$("input[name='signedApplyFiles']").val(data.message.signedApplyFile);
+	        					$("input[name='signedApplyFiles']").val(data.message.signedApplyFile); */
 					 	 	} else {
 					 	 		alert("签字确认的受理表上传失败！");
 					 	 	}		 
@@ -342,7 +351,10 @@
 	        	
 	        	// 抓拍返回，设置图片路径到页面字段
 	        	if (typeof(parentValue) != "undefined" && parentValue.filepath != "") {
-	        		var files = parentValue.filepath.split(",");
+	        		
+	        		setFilePreview("signedApply", parentValue.filepath, "确认签字的受理表");
+	        		
+	        		/* var files = parentValue.filepath.split(",");
 	        		// 多张图片预览
 	        		$("#signedApplyFileImg").text("签字受理表(1)");
         			$("#signedApplyFileImg").attr("href", basePath+'/'+files[0]);
@@ -355,13 +367,66 @@
 	        		} 
 	        		
         			// 设置隐藏字段传递到后台
-    				$("input[name='signedApplyFiles']").val(parentValue.filepath);
+    				$("input[name='signedApplyFiles']").val(parentValue.filepath); */
 	        	}
 			});
 			
 		});
-	
-	
+		
+		// 图片集中预览
+		function picturePreview(currentType, index) {
+			var basePath = "<%=basePath%>";
+			// 获取页面所有图片路径，传递到新窗口
+			// 先获取页面已经上传的文件路径
+			var proof_files = window;
+			
+			// 签字确认的受理表
+			proof_files.signedApplyFiles =  $("input[name='signedApplyFiles']").val();
+			
+			//alert("adadad");
+			window.open(basePath + '/eliminatedApply/picturePreview.jsp?filetype='+currentType+'&index='+index,'证明材料预览','height=300,width=400,top=200,left=400,toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no');
+		}
+		
+		// 根据文件路径设置回显和传递到后台的隐藏值
+		function setFilePreview(type, files, name) {
+			var basePath = "<%=basePath%>";
+			
+			if (files == null && files == "") {
+				return;
+			}
+			
+			var filesArray = files.split(",");
+			var id = "#" + type + "FileImg";
+			var filename;
+			
+			if (type == "callbackProof") {
+				filename = type + "File";
+			} else {
+				filename = type + "Files";
+			}
+    		// 多张图片预览
+    		$(id).text(name + "(1)");
+    		
+    		// 添加图片点击事件，到新窗口预览
+    		$(id).attr('href', 'javascript:void(0)');
+    		//$(id).attr('href', "javascript:picturePreview('"+type+"');");
+    		
+    		$(id).attr('onclick', "picturePreview('"+type+"', '1');");
+    		
+			//$(id).attr("href", basePath+'/'+filesArray[0]);
+			
+    		if (filesArray.length > 1) {
+    			for (var i = 2 ; i <= filesArray.length ; i ++) {
+    				//var filepath = basePath + '/' + filesArray[i-1];
+    				var filepath = "picturePreview('"+type+"', '"+ i +"');";
+    				var _a = "&nbsp<a id='"+id+i+"' href='javascript:void(0)' onclick='"+filepath+"'>"+name+"("+i+")</a>";
+    				$(id).append(_a);
+    			}
+    		} 
+    		
+			// 设置隐藏字段传递到后台
+			$("input[name='"+filename+"']").val(files);
+		}
 	</script>
 
 </body>

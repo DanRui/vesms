@@ -54,7 +54,7 @@ String basePath = request.getContextPath();
 					if (row.applyConfirmTime) {
 						return "已受理";
 					} else {
-						return "未受理";
+						return "未确认";
 					}
 				}
 			},{
@@ -164,9 +164,13 @@ String basePath = request.getContextPath();
 			    	   return true;
 			       }}, */
 				   {type:"UPDATE",content:"补贴受理信息修改",width:1132,height:800,url:basePath+"/eliminatedApply/view.do",
-			    	param:{
-			    		reset : false
-			    	}   
+			    	   param: 
+			    	   {
+			    		   reset:false,
+			    		   save:false,
+						   beforeCloseFunc:"clearCaptureRes",
+						   isBeforeClose:true
+					   }  
 				   },			
 				   //{type:"CLEAR",title:"重置",text_width:70},  
 				   {type:"PRINT_APPLY",icon:"icon-print",title:"打印受理表",text_width:100,

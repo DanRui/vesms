@@ -25,7 +25,7 @@
 		<link rel="stylesheet" href="<%=basePath%>/js/plugins/editor/plugins/code/prettify.css" />
 		<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/table.css">
 		
-        <script type="text/javascript" src="<%=basePath%>/js/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="<%=basePath%>/js/jquery-1.9.0.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/datagrid-detailview.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.extension.js"></script>
@@ -120,7 +120,7 @@
 		            if (!DeviceMain)
 		                return;
 			
-			        var sSubType = document.getElementById('subType1'); 								
+			        /* var sSubType = document.getElementById('subType1'); 								
 			        var sResolution = document.getElementById('selRes1'); 	
 				
 			        var SelectType = 0;
@@ -149,6 +149,13 @@
 			        {
 					    MainView().View_SelectVideo(VideoMain);
 					    MainView().View_SetText("打开视频中，请等待...", 0);
+							
+			        } */
+			        VideoMain = plugin().Device_CreateVideo(DeviceMain, 0, 1);
+			        if (VideoMain)
+			        {
+					    MainView().View_SelectVideo(VideoMain);
+					    MainView().View_SetText("高拍仪打开中，请等待...", 0);
 							
 			        }
 		        }
@@ -287,7 +294,7 @@
 										DeviceMain = plugin().Global_CreateDevice(1, idx);										
 										if(DeviceMain)
 										{
-											document.getElementById('lab1').innerHTML = plugin().Device_GetFriendlyName(DeviceMain);
+											/* document.getElementById('lab1').innerHTML = plugin().Device_GetFriendlyName(DeviceMain);
 											
 											var sSubType = document.getElementById('subType1');
 											sSubType.options.length = 0;
@@ -306,7 +313,7 @@
 											}
 											
 											sSubType.selectedIndex = 0;
-											changesubTypeMain();
+											changesubTypeMain(); */
 											
 											OpenVideoMain();
 										}
@@ -363,9 +370,9 @@
                                         plugin().Device_Release(DeviceMain);
                                         DeviceMain = null;
 										
-										document.getElementById('lab1').innerHTML = "";
+										/* document.getElementById('lab1').innerHTML = "";
 										document.getElementById('subType1').options.length = 0; 
-										document.getElementById('selRes1').options.length = 0; 
+										document.getElementById('selRes1').options.length = 0;  */
                                     }
                                 }
 								
@@ -386,14 +393,14 @@
 						}
                     });
 
-			        addEvent(plugin(), 'Ocr', function(flag, ret)
+			        /* addEvent(plugin(), 'Ocr', function(flag, ret)
 			        {
 				        if (1 == flag && 0 == ret)
 				        {
 					        var ret = plugin().Global_GetOcrPlainText(0);
 					        alert(ret);
 				        }
-			        });
+			        }); */
 			
 			        addEvent(plugin(), 'IdCard', function(ret)
 			        {
@@ -407,17 +414,17 @@
 						        str += ";";				
 					        }
 				
-					        document.getElementById("idcard").value=str;	
+					        /* document.getElementById("idcard").value=str;	
 							
 							var image = plugin().Global_GetIdCardImage(1);//1表示头像， 2表示正面， 3表示反面 ...
 							plugin().Image_Save(image, "C:\\idcard.jpg", 0);
 							plugin().Image_Release(image);
 							
-							document.getElementById("idcardimg").src= "C:\\idcard.jpg";
+							document.getElementById("idcardimg").src= "C:\\idcard.jpg"; */
 				        }
 			        });
 			
-			        addEvent(plugin(), 'Biokey', function(ret)
+			        /* addEvent(plugin(), 'Biokey', function(ret)
 			        {
 				        if (4 == ret)
 				        {
@@ -596,7 +603,7 @@
 				        }
 				
 				        plugin().RegionList_Release(list);
-			        });
+			        }); */
 				
 			        var title = document.title;
 			        //document.title = title + plugin().version;
@@ -884,13 +891,21 @@
 		                    var len = plugin().ImageList_GetCount(imgList);
 		                    for (var i = 0; i < len; i++) {
 		                        var img = plugin().ImageList_GetImage(imgList, i);
-		                        var Name = "D:\\" + vehiclePlateNum + "_modify_" + GetTimeString() + ".jpg";
+		                        var Name = "D:\\LJCBT_PHOTO\\" + vehiclePlateNum + "_modify_" + GetTimeString() + ".jpg";
 		                        var b = plugin().Image_Save(img, Name, 0);
 		                        if (b) {
 		                            MainView().View_PlayCaptureEffect();
 		                            thumb1().Thumbnail_Add(Name);
 
 		                            PicPath = Name;
+		                            
+		                         	// 每次点击拍照，自动复选框勾选文件
+		                            var index = thumb1().Thumbnail_GetCount();
+		                            //alert(index);
+		                            //alert(thumb1().Thumbnail_GetCheck(index));
+		                            if (!thumb1().Thumbnail_GetCheck(index)) {
+		                            	thumb1().Thumbnail_SetCheck(index, true);
+		                            }
 		                        }
 
 		                        plugin().Image_Release(img);
@@ -985,7 +1000,7 @@
 					//http://localhost:8080/vesmsDemo/servlet/FileSteamUpload?
 							
 					//fileCaptureUpload
-					var http = thumb1().Thumbnail_HttpUploadCheckImage(uploadServer + "/vesms/eliminatedModify/fileCaptureUpload.do?", 1);
+					var http = thumb1().Thumbnail_HttpUploadCheckImage(uploadServer + "/eliminatedModify/fileCaptureUpload.do?", 1);
 					if(http)
 					{
 						var htInfo = thumb1().Thumbnail_GetHttpServerInfo();
@@ -996,8 +1011,9 @@
 							var str = "";
 							for (var i = 0 ; i < msgs.length - 1 ; i ++) {
 								var msg = msgs[i];
+								alert(msg);
 								msg = $.parseJSON(msg);
-								//msg = eval('('+ msg + ')');
+								//msg = e	val('('+ msg + ')');
 								// 判断每张图片是否上传成功
 								if (msg.success) {
 									// 上传图片成功，保存图片路径到页面
@@ -1009,7 +1025,7 @@
 								}
 							}
 							$("input[name='filepath']").val(str.substring(0, str.length - 1));
-							alert("图片上传成功！");
+							//alert("图片上传成功！");
 						} else {
 							alert("图片上传失败！");
 						}	
@@ -1580,9 +1596,11 @@
 
 <body onload="Load()" onunload="Unload()" style="width: 700px;">
 
-    <div>
+    <div align="center">
         <object id="view1" type="application/x-eloamplugin" width="700" height="300" name="view"></object>
         <!-- <object id="view2" type="application/x-eloamplugin" width="600" height="300" name="view"></object> -->
+        <input class="submit_01" type="button" value="左转"	onclick="Left()" />
+        <input class="submit_01" type="button" value="右转"	onclick="Right()" />
     </div>
 
     <div>
@@ -1591,15 +1609,15 @@
 
 	<table class="datagrid-table-s datagrid-htable">
     <tr>
-	    <td>
-            <label id="lab1">设备1</label>
+	    <td align="center">
+            <!-- <label id="lab1">设备1</label>
             <select id="subType1" style="width: 90px" name="subType1" onchange="changesubTypeMain()"></select> 
             <select id="selRes1" style="width: 90px" name="selRes"></select> 
 			扫描尺寸<select id="scansize" style="width: 90px" name="scansize" onchange="changescansize()">			
 				<option value ="org">原始</option>
 				<option value ="mid">中</option>
 				<option value="small">小</option>
-			</select> 
+			</select>  -->
             <!-- <label id="lab2">设备2</label>
             <select id="subType2" style="width: 90px" name="subType2" onchange="changesubTypeAssist()"></select> 
             <select id="selRes2" style="width: 90px" name="selRes"></select>  -->		
@@ -1612,11 +1630,8 @@
             <input id="Deskew" type="checkbox" value="" onclick="Deskew(this)" />纠偏
             <input id="SetState" type="checkbox" value="" onclick="SetState(this)" />手动框选
 			<input id="OpenVerifyFacRect" type="checkbox" value="" onclick="OpenVerifyFacRect(this)" />脸部裁剪	 -->
-            <br />
-			<input class="submit_01" type="button" value="左转"	onclick="Left()" />
-            <input class="submit_01" type="button" value="右转"	onclick="Right()" />
-            <input class="submit_01" type="button" value="属性"	onclick="ShowProperty()" />
-            <b> | </b>
+            <!-- <input class="submit_01" type="button" value="属性"	onclick="ShowProperty()" />
+            <b> | </b> -->
             <!-- <input class="submit_01" type="button" value="主头录像"	onclick="StartMainRecord()" />
             <input class="submit_01" type="button" value="停止"	onclick="StopMainRecord()" /> -->
             <!-- <input class="submit_01" type="button" value="副头录像"	onclick="StartAssistRecord()" />
@@ -1668,7 +1683,7 @@
     </tr>
     <tr>
     	<td align="center">
-	   		<input class="submit_01" type="button" value="确认返回"	onclick="ReturnPage()" />
+	   		<input class="submit_01" type="button" value="保存图片"	onclick="ReturnPage()" />
     	</td>
     </tr>
     </table>

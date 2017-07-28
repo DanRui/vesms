@@ -32,5 +32,7 @@ public interface EliminatedModifyService extends BaseService {
 	
 	public List<Attachment> getAttachments(String type, String applyNo) throws Exception;
 	
+	public Map<String, Object> confirmModify(Integer id, String updateType, String signedApplyFiles) throws Exception;
+	
 }
 

@@ -121,7 +121,12 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 		}
 		
 		if (StringUtil.isNotEmpty(applyModifyInfo.getBankName())) {
-			baseInfoDetails += "BANK_NAME:[" + applyModifyInfo.getBankName() + "];";
+			String bankName = applyModifyInfo.getBankName();
+			// 如果其它银行字段不为空，则数据库存放填写的银行名称
+			if (StringUtil.isNotEmpty(applyModifyInfo.getOtherBankName())) {
+				bankName = applyModifyInfo.getOtherBankName();
+			} 
+			baseInfoDetails += "BANK_NAME:[" + bankName + "];";
 		}
 		
 		if (StringUtil.isNotEmpty(applyModifyInfo.getBankAccountNo())) {
@@ -287,6 +292,53 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 		sb.append("and t.status = '1' ");
 		List<Attachment> list = attachmentDao.getListBySql(sb.toString());
 		return list;
+	}
+
+	@Override
+	public Map<String, Object> confirmModify(Integer id, String updateType, String signedApplyFiles)
+			throws Exception {
+		// 用户Code
+		@SuppressWarnings("unchecked")
+		Map<String, Object> loginInfo = (Map<String, Object>) SecurityUtils.getSubject().getSession().getAttribute("LOGIN_INFO");
+		String userCode = (String) loginInfo.get("USER_CODE");
+		String userName = (String) loginInfo.get("USER_NAME");
+		
+		String attachments = "";
+		if (StringUtil.isNotEmpty(signedApplyFiles)) {
+			attachments = "QRSLB:[" + signedApplyFiles + "];";
+		}
+		
+		// 调用修正资料存储过程，更新数据
+		boolean isSuccess = false;
+		String msg = "";
+		Map map = new HashMap<String, Object>();
+		
+		String callName = "{call PKG_APPLY.p_apply_update_info(?,?,?,?,?,?,?,?)}";
+		Map<Integer, Object> inParams = new HashMap<Integer, Object>();
+		Map<Integer, Integer> outParams = new HashMap<Integer, Integer>();
+		
+		inParams.put(1, userCode);
+		inParams.put(2, userName);
+		inParams.put(3, id+"");
+		inParams.put(4, updateType);
+		inParams.put(5, "1");
+		inParams.put(6, null);
+		inParams.put(7, attachments);
+		
+		outParams.put(8, OracleTypes.VARCHAR); // 存储过程执行结果，消息字符串
+		List<Map<String, Object>> result = callDao.call(callName, inParams, outParams, "procedure");
+		if (null != result && result.size() > 0) {
+			Map<String, Object> tmp = result.get(0);
+			if (tmp.get("8") != null) {
+				isSuccess = true;
+				msg = (String) tmp.get("8");
+				map.put("msg", msg);
+			}
+		}
+		
+		map.put("isSuccess", isSuccess);
+		
+		return map;
 	}
 
 }

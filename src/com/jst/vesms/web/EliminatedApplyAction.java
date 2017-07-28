@@ -685,16 +685,20 @@ public class EliminatedApplyAction extends BaseAction {
 				json.put("id", result.get("id"));
 				json.put("applyNo", result.get("applyNo"));
 				json.put("msg", result.get("msg"));
+			} else {
+				json.put("msg", "受理表保存失败！");
 			}
 		} catch (Exception e) {
 			log.error("EliminatedApplyAction edit is Error:"+e, e);
+			saveOk = false;
+			json.put("msg", e.getMessage());
 		}
 		
 		log.debug("eliminatedApplyAction edit is End");
 		if(saveOk) {
 			return JsonUtil.toSuccessMsg(JsonUtil.parse(json).toString());
 		} else
-		return JsonUtil.toErrorMsg("受理信息保存失败");
+		return JsonUtil.toErrorMsg(JsonUtil.parse(json).toString());
 	}
 	
 	/**
