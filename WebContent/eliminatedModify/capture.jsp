@@ -1011,7 +1011,7 @@
 							var str = "";
 							for (var i = 0 ; i < msgs.length - 1 ; i ++) {
 								var msg = msgs[i];
-								alert(msg);
+								//alert(msg);
 								msg = $.parseJSON(msg);
 								//msg = e	val('('+ msg + ')');
 								// 判断每张图片是否上传成功

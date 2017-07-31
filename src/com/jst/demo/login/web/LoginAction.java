@@ -113,14 +113,14 @@ public class LoginAction extends BaseAction{
 	}
 	
 	@RequestMapping("login")
-	public String login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("verifycode")String verifycode,HttpSession session ,RedirectAttributes attributes) throws Exception{
+	public String login(@RequestParam("username") String username, @RequestParam("password") String password, /*@RequestParam("verifycode")String verifycode,*/HttpSession session ,RedirectAttributes attributes) throws Exception{
 //		return redirectPage("INDEX")+SystemConstants.JSP_SUFFIX;
 		String errorMessage = null;
 		boolean loginstate = false;
 		Subject currentUser = SecurityUtils.getSubject();
 		session.removeAttribute("org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS");
 		log.debug("判断当前用户是否已经登录");
-		if (null == session.getAttribute(SystemConstants.VERIFY_CODE) && SecurityUtils.getSubject().isAuthenticated()) {
+		if (/*null == session.getAttribute(SystemConstants.VERIFY_CODE) &&*/ SecurityUtils.getSubject().isAuthenticated()) {
 			log.debug("用户已登录，无需重新验证");
 			try {
 				if (null == session.getAttribute("WORKDATA")) {
@@ -132,11 +132,11 @@ public class LoginAction extends BaseAction{
 			logremark = "当前会话拥有用户信息，系统自动登录";
 			loginstate = true;
 		}else{
-			Object sessionVerifyCode = session.getAttribute(SystemConstants.VERIFY_CODE);
-			if(null!=sessionVerifyCode && null!= verifycode && verifycode.equals(sessionVerifyCode.toString())){
+			//Object sessionVerifyCode = session.getAttribute(SystemConstants.VERIFY_CODE);
+			//if(null!=sessionVerifyCode && null!= verifycode && verifycode.equals(sessionVerifyCode.toString())){
 				log.debug("验证码校验成功");
 				log.debug("清除当前会话中的验证码");
-				session.removeAttribute(SystemConstants.VERIFY_CODE);
+				//session.removeAttribute(SystemConstants.VERIFY_CODE);
 				log.debug("实例化登录安全对象");
 				LoginSecurity loginSecurity = new LoginSecurity(username);
 
@@ -214,9 +214,9 @@ public class LoginAction extends BaseAction{
 						loginstate = true;
 					}
 				}
-			}else{
+			/*}else{
 				errorMessage = "验证码错误，请重新输入";
-			}
+			}*/
 		}
 		String page = null;
 		if(loginstate){

@@ -321,7 +321,7 @@ public class EliminatedModifyServiceImpl extends BaseServiceImpl implements
 		inParams.put(2, userName);
 		inParams.put(3, id+"");
 		inParams.put(4, updateType);
-		inParams.put(5, "1");
+		inParams.put(5, "1"); // 结束修正
 		inParams.put(6, null);
 		inParams.put(7, attachments);
 		

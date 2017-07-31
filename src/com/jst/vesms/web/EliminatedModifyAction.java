@@ -348,6 +348,7 @@ private static final Log log = LogFactory.getLog(EliminatedModifyAction.class);
 		try {
 			// 更新受理单信息,包括一般资料修正和补贴账户变更
 			applyModifyInfo.setFaultType("2");
+			// 未打印受理表时都是“继续修正”
 			applyModifyInfo.setModifyResult("2");
 			Map<String, Object> map = eliminatedModifyService.saveApplyInfo(applyModifyInfo);
 			if (map.get("isSuccess").equals(true)) {
