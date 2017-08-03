@@ -170,6 +170,8 @@ String basePath = request.getContextPath();
 			    		   save:false,
 						   beforeCloseFunc:"clearCaptureRes",
 						   isBeforeClose:true
+					   }, confim : function() {
+						   return true;
 					   }  
 				   },			
 				   //{type:"CLEAR",title:"重置",text_width:70},  

@@ -1607,7 +1607,7 @@
 
 	<table class="datagrid-table-s datagrid-htable">
     <tr>
-	    <td>
+	    <td align="center">
             <!-- <label id="lab1">设备1</label>
             <select id="subType1" style="width: 90px" name="subType1" onchange="changesubTypeMain()"></select> 
             <select id="selRes1" style="width: 90px" name="selRes"></select> 

@@ -67,8 +67,15 @@ public interface PayApplyService extends BaseService {
 
 	public Page filterBatchPage(Page page);
 
-	public List<String[]> batchExcelList(String batchNo,String type,String batchType,Integer id) throws Exception ;
+	public List<String[]> batchExcelList(String batchNo,String type,Integer id) throws Exception ;
 	
 	public List getListBySql(String sql) throws Exception;
-
+	
+	public String getTotalAmount(String batchNo,String batchType) throws Exception;
+	
+	public List<String[]> repBatchExcelPreview(String batchNo) throws Exception;
+	
+	public List<String[]> repToFinExcelPreview(String batchNo) throws Exception;
+	
+	public Page getPageSql(Page page,String sql) throws Exception;
 }

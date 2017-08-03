@@ -19,10 +19,12 @@ String basePath = request.getContextPath();
 			<div class="datagrid-header" id="payImport-grid-toolbar">
 				<table id="payImport-recycle-tool-table" style = "width:100%;">
 				</table>
-		</div>
+			</div>
 		<table id="payImport-grid" style = "height:97.5%"></table>
 	</div>
-
+	<div>
+		<iframe id="iframeRead" style="display:none;"/>
+	</div>
 
 	<script type="text/javascript">
 	$(function(){
@@ -56,14 +58,14 @@ String basePath = request.getContextPath();
 			},{
 				field : "importTime",
 				title : "导入时间",
-				width : "10%",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
 				sortable : true,
 				formatter : function (value, row, index) {
 					if (row.importTime) {
-						return getNowFormatDate(new Date(row.importTime.time))
+						return new Date(row.importTime.time).Format("yyyy-MM-dd hh:mm:ss");
 					} else {
 						return "";
 					}
@@ -103,7 +105,7 @@ String basePath = request.getContextPath();
 			},{
 				field : "applyCountPayNotok",
 				title : "退款单数",
-				width : "10%",
+				width : "6%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -111,36 +113,36 @@ String basePath = request.getContextPath();
 			},{
 				field : "applyCountWaitforSign",
 				title : "尚未标记的单数",
-				width : "10%",
+				width : "8%",
 				align : "center",
 				halign : "center",
 				resizable : true,
 				sortable : true
 			},{
-				field : "remark",
-				title : "备注",
-				width : "10%",
+				field : "fileName",
+				title : "文件名称",
+				width : "25%",
 				align : "center",
 				halign : "center",
 				resizable : true,
 				sortable : true
 			}
 			] ],
-		/*	onDblClickRow : function(rowIndex, rowData) {
+			onDblClickRow : function(rowIndex, rowData) {
 				$(this).datagrid("view",{width:900,height:800,
-					url:basePath+"/payImport/batchView.do?id="+rowData.id+"&batchType="+rowData.batchType+"&type=view",
-							content:"批次受理单明细",param:{close:false}});
-			}*/
+					url:basePath+"/payImport/importView.do?id="+rowData.id,
+							content:"国库文件明细",param:{close:false}});
+			}
 		}).datagrid("initSearch",{
 			columns:[{startField:"makeStartTime",endField:"makeEndTime",title:"制表时间:",type:"date",section:true},
 					 {startField:"importStartTime",endField:"importEndTime",title:"导入时间:",type:"date",section:true}
 			        ],
 			tools:[		
-			       {type:"FILE_IMPORT",icon:"icon-add",title:"文件导入 ",text_width:100,
+			       {type:"FILE_IMPORT",icon:"icon-add",title:"文件导入标记",text_width:150,
 			     	  fn:function() {
 						openDialog({
 							   	type : "FILE_IMPORT",
-								title : "文件导入",
+								title : "国库文件导入标记",
 								width : 500,
 								height : 300,
 								param: {reset:false,save:false,close:false},
@@ -149,12 +151,67 @@ String basePath = request.getContextPath();
 						   });
 				 	  	}
 				    },
+				    {type:"RESULT_MARK",title:"手工补充标记",text_width:150,icon:"icon-biaoji",
+				    	fn:function() {
+				    		var selectedRows = this.datagrid("getSelections");
+							var infoMsg = null;
+							infoMsg = selectedRows.length < 1 ? "请选择一条记录" : (selectedRows.length > 1 ? "最多只能选择一条记录" : null);
+							if (null != infoMsg) {
+								Messager.alert({
+									type : "info",
+									title : "&nbsp;",
+									content : infoMsg
+								});
+							} else {
+								openDialog({
+								   	type : "file_mark",
+									title : "文件手工标记",
+									width : 1012,
+									height : 550,
+									param: {reset:false,save:false,close:false},
+									maximizable : true,
+									href : basePath+"/payImport/importMarkView.do?id="+selectedRows[0].id
+							   });
+							}
+				    	}	   
+				    },
+				    {type:"TREASURY_QUERY",icon:"icon-add",title:"国库文件查看",text_width:150,
+						  fn:function() {
+								var selectedRows = this.datagrid("getSelections");
+								//var ids=[];
+								var infoMsg = null;
+								infoMsg =selectedRows.length < 1 ? "请选择一条记录" : (selectedRows.length > 1 ? "最多只能选择一条记录" : null);
+								if (null != infoMsg) {
+									Messager.alert({
+										type : "info",
+										title : "&nbsp;",
+										content : infoMsg
+									});
+								}else {
+									//文件查看
+									$.ajax({
+										url:basePath+"/payImport/getImportPath.do",
+										type:"POST",
+										data:{id:selectedRows[0].id},
+										contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+										success:function(data) {
+											$("#iframeRead").attr("src", basePath+"/payImport/fileDownload.do?filepath="+encodeURI(encodeURI(data.message)));
+											$("#iframeRead").show(); 
+										}
+									});
+									/* $.post(basePath+"/payImport/getImportPath.do",{id:selectedRows[0].id
+										},
+										function(data) {
+										$("#iframeRead").attr("src", basePath+"/payImport/fileDownload.do?filepath="+data.message);
+										$("#iframeRead").show(); 
+									}); */
+							  	}
+						}},
 					   {type:"QUERY"},
 					   {type:"CLEAR"}
 				  ],
 			module:"M_MARK_IMPORT",
-			shownum:3,
-			debug:true
+			shownum:3
 		})
 
 		

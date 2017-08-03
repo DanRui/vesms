@@ -27,13 +27,17 @@ String createDate = request.getParameter("createDate"); */
 		</tr>
 		<tr class="datagrid-row">
 			<td class="view_table_left">内部批次号：</td>
-			<td class="view_table_right">${v.batchNo }</td>
+			<td class="view_table_right"><font color='red'>${v.batchNo }</font></td>
 			<td class="view_table_left">业务单数：</td>
 			<td class="view_table_right">${v.payBussCount }</td>
 			<td class="view_table_left">拨付总金额（元）：</td>
-			<td class="view_table_right">${v.payBatchTotalAmount }</td>
+			<td class="view_table_right">
+			<fmt:formatNumber value="${v.payBatchTotalAmount}" pattern="0"/> 
+			</td>
 		</tr>
 		<tr class="datagrid-row">
+		<td class="view_table_left">报送序号：</td>
+			<td class="view_table_right"><font color='red' ><B>${v.toFinanceNo }</B></font></td>
 			<td class="view_table_left">批次报财委状态：</td>
 			<td class="view_table_right">
 				<c:if test="${v.toFinanceStatus == '0'}">
@@ -49,8 +53,12 @@ String createDate = request.getParameter("createDate"); */
 			</td>
 		</tr>
 		<tr class="datagrid-row">
-			<td class="view_table_left">拨付结果详情：</td>
-			<td class="view_table_right">${v.payResRemark }</td>
+			<td class="view_table_left">批次报财务时间：</td>
+			<td class="view_table_right">
+			<fmt:formatDate value="${v.toFinanceTime}" type="time" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</td>
+			<td class="view_table_left">拨付结果标记情况：</td>
+			<td class="view_table_right"><font color='red'>${v.payResRemark }</font></td>
 		</tr>
 	</table>
 	</br>
@@ -68,11 +76,11 @@ String createDate = request.getParameter("createDate"); */
 		var basePath = $("#basePath").val();
 		$("#batchManage-list #batchManage-grid").datagrid({
 			//toolbar : "#batchCreate-grid-toolbar",
-			url : basePath+"/payApply/batchApplyList.do?batchNo="+'${v.batchNo }',
+			url : basePath+"/payApply/batchDetailList.do?batchNo="+'${v.batchNo }',
 			method : "post",
 			rownumbers : true,
-			sortName : "lastUpdateTimeDate",
-			sortOrder : "desc",
+			sortName : "apply_no",
+			sortOrder : "asc",
 			columns : [ [{
 				field : "batchNo",
 				title : "内部批次号",

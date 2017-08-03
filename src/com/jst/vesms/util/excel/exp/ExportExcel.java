@@ -67,7 +67,7 @@ public class ExportExcel {
 	
 	@Resource(name="payImportDao")
 	private static IPayImportDao payImportDao ;
-	//导出预览(不加密)
+	//正常批次预览文件
 	public static int exportExcelInWeb(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os) {
 		int result = 1;
 		int colsNum = 0;
@@ -142,14 +142,14 @@ public class ExportExcel {
 						if (colsNum == temp.length) {
 							for (int i = 0; i < temp.length; i++) {
 								//金额，数字输出		
-								if(i==12){
+								if(i==13){
 									jxl.write.Number number = new jxl.write.Number(i, flag, Double.parseDouble(temp[i]),dataFormat);									
 									ws.addCell(number);
 									Double doublst=Double.parseDouble(temp[i]);
 									intnumbersum=intnumbersum+doublst.intValue();
 								}else{
 									lable = new Label(i, flag, temp[i]);
-									// 加入自适应
+									// 加入自适应等样式
 									lable.setCellFormat(dataFormat);
 									ws.addCell(lable);
 								}
@@ -225,7 +225,7 @@ public class ExportExcel {
 	
 	
 	
-	//报财务导出(加密)
+	//报财务导出   重报报财务导出   
 	public static int exportExcelInWebs(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os,String password) {
 		int result = 1;
 		int colsNum = 0;
@@ -254,8 +254,8 @@ public class ExportExcel {
 					colsNum = data.get(0).length;
 					// 参数的含义为：左列，左行,右列，右行 合并成一个单元格
 					ws.mergeCells(0, 0, colsNum - 1, 0);
-					// 第3行上设置内标题
-					int flag = 2;
+					// 第2行上设置内标题
+					int flag = 1;
 					// 处理内标题
 					String tempClosHeader[] = excelProperties.getColsHeader();
 					for (int i = 0; i < tempClosHeader.length; i++) {
@@ -290,7 +290,7 @@ public class ExportExcel {
 					}
 					
 					//合计
-					String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
+					/*String numberstr="车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
 					String endstr="批次文件到此结束      车辆数："+data.size()+"  金额总数："+intnumbersum.toString()+"元";
 					WritableCellFormat endFormat = new WritableCellFormat();
 					// 黄色
@@ -313,7 +313,7 @@ public class ExportExcel {
 					ws.mergeCells(0, j+3, colsNum - 1, 0);
 					lable.setCellFormat(endFormat);
 					ws.setRowView(j+3, 350);
-					ws.addCell(lable);
+					ws.addCell(lable);*/
 
 					//
 					if (result != Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION) {
@@ -323,13 +323,12 @@ public class ExportExcel {
 								ws.setColumnView(i, colsSize[i]);
 							}
 						} else {
-							// 设置默认的宽度
+							// 设置默认的宽度 每格20
 							for (int i = 0; i < colsNum; i++) {
 								ws.setColumnView(i, 20);
 							}
 							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
 						}
-				
 					}
 					//设置密码
 					 SheetSettings ss = ws.getSettings(); 
@@ -520,8 +519,8 @@ public class ExportExcel {
 	
 	
 	
-	//重报批次报财务（加密文件）
-	public static int repExportExcelToFinance(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os,String password) {
+	//重报审核表预览   
+	public static int repExportExcelPreview(ExcelProperties excelProperties, String innerTitle, int[] colsSize, List<String[]> data, OutputStream os) {
 		int result = 1;
 		int colsNum = 0;
 		// 先判断是否传入原始数据
@@ -648,9 +647,6 @@ public class ExportExcel {
 							result = Constant.EXPORT_EXCEL_ARRAYNOTHESAME_EXCEPTION;
 						}
 					}
-					 SheetSettings ss = ws.getSettings(); 
-					    ss.setPassword(password); 
-					    ss.setProtected(true);
 					wwb.write();
 					wwb.close();
 					os.close();

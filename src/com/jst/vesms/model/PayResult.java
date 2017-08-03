@@ -30,8 +30,8 @@ public class PayResult  implements Serializable {
 	private String vehicleOwner;
 	// 补贴金额（元）
 	private Double subsidiesMoney;
-	// 受理时间
-	private Date applyTime;
+	// 受理确认时间
+	private Date applyConfirmTime;
 	//重报批次号
 	private String repeatedBatchNo;
 	
@@ -97,11 +97,11 @@ public class PayResult  implements Serializable {
 	public void setSubsidiesMoney(Double subsidiesMoney) {
 		this.subsidiesMoney = subsidiesMoney;
 	}
-	public Date getApplyTime() {
-		return applyTime;
+	public Date getApplyConfirmTime() {
+		return applyConfirmTime;
 	}
-	public void setApplyTime(Date applyTime) {
-		this.applyTime = applyTime;
+	public void setApplyConfirmTime(Date applyConfirmTime) {
+		this.applyConfirmTime = applyConfirmTime;
 	}
 	public String getRepeatedBatchNo() {
 		return repeatedBatchNo;

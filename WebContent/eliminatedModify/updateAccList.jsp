@@ -191,21 +191,38 @@ String basePath = request.getContextPath();
 									content : infoMsg
 								});
 							} else {
-								openDialog({
-								   	type : "update_account",
-									title : "受理补贴账户变更",
-									width : 1000,
-									height : 600,
-									param: {reset:false, save:false,
-										buttons:[{
-											id : "update_account",
-											text : "提交",
-											iconCls : "icon-ok"
-										}]
-										},
-									maximizable : true,
-									href : basePath+"/eliminatedModify/updateAccountView.do?id="+selectedRows[0].id
-							   });
+								
+								// 判断该笔受理单是否有业务授权
+								$.get(basePath+"/applySpecialAuthority/checkApplyHasApproved.do", {applyNo:selectedRows[0].applyNo}, function(data) {
+								
+									if (data.success) {
+										openDialog({
+										   	type : "update_account",
+											title : "受理补贴账户变更",
+											width : 1000,
+											height : 600,
+											param: {reset:false, save:false,
+												buttons:[{
+													id : "update_account",
+													text : "提交",
+													iconCls : "icon-ok"
+												}]
+												},
+											maximizable : true,
+											href : basePath+"/eliminatedModify/updateAccountView.do?id="+selectedRows[0].id
+									   });
+									} else {
+										Messager.alert({
+											type : "info",
+											title : "&nbsp;",
+											content : data.message.msg
+										});
+									}
+									
+								});
+								
+								
+								
 							}
 			    		}  
 					},	

@@ -272,9 +272,7 @@ String createDate = request.getParameter("createDate"); */
 				  {type:"QUERY"},
 				  {type:"CLEAR"}
 			     ],
-			module:"M_TEST_MANAGER",
-			shownum:3,
-			debug:true
+			shownum:3
 		})
  
 	})

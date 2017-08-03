@@ -43,7 +43,7 @@ out.println(URLDecoder.decode(str, "UTF-8"));
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=5">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
         <title>抓拍上传</title>
         <link rel="stylesheet" type="text/css" href="<%=basePath%>/js/plugins/easyui/themes/ui-cupertino/easyui.css">
 		<link rel="stylesheet" type="text/css" href="<%=basePath%>/js/plugins/easyui/themes/icon.css">
@@ -53,7 +53,7 @@ out.println(URLDecoder.decode(str, "UTF-8"));
 		<link rel="stylesheet" href="<%=basePath%>/js/plugins/editor/plugins/code/prettify.css" />
 		<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/table.css">
 		
-        <script type="text/javascript" src="<%=basePath%>/js/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="<%=basePath%>/js/jquery-1.9.0.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/datagrid-detailview.js"></script>
 		<script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.extension.js"></script>
@@ -784,7 +784,7 @@ out.println(URLDecoder.decode(str, "UTF-8"));
 							// 设置图片路径回显和页面隐藏字段值
 							setProofFileImgPreview(str.substring(0, str.length - 1).split(","), fileType, name);
 							//$("input[name='"+fileType+"']").val(str.substring(0, str.length - 1));
-							alert("图片上传成功！");
+							//alert("图片上传成功！");
 						} else {
 							alert("图片上传失败！");
 						}	
@@ -1354,6 +1354,8 @@ out.println(URLDecoder.decode(str, "UTF-8"));
 	<input type="hidden" name="FCZGYZM"/>
 	<!-- 开户许可证 -->
 	<input type="hidden" name="KHXKZ"/>
+	<!-- 补贴对象变更证明材料 -->
+	<input type="hidden" name="BTZHMBGZM"/>
     
     <div class="datagrid-header">
 	<table class="datagrid-table-s datagrid-htable">
@@ -1449,6 +1451,18 @@ out.println(URLDecoder.decode(str, "UTF-8"));
 		</td>
     </tr>
     </c:if>
+    <c:if test="${param.hasChecked eq true}">
+    <tr class="datagrid-row">
+    	<td class="view_table_left" style="width:135px">补贴对象变更证明材料：</td>
+		<td class="view_table_right">
+    		<input class="submit_01" type="button" value="拍照"	onclick="Scan('BTZHMBGZM')" />
+			<input class="submit_01" type="button" value="上传"	onclick="UploadThumbToServer('BTZHMBGZM', '补贴对象变更证明材料')" />
+		</td>
+		<td class="view_table_right" colspan="3">
+			<a id="BTZHMBGZM_IMG" href="#" target="_blank"></a>
+		</td>
+    </tr>
+    </c:if>
     <tr>
     	<td align="center" colspan="5">
 	   		<input class="submit_01" type="button" value="确认返回"	onclick="ReturnPage()" />
@@ -1534,6 +1548,13 @@ out.println(URLDecoder.decode(str, "UTF-8"));
     			setProofFileImgPreview(noFinanceProvideFiles, "FCZGYZM", "非财政供养单位证明");
     		}
     		
+    		// 补贴对象变更证明材料
+    		if (proof_files.accountChangeProofFiles != "") {
+    			var accountChangeProofFiles = proof_files.accountChangeProofFiles.split(",");
+    			// 多张图片预览
+    			setProofFileImgPreview(accountChangeProofFiles, "BTZHMBGZM", "补贴对象变更证明材料");
+    		}
+    		
     	}
     	
     	// 根据文件路径、种类、名称生成图片回显链接
@@ -1545,11 +1566,11 @@ out.println(URLDecoder.decode(str, "UTF-8"));
     		var id = "#" + type + "_IMG";
     		
     		$(id).text(name + "(1)");
-			$(id).attr("href", basePath+'/'+files[0]);
+			//$(id).attr("href", basePath+'/'+files[0]);
     		if (files.length > 1) {
     			for (var i = 2 ; i <= files.length ; i ++) {
     				var filepath = basePath + '/' + files[i-1];
-    				var _a = "&nbsp<a id='"+id+i+"' href='"+filepath+"' target='_blank'>"+name+"("+i+")</a>";
+    				var _a = "&nbsp<a id='"+id+i+"' href='#' target='_blank'>"+name+"("+i+")</a>";
     				$(id).append(_a);
     			}
     		}
@@ -1623,6 +1644,11 @@ out.println(URLDecoder.decode(str, "UTF-8"));
 			// 非财政供养单位证明
 			if ($("input[name='FCZGYZM']").val() != "") {
 				obj.FCZGYZM = $("input[name='FCZGYZM']").val();
+			}
+			
+			// 补贴对象变更证明材料
+			if ($("input[name='BTZHMBGZM']").val() != "") {
+				obj.BTZHMBGZM = $("input[name='BTZHMBGZM']").val();
 			}
 			window.returnValue = obj;
 			window.close();

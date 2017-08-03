@@ -18,7 +18,7 @@ import com.jst.vesms.model.PayResultImportDetail;
 public class ImportExcel {
 
     
-    public static PayResultImport readPayResultImport(File file,PayResultImport payResultImport) throws Exception{
+    public static PayResultImport readPayResultImport(String fileName,File file,PayResultImport payResultImport) throws Exception{
    	 InputStream io = new FileInputStream(file.getAbsoluteFile());  
    	  Workbook readwb = Workbook.getWorkbook(io); 
    	  Sheet sheet = readwb.getSheet(0);
@@ -40,7 +40,8 @@ public class ImportExcel {
    	  payResultImport.setImportTime(date2);// new Date()为获取当前系统时间
    	  // 导入文件路径
    	  payResultImport.setFilePath(file+"");
-   	  
+   	  // 获取导入的文件名
+   	  payResultImport.setFileName(fileName);
    	  //payImportDao.save(payResultImport);
 	   	readwb.close(); 
 	   	io.close();
@@ -98,19 +99,27 @@ public class ImportExcel {
    	        payResultImportDetail.setPayComment(cell5.getContents());
    	        
    	        // 业务ID 
-   	        String str[] = cell5.getContents().split("ID:");
+   	        String str[] = cell5.getContents().split("\\|");
    	        String str1 = str[1];
-   	        char char1= str1.charAt(0);
-   	        Integer applyId= Integer.parseInt(String.valueOf(char1));
+   	        Integer applyId= Integer.parseInt(str1);
+   	        //char char1= str1.charAt(0);
+   	       // Integer applyId= Integer.parseInt(String.valueOf(char1));
    	        payResultImportDetail.setApplyId(applyId);
    	     
    	        // 支付金额
 	        	Cell cell6 = readsheet.getCell(16, i);
 	        	String numDouble = cell6.getContents().replace(",", "");
 	        	payResultImportDetail.setPayAmount(Double.parseDouble(numDouble));
-   	        // 支付状态
+   	        // 支付结果
+	        	String payResult="";
 	        	Cell cell7 = readsheet.getCell(17, i);
-	        	payResultImportDetail.setPayResStatus(cell7.getContents());
+	        	payResult = cell7.getContents();
+	        	/*if(cell7.getContents()=="正常支付"){
+	        		payResult="1";
+	        	}else if(cell7.getContents()=="退款"){
+	        		payResult="2";
+	        	}*/
+	        	payResultImportDetail.setPayResult(payResult);
    	        // 收款人名称
 	        	Cell cell8 = readsheet.getCell(18, i);
 	        	payResultImportDetail.setAccountName(cell8.getContents());

@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.jst.common.hibernate.BaseDAO;
 import com.jst.common.service.BaseServiceImpl;
+import com.jst.common.utils.page.Page;
+import com.jst.common.utils.string.StringUtil;
 import com.jst.vesms.dao.IImportDetailDao;
 import com.jst.vesms.dao.impl.ImportDetailDao;
+import com.jst.vesms.model.EliminatedApply;
 import com.jst.vesms.model.PayResultImport;
 import com.jst.vesms.model.PayResultImportDetail;
 import com.jst.vesms.service.ImportDetailService;
@@ -42,6 +45,13 @@ implements ImportDetailService{
 	}
 	
 	
+	@Override
+	public PayResultImportDetail detailNoView(Integer id) {
+		// TODO Auto-generated method stub
+		PayResultImportDetail  payResultImportDetail =(PayResultImportDetail) importDetailDao.get(id);
+		return payResultImportDetail;
+	}
+	
 /*	// 判断传进来的业务id 和国库申请单号 在数据库是否存在   
 	public boolean isExist(){
 		boolean flag = false;
@@ -54,7 +64,19 @@ implements ImportDetailService{
 	}*/
 	
 	
-	
+
+	@Override
+	public Page<PayResultImportDetail> getPageBySql(Page<PayResultImportDetail> page,
+			String sql) throws Exception {
+		
+		List list = importDetailDao.getListBySql(sql, null, page);
+		long count = importDetailDao.getListCounter("select count(*) from (" + sql + ") ");
+		if (null != list && list.size() > 0) {
+			page.setTotalCount(count);
+			page.setResult(list);
+		}
+		return page;
+	}
 	
 	
 	

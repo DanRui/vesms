@@ -36,7 +36,7 @@ String basePath = request.getContextPath();
 		</tr>
 		<tr>
 		<td>
-			<input type="button" value="导出" class="button" id="ConfirmButton">
+			<input type="button" value="生成文件" class="button" id="ConfirmButton">
 		</td>
 		</tr>
 	</table>
@@ -51,10 +51,10 @@ String basePath = request.getContextPath();
 			$.ajaxSetup({  
 			    async : false  
 			});  
+			$("#ConfirmButton").attr("disabled","true"); //设置变灰按钮  
 			$("#confirmId").form("submit", {
 				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 				success : function(data) {
-					$("#ConfirmButton").attr("disabled","true"); //设置变灰按钮  
 					var data = eval('(' + data + ')');
 					if (data.success) {
 						Messager.alert({

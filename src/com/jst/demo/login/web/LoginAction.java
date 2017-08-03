@@ -132,12 +132,12 @@ public class LoginAction extends BaseAction{
 			logremark = "当前会话拥有用户信息，系统自动登录";
 			loginstate = true;
 		}else{
-			//Object sessionVerifyCode = session.getAttribute(SystemConstants.VERIFY_CODE);
-			//if(null!=sessionVerifyCode && null!= verifycode && verifycode.equals(sessionVerifyCode.toString())){
+		/*	Object sessionVerifyCode = session.getAttribute(SystemConstants.VERIFY_CODE);
+			if(null!=sessionVerifyCode && null!= verifycode && verifycode.equals(sessionVerifyCode.toString())){
 				log.debug("验证码校验成功");
 				log.debug("清除当前会话中的验证码");
 				//session.removeAttribute(SystemConstants.VERIFY_CODE);
-				log.debug("实例化登录安全对象");
+				log.debug("实例化登录安全对象");*/
 				LoginSecurity loginSecurity = new LoginSecurity(username);
 
 				boolean islock = false;

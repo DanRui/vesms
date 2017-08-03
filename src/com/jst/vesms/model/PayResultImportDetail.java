@@ -1,5 +1,6 @@
 package com.jst.vesms.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.jst.common.model.BaseModel;
 /**
  * <p>Title:标题</p>
  * <p>Description: 描述</p>
@@ -22,7 +25,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="T_PAY_RESULT_IMPORT_DETAIL")
-public class PayResultImportDetail { 
+public class PayResultImportDetail extends BaseModel implements Serializable{ 
 	// 主键ID
 	private Integer id;
 

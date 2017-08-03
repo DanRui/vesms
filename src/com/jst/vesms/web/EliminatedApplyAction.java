@@ -41,6 +41,7 @@ import com.jst.util.PropertyUtil;
 import com.jst.util.StringUtil;
 import com.jst.vesms.model.ActionLog;
 import com.jst.vesms.model.EliminatedApply;
+import com.jst.vesms.service.ApplySpecialAuthorityService;
 import com.jst.vesms.service.EliminatedApplyService;
 import com.jst.vesms.util.EncryptUtils;
 
@@ -55,6 +56,9 @@ public class EliminatedApplyAction extends BaseAction {
 	
 	@Resource(name = "cacheService")
 	private CacheService cacheService;
+	
+	@Resource(name = "applySpecialAuthorityServiceImpl")
+	private ApplySpecialAuthorityService applySpecialAuthorityService;
 	
 	/**
 	 * 
@@ -163,7 +167,7 @@ public class EliminatedApplyAction extends BaseAction {
 		} catch (Exception e) {
 			log.error("eliminatedApplyAction save is Error:"+e, e);
 			saveOk = false;
-			json.put("msg", "系统异常！");
+			json.put("msg", e.getMessage());
 		}
 		
 		log.debug("eliminatedApplyAction save is End");
@@ -247,7 +251,7 @@ public class EliminatedApplyAction extends BaseAction {
 	public String fileUpload(/*@RequestParam("callbackProofFile") CommonsMultipartFile callbackProofFile,
 			@RequestParam("vehicleRegisterProof") CommonsMultipartFile vehicleRegisterProof,
 			@RequestParam("vehicleLicense") CommonsMultipartFile vehicleLicense,*/
-			String isPersonal, String isProxy,
+			String isPersonal, String isProxy,Boolean required,
 			HttpServletRequest request) throws Exception {
 		log.debug("eliminatedApplyAction fileUpload is start");
 		long startTime = System.currentTimeMillis();
@@ -276,24 +280,26 @@ public class EliminatedApplyAction extends BaseAction {
             	String filenameAttr = iter.next();
                 MultipartFile file = multipartRequest.getFile(filenameAttr.toString());
                 
-                // 依次保存报废回收证明、机动车注销证明、银行卡、车主身份证明等到临时目录中。
-                if (filenameAttr.equals("callbackProofFiles") || filenameAttr.equals("vehicleCancelProof") || filenameAttr.equals("bankCard") || filenameAttr.equals("vehicleOwnerProof")) {
-                	if (file.getSize() <= 0) {
-                		isSuccess = false;
-                		break;
-                	}
-                }
-                
-                // 办理类型是代办，则代理委托书和代理人身份证必需上传
-                if (isProxy.equals("N") && (filenameAttr.equals("agentProxy") || filenameAttr.equals("agentProof")) && file.getSize() <= 0) {
-                	isSuccess = false;
-                	break;
-                }
-                
-                // 车主类型是企业，则非财政供养单位证明和开户许可证必需上传
-                if (isPersonal.equals("N") && (filenameAttr.equals("noFinanceProvide") || filenameAttr.equals("openAccPromit")) && file.getSize() <= 0) {
-                	isSuccess = false;
-                	break;
+                if (required) {
+	                // 依次保存报废回收证明、机动车注销证明、银行卡、车主身份证明等到临时目录中。
+	                if (filenameAttr.equals("callbackProofFiles") || filenameAttr.equals("vehicleCancelProof") || filenameAttr.equals("bankCard") || filenameAttr.equals("vehicleOwnerProof")) {
+	                	if (file.getSize() <= 0) {
+	                		isSuccess = false;
+	                		break;
+	                	}
+	                }
+	                
+	                // 办理类型是代办，则代理委托书和代理人身份证必需上传
+	                if (isProxy.equals("N") && (filenameAttr.equals("agentProxy") || filenameAttr.equals("agentProof")) && file.getSize() <= 0) {
+	                	isSuccess = false;
+	                	break;
+	                }
+	                
+	                // 车主类型是企业，则非财政供养单位证明和开户许可证必需上传
+	                if (isPersonal.equals("N") && (filenameAttr.equals("noFinanceProvide") || filenameAttr.equals("openAccPromit")) && file.getSize() <= 0) {
+	                	isSuccess = false;
+	                	break;
+	                }
                 }
                 // 其它资料种类
                 if (file.getSize() == 0) {
@@ -462,6 +468,7 @@ public class EliminatedApplyAction extends BaseAction {
 	public ModelAndView view(@RequestParam("id")Integer id, @RequestParam(value = "type")String type) throws Exception {
 		String view = "ELIMINATED_APPLY.VIEW";
 		if(StringUtil.isNotEmpty(type) && "update".equals(type)) {
+			// 受理录入修改页面
 			view = "ELIMINATED_APPLY.EDIT";
 		} else if (StringUtil.isNotEmpty(type) && "applyLog".equals(type)) {
 			view = "ELIMINATED_APPLY.LOG_VIEW";
@@ -501,6 +508,15 @@ public class EliminatedApplyAction extends BaseAction {
 			mv.addObject("actionLogs", actionLogList);
 		}
 		
+		// 如果是受理未确认修改页面，则根据是否授权审核通过开放相应补贴对象修改
+		if(StringUtil.isNotEmpty(type) && "update".equals(type)) {
+			boolean hasChecked = applySpecialAuthorityService.checkNotApproved(object.getApplyNo());
+			//if (hasChecked) {
+				// 授权审核通过为true
+				mv.getModel().put("hasChecked", hasChecked);
+			//}
+		}
+		
 		mv.addObject("callbackFiles", callbackFiles);
 		mv.addObject("vehicleCancelProofFiles", vehicleCancelProofFiles);
 		mv.addObject("bankCardFiles", bankCardFiles);
@@ -512,7 +528,7 @@ public class EliminatedApplyAction extends BaseAction {
 		mv.addObject("accountChangeProofFiles", accountChangeProofFiles);
 		
 		mv.addObject("v", object);
-			
+		
 		return mv;
 	}
 	
@@ -670,16 +686,17 @@ public class EliminatedApplyAction extends BaseAction {
 	@ResponseBody
 	@RequestMapping("edit")
 	@Privilege(modelCode = "M_ELIMINATED_APPLY_NO_LIST", prvgCode = "UPDATE")
-	public String edit(@RequestParam("id")Integer id, EliminatedApply eliminatedApply,
+	public String edit(@RequestParam("id")Integer id, EliminatedApply eliminatedApply, Boolean hasChecked,
 					String callbackProofFile, String vehicleCancelProofFiles,
 					String bankCardFiles, String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles,
-					String noFinanceProvideFiles, String openAccPromitFiles) throws Exception {
+					String noFinanceProvideFiles, String openAccPromitFiles,
+					String accountChangeProofFiles) throws Exception {
 		log.debug("EliminatedApplyAction edit is start");
 		boolean saveOk = false;
 		JSONObject json = new JSONObject();
 		try {
-			Map<String, Object> result = eliminatedApplyService.updateById(id, eliminatedApply, callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, 
-					agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
+			Map<String, Object> result = eliminatedApplyService.updateById(id, eliminatedApply, hasChecked, callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, 
+					agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles, accountChangeProofFiles);
 			if(null != result && result.get("isSuccess").equals(true)) {
 				saveOk = true;
 				json.put("id", result.get("id"));

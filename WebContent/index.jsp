@@ -46,6 +46,7 @@
 <script type="text/javascript" src="<%=basePath%>/js/util/dictParse.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/util/json2.js"></script>
 <script type="text/javascript" src="<%=basePath%>/js/capture.js"></script>
+<script type="text/javascript" src="<%=basePath%>/js/jquery-form.js"></script>
 
 <style media="print">
 	.Noprint{display:none;}

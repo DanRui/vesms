@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import com.jst.common.model.BaseModel;
 
 @Entity
-@Table(name="APPLY_SPECIAL_AUTHORITY")
+@Table(name="T_APPLY_SPECIAL_AUTHORITY")
 public class ApplySpecialAuthority extends BaseModel implements Serializable {
 
 	// 主键ID
@@ -53,6 +53,9 @@ public class ApplySpecialAuthority extends BaseModel implements Serializable {
 	
 	// 校验码
 	private String verifyCode;
+	
+	// 状态标识，0，未使用；1，已使用
+	private String status;
 		
 	@SequenceGenerator(name = "generator",sequenceName = "SEQ_SPECIAL_AUTHORITY_ID",allocationSize = 1)
 	@Id
@@ -165,11 +168,20 @@ public class ApplySpecialAuthority extends BaseModel implements Serializable {
 		this.verifyCode = verifyCode;
 	}
 
+	@Column(name = "STATUS", unique = false, nullable = true, length = 2)
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public ApplySpecialAuthority(Integer id, String applyNo,
 			String authorityType, String askUserCode, String askUserName,
 			Date askTime, String checkStatus, String checkUserCode,
 			String checkUserName, Date checkTime, String remark,
-			String verifyCode) {
+			String verifyCode, String status) {
 		super();
 		this.id = id;
 		this.applyNo = applyNo;
@@ -183,6 +195,7 @@ public class ApplySpecialAuthority extends BaseModel implements Serializable {
 		this.checkTime = checkTime;
 		this.remark = remark;
 		this.verifyCode = verifyCode;
+		this.status = status;
 	}
 	
 	public ApplySpecialAuthority() {}
