@@ -55,7 +55,7 @@ String createDate = request.getParameter("createDate"); */
 	</br>
 	<div id = "importDetail-list" class="easyui-panel  easyui-panel-style" data-options="title: '查询列表'" style="height:100%">
 		<input type = "hidden" id = "basePath" value = "<%=basePath %>"/>
-			<div class="datagrid-header" id="batchManage-grid-toolbar">
+			<div class="datagrid-header" id="importDetail-grid-toolbar">
 				<table id="importDetail-recycle-tool-table" style = "width:100%;">
 				</table>
 		</div>
@@ -66,7 +66,7 @@ String createDate = request.getParameter("createDate"); */
 	$(function(){
 		var basePath = $("#basePath").val();
 		$("#importDetail-list #importDetail-grid").datagrid({
-			//toolbar : "#batchCreate-grid-toolbar",
+			toolbar : "#importDetail-grid-toolbar",
 			url : basePath+"/importDetail/list.do?payImportId="+'${v.id }',
 			method : "post",
 			rownumbers : true,
@@ -201,7 +201,33 @@ String createDate = request.getParameter("createDate"); */
 				}
 			}
 			] ],
-		});
+			onDblClickRow : function(rowIndex, rowData) {
+				Dialog.create("pay_import_apply", {
+					type : "RESULT_MARK",
+					title : "拨付结果标记",
+					width : 880,
+					height : 800,
+					param: {
+							reset:false
+					},
+			maximizable : true,
+			href :basePath+"/eliminatedApply/view.do?id="+rowData.applyId+"&type=applyLog"
+				});
+			}
+		}).datagrid("initSearch",{
+			columns:[
+				{field:"applyNo",title:"业务单号:",type:"text"},
+				{field:"accountName",title:"开户户名:",type:"text"},
+				{field:"payResult",title:"支付结果:",type:"combobox",panelHeight:true,url:basePath+"/data/payResult.json", text:"name", value:"value"},
+				{field:"payResStatus",title:"支付结果标记状态:",type:"combobox",panelHeight:true,url:basePath+"/data/payResStatus.json", text:"name", value:"value"},
+				],
+				tools:[
+			      	  {type:"QUERY"},
+					  {type:"CLEAR"}
+				     ],
+				module:"M_MARK_IMPORT",
+				shownum:3
+		})
 	});
 
 	</script>

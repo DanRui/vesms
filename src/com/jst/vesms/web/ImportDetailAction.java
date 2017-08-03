@@ -43,7 +43,7 @@ private static final Log log = LogFactory.getLog(ImportDetailAction.class);
 	public String list(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, String payImportId) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String payImportId,String applyNo,String accountName,String payResStatus,String payResult) throws Exception{
 		log.debug("PayImportAction list is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
@@ -54,6 +54,18 @@ private static final Log log = LogFactory.getLog(ImportDetailAction.class);
 		String returnStr = "";
 		if(StringUtil.isNotEmpty(payImportId)) {
 			list.add(new PropertyFilter("EQI_payImportId",payImportId));
+		}
+		if(StringUtil.isNotEmpty(applyNo)) {
+			list.add(new PropertyFilter("EQS_applyNo",applyNo));
+		}
+		if(StringUtil.isNotEmpty(accountName)) {
+			list.add(new PropertyFilter("LIKES_accountName",accountName));
+		}
+		if(StringUtil.isNotEmpty(payResStatus)) {
+			list.add(new PropertyFilter("EQS_payResStatus",payResStatus));
+		}
+		if(StringUtil.isNotEmpty(payResult)) {
+			list.add(new PropertyFilter("EQS_payResult",payResult));
 		}
 		/*if(StringUtil.isNotEmpty(makeStartTime)) {
 			list.add(new PropertyFilter("GED_makeTime",makeStartTime));
@@ -132,7 +144,7 @@ private static final Log log = LogFactory.getLog(ImportDetailAction.class);
 			sb.append("and t.pay_Time < to_date('").append(payEndTime).append("','yyyy-MM-dd')+1 ");
 		}
 		if(StringUtil.isNotEmpty(payResStatus)) {
-			sb.append("and t.pay_res_status = '").append(payResStatus).append("' order by t.id");
+			sb.append("and t.pay_res_status = '").append(payResStatus).append("' ");
 		}else{		
 			sb.append("and t.pay_res_status in ('0','3')  ");
 		}

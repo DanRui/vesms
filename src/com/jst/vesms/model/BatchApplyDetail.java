@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BatchApplyDetail implements Serializable {
-	// 主键ID
-	private Integer id;
+	// 业务Id
+	private Integer applyId;
 	//批次号
 	private String batchNo;
 	//受理单号
@@ -28,12 +28,13 @@ public class BatchApplyDetail implements Serializable {
 	private Date applyConfirmTime; 
 	// 拨付状态
 	private String payStatus;
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	// 银行名称
+	private String bankName;
+	// 银行户名
+	private String bankAccountName;
+	// 银行号
+	private String bankAccountNo;
+	
 	public String getBatchNo() {
 		return batchNo;
 	}
@@ -99,6 +100,30 @@ public class BatchApplyDetail implements Serializable {
 	}
 	public void setPayStatus(String payStatus) {
 		this.payStatus = payStatus;
+	}
+	public Integer getApplyId() {
+		return applyId;
+	}
+	public void setApplyId(Integer applyId) {
+		this.applyId = applyId;
+	}
+	public String getBankName() {
+		return bankName;
+	}
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+	public String getBankAccountName() {
+		return bankAccountName;
+	}
+	public void setBankAccountName(String bankAccountName) {
+		this.bankAccountName = bankAccountName;
+	}
+	public String getBankAccountNo() {
+		return bankAccountNo;
+	}
+	public void setBankAccountNo(String bankAccountNo) {
+		this.bankAccountNo = bankAccountNo;
 	}
 	
 	

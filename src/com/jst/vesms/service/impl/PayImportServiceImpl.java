@@ -95,7 +95,7 @@ implements PayImportService{
 		return paths;
 	}*/
 	
-	//获取相同文件名后缀数最大的数值 
+	//给文件名加上时间格式
 	@Override
 	public List getNewFileName(String fileName) throws Exception {
 		StringBuffer sb = new StringBuffer();
@@ -105,6 +105,24 @@ implements PayImportService{
 		String sql = sb.toString();
 		List list = payImportDao.getTableList(sql, null);
 		return list;
+	}
+	
+	
+	
+	//更改名称，转为非中文格式 ：import+当前时间.xls
+	@Override
+	public String getDefinedName(String fileName) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		String saveName="";
+		sb.append("select  to_char(sysdate,'yyyymmddhh24miss')||'.'");
+		sb.append("||(substr('国库导出支付信息1.xlsx',instr('国库导出支付信息1.xlsx','.')+1)) from dual");
+		String sql = sb.toString();
+		List list = payImportDao.getTableList(sql, null);
+		for (int i = 0; i < list.size(); i++) {
+			saveName = (String) list.get(0);              			
+		}
+		saveName="import_"+saveName;
+		return saveName;
 	}
 	
 	

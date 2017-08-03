@@ -172,11 +172,24 @@ String basePath = request.getContextPath();
 				sortable : true
 			}
 			] ],
+			onDblClickRow : function(rowIndex, rowData) {
+				Dialog.create("pay_import_mark", {
+					type : "RESULT_MARK",
+					title : "拨付结果标记",
+					width : 880,
+					height : 800,
+					param: {
+							reset:false
+					},
+			maximizable : true,
+			href :basePath+"/eliminatedApply/view.do?id="+rowData.applyId+"&type=applyLog"
+				});
+			}
 		}).datagrid("initSearch",{
 			columns:[
 					{field:"payResStatus",title:"支付结果标记状态:",type:"combobox",panelHeight:true,url:basePath+"/data/payResStatus.json", text:"name", value:"value"},
 					{field:"payResult",title:"支付结果:",type:"combobox",panelHeight:true,url:basePath+"/data/payResult.json", text:"name", value:"value"},
-					{field:"acoountName",title:"开户户名:",type:"text"},
+					{field:"accountName",title:"开户户名:",type:"text"},
 					{field:"applyNo",title:"业务单号:",type:"text"},
 					{startField:"payStartTime",endField:"payEndTime",title:"付款时间:",type:"date",section:true}
 					],

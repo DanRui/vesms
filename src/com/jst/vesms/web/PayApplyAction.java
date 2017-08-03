@@ -609,7 +609,7 @@ public class PayApplyAction extends BaseAction{
 	public String batchDetailList(@RequestParam(value="page", defaultValue="1")int pageNo, 
 					   @RequestParam(value="rows", defaultValue="10")Integer pageSize,
 					   @RequestParam(value="order", defaultValue="DESC")String order, 
-					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String vehicleType, String applyNo, String vehicleIdentifyNo, String payResStartDate , String payResEndDate,String batchNo,String toFinanceNo) throws Exception{
+					   @RequestParam(value="sort", defaultValue="id")String orderBy, String vehiclePlateNum, String vehiclePlateType, String vehicleOwner, String vehicleType, String applyNo, String vehicleIdentifyNo,String payStatus, String payResStartDate , String payResEndDate,String batchNo,String toFinanceNo) throws Exception{
 		log.debug("payApplyAction batchDetailList is start");
 		List<PropertyFilter> list = new ArrayList<PropertyFilter>();
 		Page page = new Page();
@@ -620,40 +620,27 @@ public class PayApplyAction extends BaseAction{
 		String returnStr = "";
 		StringBuffer sb = new StringBuffer("select tea.id,tbd.batch_no,tbd.apply_no,tea.vehicle_owner,tea.subsidies_money, ");
 		sb.append("tea.vehicle_plate_num,tea.vehicle_plate_type,tea.to_finance_status, ");
-		sb.append("tea.vehicle_type,tea.VEHICLE_IDENTIFY_NO,tea.apply_confirm_time,tbd.pay_status ");
+		sb.append("tea.vehicle_type,tea.VEHICLE_IDENTIFY_NO,tea.apply_confirm_time,tbd.pay_status,"); 
+		sb.append("tea.bank_Name,tea.bank_account_name,tea.bank_account_no");
 		sb.append(" from t_eliminated_apply tea,t_batch_detail tbd,t_batch_main tbm where 1=1 ");
 		sb.append(" and tbm.batch_no=tbd.batch_no ");
 		sb.append(" and tea.apply_no=tbd.apply_no ");
 		sb.append(" and tbd.batch_no= '"+batchNo+"' ");
-		/*if(StringUtil.isNotEmpty(vehiclePlateNum)) {
-			sb.append("and t.vehicle_plate_num like '%").append(vehiclePlateNum).append("%' ");
+		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
+			sb.append("and tea.vehicle_plate_num like '%").append(vehiclePlateNum).append("%' ");
 		}
 		if(StringUtil.isNotEmpty(vehiclePlateType)) {
-			sb.append("and t.vehicle_plate_type = '").append(vehiclePlateType).append("' ");
-		}
-		if(StringUtil.isNotEmpty(vehicleIdentifyNo)) {
-			String key = PropertyUtil.getPropertyValue("DES_KEY");
-			vehicleIdentifyNo = EncryptUtils.encryptDes(key, vehicleIdentifyNo);
-			sb.append("and t.vehicle_identify_no = '").append(vehicleIdentifyNo).append("' ");
-		}
-		if(StringUtil.isNotEmpty(vehicleType)) {
-			sb.append("and t.vehicle_type = '").append(vehicleType).append("' ");
+			sb.append("and tea.vehicle_plate_type = '").append(vehiclePlateType).append("' ");
 		}
 		if(StringUtil.isNotEmpty(vehicleOwner)) {
-			sb.append("and t.vehicle_owner like '%").append(vehicleOwner).append("%' ");
+			sb.append("and tea.vehicle_owner like '%").append(vehicleOwner).append("%' ");
 		}
 		if(StringUtil.isNotEmpty(applyNo)) {
-			sb.append("and t.apply_no = '").append(applyNo).append("' ");
+			sb.append("and tbd.apply_no = '").append(applyNo).append("' ");
 		}
-		if(StringUtil.isNotEmpty(batchNo)) {
-			sb.append("and t.batch_no = '").append(batchNo).append("' ");
+		if(StringUtil.isNotEmpty(payStatus)) {
+			sb.append("and tbd.pay_status = '").append(payStatus).append("' ");
 		}
-		if(StringUtil.isNotEmpty(vehicleOwner)) {
-			sb.append("and t.vehicle_Owner = '").append(vehicleOwner).append("' ");
-		}
-		if(StringUtil.isNotEmpty(toFinanceNo)) {
-			sb.append("and m.to_Finance_No = '").append(toFinanceNo).append("' ");
-		}*/
 		sb.append(" order by "+orderBy+" "+order+" ");
 		try {
 			page = payApplyService.getPageSql(page, sb.toString());

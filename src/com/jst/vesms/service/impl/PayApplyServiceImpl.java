@@ -713,8 +713,8 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 					BatchApplyDetail batchApplyDetail = new BatchApplyDetail();
 					
 					BigDecimal idBigDecimal = (BigDecimal)objs[0];
-					Integer id = idBigDecimal.intValue();
-					batchApplyDetail.setId(id);
+					Integer applyId = idBigDecimal.intValue();
+					batchApplyDetail.setApplyId(applyId);
 					
 /*					BigDecimal toFinanceNoBigDecimal = (BigDecimal)objs[1];
 					Integer toFinanceNo = toFinanceNoBigDecimal.intValue();
@@ -734,7 +734,7 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 					batchApplyDetail.setSubsidiesMoney(subsidiesMoney);
 					
 					String vehiclePlateNum = (String) objs[5];
-					batchApplyDetail.setVehiclePlateNum(vehicleOwner);
+					batchApplyDetail.setVehiclePlateNum(vehiclePlateNum);
 					
 					// 号牌种类
 					String vehiclePlateType = (String) objs[6];
@@ -777,6 +777,16 @@ public class PayApplyServiceImpl extends BaseServiceImpl
 					
 					String payStatus = (String) objs[11];
 					batchApplyDetail.setPayStatus(payStatus);
+					
+					String bankName = (String) objs[12];
+					batchApplyDetail.setBankName(bankName);
+
+					String bankAccountName = (String) objs[13];
+					batchApplyDetail.setBankAccountName(bankAccountName);
+					
+					String bankAccountNo = (String) objs[14];
+					bankAccountNo = EncryptUtils.decryptDes(key, bankAccountNo);
+					batchApplyDetail.setBankAccountNo(bankAccountNo);
 					
 					list2.add(batchApplyDetail);
 				}

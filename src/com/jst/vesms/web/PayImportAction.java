@@ -165,6 +165,7 @@ private static final Log log = LogFactory.getLog(PayImportAction.class);
 			String result="";
 			boolean isOk = false;
 			String fileName="";
+			String uploadName="";
 			String newFileName="";
 			String excelImport="";
 			File file1=null;
@@ -184,10 +185,11 @@ private static final Log log = LogFactory.getLog(PayImportAction.class);
                 if (file!=null)
                 {	
                 	try {              		
-            			List sqlList1 = payImportService.getNewFileName(fileName);
+            			/*List sqlList1 = payImportService.getNewFileName(fileName);
             			for (int i = 0; i < sqlList1.size(); i++) {
             				newFileName =  (String) sqlList1.get(0);              			
-            			}
+            			}*/
+                		uploadName = payImportService.getDefinedName(fileName);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						log.error("PayImportAction importExcel is Error:"+e, e);
@@ -199,14 +201,14 @@ private static final Log log = LogFactory.getLog(PayImportAction.class);
     	            if (! new File(excelImport).exists()) {
                 		new File(excelImport).mkdirs();
                 	}
-    	            path =excelImport+newFileName;
+    	            path =excelImport+uploadName;
                     file1 = new File(path);
                     file.transferTo(file1);	//上传
                 }
 	         }
 		        try {
 		        	// 把国库数据导入数据库
-					String payImportId= payImportService.savePayImport(newFileName,file1);
+					String payImportId= payImportService.savePayImport(fileName,file1);
 					// 调用存储过程
 					result = payImportService.importPayResult(payImportId);
 					isOk=true;
@@ -270,14 +272,17 @@ private static final Log log = LogFactory.getLog(PayImportAction.class);
 		@Privilege(modelCode = "M_MARK_IMPORT", prvgCode = "TREASURY_QUERY")
 		public String getImportPath(@RequestParam("id")Integer id,HttpServletResponse response) {
 			log.debug("PayImportAction getImportPath is start");
-			String filePath = "" ;
+			String fileName = "" ;
+			String excelImport="";
+			String filePath="";
 			try {
 				List<PayResultImport> list = payImportService.getListByPorperty("id", id, null);
 				for (int i = 0; i < list.size(); i++) {
 					PayResultImport apply = list.get(0);
-					filePath = apply.getFilePath();
+					fileName = apply.getFileName();
 				}
-				filePath=filePath.replaceAll("\\\\", "/");
+				 excelImport = PropertyUtil.getPropertyValue("excelImport");
+				filePath=excelImport+fileName;
 			//	fileDownload(filePath, response);
 			} catch (Exception e) {
 				log.error("PayImportAction getImportPath is Error:"+e, e);
@@ -317,7 +322,6 @@ private static final Log log = LogFactory.getLog(PayImportAction.class);
 				FileInputStream inputStream = new FileInputStream(filepath);
 				OutputStream resOutStream = response.getOutputStream();
 				byte[] bytes = new byte[4096];
-				
 				while(inputStream.read(bytes) != -1) {
 					resOutStream.write(bytes, 0, bytes.length);
 				}

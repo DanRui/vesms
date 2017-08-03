@@ -75,7 +75,7 @@ String createDate = request.getParameter("createDate"); */
 	$(function(){
 		var basePath = $("#basePath").val();
 		$("#batchManage-list #batchManage-grid").datagrid({
-			//toolbar : "#batchCreate-grid-toolbar",
+			toolbar : "#batchManage-grid-toolbar",
 			url : basePath+"/payApply/batchDetailList.do?batchNo="+'${v.batchNo }',
 			method : "post",
 			rownumbers : true,
@@ -100,7 +100,61 @@ String createDate = request.getParameter("createDate"); */
 			},{
 				field : "vehicleOwner",
 				title : "车主",
+				width : "20%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
+			},{
+				field : "payStatus",
+				title : "拨付结果",
 				width : "10%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true,
+				formatter : function(value, row, index) {
+					if (value ==0) {
+						return "未拨付";
+					} else if (value ==1) {
+						return "拨付成功";
+					} else if (value ==2) {
+						return "拨付失败";
+					} else if (value ==3) {
+						return "财务退回";
+					}
+				},
+				styler : function(value, row, index) {
+					if (value ==0) {
+						return "color:gray";
+					} else if (value ==1) {
+						return "color:green";
+					} else if (value ==2) {
+						return "color:red";;
+					} else if (value ==3) {
+						return "color:red";;
+					}
+				}
+			},{
+				field : "bankName",
+				title : "银行名称",
+				width : "15%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
+			},{
+				field : "bankAccountName",
+				title : "银行户名",
+				width : "15%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
+			},{
+				field : "bankAccountNo",
+				title : "银行账号",
+				width : "15%",
 				align : "center",
 				halign : "center",
 				resizable : true,
@@ -128,7 +182,7 @@ String createDate = request.getParameter("createDate"); */
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true,
+				sortable : true
 			},{
 				field : "toFinanceStatus",
 				title : "批次报财委状态",
@@ -136,23 +190,7 @@ String createDate = request.getParameter("createDate"); */
 				align : "center",
 				halign : "center",
 				resizable : true,
-				sortable : true,
-				formatter : function(value, row, index) {
-					var num = parseInt (value);
-					if (num < 0) {
-						return "待报财务";
-					} else if (num > "0") {
-						return "已报财务";
-					}
-				},
-				styler : function(value, row, index) {
-					var num = parseInt (value);
-					if (num < 0) {
-						return "color:gray";
-					} else if (num > 0) {
-						return "color:green";
-					} 
-				}
+				sortable : true
 			},{
 				field : "vehicleTypeName",
 				title : "车辆类型",
@@ -185,9 +223,45 @@ String createDate = request.getParameter("createDate"); */
 						return "";
 					}
 				}
+			},
+			{
+				field : "applyId",
+				title : "业务ID",
+				width : "8%",
+				align : "center",
+				halign : "center",
+				resizable : true,
+				sortable : true
 			}
 			] ],
-		});
+			onDblClickRow : function(rowIndex, rowData) {
+				Dialog.create("pay_apply_view", {
+					type : "RESULT_MARK",
+					title : "拨付结果标记",
+					width : 880,
+					height : 800,
+					param: {
+							reset:false
+					},
+			maximizable : true,
+			href :basePath+"/eliminatedApply/view.do?id="+rowData.applyId+"&type=applyLog"
+				});
+			}
+		}).datagrid("initSearch",{
+			columns:[
+		            {field:"vehiclePlateNum",title:"号牌号码:",type:"text"},
+				    {field:"vehiclePlateType",title:"号牌种类:",type:"combobox", url:basePath+"/sysDict/getDictListFromMap.do?dictType=VEHICLE_PLATE_TYPE", text:"value", value:"code"},
+					{field:"vehicleOwner",title:"车主:",type:"text"},
+					{field:"applyNo",title:"业务单号:",type:"text"},
+					{field:"payStatus",title:"拨付结果:",type:"combobox",panelHeight:true,url:basePath+"/data/payStatus.json", text:"name", value:"value"},
+					],
+					tools:[
+				      	  {type:"QUERY"},
+						  {type:"CLEAR"}
+					     ],
+					module:"M_MARK_IMPORT",
+					shownum:3
+			})
 	});
 
 	</script>

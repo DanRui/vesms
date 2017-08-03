@@ -15,8 +15,11 @@ public interface PayImportService extends BaseService{
 	
 	public String importPayResult(String ids) throws Exception;
 
-	//获取相同文件名后缀数最大的数值 
+	//给文件名加上时间格式
 	public List getNewFileName(String fileName) throws Exception;
+	
+	//更改名称，转为非中文格式 ：import+当前时间.xls
+	public String getDefinedName(String fileName) throws Exception;
 		
 /*	// 判断文件名是否存在
 	public List getFileNameSql(String fileName) throws Exception;*/
