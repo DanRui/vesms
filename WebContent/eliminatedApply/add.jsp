@@ -398,9 +398,11 @@
 					</td>
 				</tr>
 				<tr class="datagrid-row">
-					<td align="center" colspan="6">
+					<td></td>
+					<td class="view_table_right">
 						<a id="btnUpload" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">本地文件上传</a>
 					</td>
+					<!-- <td colspan="4"></td> -->
 				</tr>
 			</table>
 		</div>
@@ -675,7 +677,7 @@
 					
 					// 弹出高拍仪抓拍图片界面
 					var parentValue = window.showModalDialog('eliminatedApply/captureNew.jsp?vehiclePlateNum='+vehiclePlateNum + '&isPersonal=' + isPersonal + '&isProxy=' + isProxy, proof_files, 
-							"dialogWidth=800px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
+							"dialogWidth=800px,dialogHeight=700px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 					
 					// 抓拍返回，设置图片路径到页面字段, 且设置后台隐藏字段
 		        	if (typeof(parentValue) != "undefined" && parentValue != null) {
@@ -1084,11 +1086,16 @@
 				   }
 				   
 				   //文件框页面校验，必填
-				   var ifValid = $("#form-apply-upload").form("enableValidation").form("validate");
-				   
-				   if (ifValid) {
+				   //var ifValid = $("#form-apply-upload").form("enableValidation").form("validate");
+				   var hasFileUpload = checkAttachmentsForUpload();
+				   if (!hasFileUpload) {
+					   alert("还有证明材料未选择，请选择本地证明材料！");
+					   return false;
+				   } else {
+					   
+				   //if (ifValid) {
 					
-					   var url =  $("#form-apply-upload").attr("action")+"?isPersonal="+isPersonal+"&isProxy="+isProxy;
+					   var url =  $("#form-apply-upload").attr("action")+"?isPersonal="+isPersonal+"&isProxy="+isProxy+"&required="+true;
 					   $("#form-apply-upload").form({
 		        			url  : url,
 		        		 	success : function(result) {
@@ -1162,11 +1169,7 @@
 		        	 	});
 					 
 					   $("#form-apply-upload").submit();
-				   } else {
-					   alert("还有证明材料未选择，请选择后上传！");
-					   return false;
 				   }
-				   
 	        	 	
 		        });
 				
@@ -1808,6 +1811,50 @@
 			/* function clearBeforeCloseFunc() {
 				$("#common-dialog").dialog("options", {onBeforeClose:null});
 			} */
+			// 检查必填证明材料是否选择			
+			function checkAttachmentsForUpload() {
+				var isOk = true;
+				var isPersonal = $("#isPersonal").combobox("getValue");
+				var isProxy = $("#isProxy").combobox("getValue");
+				
+				// 报废回收证明
+				if ($("input[name='callbackProofFiles']").val() == "") {
+					isOk = false;
+				}
+				
+				// 机动车注销证明
+				if ($("input[name='vehicleCancelProof']").val() == "") {
+					isOk = false;
+				}
+				// 车主身份证明
+				if ($("input[name='vehicleOwnerProof']").val() == "") {
+					isOk = false;
+				}
+				// 银行卡
+				if ($("input[name='bankCard']").val() == "") {
+					isOk = false;
+				}
+				// 企业需要非财政供养单位证明、开户许可证
+				if (isPersonal == 'N') {
+					if ($("input[name='noFinanceProvide']").val() == "") {
+						isOk = false;
+					}
+					if ($("input[name='openAccPromit']").val() == "") {
+						isOk = false;
+					}
+				}
+				// 代理需要代理委托书、代理人身份证
+				if (isProxy == "N") {
+					if ($("input[name='agentProxy']").val() == "") {
+						isOk = false;
+					}
+					if ($("input[name='agentProof']").val() == "") {
+						isOk = false;
+					}
+				}
+				
+				return isOk;
+			}
 			
 		</script>
 		

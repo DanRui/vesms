@@ -157,7 +157,7 @@ implements PayResultService{
 	}
 
 
-	// 正常业务拨付结果标记
+	// 正常业务拨付结果标记查询sql
 	public Page getPageSql(Page page,String sql) throws Exception {
 			List<PayResult> list2 = new ArrayList<PayResult>();
 			List list = payResultDao.getTableList(sql, page);
@@ -222,8 +222,8 @@ implements PayResultService{
 					
 					java.sql.Timestamp applyDate = (Timestamp) objs[10];
 					if (applyDate != null){
-						Date applyTime = new Date(applyDate.getTime());
-						payResult.setApplyTime(applyTime);
+						Date applyConfirmTime = new Date(applyDate.getTime());
+						payResult.setApplyConfirmTime(applyConfirmTime);
 					}
 					list2.add(payResult);
 				}
@@ -300,8 +300,8 @@ implements PayResultService{
 				
 				java.sql.Timestamp applyDate = (Timestamp) objs[10];
 				if (applyDate != null){
-					Date applyTime = new Date(applyDate.getTime());
-					payResult.setApplyTime(applyTime);
+					Date applyConfirmTime = new Date(applyDate.getTime());
+					payResult.setApplyConfirmTime(applyConfirmTime);
 				}
 				list2.add(payResult);
 			}

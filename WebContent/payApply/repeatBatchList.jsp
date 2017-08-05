@@ -160,7 +160,7 @@ String basePath = request.getContextPath();
 			         {field:"batchStatus",title:"批次状态：",type:"combobox",panelHeight:true, url:basePath+"/data/batchStatus.json", text:"name", value:"value"},
 					 {startField:"createStartDate",endField:"createEndDate",title:"重报批次生成时间:",type:"date",section:true}
 			        ],
-			tools:[{type:"BATCH_PREVIEW",icon:"icon-add",title:"审批表预览",text_width:100,
+			tools:[{type:"BATCH_PREVIEW",icon:"icon-add",title:"审核表预览",text_width:100,
 		     	  fn:function() {
 						var selectedRows = this.datagrid("getSelections");
 						//var ids=[];
@@ -182,12 +182,12 @@ String basePath = request.getContextPath();
 							//文件预览 
 							openDialog({
 									   	type : "batch_List",
-										title : "审批表预览",
+										title : "审核表预览",
 										width : 300,
 										height : 200,
 										param: {reset:false,save:false},
 										maximizable : true,
-										href : basePath+"/payApply/toExcelPreview.do?id="+selectedRows[0].id
+										href : basePath+"/payApply/repToExcelPreview.do?id="+selectedRows[0].id
 								   });
 						}
 				 	  }

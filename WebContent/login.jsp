@@ -44,12 +44,12 @@
 							<span>密码:</span>
 							<input type="password" name="password" autocomplete="off" class = "pass"/>
 						</li>
-						<li>
+						<%-- <li>
 							<span>验证码:</span>
 							<input type="text" name="verifycode" autocomplete="off"  class="checkBox"/>
 							<img src="<%=basePath %>/login/getCode.do" class="code">
 							<!-- <img src="images/icon_code.jpg" alt="验证码" class="code"> -->
-						</li>
+						</li> --%>
 					</ul>
 					<div class="button">
 						<a href="javascript:void(0)" class="logining">登录</a>

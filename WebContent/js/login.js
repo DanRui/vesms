@@ -48,4 +48,10 @@ $(function(){
 		
 		$("form").submit();
 	});
+	
+	$("a.look_for").click(function(e){
+		e.preventDefault();
+		
+		alert("请在公共基础平台自行修改密码！");
+	});
 })

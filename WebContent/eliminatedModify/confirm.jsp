@@ -291,13 +291,19 @@
 				$("#form-confirm").form("submit", {
 					 url : $("#form-confirm").attr("action")+"?id="+id,
 					 onSubmit : function() {
-						 var isValid = $(this).form("enableValidation").form("validate");
+						 if ($("input[name='signedApplyFile']").val() == "") {
+							 alert("请选择签字确认的受理表！");
+							 return false; 
+						 } else {
+							 return true;
+						 }
+						/*  var isValid = $(this).form("enableValidation").form("validate");
 						 if (isValid) {
 							 return isValid;
 						 } else {
 							 alert("请选择签字确认的受理表！");
 							 return false;
-						 }
+						 } */
 					 },
 					 success : function(data) {
 						 if(Object.prototype.toString.call(data) === "[object String]") {

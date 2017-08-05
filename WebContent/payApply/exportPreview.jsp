@@ -20,7 +20,7 @@ String basePath = request.getContextPath();
 		
 			<tr>
 			<td>
-				<input type="button" value="文件预览" class="button" id="ConfirmButton">
+				<input type="button" value="审批表预览" class="button" id="ConfirmButton">
 			</td>
 			</tr>
 		</table>
@@ -32,7 +32,7 @@ String basePath = request.getContextPath();
 		$("#ConfirmButton").click(function(){
 			$(this).attr("disabled","true"); //设置变灰按钮  
 				 $("#confirmId").form("submit",{
-						url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&toFinanceNo="+'${v.toFinanceNo}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
+						url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 						success : function(data) {
 							$.ajaxSetup({  
 							    async : false  

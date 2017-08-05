@@ -1,5 +1,6 @@
 package com.jst.vesms.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -8,8 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
-
 import javax.persistence.Table;
+
+import com.jst.common.model.BaseModel;
 /**
  * <p>Title:标题</p>
  * <p>Description: 描述</p>
@@ -21,7 +23,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="T_PAY_RESULT_IMPORT")
-public class PayResultImport {
+public class PayResultImport extends BaseModel implements Serializable{
 
 	// 主键ID
 	private Integer id;
@@ -50,8 +52,8 @@ public class PayResultImport {
 	// 尚未标记的单数
 	private Integer applyCountWaitforSign;
 	
-	// 备注
-	private String remark;
+	// 传入的文件名称
+	private String fileName;
 	
 	// 文件路径
 	private String filePath;
@@ -140,13 +142,13 @@ public class PayResultImport {
 		this.applyCountWaitforSign = applyCountWaitforSign;
 	}
 
-	@Column(name = "REMARK", unique = false, nullable = true,length=2000)
-	public String getRemark() {
-		return remark;
+	@Column(name = "FILE_NAME", unique = false, nullable = true,length=200)
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	@Column(name = "FILE_PATH", unique = false, nullable = true,length=200)

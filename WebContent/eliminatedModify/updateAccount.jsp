@@ -388,6 +388,7 @@
 			$("#common-dialog-update_account").click(function() {
 				/* var isValid = $("#form-update-account form").form("enableValidation").form("validate"); */
 				var id = '${v.id}';
+				var modifyResult = $('input[name="modifyResult"]:checked').val();
 				var bankName = $("#bankCodeNew").combobox("getText");
 				$("input[name='bankName']").val(bankName);
 				$("#form-update-account").form("submit", {
@@ -418,7 +419,27 @@
 							var result = eval('(' + data + ')');
 	        		 		if (result.success) {
 	        		 			alert(result.message.msg);
-	        		 			$("#common-dialog").dialog("close");
+	        		 			
+	        		 			// 选择结束修正，受理表信息更新，页面跳转到受理表打印预览页面
+								var url = basePath+"/eliminatedModify/applyPreview.do?id="+result.message.id;
+								
+								$("#common-dialog").dialog("close");
+								
+								if (modifyResult == "1") {
+									openDialog({
+									   	type : "PRINT_APPLY_TABLE",
+										title : "补贴受理表打印预览",
+										width : 1040,
+										height : 400,
+										param: {reset:false,save:false,
+											beforeCloseFunc:"clearCaptureRes",
+											isBeforeClose:true},	
+										maximizable : true,
+										href : url
+								    });
+								}
+	        		 			
+	        		 			//$("#common-dialog").dialog("close");
 	        		 			
 	        		 			$("#subsidTarget-apply-list #subsidTarget-apply-grid").datagrid("load");
 	        		 			

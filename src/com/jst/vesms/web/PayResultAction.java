@@ -79,7 +79,7 @@ public class PayResultAction extends BaseAction{
 		page.setOrderBy(orderBy);
 		String returnStr = "";
 		StringBuffer sb = new StringBuffer("select t.id,m.to_finance_No,t.batch_No,t.apply_no,t.vehicle_Plate_Num,t.vehicle_Plate_Type,t.vehicle_Type,");
-		sb.append(" t.vehicle_identify_no,t.vehicle_Owner,t.subsidies_Money,t.apply_Time");
+		sb.append(" t.vehicle_identify_no,t.vehicle_Owner,t.subsidies_Money,t.apply_Confirm_Time");
 		sb.append(" from t_eliminated_apply t ");
 		sb.append("inner join t_batch_main m on t.batch_no=m.batch_no  where 1 = 1 ");
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {
@@ -160,6 +160,7 @@ public class PayResultAction extends BaseAction{
 		String strids = "";
 		try {
 			strids = ids.replaceAll("," , "|");
+			strids.substring(0,strids.length()-1);
 			result = payResultService.markBatchApply(strids,payResStatus,faultType,faultDesc);
 			if(null != result) {
 				markOk = true;
@@ -204,7 +205,7 @@ public class PayResultAction extends BaseAction{
 		page.setOrderBy(orderBy);
 		String returnStr = "";
 		StringBuffer sb = new StringBuffer("select t.id,m.to_finance_No,t.repeated_batch_No,t.apply_no,t.vehicle_Plate_Num,t.vehicle_Plate_Type,t.vehicle_Type,");
-		sb.append(" t.vehicle_identify_no,t.vehicle_Owner,t.subsidies_Money,t.apply_Time");
+		sb.append(" t.vehicle_identify_no,t.vehicle_Owner,t.subsidies_Money,t.apply_Confirm_Time");
 		sb.append(" from t_eliminated_apply t ");
 		sb.append("inner join t_batch_main m on t.repeated_batch_no=m.batch_no  where 1 = 1 ");
 		if(StringUtil.isNotEmpty(vehiclePlateNum)) {

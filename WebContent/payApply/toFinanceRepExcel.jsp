@@ -36,7 +36,7 @@ String basePath = request.getContextPath();
 		</tr>
 		<tr>
 		<td>
-			<input type="button" value="导出" class="button" id="ConfirmButton">
+			<input type="button" value="生成文件" class="button" id="ConfirmButton">
 		</td>
 		</tr>
 	</table>
@@ -52,11 +52,11 @@ String basePath = request.getContextPath();
 		    async : false  
 		}); 
 		$("#ConfirmButton").click(function(){
+			$("#ConfirmButton").attr("disabled","true");
 			var password=$("#password").val();
 			$("#confirmId").form("submit", {
 				url : $("#confirmId").attr("action")+"?id="+'${v.id}'+"&batchNo="+'${v.batchNo}'+"&batchType="+'${v.batchType}',
 				success : function(data) {
-					$("#ConfirmButton").attr("disabled","true");
 					var data = eval('(' + data + ')');
 					if (data.success) {
 						Messager.alert({

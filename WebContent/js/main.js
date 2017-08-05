@@ -831,7 +831,7 @@ var Dialog = {
 			dialog.dialog({
 				cache: false, 
 				modal: true, 
-				closed: true,
+				closed: true,// 初始化完成后不会自动关闭窗口
 				resizable:true,
 				maximizable:true,
 				method: "post",
@@ -846,7 +846,7 @@ var Dialog = {
 			});
 			
 			dialog.panel().parent().children("div.dialog-button").css("text-align", "center");
-			dialog.dialog("restore").dialog("center").dialog("refresh").dialog("open");
+			dialog.dialog("restore").dialog("center").dialog("open");
 		}
 }
 

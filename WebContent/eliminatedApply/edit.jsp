@@ -236,9 +236,11 @@
 				<tr class="datagrid-row">
 					<td class="view_table_left">开户户名：</td>
 					<td class="view_table_right">
-						<textarea rows="3" name="bankAccountName" class="easyui-validatebox" readonly="readonly">${v.bankAccountName}</textarea>
+						<textarea rows="3" name="bankAccountName" class="easyui-validatebox">${v.bankAccountName}</textarea>
 						<%-- <input type="text" name="bankAccountName" value="${v.bankAccountName}" class="easyui-validatebox" readonly="readonly"/> --%>
-						<!-- <span style="color:red;text-align:center">&nbsp;*&nbsp;</span> -->
+						<c:if test="${hasChecked}">
+							<span style="color:red;text-align:center">&nbsp;*&nbsp;(可修改)</span>
+						</c:if>
 					</td>
 					<td class="view_table_left">开户银行：</td>
 					<td class="view_table_right">
@@ -285,6 +287,8 @@
 				<input type="hidden" name="noFinanceProvideFiles"/>
 				<!-- 开户许可证 -->
 				<input type="hidden" name="openAccPromitFiles"/>
+				<!-- 补贴对象变更证明材料 -->
+				<input type="hidden" name="accountChangeProofFiles"/>
 			</table>
 		</div>
 	</form>
@@ -479,6 +483,33 @@
 			</tr>
 			</c:if>
 			</c:if>
+			<c:if test="${hasChecked}">
+			<tr class="datagrid-row">
+				<c:if test="${!empty accountChangeProofFiles}">
+				<td class="view_table_left">原变更补贴对象证明：</td>
+				<td class="view_table_right">
+					<c:forEach items="${accountChangeProofFiles}" var="accountChangeProofFile" varStatus="status">
+						<c:if test="${status.index % 2 eq 1}">
+							<a href="javascript:void(0)" onclick="preview('accountChangeProof', '${status.count}')">${accountChangeProofFile.name}</a></br>
+							<input type="hidden" name="accountChangeProofFileImgOri" value="${accountChangeProofFile.filePath}"/>
+						</c:if>
+						<c:if test="${status.index % 2 eq 0}">
+							<a href="javascript:void(0)" onclick="preview('accountChangeProof', '${status.count}')">${accountChangeProofFile.name}</a>
+							<input type="hidden" name="accountChangeProofFileImgOri" value="${accountChangeProofFile.filePath}"/>
+						</c:if>
+					</c:forEach>
+				</td>
+				</c:if>
+				<td class="view_table_left" style="width:110px">变更补贴对象证明：</td>
+				<td class="view_table_right" colspan="2">
+					<input id="accountChangeProof" type="file" name="accountChangeProof" multiple="multiple" />
+					<a id="btnTakePhotoAccountChangeProofUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-photo'">拍照</a>
+				</td>
+				<td class="view_table_right" colspan="3">
+					<a id="accountChangeProofFileImg" href="#"></a>
+				</td>
+			</tr>
+			</c:if>
 			<tr class="datagrid-row">
 				<td align="center" colspan="6">
 					<a id="btnUploadUpdate" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-shangchuan'">本地文件上传</a>
@@ -501,6 +532,17 @@
 			
 			var id = ${v.id};
 			var vehiclePlateNum = '${v.vehiclePlateNum}'; 
+			
+			// 授权审核并通过
+			var hasChecked = ${hasChecked};
+			if (hasChecked != null && hasChecked != undefined && hasChecked) {
+				//
+				//$("textarea[name='bankAccountName']").attr("required", true);
+				alert("该业务已授权通过，可修改补贴对象名称！");
+			} else {
+				// 未授权或者授权审核不通过
+				$("textarea[name='bankAccountName']").attr("readonly", "readonly");
+			}
 				
 			// 重新调整页面窗口大小和位置居中
 			/* $("#common-dialog").dialog({
@@ -615,12 +657,25 @@
 				   return false;
 			   }
 			   
+			   var hasChecked = ${hasChecked};
+			   if (hasChecked) {
+				   // 已经授权审核通过，则检查原补贴账户名是否被修改过
+				   var oldBankAccountName = "${v.bankAccountName}";
+				   var newBankAccountName = $("textarea[name='bankAccountName']").val();
+				   if (newBankAccountName != "" && oldBankAccountName != newBankAccountName) {
+					   if ($("input[name='accountChangeProof']").val() == "") {
+						   alert("请上传补贴对象变更证明材料！");
+						   return false;
+					   }
+				   }
+			   }
+			   
 			   //文件框页面校验，必填
 			   var ifValid = $("#form-apply-upload").form("enableValidation").form("validate");
 			   
 			   if (ifValid) {
 				
-				   var url =  $("#form-apply-upload").attr("action")+"?isPersonal="+isPersonal+"&isProxy="+isProxy;
+				   var url =  $("#form-apply-upload").attr("action")+"?isPersonal="+isPersonal+"&isProxy="+isProxy+"&required="+false;
 				   
 				   /* $.ajaxSetup({ 
 					   	async: false 
@@ -692,6 +747,9 @@
 	        						
 	        						setFilePreview("openAccPromit", result.message.openAccPromit, "开户许可证");
 	        					}
+	        					
+	        					// 补贴对象变更证明材料
+	        					setFilePreview("accountChangeProof", result.message.accountChangeProof, "补贴对象变更证明材料");
 	        					
 	        		 		} else {
 	        		 			alert("文件上传失败！");
@@ -1014,6 +1072,11 @@
 	        	} */
 			});
 			
+			// 补贴对象变更证明材料拍照上传
+			$("#btnTakePhotoAccountChangeProofUpdate").click(function() {
+				captureImg();
+			});
+			
 			
 			/* // 取报废录入数据和交警接口数据
 			$("#btnApplyVerify").bind("click", function() {
@@ -1120,11 +1183,30 @@
 						return false;
 					}
 					
+					var hasChecked = ${hasChecked};
+					var hasChangedAccount = false;
+				    if (hasChecked) {
+					   // 已经授权审核通过，则检查原补贴账户名是否被修改过
+					   var oldBankAccountName = "${v.bankAccountName}";
+					   var newBankAccountName = $("textarea[name='bankAccountName']").val();
+					   if (newBankAccountName != "" && oldBankAccountName != newBankAccountName) {
+						   if ($("input[name='accountChangeProofFiles']").val() == "") {
+							   alert("补贴对象变更证明材料未上传！");
+							   return false;
+						   } else {
+							   hasChangedAccount = true;
+						   }
+					   } else if (newBankAccountName == "") {
+						   alert("补贴对象名称不能为空！");
+						   return false;
+					   }
+				    }
+					
 					$.ajax({
 		                //cache: true,
 		                type: "POST",
 		                url:$("#common-apply-edit").attr("action"),
-		                data:$("#common-apply-edit").serialize(),
+		                data:$("#common-apply-edit").serialize()+"&hasChecked="+hasChangedAccount,
 		                async: true,
 		                dataType : 'json',
 		                beforeSend : function(XMLHttpRequest) {
@@ -1264,8 +1346,8 @@
 		function setFilePreview(type, files, name) {
 			var basePath = "<%=basePath%>";
 			
-			if (files == null && files == "") {
-				return;
+			if (files == null || files == "") {
+				return false;
 			}
 			
 			var filesArray = files.split(",");
@@ -1332,6 +1414,8 @@
 			proof_files.agentProofFiles = $("input[name='agentProofFiles']").val();
 			// 代理委托书
 			proof_files.agentProxyFiles = $("input[name='agentProxyFiles']").val();
+			// 变更补贴对象证明材料
+			proof_files.accountChangeProofFiles = $("input[name='accountChangeProofFiles']").val();
 			
 			// 号牌号码
 			var vehiclePlateNum = "${v.vehiclePlateNum}";
@@ -1342,14 +1426,17 @@
 			// 办理类型
 			var isProxy = "${v.isProxy}";
 			
+			// 是否进行过授权并审核通过
+			var hasChecked = ${hasChecked};
+			
 			// 释放高拍仪资源
 			Destroy();
 			
 			// alert(JSON.stringify(proof_files));
 			
 			// 弹出高拍仪抓拍图片界面
-			var parentValue = window.showModalDialog('eliminatedApply/captureNew.jsp?vehiclePlateNum='+vehiclePlateNum + '&isPersonal=' + isPersonal + '&isProxy=' + isProxy, proof_files, 
-					"dialogWidth=800px,dialogHeight=600px,resizable=yes,status=no,scrollbars=yes,menubar=no");
+			var parentValue = window.showModalDialog('eliminatedApply/captureNew.jsp?vehiclePlateNum='+vehiclePlateNum + '&isPersonal=' + isPersonal + '&isProxy=' + isProxy + '&hasChecked=' + hasChecked, proof_files, 
+					"dialogWidth=800px,dialogHeight=700px,resizable=yes,status=no,scrollbars=yes,menubar=no");
 			
 			// 抓拍返回，设置图片路径到页面字段, 且设置后台隐藏字段
         	if (typeof(parentValue) != "undefined" && parentValue != null) {
@@ -1392,6 +1479,11 @@
         		// 非财政供养单位证明
         		if (parentValue.FCZGYZM != null && parentValue.FCZGYZM != "") {
         			setFilePreview("noFinanceProvide", parentValue.FCZGYZM, "非财政供养单位证明");
+        		}
+        		
+        		// 补贴对象变更证明材料
+        		if (parentValue.BTZHMBGZM != null && parentValue.BTZHMBGZM != "") {
+        			setFilePreview("accountChangeProof", parentValue.BTZHMBGZM, "补贴对象变更证明材料");
         		}
         	}
 		}
@@ -1467,6 +1559,8 @@
 			proof_files.agentProofFiles = $("input[name='agentProofFiles']").val();
 			// 代理委托书
 			proof_files.agentProxyFiles = $("input[name='agentProxyFiles']").val();
+			// 补贴对象变更证明材料
+			proof_files.accountChangeProofFiles = $("input[name='accountChangeProofFiles']").val(); 
 			
 			//alert("adadad");
 			window.open(basePath + '/eliminatedApply/picturePreview.jsp?filetype='+currentType+'&index='+index,'新证明材料预览','height=300,width=400,top=200,left=400,toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no');

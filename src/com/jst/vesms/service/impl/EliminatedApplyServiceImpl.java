@@ -1044,9 +1044,10 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	}
 
 	@Override
-	public Map<String, Object> updateById(Integer id, EliminatedApply eliminatedApply,
+	public Map<String, Object> updateById(Integer id, EliminatedApply eliminatedApply, Boolean hasChecked,
 			String callbackProofFile, String vehicleCancelProofFiles, String bankCardFiles,
-			String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles, String noFinanceProvideFiles, String openAccPromitFiles) throws Exception {
+			String vehicleOwnerProofFiles, String agentProxyFiles, String agentProofFiles,
+			String noFinanceProvideFiles, String openAccPromitFiles, String accountChangeProofFiles) throws Exception {
 		log.debug("EliminatedApplyServiceImpl update is start");
 		// 更新业务最近更新时间
 		eliminatedApply.setLastUpdateTimeDate(new Date());
@@ -1161,13 +1162,16 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		
 		// 定义更新的字段值
 		String updateStr = "vehicleOwnerIdentity,mobile,agentMobileNo,agentIdentity,bankCode,bankName,bankAccountNo,lastUpdateTimeDate,updateTime,lastUpdateUser,lastUpdateUserCode,verifyCode";
+		if (hasChecked) {
+			updateStr += ",bankAccountName";
+		}
 		eliminatedApplyDao.update(eliminatedApply, updateStr);
 		
 		EliminatedApply apply = (EliminatedApply) this.get(eliminatedApply.getId());
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (null != eliminatedApply) {
 			// 更新附件表数据
-			Map<String, Object> saveFilesRes = this.updateAttachments(apply.getApplyNo(), callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles);
+			Map<String, Object> saveFilesRes = this.updateAttachments(apply.getApplyNo(), hasChecked, callbackProofFile, vehicleCancelProofFiles, bankCardFiles, vehicleOwnerProofFiles, agentProxyFiles, agentProofFiles, noFinanceProvideFiles, openAccPromitFiles, accountChangeProofFiles);
 			if (saveFilesRes.get("isSave").equals(true)) {
 				map.put("isSuccess", true);
 				map.put("id", apply.getId());
@@ -1556,6 +1560,7 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 		sb.append(" from v_appointment va, v_appointment_vehicle vav ");
 		sb.append(" where va.appointment_no = vav.appointment_no ");
 		sb.append(" and va.appointment_no = '").append(appointmentNo).append("' ");
+		sb.append(" and va.state = '1' ");
 		/*sb.append(" select a.*, decode(c.apply_time, null, '未受理', '已受理') apply_status from t_appointment_vehicle a ");
 		sb.append(" left join t_appointment b on a.appointment_no = b.appointment_no ");
 		sb.append(" left join t_eliminated_apply c on a.vehicle_plate_num = c.vehicle_plate_num ");
@@ -1900,11 +1905,11 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 	}
 
 	@Override
-	public Map<String, Object> updateAttachments(String applyNo,
+	public Map<String, Object> updateAttachments(String applyNo, Boolean hasChecked,
 			String callbackProofFile, String vehicleCancelProofFiles,
 			String bankCardFiles, String vehicleOwnerProofFiles,
 			String agentProxyFiles, String agentProofFiles,
-			String noFinanceProvideFiles, String openAccPromitFiles)
+			String noFinanceProvideFiles, String openAccPromitFiles, String accountChangeProofFiles)
 			throws Exception {
 		// 用户Code
 		@SuppressWarnings("unchecked")
@@ -2144,6 +2149,38 @@ public class EliminatedApplyServiceImpl extends BaseServiceImpl implements Elimi
 				Serializable id = attachmentDao.save(file);
 				if (null == id) {
 					isSuccess = false;
+				}
+			}
+			
+		}
+		
+		// 补贴对象变更证明材料
+		if (StringUtil.isNotEmpty(accountChangeProofFiles)) {
+			if (hasChecked) {
+				// 变更了补贴对象名称，则必须更新附件表记录
+				attachmentDao.updateAttachment(applyNo, "BTZHMBGZM", "0");
+				
+				String[] vehicleLicenses = accountChangeProofFiles.split(",");
+				for (int i = 0 ; i < vehicleLicenses.length ; i ++) {
+					String fileType = vehicleLicenses[i].substring(vehicleLicenses[i].lastIndexOf(".")+1);
+					Attachment file = new Attachment();
+					file.setApplyNo(applyNo);
+					file.setName("补贴账户名变更证明材料"+(i+1));
+					file.setFileType(fileType);
+					file.setBussinessType("2");
+					file.setFilePath(vehicleLicenses[i]);
+					file.setType("BTZHMBGZM");
+					file.setStatus("1");
+					file.setUploadUser(userName);
+					file.setUploadUserCode(userCode);
+					file.setUploadTime(new Date());
+					file.setUpdateTime(new Date());
+					file.setVerifyCode("1");
+					
+					Serializable id = attachmentDao.save(file);
+					if (null == id) {
+						isSuccess = false;
+					}
 				}
 			}
 			
