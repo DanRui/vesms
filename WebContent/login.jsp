@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>深圳市老旧车提前淘汰补贴管理系统</title>
+<title>统一登录权限管理平台</title>
 <link rel="shortcut icon" href="<%=basePath%>/images/webSite/login/logo.png" type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="<%=basePath%>/css/login.css" />
 <script type="text/javascript" src="<%=basePath%>/js/jquery-1.11.1.min.js"></script>
